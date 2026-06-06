@@ -1,0 +1,1278 @@
+"use client";
+
+import Lenis from "lenis";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  type AnchorHTMLAttributes,
+  type MouseEvent,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { IntakeProvider, useIntake } from "./IntakeForm";
+
+const disclaimer =
+  "Lead generation improves prospect quality and pipeline inputs; sales outcomes depend on your offer, follow-up, and closing process.";
+
+const brandName = "B2B Lead Growth Agency";
+
+const navItems = [
+  { label: "How it works", href: "#how-it-works" },
+  { label: "Services", href: "#services" },
+  { label: "Lead quality", href: "#lead-quality" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "FAQ", href: "#faq" },
+];
+
+const valuePillars = [
+  "Sharper ICP focus",
+  "Verified buyer paths",
+  "Priority scoring",
+  "CRM-ready pipeline",
+];
+
+const processSteps = [
+  {
+    title: "Define the ICP",
+    body: "Set the industries, company profiles, buyer roles, exclusions, and qualification filters that define a true fit.",
+  },
+  {
+    title: "Research accounts",
+    body: "Identify companies that match the criteria and have a credible reason to care about your offer.",
+  },
+  {
+    title: "Verify contacts",
+    body: "Map relevant decision-makers and verify usable contact paths where possible.",
+  },
+  {
+    title: "Organize pipeline",
+    body: "Deliver annotated, prioritized records with the fields your team needs to filter, assign, and follow up.",
+  },
+  {
+    title: "Review results",
+    body: "Use quality feedback, response signals, and conversion notes to refine the next batch.",
+  },
+];
+
+const services = [
+  {
+    title: "Ideal Customer Profile Setup",
+    description: "Turn broad market assumptions into a precise target profile.",
+    deliverables: "ICP worksheet, target criteria, exclusion list, qualification rules",
+  },
+  {
+    title: "Target Account Research",
+    description: "Find companies that match the market, service fit, and sales criteria.",
+    deliverables: "Company name, website, industry, location, company size, relevance notes",
+  },
+  {
+    title: "Decision-Maker Research",
+    description: "Identify the buyer roles and influence points most relevant to the offer.",
+    deliverables: "Name, title, LinkedIn/profile source when available, department, contact priority",
+  },
+  {
+    title: "Contact Data Verification",
+    description: "Check and organize contact information so outreach starts from cleaner data.",
+    deliverables: "Email field, phone field when available, verification status, data confidence",
+  },
+  {
+    title: "Lead Scoring",
+    description: "Rank prospects by fit, relevance, account quality, and useful buying signals.",
+    deliverables: "Lead score, reason for fit, priority tier, suggested outreach angle",
+  },
+  {
+    title: "CRM-Ready Delivery",
+    description: "Format leads so your team can import, assign, filter, and act.",
+    deliverables: "CSV/Sheet, CRM columns, tags, status fields, notes",
+  },
+];
+
+const qualificationStandards = [
+  {
+    title: "Account Fit",
+    body: "The company matches the agreed industry, geography, size, service need, and exclusion criteria.",
+  },
+  {
+    title: "Buyer Relevance",
+    body: "The contact connects to a decision-making, budget-influencing, growth, operations, or department-specific role.",
+  },
+  {
+    title: "Data Usability",
+    body: "Each record includes enough context to contact, filter, prioritize, and track the prospect.",
+  },
+  {
+    title: "Reason for Fit",
+    body: "High-priority leads include a concise explanation for why they belong in the campaign.",
+  },
+  {
+    title: "Verification Status",
+    body: "Contact data includes confidence or verification notes so quality is visible, not assumed.",
+  },
+  {
+    title: "Compliance Awareness",
+    body: "Outreach should be respectful, business-relevant, and aligned with applicable email, privacy, and platform rules. Clients should confirm legal/compliance requirements for their market.",
+  },
+];
+
+const leadTiers = [
+  {
+    tier: "Tier A",
+    title: "High Fit",
+    body: "Strong ICP match, relevant buyer path, clear personalization angle, and the strongest case for sales review.",
+  },
+  {
+    tier: "Tier B",
+    title: "Good Fit",
+    body: "Matches most criteria but may need more context, buyer verification, or timing signal.",
+  },
+  {
+    tier: "Tier C",
+    title: "Possible Fit",
+    body: "Some relevance, but weaker signal, incomplete data, or less obvious buyer fit.",
+  },
+];
+
+const reportingItems = [
+  "Qualified leads delivered",
+  "Tier A/B/C distribution",
+  "Verified contact percentage",
+  "Client-approved lead percentage",
+  "Responses or meetings when outreach support is included",
+  "Lead-quality feedback notes",
+];
+
+const plans = [
+  {
+    name: "Starter",
+    price: 750,
+    volume: "25–35 verified prospects",
+    bestFor: "A focused research sprint for testing one narrow market before expanding.",
+    includes:
+      "One target market; basic ICP filtering; company, decision-maker, website, industry, location; email/LinkedIn when available; basic fit notes; monthly delivery",
+    guardrails:
+      "No outreach writing, appointment setting, weekly strategy, CRM setup, or advanced research",
+    cta: "Start with Starter",
+  },
+  {
+    name: "Growth",
+    price: 2500,
+    volume: "80–120 qualified prospects",
+    bestFor:
+      "A monthly lead generation system for companies that want consistent research, cleaner pipeline organization, and regular optimization.",
+    includes:
+      "ICP setup; 1–2 segments; decision-maker research; verified contacts; qualification scoring; outreach-ready notes; email angle suggestions; follow-up sequence template; weekly delivery; monthly review call",
+    guardrails:
+      "No guaranteed closed deals, no full SDR replacement, no unlimited segments, no end-to-end sales management",
+    cta: "Build My Pipeline",
+    featured: true,
+  },
+  {
+    name: "Premium",
+    price: 4500,
+    volume: "150–200 priority prospects",
+    bestFor:
+      "A high-touch pipeline plan for deeper targeting, multiple segments, advanced reporting, and optional outreach support.",
+    includes:
+      "2–3 segments; advanced account research; decision-maker mapping; high-value prioritization; personalization notes; fit/value lead scoring; sequence support; LinkedIn direction; CRM-ready formatting; weekly optimization call",
+    guardrails:
+      "Not a full outsourced SDR team; no revenue guarantee; no paid-ad management; no unlimited manual research",
+    cta: "Scale with Premium",
+  },
+];
+
+const framework = [
+  {
+    period: "Days 1–30",
+    title: "Clarify and validate",
+    body: "Clarify the ICP, validate data quality, and watch early response signals.",
+  },
+  {
+    period: "Days 31–60",
+    title: "Refine targeting",
+    body: "Use lead-quality feedback to tighten segments, scoring, and priority rules.",
+  },
+  {
+    period: "Days 61–90",
+    title: "Evaluate scale",
+    body: "Evaluate quality, pipeline movement, conversion signals, and whether to scale.",
+  },
+];
+
+const faqs = [
+  {
+    question: "What is B2B lead generation?",
+    answer:
+      "B2B lead generation identifies potential business buyers, qualifies fit, and prepares sales opportunities your team can review, prioritize, and follow up with.",
+  },
+  {
+    question: "What makes a lead qualified?",
+    answer:
+      "A qualified lead matches the agreed ICP, connects to a relevant buyer role or influence point, includes usable verified data or confidence notes, and has a clear reason for outreach.",
+  },
+  {
+    question: "Do you guarantee meetings/sales?",
+    answer:
+      "No. The agency provides qualified opportunities, but sales depend on offer, follow-up, timing, market fit, and closing. A separate appointment-setting agreement would be needed for booked-call support.",
+  },
+  {
+    question: "How are leads delivered?",
+    answer:
+      "Leads are delivered as a spreadsheet, CRM-ready file, or agreed system with fields, tags, notes, status tracking, priority tiers, and verification context.",
+  },
+  {
+    question: "Who is this service best for?",
+    answer:
+      "The service is built for B2B service providers, agencies, consultants, software companies, IT/cyber firms, professional services, local B2B companies, and niche service businesses.",
+  },
+  {
+    question: "Do you offer outreach or appointment setting?",
+    answer:
+      "Optional outreach support may include email copy, LinkedIn copy, call notes, meeting status tracking, or appointment-setting workflows depending on package and agreement.",
+  },
+];
+
+export default function LeadGenerationLanding() {
+  const shellRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const progress = useScrollProgress();
+
+  useSmoothScroll(Boolean(prefersReducedMotion));
+  useAmbientPointer(shellRef, Boolean(prefersReducedMotion));
+
+  return (
+    <IntakeProvider>
+      <div ref={shellRef} className="noise min-h-screen overflow-hidden bg-ink-950 text-bone">
+      <CustomCursor />
+      <motion.div
+        className="fixed left-0 top-0 z-[90] h-px w-full origin-left bg-gold-sheen"
+        style={{ scaleX: progress }}
+        aria-hidden="true"
+      />
+      <SiteNav />
+      <main>
+        <Hero prefersReducedMotion={Boolean(prefersReducedMotion)} />
+        <PositioningSection />
+        <ProcessSection />
+        <ServicesSection />
+        <LeadQualitySection />
+        <PricingSection />
+        <FrameworkSection />
+        <ProofSection />
+        <FAQSection />
+        <FinalCTA />
+      </main>
+      <SiteFooter />
+      </div>
+    </IntakeProvider>
+  );
+}
+
+function SiteNav() {
+  const { openIntake } = useIntake();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 18);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
+
+  return (
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+        scrolled
+          ? "border-b border-gold-500/20 bg-ink-950/78 shadow-panel backdrop-blur-xl"
+          : "bg-transparent"
+      }`}
+    >
+      <nav
+        className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-5 py-4 sm:gap-5 sm:px-8"
+        aria-label="Primary navigation"
+      >
+        <MagneticAnchor
+          href="#top"
+          className="font-display text-base text-gold-200 sm:text-xl"
+          data-cursor-label="Open"
+        >
+          <span>B2B Lead Growth</span>
+          <span className="hidden sm:inline"> Agency</span>
+        </MagneticAnchor>
+        <div className="hidden items-center gap-7 lg:flex">
+          {navItems.map((item) => (
+            <MagneticAnchor
+              key={item.href}
+              href={item.href}
+              className="link-wipe text-sm text-muted transition-colors hover:text-gold-200"
+              data-cursor-label="Open"
+              strength={0.18}
+            >
+              {item.label}
+            </MagneticAnchor>
+          ))}
+        </div>
+        <MagneticAnchor
+          href="#contact"
+          onClick={(event) => {
+            event.preventDefault();
+            openIntake();
+          }}
+          className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-sm border border-gold-500/55 bg-gold-sheen px-2.5 text-[11px] font-semibold text-ink-950 shadow-gold transition-transform hover:scale-[1.015] sm:min-h-11 sm:px-5 sm:text-sm"
+          data-cursor-label="Open"
+        >
+          Start Now
+        </MagneticAnchor>
+      </nav>
+    </header>
+  );
+}
+
+function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
+  const { openIntake } = useIntake();
+  const [parallax, setParallax] = useState({ x: 0, y: 0 });
+
+  function handleMove(event: MouseEvent<HTMLElement>) {
+    if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    setParallax({
+      x: (event.clientX - rect.left) / rect.width - 0.5,
+      y: (event.clientY - rect.top) / rect.height - 0.5,
+    });
+  }
+
+  const headlineShift = prefersReducedMotion
+    ? undefined
+    : { transform: `translate3d(${parallax.x * 12}px, ${parallax.y * 10}px, 0)` };
+  const lineShift = prefersReducedMotion
+    ? undefined
+    : { transform: `translate3d(${parallax.x * -10}px, ${parallax.y * -8}px, 0)` };
+
+  return (
+    <section
+      id="top"
+      className="relative flex min-h-[100svh] items-center overflow-hidden px-5 pb-20 pt-32 sm:px-8 lg:pb-28 lg:pt-36"
+      onMouseMove={handleMove}
+    >
+      <div className="ambient-light pointer-events-none absolute inset-0 opacity-80" />
+      <div className="pointer-events-none absolute inset-0">
+        <div
+          className="absolute left-[8%] top-[18%] h-px w-64 rotate-[-12deg] bg-gradient-to-r from-transparent via-gold-500/60 to-transparent"
+          style={lineShift}
+        />
+        <div
+          className="absolute bottom-[18%] right-[8%] h-72 w-px rotate-[18deg] bg-gradient-to-b from-transparent via-gold-200/35 to-transparent"
+          style={lineShift}
+        />
+        <div className="absolute left-0 top-28 h-px w-full bg-gradient-to-r from-transparent via-gold-500/18 to-transparent" />
+      </div>
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
+        <div style={headlineShift}>
+          <Reveal>
+            <p className="mb-7 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/90">
+              <span className="h-px w-10 bg-gold-500/80" aria-hidden="true" />
+              B2B lead generation services
+            </p>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <h1 className="max-w-[20rem] font-display text-[2.05rem] leading-[1.1] text-bone sm:max-w-5xl sm:text-6xl lg:text-7xl">
+              B2B Lead Generation Services for Qualified Sales Opportunities
+            </h1>
+          </Reveal>
+          <Reveal delay={0.16}>
+            <p className="mt-7 max-w-2xl text-lg leading-8 text-muted sm:text-xl">
+              Stop asking your sales team to create growth from stale lists and guesswork. We research, verify, score, and organize high-fit B2B prospects so every outreach hour starts with better judgment.
+            </p>
+            <p className="mt-4 max-w-2xl text-sm font-semibold uppercase tracking-[0.18em] text-gold-200/80">
+              Authentic research. Transparent criteria. Pipeline inputs you can measure.
+            </p>
+          </Reveal>
+          <Reveal delay={0.24}>
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <MagneticAnchor
+                href="#contact"
+                onClick={(event) => {
+                  event.preventDefault();
+                  openIntake();
+                }}
+                className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 font-semibold text-ink-950 shadow-gold"
+                data-cursor-label="Open"
+              >
+                Start Building Pipeline Now <span className="ml-3" aria-hidden="true">→</span>
+              </MagneticAnchor>
+              <MagneticAnchor
+                href="#how-it-works"
+                className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/28 px-6 font-semibold text-gold-200 transition-colors hover:border-gold-200/65 hover:bg-gold-500/8"
+                data-cursor-label="View"
+              >
+                See how it works
+              </MagneticAnchor>
+            </div>
+          </Reveal>
+        </div>
+        <Reveal delay={0.18} className="relative">
+          <div className="gold-border-draw relative overflow-hidden rounded-lg border border-gold-500/18 bg-ink-900/70 p-5 shadow-panel backdrop-blur">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-200/70 to-transparent" />
+            <div className="mb-6 flex items-center justify-between border-b border-gold-500/14 pb-5">
+              <div>
+                <p className="text-xs uppercase tracking-[0.22em] text-gold-200/80">Service promise</p>
+                <p className="mt-2 font-display text-3xl text-bone">Clarity your sales team can act on.</p>
+              </div>
+              <div className="h-12 w-12 rounded-sm border border-gold-500/35 bg-gold-500/10" aria-hidden="true" />
+            </div>
+            <div className="space-y-4">
+              {[
+                ["ICP setup", "Target criteria, exclusions, qualification rules"],
+                ["Research", "Relevant accounts with a clear reason to care"],
+                ["Verification", "Decision-maker contact data where possible"],
+                ["Delivery", "CRM-ready fields, tags, status, and notes"],
+              ].map(([label, body], index) => (
+                <div
+                  key={label}
+                  className="group grid grid-cols-[auto_1fr] gap-4 border-b border-gold-500/12 pb-4 last:border-0 last:pb-0"
+                >
+                  <div className="flex h-9 w-9 items-center justify-center rounded-sm border border-gold-500/32 bg-ink-850 text-sm text-gold-200">
+                    0{index + 1}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-bone">{label}</p>
+                    <p className="mt-1 text-sm leading-6 text-muted">{body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function PositioningSection() {
+  return (
+    <section className="relative border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
+      <div className="mx-auto max-w-7xl">
+        <Reveal>
+          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+            <div>
+              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+                Qualified B2B leads
+              </p>
+              <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+                Every month spent on the wrong prospects has a cost.
+              </h2>
+            </div>
+            <div className="space-y-5 text-lg leading-8 text-muted">
+              <p>
+                Most teams do not lose pipeline because they lack effort. They lose it because their research is too broad, their data is aging, and their sales team is spending valuable time on accounts that were never a strong fit.
+              </p>
+              <p>
+                {brandName} narrows the market, verifies the path to the right buyers, and turns scattered research into a pipeline your team can measure, prioritize, and improve over time.
+              </p>
+            </div>
+          </div>
+        </Reveal>
+        <div className="mt-14 grid gap-4 md:grid-cols-4">
+          {valuePillars.map((pillar, index) => (
+            <Reveal key={pillar} delay={index * 0.06}>
+              <TiltCard className="gold-border-draw h-full rounded-lg border border-gold-500/14 bg-ink-850/70 p-6">
+                <p className="text-xs uppercase tracking-[0.22em] text-gold-200/70">0{index + 1}</p>
+                <h2 className="mt-6 text-xl font-semibold text-bone">{pillar}</h2>
+              </TiltCard>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProcessSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [activeStep, setActiveStep] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (prefersReducedMotion || !sectionRef.current || window.innerWidth < 900) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+    const section = sectionRef.current;
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: `+=${processSteps.length * 540}`,
+        pin: true,
+        scrub: true,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const nextIndex = Math.min(
+            processSteps.length - 1,
+            Math.floor(self.progress * processSteps.length),
+          );
+          setActiveStep((current) => (current === nextIndex ? current : nextIndex));
+        },
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, [prefersReducedMotion]);
+
+  return (
+    <section
+      ref={sectionRef}
+      id="how-it-works"
+      className="relative bg-ink-950 px-5 py-24 sm:px-8 lg:min-h-screen lg:py-0"
+    >
+      <div className="ambient-light pointer-events-none absolute inset-0 opacity-55" />
+      <div className="relative z-10 mx-auto grid max-w-7xl gap-12 lg:min-h-screen lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
+        <div>
+          <Reveal>
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+              How it works
+            </p>
+            <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+              Proof starts with the way the work is done.
+            </h2>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-muted">
+              No vague lists. No borrowed credibility. Just visible criteria, traceable sourcing, verification notes, scoring logic, and CRM-ready delivery your team can inspect.
+            </p>
+          </Reveal>
+          <div className="mt-10 hidden gap-2 lg:flex" aria-hidden="true">
+            {processSteps.map((step, index) => (
+              <span
+                key={step.title}
+                className={`h-px flex-1 transition-colors ${
+                  index <= activeStep ? "bg-gold-400" : "bg-gold-500/16"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+        <div id="process" className="grid gap-4">
+          {processSteps.map((step, index) => (
+            <motion.article
+              key={step.title}
+              className={`gold-border-draw rounded-lg border p-6 transition-colors lg:p-7 ${
+                index === activeStep
+                  ? "border-gold-500/60 bg-ink-850 shadow-gold"
+                  : "border-gold-500/14 bg-ink-900/60"
+              }`}
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
+              whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.26 }}
+              transition={{ duration: 0.5, delay: index * 0.05 }}
+            >
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-gold-500/40 text-sm text-gold-200">
+                  0{index + 1}
+                </span>
+                <div>
+                  <h3 className="text-2xl font-semibold text-bone">{step.title}</h3>
+                  <p className="mt-2 leading-7 text-muted">{step.body}</p>
+                </div>
+              </div>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ServicesSection() {
+  return (
+    <section id="services" className="relative border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
+      <div className="mx-auto max-w-7xl">
+        <Reveal>
+          <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
+            <div>
+              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+                Services and deliverables
+              </p>
+              <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+                Prospect research built as a durable growth asset.
+              </h2>
+            </div>
+            <p className="text-lg leading-8 text-muted">
+              This is not a random contact export. Each campaign is shaped around your ideal customer profile, qualification criteria, sales priorities, and the measurable pipeline data your team needs to make better decisions.
+            </p>
+          </div>
+        </Reveal>
+        <div className="mt-14 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {services.map((service, index) => (
+            <Reveal key={service.title} delay={index * 0.04}>
+              <TiltCard className="gold-border-draw h-full rounded-lg border border-gold-500/14 bg-ink-950/70 p-6">
+                <p className="text-xs uppercase tracking-[0.22em] text-gold-200/70">
+                  Service 0{index + 1}
+                </p>
+                <h3 className="mt-5 text-2xl font-semibold text-bone">{service.title}</h3>
+                <p className="mt-4 leading-7 text-muted">{service.description}</p>
+                <div className="mt-6 border-t border-gold-500/14 pt-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-200/70">
+                    Deliverables
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-muted">{service.deliverables}</p>
+                </div>
+              </TiltCard>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function LeadQualitySection() {
+  return (
+    <section id="lead-quality" className="relative bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
+      <div className="ambient-light pointer-events-none absolute inset-0 opacity-40" />
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <Reveal>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+              Lead qualification standards
+            </p>
+            <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+              Trust comes from standards buyers can see.
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-muted">
+              A lead is only useful when your team understands why it belongs in the pipeline. These standards make quality visible before outreach begins.
+            </p>
+          </div>
+        </Reveal>
+        <div className="mt-14 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {qualificationStandards.map((standard, index) => (
+            <Reveal key={standard.title} delay={index * 0.04}>
+              <div className="gold-border-draw h-full rounded-lg border border-gold-500/14 bg-ink-900/72 p-6">
+                <p className="text-xs uppercase tracking-[0.22em] text-gold-200/70">
+                  0{index + 1}
+                </p>
+                <h3 className="mt-5 text-2xl font-semibold text-bone">{standard.title}</h3>
+                <p className="mt-4 leading-7 text-muted">{standard.body}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal delay={0.12}>
+          <div className="mt-12 overflow-hidden rounded-lg border border-gold-500/18 bg-ink-900/72">
+            <div className="border-b border-gold-500/14 p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
+                Lead scoring model
+              </p>
+              <h3 className="mt-3 text-2xl font-semibold text-bone">Priority tiers for sales review</h3>
+            </div>
+            <div className="grid divide-y divide-gold-500/12 md:grid-cols-3 md:divide-x md:divide-y-0">
+              {leadTiers.map((tier) => (
+                <div key={tier.tier} className="p-6">
+                  <p className="text-sm font-semibold text-gold-200">{tier.tier}</p>
+                  <h4 className="mt-3 text-xl font-semibold text-bone">{tier.title}</h4>
+                  <p className="mt-3 text-sm leading-6 text-muted">{tier.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function PricingSection() {
+  const { openIntake } = useIntake();
+
+  return (
+    <section id="pricing" className="relative border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
+      <div className="mx-auto max-w-7xl">
+        <Reveal>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+              Pricing
+            </p>
+            <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+              The smartest pipeline investment is the one your team can actually use.
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-muted">
+              Starter proves a narrow market. Growth builds the repeatable system most teams need. Premium expands the research engine when deeper segmentation and higher-touch execution are worth the investment.
+            </p>
+          </div>
+        </Reveal>
+        <div className="mt-14 grid gap-5 lg:grid-cols-3 lg:items-stretch">
+          {plans.map((plan, index) => (
+            <Reveal key={plan.name} delay={index * 0.08}>
+              <TiltCard
+                className={`gold-border-draw relative flex h-full flex-col rounded-lg border p-6 shadow-panel ${
+                  plan.featured
+                    ? "border-gold-500/65 bg-ink-850 lg:-mt-5 lg:min-h-[720px]"
+                    : "border-gold-500/16 bg-ink-950/72 lg:mt-8"
+                }`}
+              >
+                {plan.featured ? (
+                  <div className="mb-5 inline-flex w-fit rounded-sm border border-gold-500/45 bg-gold-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-gold-200">
+                    Recommended · Best Fit
+                  </div>
+                ) : null}
+                <div className="border-b border-gold-500/14 pb-6">
+                  <h3 className="font-display text-4xl text-bone">{plan.name}</h3>
+                  <p className="mt-5 text-5xl font-semibold text-bone">
+                    <CountUp prefix="$" value={plan.price} />
+                    <span className="text-lg font-normal text-muted">/mo</span>
+                  </p>
+                  <p className="mt-4 font-semibold text-gold-200">{plan.volume}</p>
+                </div>
+                <div className="space-y-6 py-7">
+                  <PlanField label="Best for" value={plan.bestFor} />
+                  <PlanField label="Includes" value={plan.includes} />
+                  <PlanField label="Excludes/guardrails" value={plan.guardrails} />
+                </div>
+                <MagneticAnchor
+                  href="#contact"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    openIntake(plan.name);
+                  }}
+                  className={`mt-auto inline-flex min-h-12 items-center justify-center rounded-sm border px-5 font-semibold ${
+                    plan.featured
+                      ? "border-gold-500/70 bg-gold-sheen text-ink-950 shadow-gold"
+                      : "border-gold-500/38 text-gold-200 hover:bg-gold-500/8"
+                  }`}
+                  data-cursor-label="Open"
+                >
+                  {plan.cta}
+                </MagneticAnchor>
+              </TiltCard>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal delay={0.1}>
+          <div className="mt-9 rounded-lg border border-gold-500/20 bg-ink-950/72 p-5 text-center text-sm leading-6 text-muted">
+            <span className="font-semibold text-gold-200">Disclaimer:</span> {disclaimer}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function FrameworkSection() {
+  return (
+    <section className="relative bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
+      <div className="ambient-light pointer-events-none absolute inset-0 opacity-40" />
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
+          <Reveal>
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+              Reporting and evaluation
+            </p>
+            <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+              Measure what matters before you scale.
+            </h2>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <p className="text-xl leading-9 text-muted">
+              A <CountUp value={90} />-day review window turns lead generation from a list purchase into a learning system.
+            </p>
+            <p className="mt-4 leading-7 text-muted">
+              Track lead quality, pipeline movement, conversion signals, and whether the system is worth scaling. One closed deal can justify Growth at a high enough average deal size, but the decision should be grounded in evidence, not hype.
+            </p>
+          </Reveal>
+        </div>
+        <div className="mt-14 grid gap-4 lg:grid-cols-3">
+          {framework.map((item, index) => (
+            <Reveal key={item.period} delay={index * 0.07}>
+              <TiltCard className="gold-border-draw h-full rounded-lg border border-gold-500/15 bg-ink-900/72 p-6">
+                <p className="text-sm font-semibold text-gold-200">{item.period}</p>
+                <h3 className="mt-5 text-2xl font-semibold text-bone">{item.title}</h3>
+                <p className="mt-4 leading-7 text-muted">{item.body}</p>
+              </TiltCard>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal delay={0.12}>
+          <div className="mt-12 grid gap-6 rounded-lg border border-gold-500/18 bg-ink-900/72 p-6 lg:grid-cols-[0.9fr_1.1fr]">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
+                Client expectations
+              </p>
+              <p className="mt-4 leading-7 text-muted">
+                {brandName} owns research quality, targeting logic, data organization, and reporting. You own the offer, follow-up, sales conversations, and closing. That clarity keeps the partnership honest.
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
+                Reporting dashboard
+              </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                {reportingItems.map((item) => (
+                  <span
+                    key={item}
+                    className="rounded-sm border border-gold-500/16 bg-ink-950/58 px-4 py-3 text-sm text-muted"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function ProofSection() {
+  return (
+    <section className="relative border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+          <Reveal>
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+              Proof without fabrication
+            </p>
+            <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+              See the quality standard before you invest.
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-muted">
+              Credibility should be inspectable. Review the exact fields, scoring context, and verification notes that ship with every record — so you can judge the quality standard before you invest a dollar.
+            </p>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <div className="group overflow-hidden rounded-lg border border-gold-500/18 bg-ink-950/78 shadow-panel">
+              <div className="border-b border-gold-500/14 p-5">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
+                      Illustrative sample
+                    </p>
+                    <h3 className="mt-2 text-2xl font-semibold text-bone">Prospect record</h3>
+                  </div>
+                  <span className="rounded-sm border border-gold-500/35 px-3 py-1 text-xs text-gold-200">
+                    Example format
+                  </span>
+                </div>
+              </div>
+              <div className="relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-ink-950/42 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="origin-center transition-transform duration-500 group-hover:scale-[1.018]">
+                  <SampleRow label="Company" value="Anonymized business record" />
+                  <SampleRow label="Contact" value="Relevant buyer role or influence point mapped" />
+                  <SampleRow label="Website" value="Checked and cited" />
+                  <SampleRow label="Industry / location" value="Company field prepared for filtering" />
+                  <SampleRow label="Contact path" value="Email, phone, or LinkedIn/profile when available" />
+                  <SampleRow label="Source/confidence" value="Verification status or data confidence noted" />
+                  <SampleRow label="Priority tier" value="Tier A / Tier B / Tier C (illustrative)" />
+                  <SampleRow label="Fit reason" value="Short explanation for why the lead belongs in the campaign" />
+                  <SampleRow label="Outreach angle" value="Suggested angle tied to segment context" />
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FAQSection() {
+  return (
+    <section id="faq" className="bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
+      <div className="mx-auto max-w-5xl">
+        <Reveal>
+          <div className="text-center">
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+              FAQ
+            </p>
+            <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+              Clear answers before you commit.
+            </h2>
+          </div>
+        </Reveal>
+        <div className="mt-12 divide-y divide-gold-500/12 border-y border-gold-500/12">
+          {faqs.map((faq, index) => (
+            <Reveal key={faq.question} delay={index * 0.05}>
+              <details className="group py-6">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-left text-xl font-semibold text-bone">
+                  {faq.question}
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm border border-gold-500/35 text-gold-200 transition-transform group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <p className="mt-4 max-w-3xl leading-7 text-muted">{faq.answer}</p>
+              </details>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal delay={0.1}>
+          <p className="mt-8 rounded-lg border border-gold-500/18 bg-ink-900/70 p-5 text-sm leading-6 text-muted">
+            <span className="font-semibold text-gold-200">Disclaimer:</span> {disclaimer}
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function FinalCTA() {
+  const { openIntake } = useIntake();
+
+  return (
+    <section id="contact" className="relative overflow-hidden border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
+      <div className="ambient-light pointer-events-none absolute inset-0 opacity-60" />
+      <div className="relative z-10 mx-auto max-w-5xl text-center">
+        <Reveal>
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+            The cost of waiting is quiet
+          </p>
+          <h2 className="font-display text-5xl leading-tight text-bone sm:text-6xl">
+            Start building a cleaner pipeline now.
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted">
+            Every week spent chasing poor-fit prospects is sales attention you cannot recover. Request a lead strategy call and find out whether Growth is the right long-term investment for your market.
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <MagneticAnchor
+              href="#contact"
+              onClick={(event) => {
+                event.preventDefault();
+                openIntake();
+              }}
+              className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-7 font-semibold text-ink-950 shadow-gold"
+              data-cursor-label="Open"
+            >
+              Book a Lead Strategy Call Now <span className="ml-3" aria-hidden="true">→</span>
+            </MagneticAnchor>
+            <span className="text-sm leading-6 text-muted">
+              60-second intake · pick a time on the spot
+            </span>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function SiteFooter() {
+  const { openIntake } = useIntake();
+
+  return (
+    <footer className="bg-ink-950 px-5 py-10 sm:px-8">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6 border-t border-gold-500/12 pt-8 text-sm text-muted md:flex-row md:items-start md:justify-between">
+        <div>
+          <p className="font-display text-xl text-gold-200">{brandName}</p>
+          <button
+            type="button"
+            onClick={() => openIntake()}
+            className="link-wipe mt-2 inline-block text-left text-gold-200 transition-colors hover:text-gold-400"
+            data-cursor-label="Open"
+          >
+            Start a lead strategy request →
+          </button>
+          <p className="mt-2">
+            © {new Date().getFullYear()} ·{" "}
+            <a href="/privacy" className="transition-colors hover:text-gold-200">
+              Privacy Policy
+            </a>
+          </p>
+        </div>
+        <p className="max-w-2xl leading-6">
+          <span className="font-semibold text-gold-200">Disclaimer:</span> {disclaimer}
+        </p>
+      </div>
+    </footer>
+  );
+}
+
+function PlanField({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-200/70">{label}</p>
+      <p className="mt-2 text-sm leading-7 text-muted">{value}</p>
+    </div>
+  );
+}
+
+function SampleRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid gap-3 border-b border-gold-500/10 px-5 py-4 last:border-0 sm:grid-cols-[0.42fr_0.58fr]">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-200/70">{label}</p>
+      <p className="text-sm leading-6 text-bone/88">{value}</p>
+    </div>
+  );
+}
+
+function Reveal({
+  children,
+  className = "",
+  delay = 0,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      className={className}
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
+      whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.24 }}
+      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function TiltCard({ children, className }: { children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [style, setStyle] = useState({ transform: "perspective(900px) rotateX(0deg) rotateY(0deg)" });
+  const prefersReducedMotion = useReducedMotion();
+
+  function handleMove(event: MouseEvent<HTMLDivElement>) {
+    if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    setStyle({
+      transform: `perspective(900px) rotateX(${y * -4}deg) rotateY(${x * 5}deg) translateY(-2px)`,
+    });
+  }
+
+  return (
+    <div
+      ref={ref}
+      className={`${className ?? ""} transition-transform duration-300`}
+      data-cursor-label="View"
+      onMouseMove={handleMove}
+      onMouseLeave={() => setStyle({ transform: "perspective(900px) rotateX(0deg) rotateY(0deg)" })}
+      style={style}
+    >
+      {children}
+    </div>
+  );
+}
+
+function MagneticAnchor({
+  children,
+  className,
+  strength = 0.24,
+  onMouseMove,
+  onMouseLeave,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & {
+  strength?: number;
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  function handleMove(event: MouseEvent<HTMLAnchorElement>) {
+    onMouseMove?.(event);
+    if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const x = (event.clientX - (rect.left + rect.width / 2)) * strength;
+    const y = (event.clientY - (rect.top + rect.height / 2)) * strength;
+    ref.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  }
+
+  function handleLeave(event: MouseEvent<HTMLAnchorElement>) {
+    onMouseLeave?.(event);
+    if (ref.current) ref.current.style.transform = "translate3d(0, 0, 0)";
+  }
+
+  return (
+    <a
+      ref={ref}
+      className={`${className ?? ""} transition-transform duration-200 ease-out`}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+      {...props}
+    >
+      {children}
+    </a>
+  );
+}
+
+function CountUp({
+  value,
+  prefix = "",
+  suffix = "",
+}: {
+  value: number;
+  prefix?: string;
+  suffix?: string;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [display, setDisplay] = useState(value);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setDisplay(value);
+      return;
+    }
+
+    const node = ref.current;
+    if (!node) return;
+
+    let frame = 0;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        setDisplay(0);
+        const start = performance.now();
+        const duration = 1200;
+        const animate = (now: number) => {
+          const elapsed = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - elapsed, 3);
+          setDisplay(Math.round(value * eased));
+          if (elapsed < 1) frame = requestAnimationFrame(animate);
+        };
+        frame = requestAnimationFrame(animate);
+      },
+      { threshold: 0.4 },
+    );
+
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [prefersReducedMotion, value]);
+
+  return (
+    <span ref={ref}>
+      {prefix}
+      {display.toLocaleString()}
+      {suffix}
+    </span>
+  );
+}
+
+function CustomCursor() {
+  const prefersReducedMotion = useReducedMotion();
+  const x = useMotionValue(-100);
+  const y = useMotionValue(-100);
+  const springX = useSpring(x, { stiffness: 180, damping: 24, mass: 0.45 });
+  const springY = useSpring(y, { stiffness: 180, damping: 24, mass: 0.45 });
+  const [state, setState] = useState({ active: false, label: "" });
+  const last = useRef({ active: false, label: "" });
+
+  useEffect(() => {
+    if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) return;
+
+    document.body.classList.add("has-custom-cursor");
+
+    const handleMove = (event: globalThis.MouseEvent) => {
+      x.set(event.clientX);
+      y.set(event.clientY);
+
+      const element = event.target instanceof Element ? event.target.closest("[data-cursor-label], a, button") : null;
+      const label =
+        element?.getAttribute("data-cursor-label") ||
+        (element?.tagName === "A" || element?.tagName === "BUTTON" ? "Open" : "");
+      const active = Boolean(element);
+
+      if (last.current.active !== active || last.current.label !== label) {
+        last.current = { active, label };
+        setState({ active, label });
+      }
+    };
+
+    window.addEventListener("mousemove", handleMove, { passive: true });
+    return () => {
+      document.body.classList.remove("has-custom-cursor");
+      window.removeEventListener("mousemove", handleMove);
+    };
+  }, [prefersReducedMotion, x, y]);
+
+  if (prefersReducedMotion) return null;
+
+  return (
+    <div className="fine-cursor pointer-events-none fixed inset-0 z-[100]" aria-hidden="true">
+      <motion.div
+        className="fixed h-2 w-2 rounded-full bg-gold-200"
+        style={{ left: x, top: y, marginLeft: -4, marginTop: -4 }}
+      />
+      <motion.div
+        className="fixed flex h-12 w-12 items-center justify-center rounded-full border border-gold-500/70 bg-ink-950/8 text-[9px] font-semibold uppercase tracking-[0.18em] text-gold-200 backdrop-blur-sm"
+        style={{
+          left: springX,
+          top: springY,
+          marginLeft: -24,
+          marginTop: -24,
+          scale: state.active ? 1.55 : 1,
+        }}
+      >
+        <span className={`transition-opacity ${state.label ? "opacity-100" : "opacity-0"}`}>
+          {state.label}
+        </span>
+      </motion.div>
+    </div>
+  );
+}
+
+function useScrollProgress() {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const update = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(max > 0 ? window.scrollY / max : 0);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  return progress;
+}
+
+function useSmoothScroll(prefersReducedMotion: boolean) {
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+
+    const lenis = new Lenis({
+      lerp: 0.08,
+      wheelMultiplier: 0.9,
+      smoothWheel: true,
+    });
+
+    let frame = 0;
+    const raf = (time: number) => {
+      lenis.raf(time);
+      frame = requestAnimationFrame(raf);
+    };
+
+    frame = requestAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(frame);
+      lenis.destroy();
+    };
+  }, [prefersReducedMotion]);
+}
+
+function useAmbientPointer(
+  ref: React.RefObject<HTMLElement | null>,
+  prefersReducedMotion: boolean,
+) {
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+
+    const handleMove = (event: globalThis.MouseEvent) => {
+      ref.current?.style.setProperty("--cursor-x", `${event.clientX}px`);
+      ref.current?.style.setProperty("--cursor-y", `${event.clientY}px`);
+    };
+
+    window.addEventListener("mousemove", handleMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMove);
+  }, [prefersReducedMotion, ref]);
+}

@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --cursor-x: 50vw;
+  --cursor-y: 50vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: #0a0a0b;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(201, 162, 75, 0.08), transparent 38rem),
+    #0a0a0b;
+  color: #f5f1e8;
+  font-family: var(--font-sans), Inter, system-ui, sans-serif;
+  text-rendering: geometricPrecision;
+}
+
+::selection {
+  background: rgba(212, 175, 55, 0.34);
+  color: #fff8df;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid #e8d9a8;
+  outline-offset: 4px;
+}
+
+.noise::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom, black, transparent 84%);
+}
+
+.ambient-light {
+  background:
+    radial-gradient(
+      circle at var(--cursor-x) var(--cursor-y),
+      rgba(201, 162, 75, 0.18),
+      rgba(201, 162, 75, 0.07) 12rem,
+      transparent 27rem
+    );
+}
+
+.gold-text {
+  background: linear-gradient(135deg, #e8d9a8 0%, #d4af37 44%, #9d7a2b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hairline {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(232, 217, 168, 0.34),
+    rgba(201, 162, 75, 0.74),
+    rgba(232, 217, 168, 0.34),
+    transparent
+  );
+}
+
+.link-wipe {
+  position: relative;
+}
+
+.link-wipe::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.34rem;
+  height: 1px;
+  background: linear-gradient(90deg, #e8d9a8, #c9a24b);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 220ms ease;
+}
+
+.link-wipe:hover::after,
+.link-wipe:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.gold-border-draw {
+  position: relative;
+}
+
+.gold-border-draw::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(232, 217, 168, 0.66);
+  clip-path: inset(0 100% 100% 0);
+  transition: clip-path 420ms ease;
+  pointer-events: none;
+}
+
+.gold-border-draw:hover::after,
+.gold-border-draw:focus-within::after {
+  clip-path: inset(0 0 0 0);
+}
+
+.fine-cursor {
+  display: none;
+}
+
+@media (pointer: fine) and (min-width: 768px) {
+  body.has-custom-cursor,
+  body.has-custom-cursor a,
+  body.has-custom-cursor button,
+  body.has-custom-cursor [role="button"] {
+    cursor: none;
+  }
+
+  .fine-cursor {
+    display: block;
+  }
+}
+
+/* The landing page hides the native cursor in favor of a custom one. Inside the
+   intake modal we restore normal cursors so inputs and buttons feel right. */
+.intake-modal * {
+  cursor: auto !important;
+}
+.intake-modal a,
+.intake-modal button,
+.intake-modal select,
+.intake-modal label[for],
+.intake-modal [role="button"] {
+  cursor: pointer !important;
+}
+.intake-modal input,
+.intake-modal textarea {
+  cursor: text !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  body.has-custom-cursor,
+  body.has-custom-cursor a,
+  body.has-custom-cursor button,
+  body.has-custom-cursor [role="button"] {
+    cursor: auto;
+  }
+
+  .fine-cursor {
+    display: none !important;
+  }
+}
