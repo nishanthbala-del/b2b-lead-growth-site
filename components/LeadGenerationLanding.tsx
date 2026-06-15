@@ -59,34 +59,34 @@ const processSteps = [
 
 const services = [
   {
-    title: "Ideal Customer Profile Setup",
-    description: "Turn broad market assumptions into a precise target profile.",
+    title: "ICP & Targeting",
+    description: "Turn broad market assumptions into a precise, agreed definition of a true-fit buyer.",
     deliverables: "ICP worksheet, target criteria, exclusion list, qualification rules",
   },
   {
-    title: "Target Account Research",
-    description: "Find companies that match the market, service fit, and sales criteria.",
-    deliverables: "Company name, website, industry, location, company size, relevance notes",
+    title: "Sourcing & Verification",
+    description: "Find the accounts and decision-makers that match the profile, with verified contact paths where possible.",
+    deliverables: "Company + buyer records, role/title, contact path, source citation, verification status",
   },
   {
-    title: "Decision-Maker Research",
-    description: "Identify the buyer roles and influence points most relevant to the offer.",
-    deliverables: "Name, title, LinkedIn/profile source when available, department, contact priority",
+    title: "Lead Scoring & Prioritization",
+    description: "Rank prospects by fit, signal, and account quality so effort lands on the strongest opportunities first.",
+    deliverables: "Lead score, reason for fit, priority tier (A/B/C), suggested angle",
   },
   {
-    title: "Contact Data Verification",
-    description: "Check and organize contact information so outreach starts from cleaner data.",
-    deliverables: "Email field, phone field when available, verification status, data confidence",
+    title: "Personalized Outreach",
+    description: "Done-for-you messaging written per prospect — not templated mail-merge — tied to a real reason to reach out.",
+    deliverables: "Per-prospect first touch + sequence, angle bank, every message client-approved before send",
   },
   {
-    title: "Lead Scoring",
-    description: "Rank prospects by fit, relevance, account quality, and useful buying signals.",
-    deliverables: "Lead score, reason for fit, priority tier, suggested outreach angle",
+    title: "Follow-up & Reply Triage",
+    description: "Multi-touch follow-up that keeps the conversation alive, with replies flagged by interest.",
+    deliverables: "Tracked cadence, reply classification, hand-off notes, opt-out handling",
   },
   {
-    title: "CRM-Ready Delivery",
-    description: "Format leads so your team can import, assign, filter, and act.",
-    deliverables: "CSV/Sheet, CRM columns, tags, status fields, notes",
+    title: "Qualification & Booking",
+    description: "Qualify interested replies against your criteria and book the call straight onto your calendar.",
+    deliverables: "Qualification check, booked call + confirmations/reminders, CRM-ready status",
   },
 ];
 
@@ -383,10 +383,10 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
           </Reveal>
           <Reveal delay={0.16}>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-muted sm:text-xl">
-              Stop asking your sales team to create growth from stale lists and guesswork. We research, verify, score, and organize high-fit B2B prospects — and at higher tiers we run the outreach, follow up, and book qualified calls on your calendar.
+              Stop losing sales time to stale lists and guesswork. We find your best-fit buyers, run the outreach and follow-up for you, and book qualified calls straight onto your calendar — you show up and close. You approve every message before it sends.
             </p>
             <p className="mt-4 max-w-2xl text-sm font-semibold uppercase tracking-[0.18em] text-gold-200/80">
-              Authentic research. Transparent criteria. Pipeline inputs you can measure.
+              Done-for-you outbound. Transparent criteria. Pipeline you can measure.
             </p>
           </Reveal>
           <Reveal delay={0.24}>
@@ -424,10 +424,10 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
             </div>
             <div className="space-y-4">
               {[
-                ["ICP setup", "Target criteria, exclusions, qualification rules"],
-                ["Research", "Relevant accounts with a clear reason to care"],
-                ["Verification", "Decision-maker contact data where possible"],
-                ["Delivery", "CRM-ready fields, tags, status, and notes"],
+                ["Source", "Best-fit accounts + buyers, with a real reason to care"],
+                ["Outreach", "Personalized messages — you approve before they send"],
+                ["Follow-up", "Tracked multi-touch cadence; replies triaged by interest"],
+                ["Book", "Qualified calls booked straight onto your calendar"],
               ].map(([label, body], index) => (
                 <div
                   key={label}
@@ -593,11 +593,11 @@ function ServicesSection() {
                 Services and deliverables
               </p>
               <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-                Prospect research built as a durable growth asset.
+                A done-for-you outbound system, not a contact export.
               </h2>
             </div>
             <p className="text-lg leading-8 text-muted">
-              This is not a random contact export. Each campaign is shaped around your ideal customer profile, qualification criteria, sales priorities, and the measurable pipeline data your team needs to make better decisions.
+              Each campaign is built around your ICP, qualification criteria, and sales priorities — from sourcing the right buyers to running the outreach and booking the calls. How much you hand to us is the tier you choose; the standards stay the same.
             </p>
           </div>
         </Reveal>
