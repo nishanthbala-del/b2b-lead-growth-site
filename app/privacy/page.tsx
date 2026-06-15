@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | B2B Lead Growth Agency",
+  title: "Privacy Policy | B2B Lead Growth",
   description:
-    "How B2B Lead Growth Agency collects, uses, stores, and protects the information you share through this website.",
+    "How B2B Lead Growth collects, uses, stores, and protects the information you share through this website.",
 };
 
 const LAST_UPDATED = "June 6, 2026";
-const brandName = "B2B Lead Growth Agency";
+const brandName = "B2B Lead Growth";
 
 export default function PrivacyPage() {
   return (

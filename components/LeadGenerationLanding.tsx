@@ -17,7 +17,7 @@ import { IntakeProvider, useIntake } from "./IntakeForm";
 const disclaimer =
   "Lead generation improves prospect quality and pipeline inputs; sales outcomes depend on your offer, follow-up, and closing process.";
 
-const brandName = "B2B Lead Growth Agency";
+const brandName = "B2B Lead Growth";
 
 const navItems = [
   { label: "How it works", href: "#how-it-works" },
@@ -146,40 +146,41 @@ const reportingItems = [
 
 const plans = [
   {
-    name: "Starter",
-    price: 750,
-    volume: "25–35 verified prospects",
-    bestFor: "A focused research sprint for testing one narrow market before expanding.",
+    name: "Lead Engine",
+    price: 500,
+    volume: "Qualified, ready-to-contact lead list",
+    bestFor:
+      "Teams that want a verified, scored prospect list and the scripts to work it — and will run the outreach themselves.",
     includes:
-      "One target market; basic ICP filtering; company, decision-maker, website, industry, location; email/LinkedIn when available; basic fit notes; monthly delivery",
+      "Defined ICP with bad-fit exclusions; sourced, enriched, scored, deduped lead list with citations; 2–3 outreach script angles plus a follow-up skeleton; CRM-ready delivery and handoff",
     guardrails:
-      "No outreach writing, appointment setting, weekly strategy, CRM setup, or advanced research",
-    cta: "Start with Starter",
+      "You own all sending, follow-up, qualifying, and booking; no outreach run for you at this tier",
+    cta: "Start with Lead Engine",
   },
   {
-    name: "Growth",
-    price: 2500,
-    volume: "80–120 qualified prospects",
+    name: "Outreach Engine",
+    price: 1000,
+    volume: "We run the outreach — you respond to interest",
     bestFor:
-      "A monthly lead generation system for companies that want consistent research, cleaner pipeline organization, and regular optimization.",
+      "Companies that want consistent, personalized outbound running every week without hiring for it.",
     includes:
-      "ICP setup; 1–2 segments; decision-maker research; verified contacts; qualification scoring; outreach-ready notes; email angle suggestions; follow-up sequence template; weekly delivery; monthly review call",
+      "Everything in Lead Engine; personalized outreach drafted per prospect (not templated mail-merge); multi-touch follow-up cadence, tracked; reply triage that flags who's interested; monthly report (contacted → replies → positive)",
     guardrails:
-      "No guaranteed closed deals, no full SDR replacement, no unlimited segments, no end-to-end sales management",
+      "You own the sending account and the sales call; no guaranteed reply volume or closed deals",
     cta: "Build My Pipeline",
     featured: true,
   },
   {
-    name: "Premium",
-    price: 4500,
-    volume: "150–200 priority prospects",
+    name: "Appointment Engine",
+    price: 1500,
+    volume: "You show up to booked, qualified calls",
     bestFor:
-      "A high-touch pipeline plan for deeper targeting, multiple segments, advanced reporting, and optional outreach support.",
+      "Teams that want the full system — prospecting through booked appointments — handled end to end.",
     includes:
-      "2–3 segments; advanced account research; decision-maker mapping; high-value prioritization; personalization notes; fit/value lead scoring; sequence support; LinkedIn direction; CRM-ready formatting; weekly optimization call",
+      "Everything in Outreach Engine; full reply qualification against your criteria; appointment booking on your calendar with confirmations and reminders; full CRM and pipeline tracking; weekly report plus a weekly optimization experiment",
     guardrails:
-      "Not a full outsourced SDR team; no revenue guarantee; no paid-ad management; no unlimited manual research",
-    cta: "Scale with Premium",
+      "You own the live call and the close; no guaranteed revenue or fixed number of appointments",
+    cta: "Scale with Appointment Engine",
   },
 ];
 
@@ -215,7 +216,7 @@ const faqs = [
   {
     question: "Do you guarantee meetings/sales?",
     answer:
-      "No. The agency provides qualified opportunities, but sales depend on offer, follow-up, timing, market fit, and closing. A separate appointment-setting agreement would be needed for booked-call support.",
+      "No. We guarantee the system and the activity and report the results, but sales depend on your offer, follow-up, timing, market fit, and closing. The Appointment Engine tier books qualified calls on your calendar, but no tier promises revenue or a fixed number of appointments.",
   },
   {
     question: "How are leads delivered?",
@@ -230,7 +231,7 @@ const faqs = [
   {
     question: "Do you offer outreach or appointment setting?",
     answer:
-      "Optional outreach support may include email copy, LinkedIn copy, call notes, meeting status tracking, or appointment-setting workflows depending on package and agreement.",
+      "Yes — that's the upgrade ladder. Lead Engine delivers the list and scripts; Outreach Engine runs personalized outreach and follow-up for you; Appointment Engine adds reply qualification and books appointments directly on your calendar.",
   },
 ];
 
@@ -299,7 +300,6 @@ function SiteNav() {
           data-cursor-label="Open"
         >
           <span>B2B Lead Growth</span>
-          <span className="hidden sm:inline"> Agency</span>
         </MagneticAnchor>
         <div className="hidden items-center gap-7 lg:flex">
           {navItems.map((item) => (
@@ -383,7 +383,7 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
           </Reveal>
           <Reveal delay={0.16}>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-muted sm:text-xl">
-              Stop asking your sales team to create growth from stale lists and guesswork. We research, verify, score, and organize high-fit B2B prospects so every outreach hour starts with better judgment.
+              Stop asking your sales team to create growth from stale lists and guesswork. We research, verify, score, and organize high-fit B2B prospects — and at higher tiers we run the outreach, follow up, and book qualified calls on your calendar.
             </p>
             <p className="mt-4 max-w-2xl text-sm font-semibold uppercase tracking-[0.18em] text-gold-200/80">
               Authentic research. Transparent criteria. Pipeline inputs you can measure.
@@ -695,7 +695,7 @@ function PricingSection() {
               The smartest pipeline investment is the one your team can actually use.
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted">
-              Starter proves a narrow market. Growth builds the repeatable system most teams need. Premium expands the research engine when deeper segmentation and higher-touch execution are worth the investment.
+              Each tier de-risks the next: Lead Engine proves the list, Outreach Engine proves the messaging, and Appointment Engine runs the whole system through to booked calls on your calendar.
             </p>
           </div>
         </Reveal>
@@ -775,7 +775,7 @@ function FrameworkSection() {
               A <CountUp value={90} />-day review window turns lead generation from a list purchase into a learning system.
             </p>
             <p className="mt-4 leading-7 text-muted">
-              Track lead quality, pipeline movement, conversion signals, and whether the system is worth scaling. One closed deal can justify Growth at a high enough average deal size, but the decision should be grounded in evidence, not hype.
+              Track lead quality, pipeline movement, conversion signals, and whether the system is worth scaling. One closed deal can justify the retainer at a high enough average deal size, but the decision should be grounded in evidence, not hype.
             </p>
           </Reveal>
         </div>
@@ -929,7 +929,7 @@ function FinalCTA() {
             Start building a cleaner pipeline now.
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted">
-            Every week spent chasing poor-fit prospects is sales attention you cannot recover. Request a lead strategy call and find out whether Growth is the right long-term investment for your market.
+            Every week spent chasing poor-fit prospects is sales attention you cannot recover. Request a strategy call and find out which engine tier is the right long-term investment for your market.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <MagneticAnchor

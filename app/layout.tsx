@@ -15,7 +15,7 @@ const playfair = Playfair_Display({
 });
 
 const siteTitle =
-  "B2B Lead Growth Agency | B2B Lead Generation Services for Qualified Sales Leads";
+  "B2B Lead Growth | B2B Lead Generation Services for Qualified Sales Leads";
 const siteDescription =
   "Build a cleaner B2B sales pipeline with targeted prospect research, verified contact data, and CRM-ready opportunities your team can measure and improve.";
 
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     title: siteTitle,
     description: siteDescription,
     type: "website",
-    siteName: "B2B Lead Growth Agency",
+    siteName: "B2B Lead Growth",
   },
   twitter: {
     card: "summary_large_image",

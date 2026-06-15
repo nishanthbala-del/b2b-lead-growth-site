@@ -48,7 +48,7 @@ export function IntakeProvider({ children }: { children: ReactNode }) {
 /*  Form data + options                                                        */
 /* -------------------------------------------------------------------------- */
 
-const PACKAGE_OPTIONS = ["Not sure yet", "Starter", "Growth", "Premium"];
+const PACKAGE_OPTIONS = ["Not sure yet", "Lead Engine", "Outreach Engine", "Appointment Engine"];
 
 const DEAL_SIZE_OPTIONS = [
   "Under $1,000",
