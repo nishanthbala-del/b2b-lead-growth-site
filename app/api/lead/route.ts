@@ -58,6 +58,15 @@ const RATE_WINDOW_MS = 60_000;
 
 function rateLimited(ip: string): boolean {
   const now = Date.now();
+  // Bound memory: when the map grows, drop IPs whose window has fully expired so
+  // quiet visitors don't accumulate forever on a long-lived (self-host) instance.
+  if (hits.size > 500) {
+    for (const [key, times] of hits) {
+      const fresh = times.filter((t) => now - t < RATE_WINDOW_MS);
+      if (fresh.length === 0) hits.delete(key);
+      else hits.set(key, fresh);
+    }
+  }
   const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
   recent.push(now);
   hits.set(ip, recent);
@@ -81,8 +90,11 @@ function genId(): string {
 
 function getIp(req: NextRequest): string {
   const xff = req.headers.get("x-forwarded-for");
-  if (xff) return xff.split(",")[0]!.trim();
-  return req.headers.get("x-real-ip") ?? "unknown";
+  if (xff) {
+    const first = xff.split(",")[0]?.trim();
+    if (first) return first;
+  }
+  return req.headers.get("x-real-ip")?.trim() || "unknown";
 }
 
 async function ensureCsvHeader(): Promise<void> {
@@ -147,11 +159,7 @@ export async function POST(req: NextRequest) {
   const ip = getIp(req);
   const action = body.action ?? "submit";
 
-  // Honeypot: bots fill hidden fields. Return a fake success so they move on.
-  if (body.company_website) {
-    return Response.json({ ok: true, id: genId() });
-  }
-
+  // Rate-limit first so honeypot/bot spam is also counted against the limit.
   if (rateLimited(ip)) {
     return Response.json(
       { ok: false, error: "Too many requests. Please try again in a moment." },
@@ -159,9 +167,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Honeypot: bots fill hidden fields. Return a fake success so they move on.
+  if (body.company_website) {
+    return Response.json({ ok: true, id: genId() });
+  }
+
   // Lightweight tracking event when a lead reaches/opens the booking step.
   if (action === "booking_opened") {
     const id = String(body.id ?? "").slice(0, 40);
+    // booking_opened is an untrusted client signal; only record well-formed ids
+    // (as minted by genId) so bots can't inject noise into the event log / Sheet.
+    if (!/^LG-\d{6}-[A-Z0-9]{2,8}$/.test(id)) {
+      return Response.json({ ok: true });
+    }
     const timestamp = new Date().toISOString();
     await appendEvent({ type: "booking_opened", id, timestamp, ip });
     await forwardToSheets({ action: "booking_opened", id, timestamp });

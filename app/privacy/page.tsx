@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | B2B Lead Growth",
+  title: "Privacy Policy",
   description:
     "How B2B Lead Growth collects, uses, stores, and protects the information you share through this website.",
 };

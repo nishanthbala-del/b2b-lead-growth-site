@@ -2,12 +2,17 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
+  cloneElement,
   createContext,
+  isValidElement,
   useCallback,
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type ReactElement,
   type ReactNode,
 } from "react";
 
@@ -105,7 +110,12 @@ const EMPTY_FORM: FormState = {
 
 type Errors = Partial<Record<keyof FormState, string>>;
 
-const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL?.trim() || "";
+// Falls back to the owner's Google Calendar scheduler so the booking step never
+// silently disappears if NEXT_PUBLIC_BOOKING_URL is missing from a Vercel build.
+// (This is a build-time NEXT_PUBLIC_ var — redeploy after changing it in Vercel.)
+const bookingUrl =
+  process.env.NEXT_PUBLIC_BOOKING_URL?.trim() ||
+  "https://calendar.app.google/FsAYPV9YoVV7Rody5";
 
 /* -------------------------------------------------------------------------- */
 /*  The modal form                                                            */
@@ -127,6 +137,8 @@ function IntakeForm({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [leadId, setLeadId] = useState("");
+  const panelRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
 
   // Reset to a clean state each time the modal opens.
   useEffect(() => {
@@ -162,6 +174,40 @@ function IntakeForm({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
+
+  // Capture the element that opened the modal; restore focus to it on close.
+  useEffect(() => {
+    if (!open) return;
+    openerRef.current = (document.activeElement as HTMLElement) ?? null;
+    return () => openerRef.current?.focus?.();
+  }, [open]);
+
+  // Move focus to the first field of the current step (deterministic; replaces autoFocus).
+  useEffect(() => {
+    if (!open) return;
+    const raf = requestAnimationFrame(() => focusFirstField(panelRef.current));
+    return () => cancelAnimationFrame(raf);
+  }, [open, step]);
+
+  // Trap Tab/Shift+Tab inside the dialog so focus can't reach the page behind it.
+  function handlePanelKeyDown(e: ReactKeyboardEvent<HTMLDivElement>) {
+    if (e.key !== "Tab") return;
+    const focusable = getFocusable(panelRef.current);
+    if (focusable.length === 0) return;
+    const first = focusable[0]!;
+    const last = focusable[focusable.length - 1]!;
+    const active = document.activeElement as HTMLElement | null;
+    const inside = !!panelRef.current?.contains(active);
+    if (e.shiftKey) {
+      if (!inside || active === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else if (!inside || active === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -238,7 +284,10 @@ function IntakeForm({
           {...overlayMotion}
         >
           <motion.div
-            className="relative w-full max-w-2xl rounded-lg border border-gold-500/25 bg-ink-900 shadow-panel"
+            ref={panelRef}
+            tabIndex={-1}
+            onKeyDown={handlePanelKeyDown}
+            className="relative w-full max-w-2xl rounded-lg border border-gold-500/25 bg-ink-900 shadow-panel outline-none"
             onClick={(e) => e.stopPropagation()}
             {...panelMotion}
           >
@@ -293,7 +342,6 @@ function IntakeForm({
                         onChange={(v) => update("name", v)}
                         placeholder="Jane Doe"
                         autoComplete="name"
-                        autoFocus
                         invalid={!!errors.name}
                       />
                     </Field>
@@ -357,7 +405,6 @@ function IntakeForm({
                       onChange={(v) => update("targetMarket", v)}
                       placeholder="e.g. NJ-based HVAC contractors, 5–50 employees"
                       rows={2}
-                      autoFocus
                       invalid={!!errors.targetMarket}
                     />
                   </Field>
@@ -426,6 +473,8 @@ function IntakeForm({
                       type="checkbox"
                       checked={form.consent}
                       onChange={(e) => update("consent", e.target.checked)}
+                      aria-invalid={errors.consent ? true : undefined}
+                      aria-describedby={errors.consent ? "f-consent-error" : undefined}
                       className="mt-1 h-4 w-4 shrink-0 accent-gold-400"
                     />
                     <span>
@@ -443,7 +492,9 @@ function IntakeForm({
                       .
                     </span>
                   </label>
-                  {errors.consent ? <FieldError>{errors.consent}</FieldError> : null}
+                  {errors.consent ? (
+                    <FieldError id="f-consent-error">{errors.consent}</FieldError>
+                  ) : null}
                 </div>
               ) : null}
 
@@ -452,7 +503,10 @@ function IntakeForm({
               ) : null}
 
               {submitError ? (
-                <p className="mt-5 rounded-sm border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                <p
+                  role="alert"
+                  className="mt-5 rounded-sm border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200"
+                >
                   {submitError}
                 </p>
               ) : null}
@@ -540,7 +594,7 @@ function BookingStep({ leadId, onClose }: { leadId: string; onClose: () => void 
         <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gold-500/45 bg-gold-500/10 text-gold-200">
           ✓
         </span>
-        <p className="text-sm leading-6 text-muted">
+        <p role="status" className="text-sm leading-6 text-muted">
           Thanks — your details are in.{" "}
           {leadId ? (
             <span className="text-bone/80">
@@ -646,6 +700,7 @@ function Field({
   required?: boolean;
   children: ReactNode;
 }) {
+  const errorId = error ? `${htmlFor}-error` : undefined;
   return (
     <div>
       <label
@@ -656,18 +711,47 @@ function Field({
         {required ? <span className="text-gold-400">*</span> : null}
         {hint ? <span className="font-normal normal-case tracking-normal text-muted/70">· {hint}</span> : null}
       </label>
-      {children}
-      {error ? <FieldError>{error}</FieldError> : null}
+      {isValidElement(children)
+        ? cloneElement(children as ReactElement<{ describedBy?: string }>, {
+            describedBy: errorId,
+          })
+        : children}
+      {error ? <FieldError id={errorId}>{error}</FieldError> : null}
     </div>
   );
 }
 
-function FieldError({ children }: { children: ReactNode }) {
-  return <p className="mt-1.5 text-xs text-red-300">{children}</p>;
+function FieldError({ id, children }: { id?: string; children: ReactNode }) {
+  return (
+    <p id={id} className="mt-1.5 text-xs text-red-300">
+      {children}
+    </p>
+  );
+}
+
+// Shared focus helpers for the dialog's focus trap / managed focus.
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]';
+
+function getFocusable(panel: HTMLElement | null): HTMLElement[] {
+  if (!panel) return [];
+  return Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter((el) => {
+    if (el.tabIndex < 0) return false; // skips the off-screen honeypot (tabIndex -1)
+    if (el.closest('[aria-hidden="true"]')) return false;
+    return el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement;
+  });
+}
+
+function focusFirstField(panel: HTMLElement | null) {
+  const focusable = getFocusable(panel);
+  const firstField = focusable.find((el) =>
+    ["INPUT", "SELECT", "TEXTAREA"].includes(el.tagName),
+  );
+  (firstField ?? focusable[0] ?? panel)?.focus();
 }
 
 const inputBase =
-  "w-full rounded-sm border bg-ink-950/60 px-4 py-3 text-sm text-bone placeholder:text-muted/45 outline-none transition-colors focus:border-gold-400/70 focus:ring-1 focus:ring-gold-400/40";
+  "w-full rounded-sm border bg-ink-950/60 px-4 py-3 text-sm text-bone placeholder:text-muted/70 outline-none transition-colors focus:border-gold-400/70 focus:ring-1 focus:ring-gold-400/40";
 
 function borderClass(invalid?: boolean) {
   return invalid ? "border-red-400/60" : "border-gold-500/22";
@@ -680,8 +764,8 @@ function Input({
   placeholder,
   type = "text",
   autoComplete,
-  autoFocus,
   invalid,
+  describedBy,
 }: {
   id: string;
   value: string;
@@ -689,8 +773,8 @@ function Input({
   placeholder?: string;
   type?: string;
   autoComplete?: string;
-  autoFocus?: boolean;
   invalid?: boolean;
+  describedBy?: string;
 }) {
   return (
     <input
@@ -700,7 +784,8 @@ function Input({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       autoComplete={autoComplete}
-      autoFocus={autoFocus}
+      aria-invalid={invalid || undefined}
+      aria-describedby={describedBy}
       className={`${inputBase} ${borderClass(invalid)}`}
     />
   );
@@ -712,16 +797,16 @@ function Textarea({
   onChange,
   placeholder,
   rows = 3,
-  autoFocus,
   invalid,
+  describedBy,
 }: {
   id: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
   rows?: number;
-  autoFocus?: boolean;
   invalid?: boolean;
+  describedBy?: string;
 }) {
   return (
     <textarea
@@ -730,7 +815,8 @@ function Textarea({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       rows={rows}
-      autoFocus={autoFocus}
+      aria-invalid={invalid || undefined}
+      aria-describedby={describedBy}
       className={`${inputBase} resize-none ${borderClass(invalid)}`}
     />
   );
@@ -743,6 +829,7 @@ function Select({
   options,
   placeholder,
   invalid,
+  describedBy,
 }: {
   id: string;
   value: string;
@@ -750,12 +837,15 @@ function Select({
   options: string[];
   placeholder?: string;
   invalid?: boolean;
+  describedBy?: string;
 }) {
   return (
     <select
       id={id}
       value={value}
       onChange={(e) => onChange(e.target.value)}
+      aria-invalid={invalid || undefined}
+      aria-describedby={describedBy}
       className={`${inputBase} ${borderClass(invalid)} appearance-none bg-[length:18px] bg-[right_0.9rem_center] bg-no-repeat pr-10`}
       style={{
         backgroundImage:

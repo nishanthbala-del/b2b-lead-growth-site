@@ -2,8 +2,6 @@
 
 import Lenis from "lenis";
 import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   type AnchorHTMLAttributes,
   type MouseEvent,
@@ -13,6 +11,19 @@ import {
   useState,
 } from "react";
 import { IntakeProvider, useIntake } from "./IntakeForm";
+import { faqs, plans } from "@/lib/content";
+
+// Bridge so ProcessSection's lazily-loaded ScrollTrigger can stay in sync with the
+// Lenis smooth-scroll instance without statically importing GSAP into the page bundle.
+let notifyScrollTriggerUpdate: (() => void) | null = null;
+
+// Cache the pointer-fine MediaQueryList so hot mousemove handlers don't reconstruct it.
+let finePointerMql: MediaQueryList | null = null;
+function isFinePointer(): boolean {
+  if (typeof window === "undefined") return false;
+  if (!finePointerMql) finePointerMql = window.matchMedia("(pointer: fine)");
+  return finePointerMql.matches;
+}
 
 const disclaimer =
   "Lead generation improves prospect quality and pipeline inputs; sales outcomes depend on your offer, follow-up, and closing process.";
@@ -144,46 +155,6 @@ const reportingItems = [
   "Lead-quality feedback notes",
 ];
 
-const plans = [
-  {
-    name: "Lead Engine",
-    price: 500,
-    volume: "Qualified, ready-to-contact lead list",
-    bestFor:
-      "Teams that want a verified, scored prospect list and the scripts to work it — and will run the outreach themselves.",
-    includes:
-      "Defined ICP with bad-fit exclusions; sourced, enriched, scored, deduped lead list with citations; 2–3 outreach script angles plus a follow-up skeleton; CRM-ready delivery and handoff",
-    guardrails:
-      "You own all sending, follow-up, qualifying, and booking; no outreach run for you at this tier",
-    cta: "Start with Lead Engine",
-  },
-  {
-    name: "Outreach Engine",
-    price: 1000,
-    volume: "We run the outreach — you respond to interest",
-    bestFor:
-      "Companies that want consistent, personalized outbound running every week without hiring for it.",
-    includes:
-      "Everything in Lead Engine; personalized outreach drafted per prospect (not templated mail-merge); multi-touch follow-up cadence, tracked; reply triage that flags who's interested; monthly report (contacted → replies → positive)",
-    guardrails:
-      "You own the sending account and the sales call; no guaranteed reply volume or closed deals",
-    cta: "Build My Pipeline",
-    featured: true,
-  },
-  {
-    name: "Appointment Engine",
-    price: 1500,
-    volume: "You show up to booked, qualified calls",
-    bestFor:
-      "Teams that want the full system — prospecting through booked appointments — handled end to end.",
-    includes:
-      "Everything in Outreach Engine; full reply qualification against your criteria; appointment booking on your calendar with confirmations and reminders; full CRM and pipeline tracking; weekly report plus a weekly optimization experiment",
-    guardrails:
-      "You own the live call and the close; no guaranteed revenue or fixed number of appointments",
-    cta: "Scale with Appointment Engine",
-  },
-];
-
 const framework = [
   {
     period: "Days 1–30",
@@ -202,39 +173,6 @@ const framework = [
   },
 ];
 
-const faqs = [
-  {
-    question: "What is B2B lead generation?",
-    answer:
-      "B2B lead generation identifies potential business buyers, qualifies fit, and prepares sales opportunities your team can review, prioritize, and follow up with.",
-  },
-  {
-    question: "What makes a lead qualified?",
-    answer:
-      "A qualified lead matches the agreed ICP, connects to a relevant buyer role or influence point, includes usable verified data or confidence notes, and has a clear reason for outreach.",
-  },
-  {
-    question: "Do you guarantee meetings/sales?",
-    answer:
-      "No. We guarantee the system and the activity and report the results, but sales depend on your offer, follow-up, timing, market fit, and closing. The Appointment Engine tier books qualified calls on your calendar, but no tier promises revenue or a fixed number of appointments.",
-  },
-  {
-    question: "How are leads delivered?",
-    answer:
-      "Leads are delivered as a spreadsheet, CRM-ready file, or agreed system with fields, tags, notes, status tracking, priority tiers, and verification context.",
-  },
-  {
-    question: "Who is this service best for?",
-    answer:
-      "The service is built for B2B service providers, agencies, consultants, software companies, IT/cyber firms, professional services, local B2B companies, and niche service businesses.",
-  },
-  {
-    question: "Do you offer outreach or appointment setting?",
-    answer:
-      "Yes — that's the upgrade ladder. Lead Engine delivers the list and scripts; Outreach Engine runs personalized outreach and follow-up for you; Appointment Engine adds reply qualification and books appointments directly on your calendar.",
-  },
-];
-
 export default function LeadGenerationLanding() {
   const shellRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
@@ -246,6 +184,12 @@ export default function LeadGenerationLanding() {
   return (
     <IntakeProvider>
       <div ref={shellRef} className="noise min-h-screen overflow-hidden bg-ink-950 text-bone">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[130] focus:rounded-sm focus:border focus:border-gold-500/70 focus:bg-ink-900 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-gold-200"
+      >
+        Skip to content
+      </a>
       <CustomCursor />
       <motion.div
         className="fixed left-0 top-0 z-[90] h-px w-full origin-left bg-gold-sheen"
@@ -253,7 +197,7 @@ export default function LeadGenerationLanding() {
         aria-hidden="true"
       />
       <SiteNav />
-      <main>
+      <main id="main" tabIndex={-1} className="outline-none">
         <Hero prefersReducedMotion={Boolean(prefersReducedMotion)} />
         <PositioningSection />
         <ProcessSection />
@@ -274,6 +218,7 @@ export default function LeadGenerationLanding() {
 function SiteNav() {
   const { openIntake } = useIntake();
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const update = () => setScrolled(window.scrollY > 18);
@@ -281,6 +226,16 @@ function SiteNav() {
     window.addEventListener("scroll", update, { passive: true });
     return () => window.removeEventListener("scroll", update);
   }, []);
+
+  // Close the mobile menu once the viewport grows to where the desktop nav appears.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onResize = () => {
+      if (window.innerWidth >= 1024) setMenuOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [menuOpen]);
 
   return (
     <header
@@ -314,41 +269,75 @@ function SiteNav() {
             </MagneticAnchor>
           ))}
         </div>
-        <MagneticAnchor
-          href="#contact"
-          onClick={(event) => {
-            event.preventDefault();
-            openIntake();
-          }}
-          className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-sm border border-gold-500/55 bg-gold-sheen px-2.5 text-[11px] font-semibold text-ink-950 shadow-gold transition-transform hover:scale-[1.015] sm:min-h-11 sm:px-5 sm:text-sm"
-          data-cursor-label="Open"
-        >
-          Start Now
-        </MagneticAnchor>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <MagneticAnchor
+            href="#contact"
+            onClick={(event) => {
+              event.preventDefault();
+              openIntake();
+            }}
+            className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-sm border border-gold-500/55 bg-gold-sheen px-3.5 text-xs font-semibold text-ink-950 shadow-gold transition-transform hover:scale-[1.015] sm:px-5 sm:text-sm"
+            data-cursor-label="Open"
+          >
+            Start Now
+          </MagneticAnchor>
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-gold-500/40 text-gold-200 transition-colors hover:bg-gold-500/10 lg:hidden"
+          >
+            <span aria-hidden="true" className="text-lg leading-none">
+              {menuOpen ? "✕" : "☰"}
+            </span>
+          </button>
+        </div>
       </nav>
+      {menuOpen ? (
+        <div
+          id="mobile-nav"
+          className="border-t border-gold-500/15 bg-ink-950/95 backdrop-blur-xl lg:hidden"
+        >
+          <div className="mx-auto flex max-w-7xl flex-col px-5 py-1 sm:px-8">
+            {navItems.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+                className="border-b border-gold-500/10 py-3.5 text-sm text-muted transition-colors last:border-0 hover:text-gold-200"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 }
 
 function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
   const { openIntake } = useIntake();
-  const [parallax, setParallax] = useState({ x: 0, y: 0 });
+  const headlineRef = useRef<HTMLDivElement>(null);
+  const line1Ref = useRef<HTMLDivElement>(null);
+  const line2Ref = useRef<HTMLDivElement>(null);
 
+  // Write the parallax transform straight to the nodes (no per-frame React render).
   function handleMove(event: MouseEvent<HTMLElement>) {
-    if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) return;
+    if (prefersReducedMotion || !isFinePointer()) return;
     const rect = event.currentTarget.getBoundingClientRect();
-    setParallax({
-      x: (event.clientX - rect.left) / rect.width - 0.5,
-      y: (event.clientY - rect.top) / rect.height - 0.5,
-    });
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    if (headlineRef.current)
+      headlineRef.current.style.transform = `translate3d(${x * 12}px, ${y * 10}px, 0)`;
+    const lineTransform = `translate3d(${x * -10}px, ${y * -8}px, 0)`;
+    if (line1Ref.current) line1Ref.current.style.transform = lineTransform;
+    if (line2Ref.current) line2Ref.current.style.transform = lineTransform;
   }
 
-  const headlineShift = prefersReducedMotion
-    ? undefined
-    : { transform: `translate3d(${parallax.x * 12}px, ${parallax.y * 10}px, 0)` };
-  const lineShift = prefersReducedMotion
-    ? undefined
-    : { transform: `translate3d(${parallax.x * -10}px, ${parallax.y * -8}px, 0)` };
+  const restStyle = prefersReducedMotion ? undefined : { transform: "translate3d(0, 0, 0)" };
 
   return (
     <section
@@ -359,17 +348,19 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
       <div className="ambient-light pointer-events-none absolute inset-0 opacity-80" />
       <div className="pointer-events-none absolute inset-0">
         <div
+          ref={line1Ref}
           className="absolute left-[8%] top-[18%] h-px w-64 rotate-[-12deg] bg-gradient-to-r from-transparent via-gold-500/60 to-transparent"
-          style={lineShift}
+          style={restStyle}
         />
         <div
+          ref={line2Ref}
           className="absolute bottom-[18%] right-[8%] h-72 w-px rotate-[18deg] bg-gradient-to-b from-transparent via-gold-200/35 to-transparent"
-          style={lineShift}
+          style={restStyle}
         />
         <div className="absolute left-0 top-28 h-px w-full bg-gradient-to-r from-transparent via-gold-500/18 to-transparent" />
       </div>
       <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
-        <div style={headlineShift}>
+        <div ref={headlineRef} style={restStyle}>
           <Reveal>
             <p className="mb-7 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/90">
               <span className="h-px w-10 bg-gold-500/80" aria-hidden="true" />
@@ -383,10 +374,10 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
           </Reveal>
           <Reveal delay={0.16}>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-muted sm:text-xl">
-              Stop losing sales time to stale lists and guesswork. We find your best-fit buyers, run the outreach and follow-up for you, and book qualified calls straight onto your calendar — you show up and close. You approve every message before it sends.
+              Stop losing sales time to stale lists and guesswork. We find your best-fit buyers and hand you a verified, scored pipeline — or run the outreach and book qualified calls onto your calendar for you. You choose how much we handle, and you approve every message before it sends.
             </p>
             <p className="mt-4 max-w-2xl text-sm font-semibold uppercase tracking-[0.18em] text-gold-200/80">
-              Done-for-you outbound. Transparent criteria. Pipeline you can measure.
+              From scored list to booked calls. Transparent criteria. Pipeline you can measure.
             </p>
           </Reveal>
           <Reveal delay={0.24}>
@@ -479,7 +470,7 @@ function PositioningSection() {
             <Reveal key={pillar} delay={index * 0.06}>
               <TiltCard className="gold-border-draw h-full rounded-lg border border-gold-500/14 bg-ink-850/70 p-6">
                 <p className="text-xs uppercase tracking-[0.22em] text-gold-200/70">0{index + 1}</p>
-                <h2 className="mt-6 text-xl font-semibold text-bone">{pillar}</h2>
+                <h3 className="mt-6 text-xl font-semibold text-bone">{pillar}</h3>
               </TiltCard>
             </Reveal>
           ))}
@@ -495,29 +486,52 @@ function ProcessSection() {
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (prefersReducedMotion || !sectionRef.current || window.innerWidth < 900) return;
-
-    gsap.registerPlugin(ScrollTrigger);
+    if (prefersReducedMotion || !sectionRef.current) return;
     const section = sectionRef.current;
-    const ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top top",
-        end: `+=${processSteps.length * 540}`,
-        pin: true,
-        scrub: true,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const nextIndex = Math.min(
-            processSteps.length - 1,
-            Math.floor(self.progress * processSteps.length),
-          );
-          setActiveStep((current) => (current === nextIndex ? current : nextIndex));
-        },
-      });
-    }, section);
+    let cancelled = false;
+    let mm: { revert: () => void } | null = null;
 
-    return () => ctx.revert();
+    // Load GSAP only when the pinned animation can actually run (keeps it off the
+    // initial bundle, so mobile visitors never download it).
+    void (async () => {
+      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+      ]);
+      if (cancelled) return;
+      gsap.registerPlugin(ScrollTrigger);
+      // Let the Lenis smooth-scroll loop drive ScrollTrigger.update (fixes scrub desync).
+      notifyScrollTriggerUpdate = () => ScrollTrigger.update();
+
+      // matchMedia creates the pin/scrub trigger on entering >=900px and reverts it on
+      // exit, and refreshes on resize — so rotating/resizing across the breakpoint works.
+      const media = gsap.matchMedia();
+      mm = media;
+      media.add("(min-width: 900px)", () => {
+        const trigger = ScrollTrigger.create({
+          trigger: section,
+          start: "top top",
+          end: `+=${processSteps.length * 540}`,
+          pin: true,
+          scrub: true,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const nextIndex = Math.min(
+              processSteps.length - 1,
+              Math.floor(self.progress * processSteps.length),
+            );
+            setActiveStep((current) => (current === nextIndex ? current : nextIndex));
+          },
+        });
+        return () => trigger.kill();
+      });
+    })();
+
+    return () => {
+      cancelled = true;
+      notifyScrollTriggerUpdate = null;
+      mm?.revert();
+    };
   }, [prefersReducedMotion]);
 
   return (
@@ -944,7 +958,7 @@ function FinalCTA() {
               Book a Lead Strategy Call Now <span className="ml-3" aria-hidden="true">→</span>
             </MagneticAnchor>
             <span className="text-sm leading-6 text-muted">
-              60-second intake · pick a time on the spot
+              60-second intake · then pick a time
             </span>
           </div>
         </Reveal>
@@ -964,14 +978,17 @@ function SiteFooter() {
           <button
             type="button"
             onClick={() => openIntake()}
-            className="link-wipe mt-2 inline-block text-left text-gold-200 transition-colors hover:text-gold-400"
+            className="link-wipe mt-2 inline-flex min-h-11 items-center text-left text-gold-200 transition-colors hover:text-gold-400"
             data-cursor-label="Open"
           >
             Start a lead strategy request →
           </button>
           <p className="mt-2">
             © {new Date().getFullYear()} ·{" "}
-            <a href="/privacy" className="transition-colors hover:text-gold-200">
+            <a
+              href="/privacy"
+              className="inline-block py-1 transition-colors hover:text-gold-200"
+            >
               Privacy Policy
             </a>
           </p>
@@ -1028,17 +1045,16 @@ function Reveal({
 
 function TiltCard({ children, className }: { children: ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [style, setStyle] = useState({ transform: "perspective(900px) rotateX(0deg) rotateY(0deg)" });
   const prefersReducedMotion = useReducedMotion();
+  const rest = "perspective(900px) rotateX(0deg) rotateY(0deg)";
 
+  // Write the tilt transform straight to the node (no per-frame React render).
   function handleMove(event: MouseEvent<HTMLDivElement>) {
-    if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) return;
+    if (prefersReducedMotion || !isFinePointer() || !ref.current) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width - 0.5;
     const y = (event.clientY - rect.top) / rect.height - 0.5;
-    setStyle({
-      transform: `perspective(900px) rotateX(${y * -4}deg) rotateY(${x * 5}deg) translateY(-2px)`,
-    });
+    ref.current.style.transform = `perspective(900px) rotateX(${y * -4}deg) rotateY(${x * 5}deg) translateY(-2px)`;
   }
 
   return (
@@ -1047,8 +1063,10 @@ function TiltCard({ children, className }: { children: ReactNode; className?: st
       className={`${className ?? ""} transition-transform duration-300`}
       data-cursor-label="View"
       onMouseMove={handleMove}
-      onMouseLeave={() => setStyle({ transform: "perspective(900px) rotateX(0deg) rotateY(0deg)" })}
-      style={style}
+      onMouseLeave={() => {
+        if (ref.current) ref.current.style.transform = rest;
+      }}
+      style={{ transform: rest }}
     >
       {children}
     </div>
@@ -1071,7 +1089,7 @@ function MagneticAnchor({
 
   function handleMove(event: MouseEvent<HTMLAnchorElement>) {
     onMouseMove?.(event);
-    if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches || !ref.current) return;
+    if (prefersReducedMotion || !isFinePointer() || !ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const x = (event.clientX - (rect.left + rect.width / 2)) * strength;
     const y = (event.clientY - (rect.top + rect.height / 2)) * strength;
@@ -1163,7 +1181,7 @@ function CustomCursor() {
   const last = useRef({ active: false, label: "" });
 
   useEffect(() => {
-    if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) return;
+    if (prefersReducedMotion || !isFinePointer()) return;
 
     document.body.classList.add("has-custom-cursor");
 
@@ -1217,12 +1235,13 @@ function CustomCursor() {
 }
 
 function useScrollProgress() {
-  const [progress, setProgress] = useState(0);
+  // A MotionValue drives the progress bar's scaleX without re-rendering the page tree.
+  const progress = useMotionValue(0);
 
   useEffect(() => {
     const update = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(max > 0 ? window.scrollY / max : 0);
+      progress.set(max > 0 ? window.scrollY / max : 0);
     };
     update();
     window.addEventListener("scroll", update, { passive: true });
@@ -1231,7 +1250,7 @@ function useScrollProgress() {
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
     };
-  }, []);
+  }, [progress]);
 
   return progress;
 }
@@ -1245,6 +1264,9 @@ function useSmoothScroll(prefersReducedMotion: boolean) {
       wheelMultiplier: 0.9,
       smoothWheel: true,
     });
+
+    // Keep ProcessSection's ScrollTrigger (lazy-loaded) in sync with smooth scroll.
+    lenis.on("scroll", () => notifyScrollTriggerUpdate?.());
 
     let frame = 0;
     const raf = (time: number) => {
@@ -1265,14 +1287,26 @@ function useAmbientPointer(
   prefersReducedMotion: boolean,
 ) {
   useEffect(() => {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || !isFinePointer()) return;
 
+    let frame = 0;
+    let nextX = 0;
+    let nextY = 0;
+    const apply = () => {
+      frame = 0;
+      ref.current?.style.setProperty("--cursor-x", `${nextX}px`);
+      ref.current?.style.setProperty("--cursor-y", `${nextY}px`);
+    };
     const handleMove = (event: globalThis.MouseEvent) => {
-      ref.current?.style.setProperty("--cursor-x", `${event.clientX}px`);
-      ref.current?.style.setProperty("--cursor-y", `${event.clientY}px`);
+      nextX = event.clientX;
+      nextY = event.clientY;
+      if (!frame) frame = requestAnimationFrame(apply);
     };
 
     window.addEventListener("mousemove", handleMove, { passive: true });
-    return () => window.removeEventListener("mousemove", handleMove);
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, [prefersReducedMotion, ref]);
 }

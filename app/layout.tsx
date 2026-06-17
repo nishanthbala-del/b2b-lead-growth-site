@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { siteUrl, brandName } from "@/lib/site";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -17,17 +18,28 @@ const playfair = Playfair_Display({
 const siteTitle =
   "B2B Lead Growth | B2B Lead Generation Services for Qualified Sales Leads";
 const siteDescription =
-  "Build a cleaner B2B sales pipeline with targeted prospect research, verified contact data, and CRM-ready opportunities your team can measure and improve.";
+  "Build a cleaner B2B sales pipeline with targeted prospect research, verified contact paths where possible, and CRM-ready opportunities your team can measure and improve.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
-  title: siteTitle,
+  metadataBase: new URL(siteUrl),
+  title: { default: siteTitle, template: "%s | B2B Lead Growth" },
   description: siteDescription,
+  applicationName: brandName,
+  keywords: [
+    "B2B lead generation",
+    "appointment setting",
+    "qualified sales leads",
+    "outbound prospecting",
+    "ICP targeting",
+    "sales pipeline",
+  ],
+  alternates: { canonical: "/" },
   openGraph: {
     title: siteTitle,
     description: siteDescription,
     type: "website",
-    siteName: "B2B Lead Growth",
+    siteName: brandName,
+    url: "/",
   },
   twitter: {
     card: "summary_large_image",
@@ -39,6 +51,30 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#0A0A0B",
+};
+
+// Organization + WebSite structured data (FAQPage + Offers live on the landing page,
+// built from the same source arrays so the markup always matches the visible text).
+const orgJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: brandName,
+      url: siteUrl,
+      logo: `${siteUrl}/icon.svg`,
+      description: siteDescription,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
+      name: brandName,
+      publisher: { "@id": `${siteUrl}/#organization` },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -48,7 +84,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
