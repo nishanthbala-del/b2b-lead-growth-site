@@ -16,7 +16,7 @@ export type Plan = {
 export const plans: Plan[] = [
   {
     name: "Lead Engine",
-    price: 500,
+    price: 750,
     volume: "Qualified, ready-to-contact lead list",
     bestFor:
       "Teams that want a verified, scored prospect list and the scripts to work it — and will run the outreach themselves.",
@@ -28,7 +28,7 @@ export const plans: Plan[] = [
   },
   {
     name: "Outreach Engine",
-    price: 1000,
+    price: 1500,
     volume: "We run the outreach — you respond to interest",
     bestFor:
       "Companies that want consistent, personalized outbound running every week without hiring for it.",
@@ -41,7 +41,7 @@ export const plans: Plan[] = [
   },
   {
     name: "Appointment Engine",
-    price: 1500,
+    price: 2500,
     volume: "You show up to booked, qualified calls",
     bestFor:
       "Teams that want the full system — prospecting through booked appointments — handled end to end.",

@@ -93,7 +93,7 @@ export default function OpengraphImage() {
               borderRadius: 4,
             }}
           >
-            $500 · $1,000 · $1,500 / mo
+            $750 · $1,500 · $2,500 / mo
           </div>
           <div style={{ fontSize: 22, color: MUTED }}>You approve every message before it sends.</div>
         </div>
