@@ -131,9 +131,12 @@ async function appendEvent(event: Record<string, unknown>): Promise<void> {
 
 async function forwardToSheets(
   payload: Record<string, unknown>,
-): Promise<{ forwarded: boolean; ok?: boolean }> {
+): Promise<{ forwarded: boolean; ok?: boolean; status?: number }> {
   const url = process.env.SHEETS_WEBHOOK_URL;
-  if (!url) return { forwarded: false };
+  if (!url) {
+    console.error("[lead] SHEETS_WEBHOOK_URL is not set — lead NOT forwarded to Sheet");
+    return { forwarded: false };
+  }
   try {
     const res = await fetch(url, {
       method: "POST",
@@ -141,7 +144,12 @@ async function forwardToSheets(
       body: JSON.stringify({ ...payload, secret: process.env.SHEETS_WEBHOOK_SECRET ?? "" }),
       signal: AbortSignal.timeout(10_000),
     });
-    return { forwarded: true, ok: res.ok };
+    // Apps Script can return HTTP 200 even when it rejects the row (e.g. bad/missing
+    // secret), so the raw body is the only reliable signal. Log it so a broken webhook
+    // is visible in runtime logs instead of silently swallowing leads.
+    const body = await res.text().catch(() => "");
+    console.log(`[lead] Sheets webhook responded status=${res.status} body=${body.slice(0, 300)}`);
+    return { forwarded: true, ok: res.ok, status: res.status };
   } catch (err) {
     console.error("[lead] Sheets forward failed:", (err as Error).message);
     return { forwarded: true, ok: false };
@@ -238,6 +246,11 @@ export async function POST(req: NextRequest) {
 
   await appendLocal(record);
   const sheet = await forwardToSheets({ action: "submit", ...record });
+  if (!sheet.ok) {
+    // Never block the user's booking flow on a Sheet hiccup, but make the failure loud
+    // server-side so a broken webhook is caught instead of silently dropping leads.
+    console.error(`[lead] Lead ${id} was NOT confirmed into the Sheet (status=${sheet.status ?? "n/a"}, forwarded=${sheet.forwarded})`);
+  }
 
-  return Response.json({ ok: true, id, sheets: sheet.forwarded });
+  return Response.json({ ok: true, id, sheets: sheet.ok === true, sheetStatus: sheet.status ?? null });
 }
