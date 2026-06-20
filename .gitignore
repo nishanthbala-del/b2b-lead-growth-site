@@ -15,3 +15,4 @@ screenshots
 # Lead submissions written locally by /api/lead — never commit real lead data
 /data
 .playwright-mcp
+.vercel
