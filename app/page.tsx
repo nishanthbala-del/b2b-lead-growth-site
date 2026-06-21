@@ -1,6 +1,6 @@
 import LeadGenerationLanding from "@/components/LeadGenerationLanding";
 import { faqs, plans } from "@/lib/content";
-import { siteUrl, brandName } from "@/lib/site";
+import { siteUrl, brandName, orgDescription } from "@/lib/site";
 
 // FAQPage + Service/Offer structured data, built server-side from the same arrays the
 // UI renders so the markup always matches the visible text (Google rich-results rule).
@@ -19,8 +19,11 @@ const structuredData = {
     {
       "@type": "Service",
       "@id": `${siteUrl}/#service`,
-      serviceType: "B2B lead generation",
       name: brandName,
+      url: siteUrl,
+      description: orgDescription,
+      serviceType: "B2B Lead Generation Services",
+      areaServed: "United States",
       provider: { "@id": `${siteUrl}/#organization` },
       offers: plans.map((p) => ({
         "@type": "Offer",

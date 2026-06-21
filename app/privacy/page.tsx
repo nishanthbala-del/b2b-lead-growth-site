@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
     "How B2B Lead Growth collects, uses, stores, and protects the information you share through this website.",
+  // Self-canonical: without this, the App Router inherits the root layout's
+  // canonical ("/") and would point this page at the homepage.
+  alternates: { canonical: "/privacy" },
 };
 
 const LAST_UPDATED = "June 6, 2026";

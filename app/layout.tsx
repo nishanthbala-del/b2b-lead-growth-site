@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { siteUrl, brandName } from "@/lib/site";
+import { siteUrl, brandName, orgDescription } from "@/lib/site";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -65,7 +65,8 @@ const orgJsonLd = {
       name: brandName,
       url: siteUrl,
       logo: `${siteUrl}/icon.svg`,
-      description: siteDescription,
+      description: orgDescription,
+      areaServed: "United States",
     },
     {
       "@type": "WebSite",
