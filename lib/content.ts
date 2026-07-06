@@ -53,6 +53,47 @@ export const plans: Plan[] = [
   },
 ];
 
+// Audience qualifiers. Surfaced as a dedicated section so the right visitor
+// self-identifies fast and the wrong-fit visitor screens themselves out before
+// they book — fewer, better-fit calls instead of broad, low-intent volume.
+export const idealFor: string[] = [
+  "B2B service providers, agencies, and consultants who sell to other businesses",
+  "SaaS and software companies with a defined deal size and sales motion",
+  "IT, cybersecurity, and managed-service firms",
+  "Professional services — finance, legal, accounting, HR, and marketing",
+  "Specialized or niche B2B companies with a clear ideal customer",
+];
+
+export const notFor: string[] = [
+  "B2C or consumer products with no business buyer",
+  "Teams that want thousands of unverified emails to blast overnight",
+  "Anyone expecting guaranteed sales or a fixed number of closed deals",
+  "Businesses with no clear offer or no one to work the pipeline",
+];
+
+// Differentiators / objection-reducers. Every item maps to something the service
+// actually does elsewhere on the page — no new claims are introduced here.
+export type Differentiator = { title: string; body: string };
+
+export const differentiators: Differentiator[] = [
+  {
+    title: "You approve every message",
+    body: "Outreach is written per prospect and goes out only after you sign off — not templated mail-merge running on autopilot in your name.",
+  },
+  {
+    title: "You keep your data and your domain",
+    body: "Your list, your sending account, your CRM. Nothing is trapped inside a tool you lose access to when the engagement ends.",
+  },
+  {
+    title: "Quality you can inspect first",
+    body: "Every record ships with a fit reason, source citation, and verification note. Judge the standard before you scale spend — no borrowed logos, no invented case studies.",
+  },
+  {
+    title: "One clear line of ownership",
+    body: "We own targeting, research, and outreach activity and report it honestly. You own the offer and the close. No confusion about who's responsible for what.",
+  },
+];
+
 export type Faq = { question: string; answer: string };
 
 export const faqs: Faq[] = [
@@ -79,11 +120,31 @@ export const faqs: Faq[] = [
   {
     question: "Who is this service best for?",
     answer:
-      "The service is built for B2B service providers, agencies, consultants, software companies, IT/cyber firms, professional services, local B2B companies, and niche service businesses.",
+      "The service is built for B2B service providers, agencies, consultants, software companies, IT/cyber firms, professional services, local B2B companies, and niche service businesses with a clear offer and someone to work the pipeline. It is not a fit for B2C products or teams wanting large volumes of unverified emails to blast overnight.",
   },
   {
     question: "Do you offer outreach or appointment setting?",
     answer:
       "Yes — that's the upgrade ladder. Lead Engine delivers the list and scripts; Outreach Engine runs personalized outreach and follow-up for you; Appointment Engine adds reply qualification and books appointments directly on your calendar.",
+  },
+  {
+    question: "How is this different from buying a lead list?",
+    answer:
+      "A bought list is a bulk export with no context and no accountability. Here, each prospect is matched to your ICP, enriched, scored, and delivered with a fit reason, source, and verification note — and, on the done-for-you tiers, worked with personalized outreach you approve. You're buying a qualified pipeline you can act on, not a spreadsheet of unchecked contacts.",
+  },
+  {
+    question: "How is this different from hiring an SDR?",
+    answer:
+      "A full-time SDR carries salary, tooling, ramp time, and management overhead. This is a system you can start in weeks, scale by changing tiers, and measure against clear reporting — without hiring, onboarding, or carrying fixed headcount before you know outbound works for your market.",
+  },
+  {
+    question: "Will outreach put my domain or sender reputation at risk?",
+    answer:
+      "Outreach runs from your sending account at a measured pace with personalized, relevant messages you approve before they send — not high-volume templated blasts. You keep control of your domain and can pause at any time. You should still confirm the email, privacy, and platform rules that apply to your market.",
+  },
+  {
+    question: "How do we start, and is there a long-term contract?",
+    answer:
+      "Pricing is monthly. Most teams start with the tier that fits today — often Lead Engine to see the quality first — and move up to done-for-you outreach once it proves out. It begins with a short strategy call to confirm fit and define your ICP before any work starts.",
   },
 ];

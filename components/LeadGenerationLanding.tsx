@@ -11,7 +11,7 @@ import {
   useState,
 } from "react";
 import { IntakeProvider, useIntake } from "./IntakeForm";
-import { faqs, plans } from "@/lib/content";
+import { differentiators, faqs, idealFor, notFor, plans } from "@/lib/content";
 
 // Bridge so ProcessSection's lazily-loaded ScrollTrigger can stay in sync with the
 // Lenis smooth-scroll instance without statically importing GSAP into the page bundle.
@@ -31,9 +31,10 @@ const disclaimer =
 const brandName = "B2B Lead Growth";
 
 const navItems = [
+  { label: "Who it's for", href: "#who-its-for" },
   { label: "How it works", href: "#how-it-works" },
   { label: "Services", href: "#services" },
-  { label: "Lead quality", href: "#lead-quality" },
+  { label: "Why us", href: "#why-us" },
   { label: "Pricing", href: "#pricing" },
   { label: "FAQ", href: "#faq" },
 ];
@@ -200,9 +201,11 @@ export default function LeadGenerationLanding() {
       <main id="main" tabIndex={-1} className="outline-none">
         <Hero prefersReducedMotion={Boolean(prefersReducedMotion)} />
         <PositioningSection />
+        <WhoItsForSection />
         <ProcessSection />
         <ServicesSection />
         <LeadQualitySection />
+        <DifferentiatorsSection />
         <PricingSection />
         <FrameworkSection />
         <ProofSection />
@@ -364,20 +367,20 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
           <Reveal>
             <p className="mb-7 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/90">
               <span className="h-px w-10 bg-gold-500/80" aria-hidden="true" />
-              B2B lead generation services
+              B2B lead generation for service businesses
             </p>
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="max-w-[20rem] font-display text-[2.05rem] leading-[1.1] text-bone sm:max-w-5xl sm:text-6xl lg:text-7xl">
-              B2B Lead Generation Services for Qualified Sales Opportunities
+              A steady pipeline of qualified B2B leads — without the guesswork.
             </h1>
           </Reveal>
           <Reveal delay={0.16}>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-muted sm:text-xl">
-              Stop losing sales time to stale lists and guesswork. We find your best-fit buyers and hand you a verified, scored pipeline — or run the outreach and book qualified calls onto your calendar for you. You choose how much we handle, and you approve every message before it sends.
+              We find your best-fit buyers and hand you a verified, scored pipeline — or run the outreach and book qualified calls straight onto your calendar. You choose how much we handle, and you approve every message before it sends.
             </p>
             <p className="mt-4 max-w-2xl text-sm font-semibold uppercase tracking-[0.18em] text-gold-200/80">
-              From scored list to booked calls. Transparent criteria. Pipeline you can measure.
+              Built for B2B service providers, agencies &amp; software teams.
             </p>
           </Reveal>
           <Reveal delay={0.24}>
@@ -401,6 +404,9 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
                 See how it works
               </MagneticAnchor>
             </div>
+            <p className="mt-4 text-sm text-muted">
+              Free strategy call · 60-second intake · no obligation
+            </p>
           </Reveal>
         </div>
         <Reveal delay={0.18} className="relative">
@@ -475,6 +481,78 @@ function PositioningSection() {
             </Reveal>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+function WhoItsForSection() {
+  const { openIntake } = useIntake();
+
+  return (
+    <section id="who-its-for" className="relative bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
+      <div className="ambient-light pointer-events-none absolute inset-0 opacity-40" />
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <Reveal>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+              Who it&rsquo;s for
+            </p>
+            <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+              Built for B2B teams with a clear offer and real deals to win.
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-muted">
+              The system works best when the fit is right. Here&rsquo;s who we do our best work for — and who we&rsquo;re honestly not the right choice for.
+            </p>
+          </div>
+        </Reveal>
+        <div className="mt-14 grid gap-5 lg:grid-cols-2">
+          <Reveal>
+            <div className="gold-border-draw h-full rounded-lg border border-gold-500/30 bg-ink-900/72 p-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-200">
+                A strong fit
+              </p>
+              <ul className="mt-6 space-y-4">
+                {idealFor.map((item) => (
+                  <li key={item} className="flex gap-3 leading-7 text-bone/90">
+                    <span aria-hidden="true" className="mt-1 text-gold-200">
+                      ✓
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <div className="h-full rounded-lg border border-gold-500/12 bg-ink-900/40 p-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+                Not the right fit
+              </p>
+              <ul className="mt-6 space-y-4">
+                {notFor.map((item) => (
+                  <li key={item} className="flex gap-3 leading-7 text-muted">
+                    <span aria-hidden="true" className="mt-1 text-muted/70">
+                      —
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+        </div>
+        <Reveal delay={0.12}>
+          <div className="mt-10 text-center">
+            <button
+              type="button"
+              onClick={() => openIntake()}
+              className="link-wipe inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+            >
+              Sounds like you? Start a strategy request →
+            </button>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -694,6 +772,48 @@ function LeadQualitySection() {
   );
 }
 
+function DifferentiatorsSection() {
+  return (
+    <section id="why-us" className="relative bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
+      <div className="ambient-light pointer-events-none absolute inset-0 opacity-40" />
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <Reveal>
+          <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
+            <div>
+              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+                Why B2B Lead Growth
+              </p>
+              <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+                A pipeline you control — not a black box.
+              </h2>
+            </div>
+            <p className="text-lg leading-8 text-muted">
+              A lot of &ldquo;lead gen&rdquo; means bulk lists, templated blasts sent in your name, and numbers you can&rsquo;t verify. This is built the opposite way: you stay in control, you see the quality, and the reporting stays honest.
+            </p>
+          </div>
+        </Reveal>
+        <div className="mt-14 grid gap-4 md:grid-cols-2">
+          {differentiators.map((item, index) => (
+            <Reveal key={item.title} delay={index * 0.05}>
+              <TiltCard className="gold-border-draw h-full rounded-lg border border-gold-500/14 bg-ink-950/70 p-7">
+                <div className="flex items-start gap-4">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-gold-500/35 text-sm text-gold-200">
+                    0{index + 1}
+                  </span>
+                  <div>
+                    <h3 className="text-xl font-semibold text-bone">{item.title}</h3>
+                    <p className="mt-3 leading-7 text-muted">{item.body}</p>
+                  </div>
+                </div>
+              </TiltCard>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function PricingSection() {
   const { openIntake } = useIntake();
 
@@ -710,6 +830,13 @@ function PricingSection() {
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted">
               Each tier de-risks the next: Lead Engine proves the list, Outreach Engine proves the messaging, and Appointment Engine runs the whole system through to booked calls on your calendar.
+            </p>
+            <p className="mt-5 inline-flex flex-wrap items-center justify-center gap-x-2 text-sm font-semibold text-gold-200/90">
+              <span>Monthly pricing</span>
+              <span aria-hidden="true" className="text-gold-500/60">·</span>
+              <span>Start with any tier</span>
+              <span aria-hidden="true" className="text-gold-500/60">·</span>
+              <span>Scale only when it proves out</span>
             </p>
           </div>
         </Reveal>
@@ -843,7 +970,7 @@ function ProofSection() {
         <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
           <Reveal>
             <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
-              Proof without fabrication
+              Proof you can inspect
             </p>
             <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
               See the quality standard before you invest.
