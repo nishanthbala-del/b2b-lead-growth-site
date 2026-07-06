@@ -57,9 +57,9 @@ export const plans: Plan[] = [
 // self-identifies fast and the wrong-fit visitor screens themselves out before
 // they book — fewer, better-fit calls instead of broad, low-intent volume.
 export const idealFor: string[] = [
-  "B2B service providers, agencies, and consultants who sell to other businesses",
+  "B2B service providers, agencies, and consultants who sell high-value engagements and want a steady outbound pipeline",
   "SaaS and software companies with a defined deal size and sales motion",
-  "IT, cybersecurity, and managed-service firms",
+  "IT, cybersecurity, and managed-service firms with recurring or high-value contracts to sell",
   "Professional services — finance, legal, accounting, HR, and marketing",
   "Specialized or niche B2B companies with a clear ideal customer",
 ];
@@ -82,11 +82,11 @@ export const differentiators: Differentiator[] = [
   },
   {
     title: "You keep your data and your domain",
-    body: "Your list, your sending account, your CRM. Nothing is trapped inside a tool you lose access to when the engagement ends.",
+    body: "Your list, your sending account, your CRM. Outreach goes out from your own domain at a measured, personalized pace — never a high-volume blast — and nothing is trapped inside a tool you lose access to when the engagement ends.",
   },
   {
     title: "Quality you can inspect first",
-    body: "Every record ships with a fit reason, source citation, and verification note. Judge the standard before you scale spend — no borrowed logos, no invented case studies.",
+    body: "Every record ships with a fit reason, source citation, and verification note. Start on Lead Engine, judge the quality on your first list, then scale into done-for-you outreach once the quality earns it — no borrowed logos, no invented case studies.",
   },
   {
     title: "One clear line of ownership",
@@ -120,7 +120,7 @@ export const faqs: Faq[] = [
   {
     question: "Who is this service best for?",
     answer:
-      "The service is built for B2B service providers, agencies, consultants, software companies, IT/cyber firms, professional services, local B2B companies, and niche service businesses with a clear offer and someone to work the pipeline. It is not a fit for B2C products or teams wanting large volumes of unverified emails to blast overnight.",
+      "The service is built for B2B service providers, agencies, and consultants; SaaS and software companies with a defined deal size; IT, cybersecurity, and managed-service firms; professional services such as finance, legal, accounting, HR, and marketing; and specialized or niche B2B companies with a clear offer and someone to work the pipeline. It is not a fit for B2C products or teams wanting large volumes of unverified emails to blast overnight.",
   },
   {
     question: "Do you offer outreach or appointment setting?",
@@ -145,6 +145,16 @@ export const faqs: Faq[] = [
   {
     question: "How do we start, and is there a long-term contract?",
     answer:
-      "Pricing is monthly. Most teams start with the tier that fits today — often Lead Engine to see the quality first — and move up to done-for-you outreach once it proves out. It begins with a short strategy call to confirm fit and define your ICP before any work starts.",
+      "No long-term contract — pricing is month-to-month, so you're not locked in while you find out whether outbound works for your market. You can stop or move between tiers as your needs change. Most teams start with the tier that fits today — often Lead Engine, to see the quality first — then move up to done-for-you outreach once it proves out. It all begins with a short strategy call to confirm fit and define your ICP before any work starts.",
+  },
+  {
+    question: "What do you need from me to get started?",
+    answer:
+      "On the outreach tiers you provide the sending account or domain the messages go out from, and you approve every message before it sends. You handle the sales calls and the close. We handle the targeting, research, and list building — and, on the done-for-you tiers, the personalized outreach and follow-up. We confirm exactly what's needed for your tier on the strategy call before any work starts.",
+  },
+  {
+    question: "What happens on the free strategy call?",
+    answer:
+      "It's a short, no-obligation call to confirm whether this is a fit and to define your ideal customer profile. We talk through who you sell to, what a good deal looks like, and which tier makes sense to start with. No work begins until you decide to move forward, and there's a roughly 60-second intake beforehand so the call starts with context.",
   },
 ];

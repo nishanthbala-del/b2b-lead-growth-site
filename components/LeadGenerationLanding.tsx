@@ -367,12 +367,12 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
           <Reveal>
             <p className="mb-7 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/90">
               <span className="h-px w-10 bg-gold-500/80" aria-hidden="true" />
-              B2B lead generation for service businesses
+              B2B lead generation
             </p>
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="max-w-[20rem] font-display text-[2.05rem] leading-[1.1] text-bone sm:max-w-5xl sm:text-6xl lg:text-7xl">
-              A steady pipeline of qualified B2B leads — without the guesswork.
+              A steady pipeline of qualified B2B leads — not a bulk list or a black box.
             </h1>
           </Reveal>
           <Reveal delay={0.16}>
@@ -394,7 +394,7 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
                 className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 font-semibold text-ink-950 shadow-gold"
                 data-cursor-label="Open"
               >
-                Start Building Pipeline Now <span className="ml-3" aria-hidden="true">→</span>
+                Start Building Your Pipeline <span className="ml-3" aria-hidden="true">→</span>
               </MagneticAnchor>
               <MagneticAnchor
                 href="#how-it-works"
@@ -458,12 +458,12 @@ function PositioningSection() {
                 Qualified B2B leads
               </p>
               <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-                Every month spent on the wrong prospects has a cost.
+                The wrong accounts are more expensive than they look.
               </h2>
             </div>
             <div className="space-y-5 text-lg leading-8 text-muted">
               <p>
-                Most teams do not lose pipeline because they lack effort. They lose it because their research is too broad, their data is aging, and their sales team is spending valuable time on accounts that were never a strong fit.
+                Most teams do not lose pipeline because they lack effort. They lose it because their research is too broad, their data is aging, and their sales team is working accounts that were never a strong fit.
               </p>
               <p>
                 {brandName} narrows the market, verifies the path to the right buyers, and turns scattered research into a pipeline your team can measure, prioritize, and improve over time.
@@ -549,7 +549,7 @@ function WhoItsForSection() {
               onClick={() => openIntake()}
               className="link-wipe inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
             >
-              Sounds like you? Start a strategy request →
+              Sounds like you? Book a strategy call →
             </button>
           </div>
         </Reveal>
@@ -826,17 +826,17 @@ function PricingSection() {
               Pricing
             </p>
             <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-              The smartest pipeline investment is the one your team can actually use.
+              The smartest investment is the tier your team can actually use.
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted">
               Each tier de-risks the next: Lead Engine proves the list, Outreach Engine proves the messaging, and Appointment Engine runs the whole system through to booked calls on your calendar.
             </p>
             <p className="mt-5 inline-flex flex-wrap items-center justify-center gap-x-2 text-sm font-semibold text-gold-200/90">
-              <span>Monthly pricing</span>
+              <span>Month-to-month</span>
               <span aria-hidden="true" className="text-gold-500/60">·</span>
               <span>Start with any tier</span>
               <span aria-hidden="true" className="text-gold-500/60">·</span>
-              <span>Scale only when it proves out</span>
+              <span>Scale only when the quality proves out</span>
             </p>
           </div>
         </Reveal>
@@ -852,7 +852,7 @@ function PricingSection() {
               >
                 {plan.featured ? (
                   <div className="mb-5 inline-flex w-fit rounded-sm border border-gold-500/45 bg-gold-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-gold-200">
-                    Recommended · Best Fit
+                    Recommended
                   </div>
                 ) : null}
                 <div className="border-b border-gold-500/14 pb-6">
@@ -887,6 +887,13 @@ function PricingSection() {
             </Reveal>
           ))}
         </div>
+        <Reveal delay={0.08}>
+          <p className="mx-auto mt-10 max-w-3xl text-center text-base leading-7 text-bone/85">
+            Every tier costs less than a full-time SDR — no salary, tooling, ramp time, or
+            management overhead, and no fixed headcount to carry before you know outbound works for
+            your market.
+          </p>
+        </Reveal>
         <Reveal delay={0.1}>
           <div className="mt-9 rounded-lg border border-gold-500/20 bg-ink-950/72 p-5 text-center text-sm leading-6 text-muted">
             <span className="font-semibold text-gold-200">Disclaimer:</span> {disclaimer}
@@ -1067,7 +1074,7 @@ function FinalCTA() {
             The cost of waiting is quiet
           </p>
           <h2 className="font-display text-5xl leading-tight text-bone sm:text-6xl">
-            Start building a cleaner pipeline now.
+            Put right-fit prospects in front of your sales team.
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted">
             Every week spent chasing poor-fit prospects is sales attention you cannot recover. Request a strategy call and find out which engine tier is the right long-term investment for your market.
