@@ -181,7 +181,7 @@ const founderResponsibilities = [
   },
   {
     title: "Messaging & angles",
-    body: "Outreach written for your market — and approved by you before it sends.",
+    body: "The per-prospect outreach and angles, written for your market and your offer.",
   },
   {
     title: "Lead-quality review",
@@ -804,7 +804,7 @@ function DifferentiatorsSection() {
                 Why B2B Lead Growth
               </p>
               <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-                A pipeline you control — not a black box.
+                A pipeline you control, with quality you can see.
               </h2>
             </div>
             <p className="text-lg leading-8 text-muted">
@@ -1161,13 +1161,13 @@ function FinalCTA() {
       <div className="relative z-10 mx-auto max-w-5xl text-center">
         <Reveal>
           <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
-            The cost of waiting is quiet
+            Stop chasing poor-fit prospects
           </p>
           <h2 className="font-display text-5xl leading-tight text-bone sm:text-6xl">
             Put right-fit prospects in front of your sales team.
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted">
-            Every week spent chasing poor-fit prospects is sales attention you cannot recover. Request a strategy call and find out which engine tier is the right long-term investment for your market.
+            Every week spent chasing poor-fit prospects is sales attention you cannot recover. Book a free strategy call to define your ICP and find the tier that fits your market.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <MagneticAnchor
@@ -1205,7 +1205,7 @@ function SiteFooter() {
             className="link-wipe mt-2 inline-flex min-h-11 items-center text-left text-gold-200 transition-colors hover:text-gold-400"
             data-cursor-label="Open"
           >
-            Start a lead strategy request →
+            Book a strategy call →
           </button>
           <p className="mt-2">
             © {new Date().getFullYear()} ·{" "}
