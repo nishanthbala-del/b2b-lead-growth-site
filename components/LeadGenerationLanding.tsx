@@ -460,7 +460,7 @@ function PositioningSection() {
             </div>
             <div className="space-y-5 text-lg leading-8 text-muted">
               <p>
-                Most teams do not lose pipeline because they lack effort. They lose it because their research is too broad, their data is aging, and their sales team is spending valuable time on accounts that were never a strong fit.
+                Most HVAC contractors and B2B teams do not lose pipeline because they lack effort. They lose it because their research is too broad, their data is aging, and their sales team is spending valuable time on accounts that were never a strong fit.
               </p>
               <p>
                 {brandName} narrows the market, verifies the path to the right buyers, and turns scattered research into a pipeline your team can measure, prioritize, and improve over time.

@@ -622,7 +622,7 @@ function BookingStep({ leadId, onClose }: { leadId: string; onClose: () => void 
             <div className="overflow-hidden rounded-sm border border-gold-500/20 bg-ink-950/60">
               <iframe
                 src={bookingUrl}
-                title="Book a strategy call"
+                title="Book your Free Pipeline Audit"
                 className="h-[520px] w-full"
                 loading="lazy"
               />
