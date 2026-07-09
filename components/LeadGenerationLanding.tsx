@@ -174,6 +174,25 @@ const framework = [
   },
 ];
 
+const founderResponsibilities = [
+  {
+    title: "Research & targeting",
+    body: "Defining your ICP and sourcing the accounts that actually fit it.",
+  },
+  {
+    title: "Messaging & angles",
+    body: "Outreach written for your market — and approved by you before it sends.",
+  },
+  {
+    title: "Lead-quality review",
+    body: "Every record checked against your criteria before it reaches you.",
+  },
+  {
+    title: "Reporting",
+    body: "Clear numbers on what was done and what came back, so you can judge it.",
+  },
+];
+
 export default function LeadGenerationLanding() {
   const shellRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
@@ -206,6 +225,7 @@ export default function LeadGenerationLanding() {
         <ServicesSection />
         <LeadQualitySection />
         <DifferentiatorsSection />
+        <FounderSection />
         <PricingSection />
         <FrameworkSection />
         <ProofSection />
@@ -814,6 +834,76 @@ function DifferentiatorsSection() {
   );
 }
 
+function FounderSection() {
+  const { openIntake } = useIntake();
+
+  return (
+    <section id="founder" className="relative bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
+      <div className="ambient-light pointer-events-none absolute inset-0 opacity-40" />
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+          <Reveal>
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+              Who you&rsquo;re working with
+            </p>
+            <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+              A hands-on, founder-led service.
+            </h2>
+            <div className="mt-6 space-y-5 text-lg leading-8 text-muted">
+              <p>
+                B2B Lead Growth isn&rsquo;t outsourced, generic lead gen. It&rsquo;s founder-led: the
+                person who defines your targeting is the same person writing your outreach angles,
+                reviewing lead quality, and preparing your reporting — so the work stays close to
+                your ICP and responds to your feedback, instead of being handed to a rotating team
+                running a generic playbook.
+              </p>
+              <p>
+                You always know who&rsquo;s doing the work, and you sign off on the messaging before
+                anything goes out. It&rsquo;s direct, hands-on attention on the research, the
+                outreach, and the numbers — the parts that decide whether your pipeline is any good.
+              </p>
+            </div>
+            <div className="mt-8">
+              <button
+                type="button"
+                onClick={() => openIntake()}
+                className="link-wipe inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+              >
+                Book a strategy call →
+              </button>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div className="gold-border-draw overflow-hidden rounded-lg border border-gold-500/18 bg-ink-900/72 shadow-panel">
+              <div className="border-b border-gold-500/14 p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
+                  Personally handled
+                </p>
+                <h3 className="mt-3 text-2xl font-semibold text-bone">
+                  The work that decides lead quality
+                </h3>
+              </div>
+              <div className="divide-y divide-gold-500/12">
+                {founderResponsibilities.map((item, index) => (
+                  <div key={item.title} className="grid grid-cols-[auto_1fr] gap-4 p-5">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-gold-500/32 text-sm text-gold-200">
+                      0{index + 1}
+                    </span>
+                    <div>
+                      <p className="font-semibold text-bone">{item.title}</p>
+                      <p className="mt-1 text-sm leading-6 text-muted">{item.body}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function PricingSection() {
   const { openIntake } = useIntake();
 
@@ -889,9 +979,9 @@ function PricingSection() {
         </div>
         <Reveal delay={0.08}>
           <p className="mx-auto mt-10 max-w-3xl text-center text-base leading-7 text-bone/85">
-            Every tier costs less than a full-time SDR — no salary, tooling, ramp time, or
-            management overhead, and no fixed headcount to carry before you know outbound works for
-            your market.
+            A lower-risk way to build pipeline before you commit to hiring: every tier costs less
+            than a full-time SDR — no salary, tooling, ramp time, or long-term headcount — so you
+            can find out whether outbound works for your market first.
           </p>
         </Reveal>
         <Reveal delay={0.1}>

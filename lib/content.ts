@@ -82,7 +82,7 @@ export const differentiators: Differentiator[] = [
   },
   {
     title: "You keep your data and your domain",
-    body: "Your list, your sending account, your CRM. Outreach goes out from your own domain at a measured, personalized pace — never a high-volume blast — and nothing is trapped inside a tool you lose access to when the engagement ends.",
+    body: "Your list, your sending account, your CRM — outreach always goes out from your own domain, with your sign-off, and nothing is locked inside a tool you lose access to when the engagement ends.",
   },
   {
     title: "Quality you can inspect first",
@@ -110,7 +110,7 @@ export const faqs: Faq[] = [
   {
     question: "Do you guarantee meetings/sales?",
     answer:
-      "No. We guarantee the system and the activity and report the results, but sales depend on your offer, follow-up, timing, market fit, and closing. The Appointment Engine tier books qualified calls on your calendar, but no tier promises revenue or a fixed number of appointments.",
+      "No. Sales depend on your offer, follow-up, timing, market fit, and closing, so we don't promise meetings, revenue, or a set number of results. What we commit to is running the system, doing the research and outreach work, and reporting the results honestly. The Appointment Engine tier includes booking qualified calls on your calendar, but no tier promises revenue or a fixed number of appointments.",
   },
   {
     question: "How are leads delivered?",
@@ -138,14 +138,14 @@ export const faqs: Faq[] = [
       "A full-time SDR carries salary, tooling, ramp time, and management overhead. This is a system you can start in weeks, scale by changing tiers, and measure against clear reporting — without hiring, onboarding, or carrying fixed headcount before you know outbound works for your market.",
   },
   {
-    question: "Will outreach put my domain or sender reputation at risk?",
+    question: "Who controls the outreach and the sending account?",
     answer:
-      "Outreach runs from your sending account at a measured pace with personalized, relevant messages you approve before they send — not high-volume templated blasts. You keep control of your domain and can pause at any time. You should still confirm the email, privacy, and platform rules that apply to your market.",
+      "You do. Outreach runs from your own sending account, every message is personalized and approved by you before it sends, and you set the volume and can pause anytime. Sender reputation and deliverability depend on your domain setup and sending history, which stay in your hands — so you should confirm the email, privacy, and platform rules that apply to your market before outreach begins.",
   },
   {
     question: "How do we start, and is there a long-term contract?",
     answer:
-      "No long-term contract — pricing is month-to-month, so you're not locked in while you find out whether outbound works for your market. You can stop or move between tiers as your needs change. Most teams start with the tier that fits today — often Lead Engine, to see the quality first — then move up to done-for-you outreach once it proves out. It all begins with a short strategy call to confirm fit and define your ICP before any work starts.",
+      "No long-term contract — pricing is month-to-month, so you're not locked in while you find out whether outbound works for your market. You can stop or move between tiers as your needs change. It often makes sense to start with the tier that fits today — often Lead Engine, to see the quality first — then move up to done-for-you outreach once it proves out. It all begins with a short strategy call to confirm fit and define your ICP before any work starts.",
   },
   {
     question: "What do you need from me to get started?",
