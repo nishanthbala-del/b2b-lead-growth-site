@@ -16,9 +16,9 @@ const playfair = Playfair_Display({
 });
 
 const siteTitle =
-  "B2B Lead Growth | B2B Lead Generation Services for Qualified Sales Leads";
+  "Outbound Lead Generation for HVAC Contractors | B2B Lead Growth";
 const siteDescription =
-  "Build a cleaner B2B sales pipeline with targeted prospect research, verified contact paths where possible, and CRM-ready opportunities your team can measure and improve.";
+  "Outbound lead generation for HVAC contractors and B2B teams — prospect research, personalized outreach, and organized follow-up that create new qualified sales opportunities. Start with a Free Pipeline Audit.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -26,9 +26,11 @@ export const metadata: Metadata = {
   description: siteDescription,
   applicationName: brandName,
   keywords: [
+    "HVAC lead generation",
+    "outbound lead generation",
     "B2B lead generation",
     "appointment setting",
-    "qualified sales leads",
+    "qualified sales opportunities",
     "outbound prospecting",
     "ICP targeting",
     "sales pipeline",

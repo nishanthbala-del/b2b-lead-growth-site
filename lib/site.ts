@@ -13,4 +13,4 @@ export const brandName = "B2B Lead Growth";
 
 // Canonical organization/service description used in JSON-LD structured data.
 export const orgDescription =
-  "B2B Lead Growth helps service businesses find researched, verified, ICP-fit prospects and build cleaner sales pipelines.";
+  "B2B Lead Growth helps HVAC contractors and B2B service teams create new qualified sales opportunities through prospect research, personalized outbound outreach, organized follow-up, reply tracking, and simple reporting.";

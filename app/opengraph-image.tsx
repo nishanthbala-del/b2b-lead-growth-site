@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 // Auto-applied by the App Router to BOTH openGraph.images and twitter.images,
 // which satisfies the `summary_large_image` Twitter card declared in layout.tsx.
 export const runtime = "edge";
-export const alt = "B2B Lead Growth — B2B Lead Generation for Qualified Sales Opportunities";
+export const alt = "B2B Lead Growth — Outbound Lead Generation for HVAC Contractors and B2B Teams";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -74,10 +74,10 @@ export default function OpengraphImage() {
               maxWidth: 980,
             }}
           >
-            B2B Lead Generation for Qualified Sales Opportunities
+            New Qualified Sales Opportunities, Created Through Outbound
           </div>
           <div style={{ fontSize: 30, color: MUTED, maxWidth: 920, lineHeight: 1.35 }}>
-            Best-fit buyers, done-for-you outreach, and qualified calls booked on your calendar.
+            Outbound prospect research, personalized outreach, and follow-up for HVAC contractors and B2B teams.
           </div>
         </div>
 

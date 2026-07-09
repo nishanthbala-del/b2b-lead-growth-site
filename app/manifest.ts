@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "B2B Lead Growth",
     short_name: "B2B Lead Growth",
     description:
-      "B2B lead generation services for qualified sales opportunities — sourcing, outreach, and booked calls.",
+      "Outbound lead generation for HVAC contractors and B2B teams — prospect research, personalized outreach, and organized follow-up that create new qualified sales opportunities.",
     start_url: "/",
     display: "standalone",
     background_color: "#0A0A0B",

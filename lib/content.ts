@@ -57,9 +57,14 @@ export type Faq = { question: string; answer: string };
 
 export const faqs: Faq[] = [
   {
+    question: "What is the Free Pipeline Audit?",
+    answer:
+      "The Free Pipeline Audit is a no-cost, no-obligation review of your outbound pipeline. We look at who you're targeting, how you're reaching them, and where opportunities are slipping — then walk you through a specific plan on a short call. There's no charge and no commitment to work with us afterward.",
+  },
+  {
     question: "What is B2B lead generation?",
     answer:
-      "B2B lead generation identifies potential business buyers, qualifies fit, and prepares sales opportunities your team can review, prioritize, and follow up with.",
+      "B2B lead generation is outbound work that creates new sales opportunities: researching best-fit companies, reaching the right buyers with personalized outreach, and handing your team qualified conversations to follow up with. It creates new demand rather than waiting on inbound.",
   },
   {
     question: "What makes a lead qualified?",
@@ -79,7 +84,7 @@ export const faqs: Faq[] = [
   {
     question: "Who is this service best for?",
     answer:
-      "The service is built for B2B service providers, agencies, consultants, software companies, IT/cyber firms, professional services, local B2B companies, and niche service businesses.",
+      "It's built primarily for HVAC contractors who want a steady flow of new commercial opportunities — and it works just as well for other B2B service teams with a defined ideal customer, a considered sale, and the capacity to follow up on qualified conversations.",
   },
   {
     question: "Do you offer outreach or appointment setting?",

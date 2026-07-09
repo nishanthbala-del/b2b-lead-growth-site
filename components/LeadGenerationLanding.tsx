@@ -279,7 +279,7 @@ function SiteNav() {
             className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-sm border border-gold-500/55 bg-gold-sheen px-3.5 text-xs font-semibold text-ink-950 shadow-gold transition-transform hover:scale-[1.015] sm:px-5 sm:text-sm"
             data-cursor-label="Open"
           >
-            Start Now
+            Free Pipeline Audit
           </MagneticAnchor>
           <button
             type="button"
@@ -364,20 +364,20 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
           <Reveal>
             <p className="mb-7 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/90">
               <span className="h-px w-10 bg-gold-500/80" aria-hidden="true" />
-              B2B lead generation services
+              Outbound lead generation for HVAC contractors
             </p>
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="max-w-[20rem] font-display text-[2.05rem] leading-[1.1] text-bone sm:max-w-5xl sm:text-6xl lg:text-7xl">
-              B2B Lead Generation Services for Qualified Sales Opportunities
+              New Qualified Sales Opportunities, Created Through Outbound
             </h1>
           </Reveal>
           <Reveal delay={0.16}>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-muted sm:text-xl">
-              Stop losing sales time to stale lists and guesswork. We find your best-fit buyers and hand you a verified, scored pipeline — or run the outreach and book qualified calls onto your calendar for you. You choose how much we handle, and you approve every message before it sends.
+              We help HVAC contractors and B2B service teams start new conversations with best-fit buyers — through prospect research, personalized outbound outreach, and organized follow-up. We hand you qualified opportunities to close. You choose how much we run, and you approve every message before it sends.
             </p>
             <p className="mt-4 max-w-2xl text-sm font-semibold uppercase tracking-[0.18em] text-gold-200/80">
-              From scored list to booked calls. Transparent criteria. Pipeline you can measure.
+              New conversations, not recycled lists. Transparent criteria. Pipeline you can measure.
             </p>
           </Reveal>
           <Reveal delay={0.24}>
@@ -391,7 +391,7 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
                 className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 font-semibold text-ink-950 shadow-gold"
                 data-cursor-label="Open"
               >
-                Start Building Pipeline Now <span className="ml-3" aria-hidden="true">→</span>
+                Get Your Free Pipeline Audit <span className="ml-3" aria-hidden="true">→</span>
               </MagneticAnchor>
               <MagneticAnchor
                 href="#how-it-works"
@@ -401,6 +401,9 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
                 See how it works
               </MagneticAnchor>
             </div>
+            <p className="mt-4 text-sm leading-6 text-muted">
+              60-second intake, then book your audit. Free, no obligation — you leave with a clear plan whether or not we work together.
+            </p>
           </Reveal>
         </div>
         <Reveal delay={0.18} className="relative">
@@ -940,10 +943,10 @@ function FinalCTA() {
             The cost of waiting is quiet
           </p>
           <h2 className="font-display text-5xl leading-tight text-bone sm:text-6xl">
-            Start building a cleaner pipeline now.
+            Start building new pipeline now.
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted">
-            Every week spent chasing poor-fit prospects is sales attention you cannot recover. Request a strategy call and find out which engine tier is the right long-term investment for your market.
+            Every week without consistent outbound is qualified conversations you never get to have. Start with a Free Pipeline Audit: we review your targeting and outreach and map the fastest path to new opportunities — then you decide which engine tier fits.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <MagneticAnchor
@@ -955,10 +958,10 @@ function FinalCTA() {
               className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-7 font-semibold text-ink-950 shadow-gold"
               data-cursor-label="Open"
             >
-              Book a Lead Strategy Call Now <span className="ml-3" aria-hidden="true">→</span>
+              Get Your Free Pipeline Audit <span className="ml-3" aria-hidden="true">→</span>
             </MagneticAnchor>
             <span className="text-sm leading-6 text-muted">
-              60-second intake · then pick a time
+              60-second intake · then pick a time · no obligation
             </span>
           </div>
         </Reveal>
@@ -981,7 +984,7 @@ function SiteFooter() {
             className="link-wipe mt-2 inline-flex min-h-11 items-center text-left text-gold-200 transition-colors hover:text-gold-400"
             data-cursor-label="Open"
           >
-            Start a lead strategy request →
+            Request your Free Pipeline Audit →
           </button>
           <p className="mt-2">
             © {new Date().getFullYear()} ·{" "}

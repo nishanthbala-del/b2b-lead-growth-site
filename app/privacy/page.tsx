@@ -43,7 +43,7 @@ export default function PrivacyPage() {
         <p className="mt-8 leading-7 text-muted">
           This Privacy Policy explains how {brandName} (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or
           &ldquo;our&rdquo;) collects, uses, stores, and protects information when you visit this
-          website or submit our lead strategy request form. We keep data collection to the minimum
+          website or submit our Free Pipeline Audit request form. We keep data collection to the minimum
           needed to respond to you and deliver our service.
         </p>
 
@@ -65,7 +65,7 @@ export default function PrivacyPage() {
 
         <Section title="2. How we use your information">
           <ul className="space-y-2 leading-7 text-muted">
-            <BulletItem>Respond to your enquiry and schedule a lead strategy call.</BulletItem>
+            <BulletItem>Respond to your enquiry and schedule your Free Pipeline Audit.</BulletItem>
             <BulletItem>
               Assess fit and, if we work together, plan and deliver the agreed service.
             </BulletItem>

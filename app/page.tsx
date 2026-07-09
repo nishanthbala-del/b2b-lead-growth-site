@@ -22,8 +22,12 @@ const structuredData = {
       name: brandName,
       url: siteUrl,
       description: orgDescription,
-      serviceType: "B2B Lead Generation Services",
+      serviceType: "Outbound B2B Lead Generation",
       areaServed: "United States",
+      audience: {
+        "@type": "Audience",
+        audienceType: "HVAC contractors and B2B service teams",
+      },
       provider: { "@id": `${siteUrl}/#organization` },
       offers: plans.map((p) => ({
         "@type": "Offer",

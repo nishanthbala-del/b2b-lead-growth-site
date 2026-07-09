@@ -297,7 +297,7 @@ function IntakeForm({
             <div className="flex items-start justify-between gap-4 border-b border-gold-500/14 px-6 py-5 sm:px-8">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold-200/80">
-                  {step === 3 ? "Request received" : "Request a lead strategy call"}
+                  {step === 3 ? "Request received" : "Request your Free Pipeline Audit"}
                 </p>
                 <h2 id="intake-title" className="mt-1 font-display text-2xl text-bone sm:text-3xl">
                   {step === 3 ? "You're in good hands." : "Let's build your pipeline."}
@@ -403,7 +403,7 @@ function IntakeForm({
                       id="f-market"
                       value={form.targetMarket}
                       onChange={(v) => update("targetMarket", v)}
-                      placeholder="e.g. NJ-based HVAC contractors, 5–50 employees"
+                      placeholder="e.g. property managers & general contractors across North Jersey"
                       rows={2}
                       invalid={!!errors.targetMarket}
                     />
@@ -607,7 +607,7 @@ function BookingStep({ leadId, onClose }: { leadId: string; onClose: () => void 
       {bookingUrl ? (
         <>
           <p className="text-base leading-7 text-bone">
-            Last step: pick a time for your lead strategy call.
+            Last step: pick a time for your Free Pipeline Audit.
           </p>
           <a
             href={bookingUrl}
@@ -645,7 +645,7 @@ function BookingStep({ leadId, onClose }: { leadId: string; onClose: () => void 
         <>
           <p className="text-base leading-7 text-bone">
             We&apos;ll review your details and email you within one business day to schedule your
-            lead strategy call.
+            Free Pipeline Audit.
           </p>
           <p className="rounded-sm border border-gold-500/16 bg-ink-950/50 px-4 py-3 text-sm leading-6 text-muted">
             Keep an eye on your inbox (and spam folder). If you&apos;d like to add anything in the
