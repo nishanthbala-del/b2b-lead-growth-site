@@ -160,7 +160,7 @@ function json(obj) {
 Already wired to your Google Calendar appointment schedule in `.env.local`:
 
 ```
-NEXT_PUBLIC_BOOKING_URL=https://calendar.app.google/cyDCVBd2XhpuBCvG9
+NEXT_PUBLIC_BOOKING_URL=https://calendar.app.google/1gmKxyRv4gntbuU6A
 ```
 
 After a visitor submits the form they get a **"Choose a time"** button that opens this scheduler
@@ -186,7 +186,7 @@ To change the link, edit `NEXT_PUBLIC_BOOKING_URL` and restart dev (or update it
 3. **Before deploying, add Environment Variables** (Settings → Environment Variables):
    | Name | Value |
    | --- | --- |
-   | `NEXT_PUBLIC_BOOKING_URL` | `https://calendar.app.google/cyDCVBd2XhpuBCvG9` |
+   | `NEXT_PUBLIC_BOOKING_URL` | `https://calendar.app.google/1gmKxyRv4gntbuU6A` |
    | `SHEETS_WEBHOOK_URL` | the Apps Script `/exec` URL from Step 1 |
    | `SHEETS_WEBHOOK_SECRET` | the secret (only if you set one) |
    | `NEXT_PUBLIC_SITE_URL` | your final Vercel URL (e.g. `https://your-site.vercel.app`) |

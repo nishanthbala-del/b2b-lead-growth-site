@@ -115,7 +115,7 @@ type Errors = Partial<Record<keyof FormState, string>>;
 // (This is a build-time NEXT_PUBLIC_ var — redeploy after changing it in Vercel.)
 const bookingUrl =
   process.env.NEXT_PUBLIC_BOOKING_URL?.trim() ||
-  "https://calendar.app.google/cyDCVBd2XhpuBCvG9";
+  "https://calendar.app.google/1gmKxyRv4gntbuU6A";
 
 /* -------------------------------------------------------------------------- */
 /*  The modal form                                                            */

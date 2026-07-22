@@ -57,7 +57,6 @@ export const plans: Plan[] = [
 // self-identifies fast and the wrong-fit visitor screens themselves out before
 // they book — fewer, better-fit calls instead of broad, low-intent volume.
 export const idealFor: string[] = [
-  "Local and regional service businesses — home-services trades, contractors, and field-service firms with high-ticket jobs to win",
   "B2B service providers, agencies, and consultants who sell high-value engagements and want a steady outbound pipeline",
   "SaaS and software companies with a defined deal size and sales motion",
   "IT, cybersecurity, and managed-service firms with recurring or high-value contracts to sell",
@@ -66,7 +65,7 @@ export const idealFor: string[] = [
 ];
 
 export const notFor: string[] = [
-  "Transactional e-commerce or app installs with no real sales conversation",
+  "B2C or consumer products with no business buyer",
   "Teams that want thousands of unverified emails to blast overnight",
   "Anyone expecting guaranteed sales or a fixed number of closed deals",
   "Businesses with no clear offer or no one to work the pipeline",
@@ -121,7 +120,7 @@ export const faqs: Faq[] = [
   {
     question: "Who is this service best for?",
     answer:
-      "The service is built for local and regional service businesses (home-services trades, contractors, and field-service firms); B2B service providers, agencies, and consultants; SaaS and software companies with a defined deal size; IT, cybersecurity, and managed-service firms; professional services such as finance, legal, accounting, HR, and marketing; and specialized or niche B2B companies with a clear offer and someone to work the pipeline. It is not a fit for transactional e-commerce with no sales conversation, or teams wanting large volumes of unverified emails to blast overnight.",
+      "The service is built for B2B service providers, agencies, and consultants; SaaS and software companies with a defined deal size; IT, cybersecurity, and managed-service firms; professional services such as finance, legal, accounting, HR, and marketing; and specialized or niche B2B companies with a clear offer and someone to work the pipeline. It is not a fit for B2C products or teams wanting large volumes of unverified emails to blast overnight.",
   },
   {
     question: "Do you offer outreach or appointment setting?",
