@@ -922,6 +922,8 @@ function PricingSection() {
               Each tier de-risks the next: Lead Engine proves the list, Outreach Engine proves the messaging, and Appointment Engine runs the whole system through to booked calls on your calendar.
             </p>
             <p className="mt-5 inline-flex flex-wrap items-center justify-center gap-x-2 text-sm font-semibold text-gold-200/90">
+              <span>No setup fee</span>
+              <span aria-hidden="true" className="text-gold-500/60">·</span>
               <span>Month-to-month</span>
               <span aria-hidden="true" className="text-gold-500/60">·</span>
               <span>Start with any tier</span>
