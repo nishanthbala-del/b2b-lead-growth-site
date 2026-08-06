@@ -43,23 +43,43 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Touch devices never fire :hover, and the line above removes the browser's own tap
+   flash — without this, tapping any CTA gives no feedback at all until the next
+   screen paints, which reads as a dead button and invites double-taps. */
+@media (hover: none) {
+  a:active,
+  button:active,
+  summary:active {
+    opacity: 0.72;
+    transition: opacity 60ms linear;
+  }
+}
+
 :focus-visible {
   outline: 2px solid #e8d9a8;
   outline-offset: 4px;
 }
 
-.noise::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.18;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: linear-gradient(to bottom, black, transparent 84%);
+/* A fixed, viewport-sized, masked overlay has to be kept in sync by the compositor
+   on every scroll frame. At phone pixel densities a 42px grid at 18% opacity over
+   near-black is invisible anyway, so it only runs where it can actually be seen.
+   -webkit- prefix included for iOS Safari below 15.4, which otherwise drops the
+   bottom fade entirely. */
+@media (min-width: 768px) {
+  .noise::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.18;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+    background-size: 42px 42px;
+    -webkit-mask-image: linear-gradient(to bottom, black, transparent 84%);
+    mask-image: linear-gradient(to bottom, black, transparent 84%);
+  }
 }
 
 .ambient-light {
@@ -138,7 +158,10 @@ a {
 }
 
 @media (pointer: fine) and (min-width: 768px) {
-  body.has-custom-cursor,
+  /* The decorative ring replaces the pointer over interactive elements only. The
+     real cursor is left alone everywhere else: hiding it across the whole page put
+     a spring-lagged dot between the user and every piece of selectable text, and
+     anyone with a motion or tracking difficulty simply loses the pointer. */
   body.has-custom-cursor a,
   body.has-custom-cursor button,
   body.has-custom-cursor [role="button"] {

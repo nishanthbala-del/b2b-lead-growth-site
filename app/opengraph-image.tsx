@@ -2,8 +2,13 @@ import { ImageResponse } from "next/og";
 
 // Auto-applied by the App Router to BOTH openGraph.images and twitter.images,
 // which satisfies the `summary_large_image` Twitter card declared in layout.tsx.
-export const runtime = "edge";
-export const alt = "B2B Lead Growth — B2B Lead Generation for Qualified Sales Opportunities";
+//
+// No `runtime = "edge"`: this card is completely static, and declaring the edge
+// runtime opted the route out of static generation, so every scrape by every social
+// crawler re-rendered the same PNG on demand. On the Node runtime it is generated
+// once at build and served from the CDN.
+export const alt =
+  "B2B Lead Growth — done-for-you B2B lead generation: cited prospects, outreach, booked calls";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -74,10 +79,10 @@ export default function OpengraphImage() {
               maxWidth: 980,
             }}
           >
-            B2B Lead Generation for Qualified Sales Opportunities
+            A steady pipeline of qualified leads
           </div>
           <div style={{ fontSize: 30, color: MUTED, maxWidth: 920, lineHeight: 1.35 }}>
-            Best-fit buyers, done-for-you outreach, and qualified calls booked on your calendar.
+            Cited prospects, done-for-you outreach, and qualified calls booked on your calendar.
           </div>
         </div>
 
@@ -95,7 +100,9 @@ export default function OpengraphImage() {
           >
             $750 · $1,500 · $2,500 / mo
           </div>
-          <div style={{ fontSize: 22, color: MUTED }}>You approve every message before it sends.</div>
+          <div style={{ fontSize: 22, color: MUTED }}>
+            No setup fee · Month-to-month · You approve every message
+          </div>
         </div>
       </div>
     ),

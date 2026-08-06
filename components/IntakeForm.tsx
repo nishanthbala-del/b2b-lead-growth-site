@@ -15,6 +15,8 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
+import { bookingUrl, callLengthMinutes } from "@/lib/site";
+import { pauseSmoothScroll } from "@/lib/smooth-scroll";
 
 /* -------------------------------------------------------------------------- */
 /*  Context: any CTA can call openIntake() to launch the form                  */
@@ -110,12 +112,9 @@ const EMPTY_FORM: FormState = {
 
 type Errors = Partial<Record<keyof FormState, string>>;
 
-// Falls back to the owner's Google Calendar scheduler so the booking step never
-// silently disappears if NEXT_PUBLIC_BOOKING_URL is missing from a Vercel build.
-// (This is a build-time NEXT_PUBLIC_ var — redeploy after changing it in Vercel.)
-const bookingUrl =
-  process.env.NEXT_PUBLIC_BOOKING_URL?.trim() ||
-  "https://calendar.app.google/FsAYPV9YoVV7Rody5";
+// The scheduler link and slot length come from lib/site.ts — one source of truth
+// shared with the page copy and the docs, so the button and the promise can never
+// drift apart. (NEXT_PUBLIC_* is inlined at build time: redeploy after changing it.)
 
 /* -------------------------------------------------------------------------- */
 /*  The modal form                                                            */
@@ -137,7 +136,13 @@ function IntakeForm({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [leadId, setLeadId] = useState("");
+  // False when the server could not persist the lead anywhere (e.g. the Sheets
+  // webhook is misconfigured). The booking step then tells the visitor plainly and
+  // pushes them to book, because the calendar entry captures their details even
+  // when our own storage did not.
+  const [stored, setStored] = useState(true);
   const panelRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
 
   // Reset to a clean state each time the modal opens.
@@ -152,16 +157,21 @@ function IntakeForm({
     setErrors({});
     setSubmitError("");
     setLeadId("");
+    setStored(true);
     setStep(1);
   }, [open, initialPackage]);
 
-  // Lock background scroll while open.
+  // Lock background scroll while open. `overflow: hidden` alone is not enough —
+  // Lenis drives window scroll from its own wheel/touch listeners and ignores it —
+  // so the smooth-scroll instance is parked for the duration too.
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    pauseSmoothScroll(true);
     return () => {
       document.body.style.overflow = prev;
+      pauseSmoothScroll(false);
     };
   }, [open]);
 
@@ -183,9 +193,16 @@ function IntakeForm({
   }, [open]);
 
   // Move focus to the first field of the current step (deterministic; replaces autoFocus).
+  // On the confirmation step there are no fields, so focus the heading instead: a
+  // freshly inserted role="status" node is unreliably announced, whereas moving focus
+  // to the new heading reliably tells a screen-reader user the step changed and what
+  // it now says.
   useEffect(() => {
     if (!open) return;
-    const raf = requestAnimationFrame(() => focusFirstField(panelRef.current));
+    const raf = requestAnimationFrame(() => {
+      if (step === 3) titleRef.current?.focus();
+      else focusFirstField(panelRef.current);
+    });
     return () => cancelAnimationFrame(raf);
   }, [open, step]);
 
@@ -229,7 +246,6 @@ function IntakeForm({
     const next: Errors = {};
     if (!form.targetMarket.trim()) next.targetMarket = "Tell us who you sell to.";
     if (!form.avgDealSize) next.avgDealSize = "Select an average deal size.";
-    if (!form.salesGoals.trim()) next.salesGoals = "Share what success looks like.";
     if (!form.currentProspecting) next.currentProspecting = "Select your current approach.";
     if (!form.consent) next.consent = "Please confirm so we can reply to you.";
     setErrors(next);
@@ -237,7 +253,12 @@ function IntakeForm({
   }
 
   async function handleSubmit() {
-    if (!validateStep2()) return;
+    if (!validateStep2()) {
+      // Without this, a keyboard or screen-reader user presses Submit, nothing
+      // visibly happens, and the errors they can't see stay behind them in the DOM.
+      focusFirstInvalid(panelRef.current);
+      return;
+    }
     setSubmitting(true);
     setSubmitError("");
     try {
@@ -246,12 +267,18 @@ function IntakeForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "submit", ...form }),
       });
-      const data = (await res.json()) as { ok: boolean; id?: string; error?: string };
+      const data = (await res.json()) as {
+        ok: boolean;
+        id?: string;
+        error?: string;
+        stored?: boolean;
+      };
       if (!res.ok || !data.ok) {
         setSubmitError(data.error || "Something went wrong. Please try again.");
         return;
       }
       setLeadId(data.id || "");
+      setStored(data.stored !== false);
       setStep(3);
     } catch {
       setSubmitError("Network error. Please check your connection and try again.");
@@ -259,6 +286,18 @@ function IntakeForm({
       setSubmitting(false);
     }
   }
+
+  // Has the visitor invested anything in this form yet? Drives the backdrop-click
+  // guard below. `package` is excluded because it is pre-filled, not typed.
+  const hasEnteredData =
+    step > 1 ||
+    Boolean(
+      form.name ||
+        form.email ||
+        form.company ||
+        form.website ||
+        form.role,
+    );
 
   const overlayMotion = prefersReducedMotion
     ? {}
@@ -277,7 +316,13 @@ function IntakeForm({
       {open ? (
         <motion.div
           className="intake-modal fixed inset-0 z-[120] flex items-start justify-center overflow-y-auto bg-ink-950/85 px-4 py-6 backdrop-blur-md sm:items-center sm:py-10"
-          onClick={onClose}
+          // A backdrop click closes an EMPTY form only. Once anything has been typed,
+          // a stray tap — and on mobile the backdrop is most of the screen — would
+          // silently destroy the whole submission, so it is ignored; Esc and the ×
+          // button remain the deliberate ways out.
+          onClick={() => {
+            if (!hasEnteredData) onClose();
+          }}
           role="dialog"
           aria-modal="true"
           aria-labelledby="intake-title"
@@ -299,26 +344,52 @@ function IntakeForm({
                 <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold-200/80">
                   {step === 3 ? "Request received" : "Request a lead strategy call"}
                 </p>
-                <h2 id="intake-title" className="mt-1 font-display text-2xl text-bone sm:text-3xl">
-                  {step === 3 ? "You're in good hands." : "Let's build your pipeline."}
+                <h2
+                  id="intake-title"
+                  ref={titleRef}
+                  tabIndex={-1}
+                  className="mt-1 font-display text-2xl text-bone outline-none sm:text-3xl"
+                >
+                  {step === 3 ? "Now pick your time." : "Let's build your pipeline."}
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="Close"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-gold-500/30 text-gold-200 transition-colors hover:bg-gold-500/10"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-gold-500/30 text-gold-200 transition-colors hover:bg-gold-500/10"
               >
                 <span aria-hidden="true" className="text-lg leading-none">×</span>
               </button>
             </div>
 
+            {/* A real <form> so Enter submits the current step from any field, and so
+                browsers treat this as a form for autofill. Advancing/submitting runs
+                through onSubmit; the footer buttons are type="submit". */}
+            <form
+              noValidate
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (step === 1) {
+                  if (validateStep1()) setStep(2);
+                  else focusFirstInvalid(panelRef.current);
+                } else if (step === 2 && !submitting) {
+                  void handleSubmit();
+                }
+              }}
+            >
             {/* Progress */}
             {step !== 3 ? (
-              <div className="flex items-center gap-2 px-6 pt-5 sm:px-8" aria-hidden="true">
-                <StepDot active={step >= 1} done={step > 1} label="Your business" />
-                <span className={`h-px flex-1 ${step > 1 ? "bg-gold-400" : "bg-gold-500/20"}`} />
-                <StepDot active={step >= 2} done={false} label="Your pipeline" />
+              <div className="px-6 pt-5 sm:px-8">
+                {/* The dots are decorative; this sentence is what a screen reader gets. */}
+                <p className="sr-only">
+                  Step {step} of 2: {step === 1 ? "your business" : "your pipeline"}.
+                </p>
+                <div className="flex items-center gap-2" aria-hidden="true">
+                  <StepDot active={step >= 1} done={step > 1} label="Your business" />
+                  <span className={`h-px flex-1 ${step > 1 ? "bg-gold-400" : "bg-gold-500/20"}`} />
+                  <StepDot active={step >= 2} done={false} label="Your pipeline" />
+                </div>
               </div>
             ) : null}
 
@@ -443,8 +514,8 @@ function IntakeForm({
                   <Field
                     label="What would success look like in 90 days?"
                     htmlFor="f-goals"
+                    hint="optional"
                     error={errors.salesGoals}
-                    required
                   >
                     <Textarea
                       id="f-goals"
@@ -499,7 +570,7 @@ function IntakeForm({
               ) : null}
 
               {step === 3 ? (
-                <BookingStep leadId={leadId} onClose={onClose} />
+                <BookingStep leadId={leadId} stored={stored} onClose={onClose} />
               ) : null}
 
               {submitError ? (
@@ -519,35 +590,31 @@ function IntakeForm({
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+                    className="-ml-2 inline-flex min-h-11 items-center px-2 text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
                   >
                     ← Back
                   </button>
                 ) : (
                   <span className="text-xs text-muted">Takes about 60 seconds.</span>
                 )}
-                {step === 1 ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (validateStep1()) setStep(2);
-                    }}
-                    className="inline-flex min-h-11 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 text-sm font-semibold text-ink-950 shadow-gold transition-transform hover:scale-[1.02]"
-                  >
-                    Continue <span aria-hidden="true" className="ml-2">→</span>
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleSubmit}
-                    disabled={submitting}
-                    className="inline-flex min-h-11 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 text-sm font-semibold text-ink-950 shadow-gold transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {submitting ? "Sending…" : "Submit request"}
-                  </button>
-                )}
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex min-h-11 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 text-sm font-semibold text-ink-950 shadow-gold transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {step === 1 ? (
+                    <>
+                      Continue <span aria-hidden="true" className="ml-2">→</span>
+                    </>
+                  ) : submitting ? (
+                    "Sending…"
+                  ) : (
+                    "Submit request"
+                  )}
+                </button>
               </div>
             ) : null}
+            </form>
 
             {/* Honeypot — visually hidden, off-screen, not announced. */}
             <div aria-hidden="true" className="absolute h-0 w-0 overflow-hidden opacity-0">
@@ -578,7 +645,15 @@ function IntakeForm({
 const bookingEmbeddable =
   !!bookingUrl && !/calendar\.app\.google|calendar\.google\.com/i.test(bookingUrl);
 
-function BookingStep({ leadId, onClose }: { leadId: string; onClose: () => void }) {
+function BookingStep({
+  leadId,
+  stored,
+  onClose,
+}: {
+  leadId: string;
+  stored: boolean;
+  onClose: () => void;
+}) {
   function handleOpenScheduler() {
     void fetch("/api/lead", {
       method: "POST",
@@ -594,20 +669,39 @@ function BookingStep({ leadId, onClose }: { leadId: string; onClose: () => void 
         <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gold-500/45 bg-gold-500/10 text-gold-200">
           ✓
         </span>
-        <p role="status" className="text-sm leading-6 text-muted">
-          Thanks — your details are in.{" "}
-          {leadId ? (
-            <span className="text-bone/80">
-              Reference <span className="font-semibold text-gold-200">{leadId}</span>.
-            </span>
-          ) : null}
+        <p className="text-sm leading-6 text-muted">
+          {stored ? (
+            <>
+              Thanks — your details are in.{" "}
+              {leadId ? (
+                <span className="text-bone/80">
+                  Reference <span className="font-semibold text-gold-200">{leadId}</span>.
+                </span>
+              ) : null}
+            </>
+          ) : (
+            <>Thanks — your details came through, but we couldn&apos;t confirm they saved.</>
+          )}
         </p>
       </div>
+
+      {!stored ? (
+        <p className="rounded-sm border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-sm leading-6 text-amber-100">
+          Please book a time below so we definitely have you — the calendar booking reaches us
+          directly and doesn&apos;t depend on the step that just failed.
+        </p>
+      ) : null}
 
       {bookingUrl ? (
         <>
           <p className="text-base leading-7 text-bone">
-            Last step: pick a time for your lead strategy call.
+            Last step: pick a time for your {callLengthMinutes}-minute strategy call.
+          </p>
+          <p className="text-sm leading-6 text-muted">
+            On the call we confirm your ideal customer, agree what a good lead looks like, and
+            decide which tier fits. You&apos;ll get a short written lead audit from it — a few
+            specific observations about your market and one next step — and it&apos;s yours to
+            keep whether or not we work together.
           </p>
           <a
             href={bookingUrl}
@@ -636,7 +730,7 @@ function BookingStep({ leadId, onClose }: { leadId: string; onClose: () => void 
           <button
             type="button"
             onClick={onClose}
-            className="text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+            className="-ml-2 inline-flex min-h-11 w-fit items-center px-2 text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
           >
             Done
           </button>
@@ -712,8 +806,11 @@ function Field({
         {hint ? <span className="font-normal normal-case tracking-normal text-muted/70">· {hint}</span> : null}
       </label>
       {isValidElement(children)
-        ? cloneElement(children as ReactElement<{ describedBy?: string }>, {
+        ? cloneElement(children as ReactElement<{ describedBy?: string; required?: boolean }>, {
             describedBy: errorId,
+            // The visual asterisk in the label is decorative; this is what actually
+            // reaches assistive tech.
+            required,
           })
         : children}
       {error ? <FieldError id={errorId}>{error}</FieldError> : null}
@@ -722,8 +819,10 @@ function Field({
 }
 
 function FieldError({ id, children }: { id?: string; children: ReactNode }) {
+  // role="alert" so the message is announced the moment validation inserts it —
+  // the aria-describedby link alone only helps once focus reaches the control.
   return (
-    <p id={id} className="mt-1.5 text-xs text-red-300">
+    <p id={id} role="alert" className="mt-1.5 text-xs text-red-300">
       {children}
     </p>
   );
@@ -750,8 +849,18 @@ function focusFirstField(panel: HTMLElement | null) {
   (firstField ?? focusable[0] ?? panel)?.focus();
 }
 
+// Send focus to the first control that failed validation, so the error next to it
+// is read out and the caret lands where the fix has to happen.
+function focusFirstInvalid(panel: HTMLElement | null) {
+  panel?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+}
+
+// `text-base` (16px) on small screens is deliberate: iOS Safari zooms the whole
+// page whenever a focused input's font-size is below 16px, and it never zooms back
+// out — which on a phone leaves the rest of the form scrolled off-screen mid-way
+// through filling it in. Back to 14px from `sm:` up, where no such rule applies.
 const inputBase =
-  "w-full rounded-sm border bg-ink-950/60 px-4 py-3 text-sm text-bone placeholder:text-muted/70 outline-none transition-colors focus:border-gold-400/70 focus:ring-1 focus:ring-gold-400/40";
+  "w-full rounded-sm border bg-ink-950/60 px-4 py-3 text-base text-bone placeholder:text-muted/70 outline-none transition-colors focus:border-gold-400/70 focus:ring-1 focus:ring-gold-400/40 sm:text-sm";
 
 function borderClass(invalid?: boolean) {
   return invalid ? "border-red-400/60" : "border-gold-500/22";
@@ -766,6 +875,7 @@ function Input({
   autoComplete,
   invalid,
   describedBy,
+  required,
 }: {
   id: string;
   value: string;
@@ -775,6 +885,7 @@ function Input({
   autoComplete?: string;
   invalid?: boolean;
   describedBy?: string;
+  required?: boolean;
 }) {
   return (
     <input
@@ -786,6 +897,7 @@ function Input({
       autoComplete={autoComplete}
       aria-invalid={invalid || undefined}
       aria-describedby={describedBy}
+      aria-required={required || undefined}
       className={`${inputBase} ${borderClass(invalid)}`}
     />
   );
@@ -799,6 +911,7 @@ function Textarea({
   rows = 3,
   invalid,
   describedBy,
+  required,
 }: {
   id: string;
   value: string;
@@ -807,6 +920,7 @@ function Textarea({
   rows?: number;
   invalid?: boolean;
   describedBy?: string;
+  required?: boolean;
 }) {
   return (
     <textarea
@@ -817,6 +931,7 @@ function Textarea({
       rows={rows}
       aria-invalid={invalid || undefined}
       aria-describedby={describedBy}
+      aria-required={required || undefined}
       className={`${inputBase} resize-none ${borderClass(invalid)}`}
     />
   );
@@ -830,6 +945,7 @@ function Select({
   placeholder,
   invalid,
   describedBy,
+  required,
 }: {
   id: string;
   value: string;
@@ -838,6 +954,7 @@ function Select({
   placeholder?: string;
   invalid?: boolean;
   describedBy?: string;
+  required?: boolean;
 }) {
   return (
     <select
@@ -846,6 +963,7 @@ function Select({
       onChange={(e) => onChange(e.target.value)}
       aria-invalid={invalid || undefined}
       aria-describedby={describedBy}
+      aria-required={required || undefined}
       className={`${inputBase} ${borderClass(invalid)} appearance-none bg-[length:18px] bg-[right_0.9rem_center] bg-no-repeat pr-10`}
       style={{
         backgroundImage:

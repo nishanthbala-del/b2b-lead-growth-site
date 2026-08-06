@@ -19,7 +19,7 @@ export const plans: Plan[] = [
     price: 750,
     volume: "Qualified, ready-to-contact lead list",
     bestFor:
-      "Teams that want a verified, scored prospect list and the scripts to work it — and will run the outreach themselves.",
+      "Teams that want a researched, cited, scored prospect list and the scripts to work it — and will run the outreach themselves.",
     includes:
       "Defined ICP with bad-fit exclusions; sourced, enriched, scored, deduped lead list with citations; 2–3 outreach script angles plus a follow-up skeleton; CRM-ready delivery and handoff",
     guardrails:
@@ -56,19 +56,30 @@ export const plans: Plan[] = [
 // Audience qualifiers. Surfaced as a dedicated section so the right visitor
 // self-identifies fast and the wrong-fit visitor screens themselves out before
 // they book — fewer, better-fit calls instead of broad, low-intent volume.
+//
+// The first entry is deliberately the market the campaigns are actively running
+// in today (local service businesses, starting with New Jersey HVAC). A visitor
+// who is being reached by that outbound has to see themselves on this page
+// immediately, or the whole funnel leaks at the landing.
 export const idealFor: string[] = [
+  "Local and regional service businesses — HVAC, contractors, and home services — that sell high-value jobs and want a steady flow of qualified conversations",
   "B2B service providers, agencies, and consultants who sell high-value engagements and want a steady outbound pipeline",
   "SaaS and software companies with a defined deal size and sales motion",
   "IT, cybersecurity, and managed-service firms with recurring or high-value contracts to sell",
   "Professional services — finance, legal, accounting, HR, and marketing",
-  "Specialized or niche B2B companies with a clear ideal customer",
+  "Specialized or niche companies with a clear ideal customer and someone to work the pipeline",
 ];
 
+// Honest disqualifiers. The last item names the real limitation of an early
+// business rather than papering over it — it is the same fact the rest of the
+// page is built around, and stating it plainly is what earns the benefit of the
+// doubt from a careful buyer.
 export const notFor: string[] = [
-  "B2C or consumer products with no business buyer",
+  "Consumer-product or e-commerce brands that need mass-market advertising rather than one-to-one outreach",
   "Teams that want thousands of unverified emails to blast overnight",
-  "Anyone expecting guaranteed sales or a fixed number of closed deals",
-  "Businesses with no clear offer or no one to work the pipeline",
+  "Anyone expecting guaranteed sales, guaranteed jobs, or a fixed number of appointments",
+  "Businesses with no clear offer, or no one available to take the calls and close",
+  "Anyone who needs published client case studies before they'll start — this is an early, founder-led service, and there are none yet",
 ];
 
 // Differentiators / objection-reducers. Every item maps to something the service
@@ -81,16 +92,16 @@ export const differentiators: Differentiator[] = [
     body: "Outreach is written per prospect and goes out only after you sign off — not templated mail-merge running on autopilot in your name.",
   },
   {
-    title: "You keep your data and your domain",
-    body: "Your list, your sending account, your CRM — outreach always goes out from your own domain, with your sign-off, and nothing is locked inside a tool you lose access to when the engagement ends.",
+    title: "Everything we build is yours",
+    body: "Your list, your sending account, your CRM. Outreach goes out from your own domain with your sign-off, and the lists, scripts, and trackers stay yours to keep — nothing is locked inside a tool you lose access to when the engagement ends.",
   },
   {
-    title: "Quality you can inspect first",
-    body: "Every record ships with a fit reason, source citation, and verification note. Start on Lead Engine, judge the quality on your first list, then scale into done-for-you outreach once the quality earns it — no borrowed logos, no invented case studies.",
+    title: "No citation, no outreach",
+    body: "Every prospect is sourced from free public data and carries the source it came from, plus a fit reason and a data-confidence note. That is a hard rule in the system, not a best effort — a record without a citation cannot be contacted. No bought broker lists, no invented companies, no borrowed logos, no fabricated case studies.",
   },
   {
     title: "One clear line of ownership",
-    body: "We own targeting, research, and outreach activity and report it honestly. You own the offer and the close. No confusion about who's responsible for what.",
+    body: "We own targeting, research, the writing, and — on the outreach tiers — the sending and follow-up, and we report it honestly. You approve the messaging, take the calls, and close. No confusion about who's responsible for what.",
   },
 ];
 
@@ -105,7 +116,7 @@ export const faqs: Faq[] = [
   {
     question: "What makes a lead qualified?",
     answer:
-      "A qualified lead matches the agreed ICP, connects to a relevant buyer role or influence point, includes usable verified data or confidence notes, and has a clear reason for outreach.",
+      "A qualified lead matches the agreed ICP, connects to a relevant buyer role or influence point, includes usable contact data with a confidence note, and has a clear, cited reason for outreach.",
   },
   {
     question: "Do you guarantee meetings/sales?",
@@ -113,14 +124,39 @@ export const faqs: Faq[] = [
       "No. Sales depend on your offer, follow-up, timing, market fit, and closing, so we don't promise meetings, revenue, or a set number of results. What we commit to is running the system, doing the research and outreach work, and reporting the results honestly. The Appointment Engine tier includes booking qualified calls on your calendar, but no tier promises revenue or a fixed number of appointments.",
   },
   {
+    question: "How many leads or messages do I get each month?",
+    answer:
+      "We set the volume with you on the strategy call, because the honest answer depends on how many companies actually match your criteria and what your sending setup can safely support. We deliberately don't advertise a headline number: hitting a quota is what pushes an agency to loosen the targeting or exceed safe sending limits, which is exactly the failure mode this service is built to avoid. You'll know the agreed volume before any work starts, and the monthly report shows what was actually delivered against it.",
+  },
+  {
     question: "How are leads delivered?",
     answer:
-      "Leads are delivered as a spreadsheet, CRM-ready file, or agreed system with fields, tags, notes, status tracking, priority tiers, and verification context.",
+      "Leads are delivered as a spreadsheet, CRM-ready file, or agreed system with fields, tags, notes, status tracking, priority bands, a fit reason, and the public source citation for every record.",
   },
   {
     question: "Who is this service best for?",
     answer:
-      "The service is built for B2B service providers, agencies, and consultants; SaaS and software companies with a defined deal size; IT, cybersecurity, and managed-service firms; professional services such as finance, legal, accounting, HR, and marketing; and specialized or niche B2B companies with a clear offer and someone to work the pipeline. It is not a fit for B2C products or teams wanting large volumes of unverified emails to blast overnight.",
+      "The service is built for local and regional service businesses such as HVAC, contractors, and home services that sell high-value jobs; B2B service providers, agencies, and consultants; SaaS and software companies with a defined deal size; IT, cybersecurity, and managed-service firms; professional services such as finance, legal, accounting, HR, and marketing; and specialized or niche companies with a clear offer and someone to work the pipeline. It is not a fit for consumer-product or e-commerce brands that need mass-market advertising, or for teams wanting large volumes of unverified emails to blast overnight.",
+  },
+  {
+    question: "Where are you based, and who do you serve?",
+    answer:
+      "The work is done remotely and can be delivered for businesses across the United States. Campaigns are currently focused on New Jersey, starting with residential HVAC contractors, so that is where the sharpest local market knowledge sits today.",
+  },
+  {
+    question: "Do you have case studies or client results I can see?",
+    answer:
+      "Not yet, and we won't invent any. This is an early, founder-led service, so there are no published client results to show — which is exactly why the site shows you the standards, the record format, the process, and the pricing instead. Start on Lead Engine and judge the first list on its own merits; that is the proof that actually matters before you scale spend.",
+  },
+  {
+    question: "Where do the leads come from?",
+    answer:
+      "Prospects are researched from free public sources, and every record ships with the source citation, a fit reason, and a verification note. Nothing is bought from a data broker and nothing is invented — if a prospect has no citation, it doesn't go into your list or get contacted.",
+  },
+  {
+    question: "What happens if someone asks not to be contacted?",
+    answer:
+      "They're added to a suppression list immediately and never contacted again on your campaign. Opt-out handling, deduplication, and daily sending caps run as automated checks on every send rather than something a person has to remember.",
   },
   {
     question: "Do you offer outreach or appointment setting?",
@@ -145,16 +181,16 @@ export const faqs: Faq[] = [
   {
     question: "How do we start, and is there a long-term contract?",
     answer:
-      "No long-term contract — pricing is month-to-month, so you're not locked in while you find out whether outbound works for your market. You can stop or move between tiers as your needs change. It often makes sense to start with the tier that fits today — often Lead Engine, to see the quality first — then move up to done-for-you outreach once it proves out. It all begins with a short strategy call to confirm fit and define your ICP before any work starts.",
+      "No long-term contract and no setup fee — pricing is a flat monthly fee, month-to-month, and you can cancel anytime, so you're not locked in while you find out whether outbound works for your market. You can move between tiers as your needs change, and everything built for you is yours to keep. It often makes sense to start with the tier that fits today — often Lead Engine, to see the quality first — then move up to done-for-you outreach once it proves out. It all begins with a 15-minute strategy call to confirm fit and define your ICP before any work starts.",
   },
   {
     question: "What do you need from me to get started?",
     answer:
-      "On the outreach tiers you provide the sending account or domain the messages go out from, and you approve every message before it sends. You handle the sales calls and the close. We handle the targeting, research, and list building — and, on the done-for-you tiers, the personalized outreach and follow-up. We confirm exactly what's needed for your tier on the strategy call before any work starts.",
+      "Three things: a clear picture of who you sell to, your approval on the messaging, and someone available to take the calls. On the outreach tiers you also provide the sending account or domain the messages go out from, so the relationship and the sender reputation stay yours. We handle the targeting, research, list building, and — on the done-for-you tiers — the outreach and follow-up. We confirm exactly what's needed for your tier on the strategy call before any work starts.",
   },
   {
     question: "What happens on the free strategy call?",
     answer:
-      "It's a short, no-obligation call to confirm whether this is a fit and to define your ideal customer profile. We talk through who you sell to, what a good deal looks like, and which tier makes sense to start with. No work begins until you decide to move forward, and there's a roughly 60-second intake beforehand so the call starts with context.",
+      "It's a 15-minute, no-obligation call to confirm whether this is a fit and to define your ideal customer profile. We talk through who you sell to, what a good deal looks like, and which tier makes sense to start with. You also get a short written lead audit out of it — a few specific observations about your market and one clear next step — and it's yours to keep whether or not we work together. No work begins until you decide to move forward, and there's a roughly 60-second intake beforehand so the call starts with context.",
   },
 ];

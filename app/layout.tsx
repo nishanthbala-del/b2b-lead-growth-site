@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { siteUrl, brandName, orgDescription } from "@/lib/site";
+import { siteUrl, brandName, orgDescription, areaServed } from "@/lib/site";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,10 +15,13 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const siteTitle =
-  "B2B Lead Growth | B2B Lead Generation Services for Qualified Sales Leads";
+// Title kept under ~60 characters so Google doesn't truncate it, and "B2B" is not
+// repeated three times. Description under ~155 characters, and it names the market
+// and the commitment rather than the "verified contact paths" claim the system does
+// not actually make.
+const siteTitle = "B2B Lead Growth | Done-For-You Lead Generation";
 const siteDescription =
-  "Build a cleaner B2B sales pipeline with targeted prospect research, verified contact paths where possible, and CRM-ready opportunities your team can measure and improve.";
+  "Researched, cited prospects for contractors, service businesses, and B2B teams — or done-for-you outreach and booked calls. From $750/mo, month-to-month.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -66,7 +69,7 @@ const orgJsonLd = {
       url: siteUrl,
       logo: `${siteUrl}/icon.svg`,
       description: orgDescription,
-      areaServed: "United States",
+      areaServed: areaServed,
     },
     {
       "@type": "WebSite",
@@ -85,6 +88,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <head>
+        {/* The scroll-reveal animation server-renders every content block with an
+            inline `opacity:0`, which framer-motion clears once it takes over. With
+            JavaScript unavailable or broken, nothing ever clears it and the page is
+            blank. This override only applies in that case and costs nothing
+            otherwise. */}
+        <noscript
+          dangerouslySetInnerHTML={{
+            __html: `<style>[style*="opacity:0"]{opacity:1!important;transform:none!important}</style>`,
+          }}
+        />
+      </head>
       <body>
         <script
           type="application/ld+json"

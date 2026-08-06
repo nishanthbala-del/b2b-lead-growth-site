@@ -1,17 +1,34 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { brandName, contactEmail, legalEntity } from "@/lib/site";
+
+const PAGE_TITLE = "Privacy Policy";
+const PAGE_DESCRIPTION =
+  "How B2B Lead Growth collects, uses, stores, and protects the information you share through this website.";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description:
-    "How B2B Lead Growth collects, uses, stores, and protects the information you share through this website.",
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
   // Self-canonical: without this, the App Router inherits the root layout's
   // canonical ("/") and would point this page at the homepage.
   alternates: { canonical: "/privacy" },
+  // openGraph is NOT inherited field-by-field: declaring it in the root layout and
+  // omitting it here made this page share as the homepage, with the homepage's
+  // title, description and og:url.
+  openGraph: {
+    title: `${PAGE_TITLE} | B2B Lead Growth`,
+    description: PAGE_DESCRIPTION,
+    type: "article",
+    url: "/privacy",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${PAGE_TITLE} | B2B Lead Growth`,
+    description: PAGE_DESCRIPTION,
+  },
 };
 
-const LAST_UPDATED = "June 6, 2026";
-const brandName = "B2B Lead Growth";
+const LAST_UPDATED = "August 6, 2026";
 
 export default function PrivacyPage() {
   return (
@@ -56,10 +73,14 @@ export default function PrivacyPage() {
             comfortable providing.
           </p>
           <p className="mt-4 leading-7 text-muted">
-            <strong className="text-bone/90">Information collected automatically.</strong> Our
-            server records basic technical data with each submission — the date and time and the IP
-            address the request came from — to help prevent spam and abuse. This site does{" "}
-            <em>not</em> use third-party advertising or cross-site tracking cookies.
+            <strong className="text-bone/90">Information collected automatically.</strong> When you
+            submit the form, our server records the date and time and the IP address the request
+            came from, to prevent spam and abuse. Be aware that the IP address is stored alongside
+            your submission for as long as we keep the submission, not just for the moment of the
+            check. If you click &ldquo;Choose a time&rdquo; on the booking step, we also record that
+            you reached that step, so we know which enquiries went on to book. This site does{" "}
+            <em>not</em> use third-party advertising, analytics, or cross-site tracking cookies, and
+            it sets no cookies of its own.
           </p>
         </Section>
 
@@ -80,10 +101,25 @@ export default function PrivacyPage() {
 
         <Section title="3. Consent and legal basis">
           <p className="leading-7 text-muted">
-            We process your information based on the consent you give when you submit the form, and
-            on our legitimate interest in responding to business enquiries and operating this site.
-            You can withdraw consent or ask us to stop contacting you at any time (see &ldquo;Your
-            choices and rights&rdquo; below).
+            The tick-box on the form is your consent to be <em>contacted</em> about your enquiry,
+            and you can withdraw it at any time (see &ldquo;Your choices and rights&rdquo; below).
+            Withdrawing it stops us contacting you; it does not by itself erase the record of your
+            enquiry, which we keep on the basis of our legitimate interest in responding to
+            business enquiries, running this website, and keeping records of who we have dealt
+            with. You can ask us to delete that record too, and we will.
+          </p>
+        </Section>
+
+        <Section title="3a. Information about prospects we research for clients">
+          <p className="leading-7 text-muted">
+            Separately from this website, our service researches business contacts on behalf of our
+            clients. That information comes from freely available public sources, is limited to
+            business-context details, and always records the source it came from. If you have been
+            contacted as a result of that work and want to be removed, tell us and we will add you
+            to a suppression list immediately and permanently — you will not be contacted again for
+            that client. This policy covers our own handling of that data; the client on whose
+            behalf the outreach is sent is responsible for their own compliance obligations as the
+            sender.
           </p>
         </Section>
 
@@ -110,12 +146,11 @@ export default function PrivacyPage() {
           <p className="leading-7 text-muted">
             Depending on where you live, you may have the right to access, correct, delete, or
             restrict the use of your personal information, to object to certain processing, and to
-            withdraw consent. To make a request, use the{" "}
-            <Link href="/#contact" className="text-gold-200 underline-offset-4 hover:underline">
-              request form
-            </Link>{" "}
-            on our site and tell us what you&rsquo;d like — we&rsquo;ll act on verified requests
-            within a reasonable time. You can also ask us to stop contacting you and we will.
+            withdraw consent. To make a request, contact us using the details in section 9 below
+            and tell us what you&rsquo;d like — we&rsquo;ll act on verified requests within a
+            reasonable time and won&rsquo;t charge you for it. You can also ask us to stop
+            contacting you and we will. We will not treat you differently for exercising any of
+            these rights.
           </p>
         </Section>
 
@@ -133,22 +168,50 @@ export default function PrivacyPage() {
           </p>
         </Section>
 
-        <Section title="9. Contact">
+        <Section title="9. Who we are, and how to contact us">
           <p className="leading-7 text-muted">
-            Questions about this policy or your information? Reach us through the{" "}
-            <Link href="/#contact" className="text-gold-200 underline-offset-4 hover:underline">
-              request form
-            </Link>{" "}
-            and mention &ldquo;Privacy&rdquo; so we can route it correctly.
+            {legalEntity ? (
+              <>
+                {brandName} is operated by {legalEntity}, which is responsible for the information
+                described in this policy.
+              </>
+            ) : (
+              <>
+                {brandName} is a founder-run business operating from the United States, and is
+                responsible for the information described in this policy. Full registered business
+                details are available on request.
+              </>
+            )}
+          </p>
+          <p className="mt-4 leading-7 text-muted">
+            For anything to do with this policy or your information — including access, correction,
+            deletion, or asking us to stop contacting you —{" "}
+            {contactEmail ? (
+              <>
+                email{" "}
+                <a
+                  href={`mailto:${contactEmail}?subject=Privacy%20request`}
+                  className="text-gold-200 underline-offset-4 hover:underline"
+                >
+                  {contactEmail}
+                </a>
+                . You do not need to fill in any form, and we will not ask you for more information
+                than we need to find your record and verify the request.
+              </>
+            ) : (
+              <>
+                use the{" "}
+                <Link href="/#contact" className="text-gold-200 underline-offset-4 hover:underline">
+                  request form
+                </Link>{" "}
+                and write &ldquo;Privacy&rdquo; in the notes. Only your name and email are needed to
+                identify your record — you don&rsquo;t have to answer the questions about your
+                business, and we will not use a privacy request as a reason to contact you about
+                our services.
+              </>
+            )}
           </p>
         </Section>
-
-        <p className="mt-12 rounded-lg border border-gold-500/18 bg-ink-900/70 p-5 text-sm leading-6 text-muted">
-          <span className="font-semibold text-gold-200">Note:</span> This policy is a general
-          starting point provided with the site, not legal advice. Have it reviewed against the laws
-          that apply to your market (for example GDPR, CAN-SPAM, CASL, or US state privacy laws)
-          before you rely on it.
-        </p>
       </main>
 
       <footer className="border-t border-gold-500/12 px-5 py-8 sm:px-8">

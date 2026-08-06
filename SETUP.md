@@ -57,14 +57,23 @@ leads go to a Google Sheet via a tiny Apps Script "web app". Do this once:
 
 1. Create a new Google Sheet (e.g. "Lead Growth — Leads").
 2. **Extensions → Apps Script.** Delete any boilerplate and paste the script below.
-3. (Optional but recommended) set `NOTIFY_EMAIL` to your private inbox to get an email per lead,
-   and set `SECRET` to any random string.
+3. **Set `SECRET` to a long random string** (e.g. `openssl rand -hex 24`). The deployment is
+   public by design — "Who has access: Anyone" is what lets the site POST to it — so the secret
+   is the only thing stopping a stranger who finds the `/exec` URL from writing rows into your
+   leads Sheet and firing notification emails from your Google account. Also set `NOTIFY_EMAIL`
+   to your private inbox to get an email per lead.
 4. Click **Deploy → New deployment → Web app.**
    - *Execute as:* **Me**
    - *Who has access:* **Anyone**
    - Click **Deploy**, authorize, and **copy the Web app URL** (ends in `/exec`).
-5. Put that URL in `SHEETS_WEBHOOK_URL` (in `.env.local` for local, and in Vercel for prod).
-   If you set `SECRET`, also set `SHEETS_WEBHOOK_SECRET` to the same value.
+5. Put that URL in `SHEETS_WEBHOOK_URL` (in `.env.local` for local, and in Vercel for prod),
+   and put the same secret in `SHEETS_WEBHOOK_SECRET`.
+
+> **This step is not optional in production.** Vercel's filesystem is ephemeral, so the Sheet is
+> the only durable place a lead is written. With `SHEETS_WEBHOOK_URL` unset or wrong, the API
+> logs `LEAD ... WAS NOT STORED ANYWHERE`, and the visitor is told their details didn't save and
+> pushed to book a time instead (the calendar booking still captures them). Submit the live form
+> once after deploying and confirm the row lands.
 
 > Your email stays private — it lives only inside the Apps Script, never on the public site.
 
@@ -73,7 +82,7 @@ leads go to a Google Sheet via a tiny Apps Script "web app". Do this once:
 ```javascript
 // ---- CONFIG -----------------------------------------------------------------
 const SHEET_NAME = 'Leads';
-const SECRET = '';        // optional: must match SHEETS_WEBHOOK_SECRET if set
+const SECRET = '';        // REQUIRED — set this. Must match SHEETS_WEBHOOK_SECRET.
 const NOTIFY_EMAIL = '';  // optional: your private email for new-lead alerts
 // -----------------------------------------------------------------------------
 
@@ -86,21 +95,36 @@ const HEADERS = [
 function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents);
-    if (SECRET && body.secret !== SECRET) return json({ ok: false, error: 'unauthorized' });
+    // Fail CLOSED. An empty SECRET must reject everything rather than accept
+    // everything — this endpoint is deployed as "Anyone", so an unset secret would
+    // leave a public write + mail-send endpoint on your Google account.
+    if (!SECRET || body.secret !== SECRET) return json({ ok: false, error: 'unauthorized' });
 
-    const sheet = getSheet();
+    // Apps Script runs concurrent invocations. Both branches below read the sheet's
+    // last row before writing, so without a lock two leads arriving together can
+    // append to the same row or stamp the wrong one.
+    const lock = LockService.getScriptLock();
+    if (!lock.tryLock(20000)) return json({ ok: false, error: 'busy' });
 
-    if (body.action === 'booking_opened') {
-      markBookingOpened(sheet, body.id, body.timestamp);
-      return json({ ok: true });
+    try {
+      const sheet = getSheet();
+
+      if (body.action === 'booking_opened') {
+        markBookingOpened(sheet, body.id, body.timestamp);
+        return json({ ok: true });
+      }
+
+      // action === 'submit'
+      const row = HEADERS.map(function (h) {
+        if (h === 'bookingOpenedAt') return '';
+        return body[h] != null ? body[h] : '';
+      });
+      // setValues, not appendRow: appendRow re-evaluates leading '=' as a formula,
+      // which would undo the site's formula-injection guard.
+      sheet.getRange(sheet.getLastRow() + 1, 1, 1, HEADERS.length).setValues([row]);
+    } finally {
+      lock.releaseLock();
     }
-
-    // action === 'submit'
-    const row = HEADERS.map(function (h) {
-      if (h === 'bookingOpenedAt') return '';
-      return body[h] != null ? body[h] : '';
-    });
-    sheet.appendRow(row);
 
     if (NOTIFY_EMAIL) {
       const lines = ['package', 'name', 'email', 'company', 'website', 'role',
@@ -160,7 +184,7 @@ function json(obj) {
 Already wired to your Google Calendar appointment schedule in `.env.local`:
 
 ```
-NEXT_PUBLIC_BOOKING_URL=https://calendar.app.google/FsAYPV9YoVV7Rody5
+NEXT_PUBLIC_BOOKING_URL=https://calendar.app.google/cyDCVBd2XhpuBCvG9
 ```
 
 After a visitor submits the form they get a **"Choose a time"** button that opens this scheduler
@@ -186,7 +210,7 @@ To change the link, edit `NEXT_PUBLIC_BOOKING_URL` and restart dev (or update it
 3. **Before deploying, add Environment Variables** (Settings → Environment Variables):
    | Name | Value |
    | --- | --- |
-   | `NEXT_PUBLIC_BOOKING_URL` | `https://calendar.app.google/FsAYPV9YoVV7Rody5` |
+   | `NEXT_PUBLIC_BOOKING_URL` | `https://calendar.app.google/cyDCVBd2XhpuBCvG9` |
    | `SHEETS_WEBHOOK_URL` | the Apps Script `/exec` URL from Step 1 |
    | `SHEETS_WEBHOOK_SECRET` | the secret (only if you set one) |
    | `NEXT_PUBLIC_SITE_URL` | your final Vercel URL (e.g. `https://your-site.vercel.app`) |
@@ -227,4 +251,12 @@ prioritize. Export anytime via **File → Download → CSV**.
   Add a privacy note/policy link before heavy outbound if your market requires it.
 - **No fabricated proof:** the site ships without case studies on purpose. Add real ones to the
   "Proof" section once you have client results.
-- **Optional polish later:** a custom social-share (OG) image, a privacy policy page, and a captcha.
+- **Still open:** a captcha for higher volume, and the two legal-identity values below.
+- **Legal identity:** set `NEXT_PUBLIC_CONTACT_EMAIL` and `NEXT_PUBLIC_LEGAL_ENTITY` in Vercel as
+  soon as the business details exist. Until they are set, the privacy policy says the registered
+  details are "available on request" and routes privacy requests through the intake form — which
+  works, but a named entity and a real contact inbox are what a US/EU privacy request actually
+  expects. Nothing is invented in their place.
+- **Have the privacy policy reviewed.** `app/privacy/page.tsx` describes what this codebase
+  genuinely does, but it has not been reviewed by a lawyer against GDPR, CAN-SPAM, CASL, or US
+  state privacy law. Do that before running outbound at volume.

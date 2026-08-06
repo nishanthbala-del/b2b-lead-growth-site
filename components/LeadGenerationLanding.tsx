@@ -12,6 +12,8 @@ import {
 } from "react";
 import { IntakeProvider, useIntake } from "./IntakeForm";
 import { differentiators, faqs, idealFor, notFor, plans } from "@/lib/content";
+import { callLengthMinutes, contactEmail, currentFocusArea } from "@/lib/site";
+import { registerSmoothScroll } from "@/lib/smooth-scroll";
 
 // Bridge so ProcessSection's lazily-loaded ScrollTrigger can stay in sync with the
 // Lenis smooth-scroll instance without statically importing GSAP into the page bundle.
@@ -26,7 +28,7 @@ function isFinePointer(): boolean {
 }
 
 const disclaimer =
-  "Lead generation improves prospect quality and pipeline inputs; sales outcomes depend on your offer, follow-up, and closing process.";
+  "We guarantee the system and the work, and we report the results honestly — we do not guarantee revenue, jobs, customers, or a set number of appointments. Sales outcomes depend on your offer, your market, your follow-up, and your closing.";
 
 const brandName = "B2B Lead Growth";
 
@@ -39,33 +41,50 @@ const navItems = [
   { label: "FAQ", href: "#faq" },
 ];
 
+// "Cited sources" rather than "verified contacts": what the system actually
+// guarantees is that every prospect carries a public source citation before anyone
+// is contacted. Contact-data confidence is noted, not certified — so the pillar
+// claims the thing that is genuinely true and checkable.
 const valuePillars = [
   "Sharper ICP focus",
-  "Verified buyer paths",
+  "Cited public sources",
   "Priority scoring",
   "CRM-ready pipeline",
 ];
 
+// The full pipeline, not just the list-building half. `from` names the lowest tier
+// at which the step is included, so the ladder is legible before anyone reaches the
+// pricing table and nobody buys expecting a step their tier doesn't cover.
 const processSteps = [
   {
-    title: "Define the ICP",
-    body: "Set the industries, company profiles, buyer roles, exclusions, and qualification filters that define a true fit.",
+    title: "Agree the profile",
+    from: "Lead Engine",
+    body: "Set the industries, service areas, company profiles, buyer roles, exclusions, and qualification filters that define a true fit.",
   },
   {
-    title: "Research accounts",
-    body: "Identify companies that match the criteria and have a credible reason to care about your offer.",
+    title: "Research and cite",
+    from: "Lead Engine",
+    body: "Find companies that match the criteria from free public sources, each with its source citation and a specific, checkable reason to reach out.",
   },
   {
-    title: "Verify contacts",
-    body: "Map relevant decision-makers and verify usable contact paths where possible.",
+    title: "Score and organise",
+    from: "Lead Engine",
+    body: "Rank by fit and deliver annotated, prioritised records with the fields your team needs to filter, assign, and follow up — plus the outreach scripts.",
   },
   {
-    title: "Organize pipeline",
-    body: "Deliver annotated, prioritized records with the fields your team needs to filter, assign, and follow up.",
+    title: "Write and verify",
+    from: "Outreach Engine",
+    body: "Draft outreach per prospect, checked before it can send — cited, on-profile, compliant, not over-promising — and put in front of you to approve.",
   },
   {
-    title: "Review results",
-    body: "Use quality feedback, response signals, and conversion notes to refine the next batch.",
+    title: "Send and follow up",
+    from: "Outreach Engine",
+    body: "Run the multi-touch cadence from your own sending account, within daily caps, with opt-outs suppressed immediately and permanently.",
+  },
+  {
+    title: "Qualify and book",
+    from: "Appointment Engine",
+    body: "Classify every reply, qualify interest against your criteria, and put the call on your calendar — then use what came back to sharpen the next batch.",
   },
 ];
 
@@ -76,9 +95,9 @@ const services = [
     deliverables: "ICP worksheet, target criteria, exclusion list, qualification rules",
   },
   {
-    title: "Sourcing & Verification",
-    description: "Find the accounts and decision-makers that match the profile, with verified contact paths where possible.",
-    deliverables: "Company + buyer records, role/title, contact path, source citation, verification status",
+    title: "Sourcing & Citation",
+    description: "Find the accounts and decision-makers that match the profile, using free public sources only — never a bought broker list.",
+    deliverables: "Company + buyer records, role/title, contact path, public source citation, data-confidence note",
   },
   {
     title: "Lead Scoring & Prioritization",
@@ -120,39 +139,41 @@ const qualificationStandards = [
     body: "High-priority leads include a concise explanation for why they belong in the campaign.",
   },
   {
-    title: "Verification Status",
-    body: "Contact data includes confidence or verification notes so quality is visible, not assumed.",
+    title: "Source Citation",
+    body: "Every prospect carries the public source it came from. No citation, no outreach — that is a hard rule, not a preference.",
   },
   {
-    title: "Compliance Awareness",
-    body: "Outreach should be respectful, business-relevant, and aligned with applicable email, privacy, and platform rules. Clients should confirm legal/compliance requirements for their market.",
+    title: "Enforced Compliance Controls",
+    body: "Opt-outs are suppressed immediately and permanently, duplicates and conflicts are blocked, and daily sending caps are enforced automatically on every send. You remain responsible for the email, privacy, and platform rules that apply in your market, and we'll confirm them with you before outreach begins.",
   },
 ];
 
 const leadTiers = [
   {
-    tier: "Tier A",
-    title: "High Fit",
-    body: "Strong ICP match, relevant buyer path, clear personalization angle, and the strongest case for sales review.",
+    tier: "Band A",
+    title: "High fit — top scores",
+    body: "Strong profile match, a relevant buyer path, and a clear, cited reason to reach out. Work these first.",
   },
   {
-    tier: "Tier B",
-    title: "Good Fit",
-    body: "Matches most criteria but may need more context, buyer verification, or timing signal.",
+    tier: "Band B",
+    title: "Good fit — mid scores",
+    body: "Matches most of the criteria but needs more context, a confirmed buyer, or a timing signal.",
   },
   {
-    tier: "Tier C",
-    title: "Possible Fit",
-    body: "Some relevance, but weaker signal, incomplete data, or less obvious buyer fit.",
+    tier: "Band C",
+    title: "Possible fit — low scores",
+    body: "Some relevance, but a weaker signal, incomplete data, or a less obvious buyer.",
   },
 ];
 
+// Only what the system actually produces. "Verified contact percentage" and
+// "client-approved lead percentage" were metrics nothing in the pipeline computes.
 const reportingItems = [
-  "Qualified leads delivered",
-  "Tier A/B/C distribution",
-  "Verified contact percentage",
-  "Client-approved lead percentage",
-  "Responses or meetings when outreach support is included",
+  "Leads delivered, with fit scores",
+  "Priority-band distribution",
+  "Prospects contacted (outreach tiers)",
+  "Replies, and how many were positive",
+  "Calls booked (Appointment Engine)",
   "Lead-quality feedback notes",
 ];
 
@@ -174,22 +195,39 @@ const framework = [
   },
 ];
 
-const founderResponsibilities = [
+// What the system runs versus what stays with the client. Mirrors the operating
+// system's own split exactly — no capability here that isn't actually built.
+const systemHandles = [
   {
     title: "Research & targeting",
-    body: "Defining your ICP and sourcing the accounts that actually fit it.",
+    body: "Sourcing accounts that fit the agreed profile, from free public sources, each with its citation.",
   },
   {
     title: "Messaging & angles",
-    body: "The per-prospect outreach and angles, written for your market and your offer.",
+    body: "Per-prospect outreach and follow-up written against a real, cited reason to reach out.",
   },
   {
-    title: "Lead-quality review",
-    body: "Every record checked against your criteria before it reaches you.",
+    title: "Verification before send",
+    body: "An independent check on every draft, plus hard gates for citations, opt-outs, duplicates, and daily caps.",
   },
   {
-    title: "Reporting",
-    body: "Clear numbers on what was done and what came back, so you can judge it.",
+    title: "Replies & reporting",
+    body: "Replies classified and answered, and honest numbers on what was done and what came back.",
+  },
+];
+
+const youHandle = [
+  {
+    title: "Approve the messaging",
+    body: "Nothing goes out in your name until you've signed off on it.",
+  },
+  {
+    title: "Take the calls",
+    body: "The conversation with an interested buyer is yours to run.",
+  },
+  {
+    title: "Close, and tell us what happened",
+    body: "You own the offer and the close, and confirm the real outcomes so the reporting stays true.",
   },
 ];
 
@@ -250,14 +288,22 @@ function SiteNav() {
     return () => window.removeEventListener("scroll", update);
   }, []);
 
-  // Close the mobile menu once the viewport grows to where the desktop nav appears.
+  // Close the mobile menu once the viewport grows to where the desktop nav appears,
+  // and on Escape — an expanded disclosure a keyboard user cannot dismiss is a trap.
   useEffect(() => {
     if (!menuOpen) return;
     const onResize = () => {
       if (window.innerWidth >= 1024) setMenuOpen(false);
     };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
     window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("keydown", onKey);
+    };
   }, [menuOpen]);
 
   return (
@@ -318,25 +364,29 @@ function SiteNav() {
           </button>
         </div>
       </nav>
-      {menuOpen ? (
-        <div
-          id="mobile-nav"
-          className="border-t border-gold-500/15 bg-ink-950/95 backdrop-blur-xl lg:hidden"
-        >
-          <div className="mx-auto flex max-w-7xl flex-col px-5 py-1 sm:px-8">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={() => setMenuOpen(false)}
-                className="border-b border-gold-500/10 py-3.5 text-sm text-muted transition-colors last:border-0 hover:text-gold-200"
-              >
-                {item.label}
-              </a>
-            ))}
-          </div>
+      {/* Always rendered so `aria-controls` on the toggle points at a real element
+          (a dangling id is ignored by assistive tech, which then can't tell the user
+          what the button expands), and wrapped in <nav> so the links stay inside a
+          navigation landmark. `hidden` keeps it out of the tree while collapsed. */}
+      <nav
+        id="mobile-nav"
+        hidden={!menuOpen}
+        aria-label="Mobile navigation"
+        className="border-t border-gold-500/15 bg-ink-950/95 backdrop-blur-xl lg:hidden"
+      >
+        <div className="mx-auto flex max-w-7xl flex-col px-5 py-1 sm:px-8">
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              onClick={() => setMenuOpen(false)}
+              className="flex min-h-11 items-center border-b border-gold-500/10 py-3.5 text-sm text-muted transition-colors last:border-0 hover:text-gold-200"
+            >
+              {item.label}
+            </a>
+          ))}
         </div>
-      ) : null}
+      </nav>
     </header>
   );
 }
@@ -360,12 +410,18 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
     if (line2Ref.current) line2Ref.current.style.transform = lineTransform;
   }
 
-  const restStyle = prefersReducedMotion ? undefined : { transform: "translate3d(0, 0, 0)" };
+  // Always the identity transform, on both the server and the client: branching this
+  // on a client-only media query is another hydration mismatch. `handleMove` already
+  // no-ops under reduced motion, so these nodes simply never move.
+  const restStyle = { transform: "translate3d(0, 0, 0)" };
 
   return (
     <section
       id="top"
-      className="relative flex min-h-[100svh] items-center overflow-hidden px-5 pb-20 pt-32 sm:px-8 lg:pb-28 lg:pt-36"
+      // Mobile spacing is tuned so the primary CTA clears the fold on a 360x740
+      // screen — the common small-Android size — where it previously landed a couple
+      // of pixels below it and the only visible action was the nav button.
+      className="relative flex min-h-[100svh] items-center overflow-hidden px-5 pb-16 pt-24 sm:pb-20 sm:pt-32 lg:pb-28 lg:pt-36"
       onMouseMove={handleMove}
     >
       <div className="ambient-light pointer-events-none absolute inset-0 opacity-80" />
@@ -385,7 +441,7 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
       <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
         <div ref={headlineRef} style={restStyle}>
           <Reveal>
-            <p className="mb-7 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/90">
+            <p className="mb-5 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/90 sm:mb-7">
               <span className="h-px w-10 bg-gold-500/80" aria-hidden="true" />
               B2B lead generation
             </p>
@@ -396,15 +452,16 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
             </h1>
           </Reveal>
           <Reveal delay={0.16}>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-muted sm:text-xl">
-              We find your best-fit buyers and hand you a verified, scored pipeline — or run the outreach and book qualified calls straight onto your calendar. You choose how much we handle, and you approve every message before it sends.
+            <p className="mt-5 max-w-2xl text-base leading-7 text-muted sm:mt-7 sm:text-lg sm:leading-8 lg:text-xl">
+              We find your best-fit buyers and hand you a cited, scored pipeline — or run the outreach and book qualified calls straight onto your calendar. You choose how much we handle, and you approve every message before it sends.
             </p>
-            <p className="mt-4 max-w-2xl text-sm font-semibold uppercase tracking-[0.18em] text-gold-200/80">
-              Built for B2B service providers, agencies &amp; software teams.
+            <p className="mt-3 max-w-2xl text-sm font-semibold uppercase tracking-[0.18em] text-gold-200/80 sm:mt-4">
+              For contractors, service businesses, agencies &amp; software teams selling
+              high-value work.
             </p>
           </Reveal>
           <Reveal delay={0.24}>
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row">
               <MagneticAnchor
                 href="#contact"
                 onClick={(event) => {
@@ -425,7 +482,8 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
               </MagneticAnchor>
             </div>
             <p className="mt-4 text-sm text-muted">
-              Free strategy call · 60-second intake · no obligation
+              Free {callLengthMinutes}-minute call · 60-second intake · you keep the lead audit
+              either way
             </p>
           </Reveal>
         </div>
@@ -491,7 +549,9 @@ function PositioningSection() {
             </div>
           </div>
         </Reveal>
-        <div className="mt-14 grid gap-4 md:grid-cols-4">
+        {/* 1 -> 2 -> 4. Jumping straight to 4 columns at md gave 164px cards at
+            768px, hard-wrapping every heading onto three lines. */}
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {valuePillars.map((pillar, index) => (
             <Reveal key={pillar} delay={index * 0.06}>
               <TiltCard className="gold-border-draw h-full rounded-lg border border-gold-500/14 bg-ink-850/70 p-6">
@@ -529,9 +589,9 @@ function WhoItsForSection() {
         <div className="mt-14 grid gap-5 lg:grid-cols-2">
           <Reveal>
             <div className="gold-border-draw h-full rounded-lg border border-gold-500/30 bg-ink-900/72 p-7">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-200">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-200">
                 A strong fit
-              </p>
+              </h3>
               <ul className="mt-6 space-y-4">
                 {idealFor.map((item) => (
                   <li key={item} className="flex gap-3 leading-7 text-bone/90">
@@ -546,9 +606,9 @@ function WhoItsForSection() {
           </Reveal>
           <Reveal delay={0.08}>
             <div className="h-full rounded-lg border border-gold-500/12 bg-ink-900/40 p-7">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
                 Not the right fit
-              </p>
+              </h3>
               <ul className="mt-6 space-y-4">
                 {notFor.map((item) => (
                   <li key={item} className="flex gap-3 leading-7 text-muted">
@@ -564,10 +624,15 @@ function WhoItsForSection() {
         </div>
         <Reveal delay={0.12}>
           <div className="mt-10 text-center">
+            <p className="mx-auto max-w-2xl text-base leading-7 text-muted">
+              The work is done remotely for businesses across the US. Campaigns are currently
+              focused on {currentFocusArea}, starting with residential HVAC contractors — so
+              that&rsquo;s where the sharpest local market knowledge sits today.
+            </p>
             <button
               type="button"
               onClick={() => openIntake()}
-              className="link-wipe inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+              className="link-wipe mt-6 inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
             >
               Sounds like you? Book a strategy call →
             </button>
@@ -601,11 +666,17 @@ function ProcessSection() {
       // Let the Lenis smooth-scroll loop drive ScrollTrigger.update (fixes scrub desync).
       notifyScrollTriggerUpdate = () => ScrollTrigger.update();
 
-      // matchMedia creates the pin/scrub trigger on entering >=900px and reverts it on
-      // exit, and refreshes on resize — so rotating/resizing across the breakpoint works.
+      // matchMedia creates the pin/scrub trigger on entering the breakpoint and reverts
+      // it on exit, refreshing on resize — so rotating/resizing across it works.
+      //
+      // This MUST match the `lg:` breakpoint (1024px) that the section's full-height,
+      // two-column layout is built on. Pinning at 900px pinned a section whose layout
+      // was still the stacked mobile one, so between 900px and 1023px the pin froze the
+      // viewport on a card list taller than the screen and steps 4 and 5 could never be
+      // scrolled to.
       const media = gsap.matchMedia();
       mm = media;
-      media.add("(min-width: 900px)", () => {
+      media.add("(min-width: 1024px)", () => {
         const trigger = ScrollTrigger.create({
           trigger: section,
           start: "top top",
@@ -672,17 +743,24 @@ function ProcessSection() {
                   ? "border-gold-500/60 bg-ink-850 shadow-gold"
                   : "border-gold-500/14 bg-ink-900/60"
               }`}
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
-              whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.26 }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
+              transition={
+                prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: index * 0.05 }
+              }
             >
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-gold-500/40 text-sm text-gold-200">
                   0{index + 1}
                 </span>
                 <div>
-                  <h3 className="text-2xl font-semibold text-bone">{step.title}</h3>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <h3 className="text-2xl font-semibold text-bone">{step.title}</h3>
+                    <span className="rounded-sm border border-gold-500/30 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-gold-200/80">
+                      From {step.from}
+                    </span>
+                  </div>
                   <p className="mt-2 leading-7 text-muted">{step.body}</p>
                 </div>
               </div>
@@ -774,7 +852,14 @@ function LeadQualitySection() {
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
                 Lead scoring model
               </p>
-              <h3 className="mt-3 text-2xl font-semibold text-bone">Priority tiers for sales review</h3>
+              <h3 className="mt-3 text-2xl font-semibold text-bone">
+                Every prospect gets a fit score, and the score sets the band
+              </h3>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted">
+                Each record is scored against the criteria you agreed, and the score decides which
+                band it lands in — so &ldquo;high priority&rdquo; means a number you can check, not
+                a label someone assigned by feel.
+              </p>
             </div>
             <div className="grid divide-y divide-gold-500/12 md:grid-cols-3 md:divide-x md:divide-y-0">
               {leadTiers.map((tier) => (
@@ -844,23 +929,29 @@ function FounderSection() {
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
           <Reveal>
             <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
-              Who you&rsquo;re working with
+              How the work actually gets done
             </p>
             <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-              A hands-on, founder-led service.
+              An AI-run system, with a person accountable for it.
             </h2>
             <div className="mt-6 space-y-5 text-lg leading-8 text-muted">
               <p>
-                B2B Lead Growth isn&rsquo;t outsourced, generic lead gen. It&rsquo;s founder-led: the
-                person who defines your targeting is the same person writing your outreach angles,
-                reviewing lead quality, and preparing your reporting — so the work stays close to
-                your ICP and responds to your feedback, instead of being handed to a rotating team
-                running a generic playbook.
+                We&rsquo;d rather tell you this up front than let you find out later: the research,
+                scoring, writing, follow-up, and reply handling are run by an AI system, not by a
+                room of junior staff. That&rsquo;s precisely why every prospect arrives with a
+                public source citation and a specific reason to reach out — consistently, on every
+                record, not just when someone has time.
               </p>
               <p>
-                You always know who&rsquo;s doing the work, and you sign off on the messaging before
-                anything goes out. It&rsquo;s direct, hands-on attention on the research, the
-                outreach, and the numbers — the parts that decide whether your pipeline is any good.
+                It is not left unattended. Every draft is independently checked before it can be
+                sent — cited, on-profile, compliant, not over-promising — against hard automated
+                gates for citations, opt-out suppression, duplicates, and daily sending caps, and
+                any lane that starts behaving oddly can be stopped outright. Nothing reaches a
+                prospect until <span className="text-bone/90">you</span> have approved the message.
+              </p>
+              <p>
+                And a person stands behind it: one founder, who takes your call, answers for the
+                numbers, and is who you talk to when something needs to change.
               </p>
             </div>
             <div className="mt-8">
@@ -877,17 +968,44 @@ function FounderSection() {
             <div className="gold-border-draw overflow-hidden rounded-lg border border-gold-500/18 bg-ink-900/72 shadow-panel">
               <div className="border-b border-gold-500/14 p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
-                  Personally handled
+                  Who does what
                 </p>
                 <h3 className="mt-3 text-2xl font-semibold text-bone">
-                  The work that decides lead quality
+                  No confusion about the split
                 </h3>
               </div>
               <div className="divide-y divide-gold-500/12">
-                {founderResponsibilities.map((item, index) => (
+                <div className="px-5 pt-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-200/70">
+                    We run
+                  </p>
+                </div>
+                {systemHandles.map((item) => (
                   <div key={item.title} className="grid grid-cols-[auto_1fr] gap-4 p-5">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-gold-500/32 text-sm text-gold-200">
-                      0{index + 1}
+                    <span
+                      aria-hidden="true"
+                      className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-sm border border-gold-500/32 text-xs text-gold-200"
+                    >
+                      ✓
+                    </span>
+                    <div>
+                      <p className="font-semibold text-bone">{item.title}</p>
+                      <p className="mt-1 text-sm leading-6 text-muted">{item.body}</p>
+                    </div>
+                  </div>
+                ))}
+                <div className="px-5 pt-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-200/70">
+                    You keep
+                  </p>
+                </div>
+                {youHandle.map((item) => (
+                  <div key={item.title} className="grid grid-cols-[auto_1fr] gap-4 p-5">
+                    <span
+                      aria-hidden="true"
+                      className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-sm border border-gold-500/32 text-xs text-gold-200"
+                    >
+                      →
                     </span>
                     <div>
                       <p className="font-semibold text-bone">{item.title}</p>
@@ -921,12 +1039,14 @@ function PricingSection() {
             <p className="mt-6 text-lg leading-8 text-muted">
               Each tier de-risks the next: Lead Engine proves the list, Outreach Engine proves the messaging, and Appointment Engine runs the whole system through to booked calls on your calendar.
             </p>
-            <p className="mt-5 inline-flex flex-wrap items-center justify-center gap-x-2 text-sm font-semibold text-gold-200/90">
-              <span>Month-to-month</span>
+            <p className="mt-5 inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm font-semibold text-gold-200/90">
+              <span>Flat monthly fee</span>
               <span aria-hidden="true" className="text-gold-500/60">·</span>
-              <span>Start with any tier</span>
+              <span>No setup fee</span>
               <span aria-hidden="true" className="text-gold-500/60">·</span>
-              <span>Scale only when the quality proves out</span>
+              <span>Month-to-month, cancel anytime</span>
+              <span aria-hidden="true" className="text-gold-500/60">·</span>
+              <span>Everything we build is yours to keep</span>
             </p>
           </div>
         </Reveal>
@@ -1013,7 +1133,9 @@ function FrameworkSection() {
               A <CountUp value={90} />-day review window turns lead generation from a list purchase into a learning system.
             </p>
             <p className="mt-4 leading-7 text-muted">
-              Track lead quality, pipeline movement, conversion signals, and whether the system is worth scaling. One closed deal can justify the retainer at a high enough average deal size, but the decision should be grounded in evidence, not hype.
+              Track lead quality, pipeline movement, and response signals, then decide whether the
+              system is worth scaling — on your own numbers, against your own deal size. We
+              don&rsquo;t model your return for you, because we have no way to know it.
             </p>
           </Reveal>
         </div>
@@ -1035,7 +1157,10 @@ function FrameworkSection() {
                 Client expectations
               </p>
               <p className="mt-4 leading-7 text-muted">
-                {brandName} owns research quality, targeting logic, data organization, and reporting. You own the offer, follow-up, sales conversations, and closing. That clarity keeps the partnership honest.
+                {brandName} owns targeting, research quality, the writing, the sending and
+                follow-up on the outreach tiers, and honest reporting. You approve the messaging,
+                own the offer, take the calls, close, and confirm what actually happened. That
+                clarity keeps the partnership honest.
               </p>
             </div>
             <div>
@@ -1061,6 +1186,8 @@ function FrameworkSection() {
 }
 
 function ProofSection() {
+  const { openIntake } = useIntake();
+
   return (
     <section className="relative border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
       <div className="mx-auto max-w-7xl">
@@ -1073,8 +1200,20 @@ function ProofSection() {
               See the quality standard before you invest.
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted">
-              Credibility should be inspectable. Review the exact fields, scoring context, and verification notes that ship with every record — so you can judge the quality standard before you invest a dollar.
+              We have no client case studies to show you yet, and we won&rsquo;t borrow anyone
+              else&rsquo;s. What we can show you is the standard: the exact fields, scoring context,
+              and citations that ship with every record. Judge that, then judge the first real list
+              — one month, no contract, cancel if it isn&rsquo;t good.
             </p>
+            <div className="mt-8">
+              <button
+                type="button"
+                onClick={() => openIntake("Lead Engine")}
+                className="link-wipe inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+              >
+                Start with Lead Engine and see the quality →
+              </button>
+            </div>
           </Reveal>
           <Reveal delay={0.08}>
             <div className="group overflow-hidden rounded-lg border border-gold-500/18 bg-ink-950/78 shadow-panel">
@@ -1130,13 +1269,18 @@ function FAQSection() {
         <div className="mt-12 divide-y divide-gold-500/12 border-y border-gold-500/12">
           {faqs.map((faq, index) => (
             <Reveal key={faq.question} delay={index * 0.05}>
+              {/* The <summary> is wrapped in an <h3> so all twelve questions show up in
+                  screen-reader heading navigation — otherwise the largest block of
+                  content on the page is unreachable that way. */}
               <details className="group py-6">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-left text-xl font-semibold text-bone">
-                  {faq.question}
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm border border-gold-500/35 text-gold-200 transition-transform group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
+                <h3>
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-6 text-left text-xl font-semibold text-bone">
+                    {faq.question}
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm border border-gold-500/35 text-gold-200 transition-transform group-open:rotate-45">
+                      +
+                    </span>
+                  </summary>
+                </h3>
                 <p className="mt-4 max-w-3xl leading-7 text-muted">{faq.answer}</p>
               </details>
             </Reveal>
@@ -1167,7 +1311,11 @@ function FinalCTA() {
             Put right-fit prospects in front of your sales team.
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted">
-            Every week spent chasing poor-fit prospects is sales attention you cannot recover. Book a free strategy call to define your ICP and find the tier that fits your market.
+            Every week spent chasing poor-fit prospects is sales attention you cannot recover.
+            Book a free {callLengthMinutes}-minute call to define your ideal customer and find
+            the tier that fits your market. You&rsquo;ll leave with a short written lead audit —
+            a few specific observations and one next step — and it&rsquo;s yours to keep whether
+            or not we work together.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <MagneticAnchor
@@ -1208,6 +1356,9 @@ function SiteFooter() {
             Book a strategy call →
           </button>
           <p className="mt-2">
+            Remote across the US · currently focused on {currentFocusArea}
+          </p>
+          <p className="mt-2">
             © {new Date().getFullYear()} ·{" "}
             <a
               href="/privacy"
@@ -1215,6 +1366,17 @@ function SiteFooter() {
             >
               Privacy Policy
             </a>
+            {contactEmail ? (
+              <>
+                {" · "}
+                <a
+                  href={`mailto:${contactEmail}`}
+                  className="inline-block py-1 transition-colors hover:text-gold-200"
+                >
+                  {contactEmail}
+                </a>
+              </>
+            ) : null}
           </p>
         </div>
         <p className="max-w-2xl leading-6">
@@ -1254,13 +1416,21 @@ function Reveal({
 }) {
   const prefersReducedMotion = useReducedMotion();
 
+  // `initial` and `whileInView` stay identical on the server and the client — they
+  // decide the first rendered markup, so branching them on a client-only media query
+  // breaks hydration. Reduced motion is honoured through the transition instead: the
+  // element still reveals, it just arrives instantly with no travel.
   return (
     <motion.div
       className={className}
-      initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
-      whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.24 }}
-      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay }}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : { duration: 0.65, ease: [0.22, 1, 0.36, 1], delay }
+      }
     >
       {children}
     </motion.div>
@@ -1270,9 +1440,12 @@ function Reveal({
 function TiltCard({ children, className }: { children: ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
-  const rest = "perspective(900px) rotateX(0deg) rotateY(0deg)";
 
-  // Write the tilt transform straight to the node (no per-frame React render).
+  // No resting transform. There are ~20 of these on the page, and a static
+  // `perspective()` establishes a 3D rendering context that switches the card's
+  // text from subpixel to grayscale antialiasing — on every touch device, where
+  // the tilt can never fire anyway. `handleMove` writes the transform on demand
+  // and mouse-leave clears it, so the effect is unchanged where it applies.
   function handleMove(event: MouseEvent<HTMLDivElement>) {
     if (prefersReducedMotion || !isFinePointer() || !ref.current) return;
     const rect = event.currentTarget.getBoundingClientRect();
@@ -1288,9 +1461,8 @@ function TiltCard({ children, className }: { children: ReactNode; className?: st
       data-cursor-label="View"
       onMouseMove={handleMove}
       onMouseLeave={() => {
-        if (ref.current) ref.current.style.transform = rest;
+        if (ref.current) ref.current.style.transform = "";
       }}
-      style={{ transform: rest }}
     >
       {children}
     </div>
@@ -1386,11 +1558,27 @@ function CountUp({
     };
   }, [prefersReducedMotion, value]);
 
+  // Two things matter here:
+  //  - A fixed locale. Bare `toLocaleString()` formats with the *server's* locale
+  //    during SSR and the *visitor's* on the client, so "1,500" vs "1.500" was a
+  //    hydration mismatch for anyone outside en-US.
+  //  - A reserved width. The counter drops to 0 and climbs back, so the digit count
+  //    goes 4 -> 1 -> 4 and the adjacent "/mo" slid sideways at 48px type on all
+  //    three price cards. An invisible copy of the final value holds the box.
+  const format = (n: number) => n.toLocaleString("en-US");
+
   return (
-    <span ref={ref}>
-      {prefix}
-      {display.toLocaleString()}
-      {suffix}
+    <span ref={ref} className="relative inline-block tabular-nums">
+      <span aria-hidden="true" className="invisible">
+        {prefix}
+        {format(value)}
+        {suffix}
+      </span>
+      <span className="absolute inset-0">
+        {prefix}
+        {format(display)}
+        {suffix}
+      </span>
     </span>
   );
 }
@@ -1432,8 +1620,13 @@ function CustomCursor() {
     };
   }, [prefersReducedMotion, x, y]);
 
-  if (prefersReducedMotion) return null;
-
+  // NOTE: do NOT return null for reduced motion. `useReducedMotion()` reads a media
+  // query that only exists on the client, so the server always renders this subtree
+  // while a reduced-motion client would skip it — a hydration mismatch that makes
+  // React throw away and re-render the whole page for exactly the users who asked
+  // for less work. globals.css already hides `.fine-cursor` under reduced motion
+  // (and on coarse pointers), and the effect above never attaches its listeners,
+  // so keeping the markup identical on both sides costs nothing.
   return (
     <div className="fine-cursor pointer-events-none fixed inset-0 z-[100]" aria-hidden="true">
       <motion.div
@@ -1481,7 +1674,11 @@ function useScrollProgress() {
 
 function useSmoothScroll(prefersReducedMotion: boolean) {
   useEffect(() => {
-    if (prefersReducedMotion) return;
+    // Lenis leaves `syncTouch` off by default, so on touch devices it smooths
+    // nothing while still binding document-level listeners and running a rAF loop
+    // for the whole session — pure cost on the weakest hardware. Only run it where
+    // it actually does something.
+    if (prefersReducedMotion || !isFinePointer()) return;
 
     const lenis = new Lenis({
       lerp: 0.08,
@@ -1492,6 +1689,9 @@ function useSmoothScroll(prefersReducedMotion: boolean) {
     // Keep ProcessSection's ScrollTrigger (lazy-loaded) in sync with smooth scroll.
     lenis.on("scroll", () => notifyScrollTriggerUpdate?.());
 
+    // Let the intake modal park Lenis while it is open.
+    registerSmoothScroll((paused) => (paused ? lenis.stop() : lenis.start()));
+
     let frame = 0;
     const raf = (time: number) => {
       lenis.raf(time);
@@ -1501,6 +1701,7 @@ function useSmoothScroll(prefersReducedMotion: boolean) {
     frame = requestAnimationFrame(raf);
     return () => {
       cancelAnimationFrame(frame);
+      registerSmoothScroll(null);
       lenis.destroy();
     };
   }, [prefersReducedMotion]);
