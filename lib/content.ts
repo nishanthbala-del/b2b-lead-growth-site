@@ -6,6 +6,10 @@ export type Plan = {
   name: string;
   price: number;
   volume: string;
+  // Stated monthly volume ceiling. Published so a buyer knows what they are
+  // agreeing to before they agree to it — the work is capacity-limited and
+  // quoting a tier without its ceiling reads as unlimited.
+  capacity: string;
   bestFor: string;
   includes: string;
   guardrails: string;
@@ -18,6 +22,7 @@ export const plans: Plan[] = [
     name: "Lead Engine",
     price: 750,
     volume: "Qualified, ready-to-contact lead list",
+    capacity: "Up to ~40 prospects researched and delivered per month (capacity-limited)",
     bestFor:
       "Teams that want a researched, cited, scored prospect list and the scripts to work it — and will run the outreach themselves.",
     includes:
@@ -30,6 +35,7 @@ export const plans: Plan[] = [
     name: "Outreach Engine",
     price: 1500,
     volume: "We run the outreach — you respond to interest",
+    capacity: "Up to ~100 prospects worked per month",
     bestFor:
       "Companies that want consistent, personalized outbound running every week without hiring for it.",
     includes:
@@ -43,6 +49,7 @@ export const plans: Plan[] = [
     name: "Appointment Engine",
     price: 2500,
     volume: "You show up to booked, qualified calls",
+    capacity: "Up to ~150 prospects worked per month",
     bestFor:
       "Teams that want the full system — prospecting through booked appointments — handled end to end.",
     includes:
@@ -194,3 +201,141 @@ export const faqs: Faq[] = [
       "It's a 15-minute, no-obligation call to confirm whether this is a fit and to define your ideal customer profile. We talk through who you sell to, what a good deal looks like, and which tier makes sense to start with. You also get a short written lead audit out of it — a few specific observations about your market and one clear next step — and it's yours to keep whether or not we work together. No work begins until you decide to move forward, and there's a roughly 60-second intake beforehand so the call starts with context.",
   },
 ];
+
+// The Free Pipeline Audit is the primary trust offer: a free slice of the paid Lead
+// Engine work, handed over before any money changes hands. For a business with no
+// track record yet, giving away real, verifiable work IS the proof — so the copy here
+// promises a deliverable and its quality, never an outcome. Keep it honest and free of
+// any guarantee/testimonial/result claim (see the operating-system repo's design spec).
+export const audit = {
+  name: "Free Pipeline Audit",
+  tagline:
+    "A sharpened view of your ideal customer plus 3–5 real, individually vetted, best-fit prospects — each with a cited reason to reach out — and one sample outreach message written the way we'd actually send it. Yours to keep, before you pay anything.",
+  includes: [
+    {
+      title: "An ICP snapshot",
+      body: "A tightened definition of your best-fit buyer — industry, size, geography, role, buying trigger — plus the bad-fit exclusions we'd screen out.",
+    },
+    {
+      title: "3–5 real, individually vetted prospects",
+      body: "Actual companies that match, each with a mapped buyer/contact path, a cited public reason they're worth contacting, a source link, and a priority ranking.",
+    },
+    {
+      title: "One sample outreach message",
+      body: "A personalized first touch written for one of those prospects, tied to its real reason — so you see the voice and specificity, not a mail-merge template.",
+    },
+    {
+      title: "A read of your current targeting",
+      body: "Where your best-fit buyers actually are, and the one gap most likely costing you qualified conversations right now.",
+    },
+  ],
+  whyFree:
+    "We'd rather show you the quality than tell you about it. There's no track record to point to yet, so the audit is the proof. If it's useful, we'll talk about running it at scale. If it isn't, you keep the work and owe nothing.",
+  guardrail:
+    "The audit shows you the quality of the work, not a promised result — no guaranteed leads, replies, or meetings. It's a real deliverable you keep whether or not you ever hire us. Every prospect is individually vetted and cited — never bulk-scraped.",
+} as const;
+
+// The service timeline for the managed tiers (Outreach / Appointment), shown so a
+// buyer knows what they are agreeing to before they agree to it.
+//
+// CANONICAL SOURCE: the operating-system repo's `core/timeline.py`. This is a
+// RENDERING of that module, not a second timeline — `scripts/check_cross_repo.py`
+// in that repo asserts every `band` and `label` below matches it exactly, and
+// fails the OS validation suite if they drift. Add or edit a phase THERE first.
+//
+// A subset is allowed (this page omits internal steps like the final automated
+// checks); a phase stated here with different wording is not.
+//
+// Every band describes work we do. Nothing here is dated against a result —
+// replies, meetings, and revenue depend on the market and the offer, so putting a
+// date next to one would be inventing a number.
+export type TimelinePhase = {
+  band: string;
+  label: string;
+  owner: "you" | "we" | "both";
+  detail: string;
+};
+
+export const serviceTimeline: TimelinePhase[] = [
+  {
+    band: "Day 0",
+    label: "Agreement signed, first payment received",
+    owner: "both",
+    detail:
+      "The clock starts here and not before — no work begins until the agreement is signed and the first payment has cleared.",
+  },
+  {
+    band: "Days 1-2",
+    label: "You fill in the onboarding form",
+    owner: "you",
+    detail:
+      "About 30 minutes. What you do, where you work, what you can and cannot claim, and who your best customers actually are.",
+  },
+  {
+    band: "Days 2-4",
+    label: "We draft your ideal-customer definition and send it for sign-off",
+    owner: "we",
+    detail:
+      "Who we should be reaching, and just as importantly the bad-fit exclusions we screen out. You correct it; we do not proceed on a definition you have not seen.",
+  },
+  {
+    band: "Your pace",
+    label: "You export the demand you already own",
+    owner: "you",
+    detail:
+      "This is the step that sets the whole schedule. Past customers, open and expired estimates, lapsed maintenance plans, missed calls. We cannot research, buy, or infer these — they are your records and only you can send them. Nothing is contacted until they are imported and you have approved the list.",
+  },
+  {
+    band: "Days 3-5",
+    label: "We arm the mailbox you own",
+    owner: "both",
+    detail:
+      "Messages go out from your sending identity, never ours, so you can open the sent folder and read exactly what went where.",
+  },
+  {
+    band: "3 business days",
+    label: "You approve the setup and the first batch",
+    owner: "you",
+    detail:
+      "Targeting, messaging pattern, and the first batch of messages, in your words before anyone reads them. If you do not respond we hold — silence is never taken as approval.",
+  },
+  {
+    band: "About a week in, once the steps above are done",
+    label: "First messages go out — deliberately slowly",
+    owner: "we",
+    detail:
+      "We start at 5 a day for the first three days, 10 a day for the next three, then up to full volume. Starting slow protects your domain's reputation; a mailbox that opens at full speed gets filtered, and that is not recoverable in a month.",
+  },
+  {
+    band: "About two weeks per prospect",
+    label: "Each prospect gets a short, spaced sequence",
+    owner: "we",
+    detail:
+      "Up to 4 touches, at least 3 days apart, each one adding something new rather than chasing. Anyone who asks us to stop is suppressed immediately, in code, permanently.",
+  },
+  {
+    band: "Ongoing, same day",
+    label: "Replies are triaged as they arrive",
+    owner: "we",
+    detail:
+      "Interested replies are qualified against the criteria you set. Opt-outs are processed automatically the moment they land.",
+  },
+  {
+    band: "Day 30",
+    label: "First full review",
+    owner: "both",
+    detail:
+      "What went out, what came back, what we change for the next month. This is also the honest checkpoint on whether this is working.",
+  },
+  {
+    band: "Day 30 onward",
+    label: "Month-to-month from here",
+    owner: "both",
+    detail:
+      "It renews monthly until you stop it. Either side can end it on 14 days' written notice, and you keep everything built for you — the lists, the scripts, the trackers.",
+  },
+];
+
+// Must accompany any rendering of serviceTimeline. Verbatim from core/timeline.DISCLAIMER.
+export const serviceTimelineDisclaimer =
+  "These are the timings we work to for the parts of this we control. They describe our activity, not your results. The steps marked as yours set the real pace — we cannot start outreach before your records are in and approved.";

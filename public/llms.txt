@@ -1,0 +1,30 @@
+# B2B Lead Growth
+
+> B2B Lead Growth is a founder-run B2B lead-generation and outreach service for service
+> businesses, currently focused first on residential HVAC and other home-service
+> contractors in New Jersey (serving the United States). It is a monthly service, not a
+> lead seller: it does not sell or resell leads, shared or exclusive. Pricing is
+> published: $750 (researched prospect list, client sends), $1,500 (personalised outreach
+> and follow-up run for the client), or $2,500 (adds reply qualification and booking
+> qualified calls on the client's calendar) per month, month-to-month, no setup fee,
+> 14 days' notice to cancel either side. The entry offer is a Free Pipeline Audit — a
+> sharpened ideal-customer profile plus 3–5 individually vetted, cited prospects and one
+> sample outreach message, free, that the prospect keeps regardless of whether they
+> become a client. The company started in 2026 and says so plainly: it has no clients,
+> testimonials, case studies, or results to publish yet and publishes none, and it never
+> guarantees lead counts, replies, meetings, or revenue.
+
+## Pages
+
+- [Home](https://b2b-lead-growth-site.vercel.app/): what the service is, how it works, full pricing, FAQ
+- [Free Pipeline Audit](https://b2b-lead-growth-site.vercel.app/free-pipeline-audit): what the free audit includes and how it works
+- [Pricing](https://b2b-lead-growth-site.vercel.app/pricing): exact monthly pricing with cited market context, plus billing, cancellation, and refund terms
+- [HVAC Lead Generation in New Jersey](https://b2b-lead-growth-site.vercel.app/hvac-lead-generation-new-jersey): what HVAC leads cost NJ contractors and the honest options
+- [Shared vs. Exclusive HVAC Leads](https://b2b-lead-growth-site.vercel.app/shared-vs-exclusive-hvac-leads): neutral cost-per-job math, with sources
+- [How to Choose a Lead Generation Agency](https://b2b-lead-growth-site.vercel.app/how-to-choose-a-lead-generation-agency): red flags, questions to ask, and our own answers
+- [Terms of Service](https://b2b-lead-growth-site.vercel.app/terms): what is sold, fees and billing, cancellation, refunds, termination, liability
+- [Privacy Policy](https://b2b-lead-growth-site.vercel.app/privacy): what data is collected, how it is used, retention, and your rights
+
+## Contact
+
+- Email: nishanthbala419@gmail.com

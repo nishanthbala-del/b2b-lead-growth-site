@@ -31,7 +31,7 @@ export const orgDescription =
 // empty string. That way a misconfigured build still books real calls.
 export const bookingUrl =
   process.env.NEXT_PUBLIC_BOOKING_URL?.trim() ||
-  "https://calendar.app.google/cyDCVBd2XhpuBCvG9";
+  "https://calendar.app.google/nvD1n6y2gzRzjeMS7";
 
 // The scheduler's actual appointment length. Stated on the site so the promise
 // matches the calendar slot a visitor lands on.
@@ -56,5 +56,41 @@ export const currentFocusArea = "New Jersey";
 // Set these in Vercel (and .env.local) as soon as the business details exist:
 //   NEXT_PUBLIC_CONTACT_EMAIL  e.g. hello@yourdomain.com
 //   NEXT_PUBLIC_LEGAL_ENTITY   e.g. "Example Lead Growth LLC, New Jersey, USA"
-export const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "";
+// The env override is kept, but the fallback is a REAL monitored inbox rather than ""
+// — the same posture this file already takes for `bookingUrl`. /terms renders
+// `mailto:${contactEmail}` unguarded, so an unset variable would publish an empty
+// mailto on a legal page, which is worse than degrading honestly.
+export const contactEmail =
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "nishanthbala419@gmail.com";
 export const legalEntity = process.env.NEXT_PUBLIC_LEGAL_ENTITY?.trim() || "";
+
+// The legal name shown on legal pages. Keep this as the TRADE name until the LLC is
+// verified formed and in good standing — do NOT publish "LLC" the entity can't back.
+// Once formation is confirmed, set this to the exact registered name.
+export const legalEntityName = "B2B Lead Growth";
+
+// The named person behind the business. The site claims the service is founder-run and
+// that there is no account manager between the client and the person responsible — that
+// claim is only checkable if the person is named. This MUST stay in lockstep with the
+// outbound sender identity (operating-system repo: 00_CONTROL_CENTER/sender_identity.yaml,
+// from_name) so a prospect who gets an email and then visits the site sees the same name.
+// This is founder attribution, NOT a claim of legal signatory authority.
+export const founderName = "Nishanth Balaji";
+
+// Commercial / PO-box / registered-agent mailing address. DO NOT use a private residence.
+// Leave "" until a commercial address exists — the address line renders ONLY when this is set.
+export const businessMailingAddress = "";
+
+// Governing-law state for the Terms of Service (CONFIRM with counsel).
+export const governingLawState = "New Jersey";
+
+// Notice window (in days) either party may cancel on. Published on /terms AND asserted in
+// marketing copy, so it lives in one place — a mismatch between the pricing pitch and the
+// Terms is exactly the contradiction a buyer or a chargeback reviewer looks for.
+export const cancellationNoticeDays = 14;
+
+// Last-updated stamp shown on /terms and /privacy. Bump BOTH together, and only on a
+// substantive edit. The ISO form exists because app/sitemap.ts needs a machine-safe date —
+// parsing the display string relies on locale-dependent Date behaviour.
+export const legalLastUpdated = "August 8, 2026";
+export const legalLastUpdatedISO = "2026-08-08";
