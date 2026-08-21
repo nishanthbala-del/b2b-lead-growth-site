@@ -258,6 +258,13 @@ export default function PricingPage() {
             Day 0 is the day the agreement is signed and the first payment clears — no work
             begins before it. From there:
           </p>
+          <p className="mt-3">
+            <span className="text-bone">Which of these apply to you depends on your tier.</span>{" "}
+            Lead Engine ends at handover: you receive the ideal-customer definition, the researched
+            and cited prospect list and the scripts, and you run the sending yourself — so the
+            mailbox, approval, warm-up, sequence and reply-triage phases below are not part of that
+            tier. Outreach Engine and Appointment Engine include all of them.
+          </p>
           <ul className="mt-4 space-y-3">
             {serviceTimeline.map((p) => (
               <li key={p.label} className="border-l-2 border-gold-200/30 pl-4">
@@ -269,6 +276,38 @@ export default function PricingPage() {
             ))}
           </ul>
           <p className="mt-4 text-sm opacity-80">{serviceTimelineDisclaimer}</p>
+        </GuideSection>
+
+        <GuideSection title="Where your prospects come from — this depends on who you sell to">
+          <p>
+            There are two different answers, and which one applies to you changes what you have to
+            do. Read this before you pick a tier.
+          </p>
+          <p>
+            <span className="text-bone">If you sell to other businesses</span> — agencies,
+            consultants, SaaS, IT and managed services, professional services — we research and
+            source the prospects. Companies are public entities, so every record we build carries
+            the public source it came from, a fit reason and a confidence note, and nothing without
+            a citation can be contacted.
+          </p>
+          <p>
+            <span className="text-bone">If you sell to consumers</span> — HVAC, contractors, home
+            services — we do not, and will not, cold-source your buyers. Your customers are private
+            individuals, and a homeowner list assembled by a stranger is exactly the kind of list
+            this service exists as an alternative to. Instead the campaign runs on{" "}
+            <span className="text-bone">demand you already own</span>: past customers, open and
+            expired estimates, lapsed maintenance plans, missed calls and prior enquiries, exported
+            from your own system. We cannot research, buy or infer those records — only you can send
+            them — and nothing is contacted until they are imported and you have approved the list.
+            Referral partners are the exception: plumbers, electricians, realtors and property
+            managers are businesses, so those we can research and cite for you.
+          </p>
+          <p className="text-sm opacity-80">
+            This is enforced in code, not by policy: a record claiming to come from your own
+            customer base that is not in the list you approved is blocked before it can be
+            contacted. It is also the step that sets your start date — the export is usually the
+            longest pole, so it is worth starting it early.
+          </p>
         </GuideSection>
 
         <GuideSection title="Billing, cancellation, and refunds">

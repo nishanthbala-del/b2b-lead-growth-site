@@ -12,7 +12,13 @@ import {
 } from "react";
 import { IntakeProvider, useIntake } from "./IntakeForm";
 import { audit, differentiators, faqs, idealFor, notFor, plans } from "@/lib/content";
-import { callLengthMinutes, contactEmail, currentFocusArea, intakeMinutes } from "@/lib/site";
+import {
+  callLengthMinutes,
+  contactEmail,
+  currentFocusArea,
+  founderName,
+  intakeMinutes,
+} from "@/lib/site";
 import { guidePages } from "@/lib/pages";
 import { registerSmoothScroll } from "@/lib/smooth-scroll";
 
@@ -1018,11 +1024,13 @@ function FounderSection() {
                 sent — cited, on-profile, compliant, not over-promising — against hard automated
                 gates for citations, opt-out suppression, duplicates, and daily sending caps, and
                 any lane that starts behaving oddly can be stopped outright. Nothing reaches a
-                prospect until <span className="text-bone/90">you</span> have approved the message.
+                prospect until <span className="text-bone/90">you</span> have approved the
+                targeting, the messaging pattern, and the first batch it goes out in.
               </p>
               <p>
-                And a person stands behind it: one founder, who takes your call, answers for the
-                numbers, and is who you talk to when something needs to change.
+                And a person stands behind it: {founderName}, the founder — the one who takes
+                your call, answers for the numbers, and is who you talk to when something needs to
+                change. Not an account manager, and not a rotating queue.
               </p>
             </div>
             <div className="mt-8">
@@ -1143,6 +1151,10 @@ function PricingSection() {
                     <span className="text-lg font-normal text-muted">/mo</span>
                   </p>
                   <p className="mt-4 font-semibold text-gold-200">{plan.volume}</p>
+                  {/* The ceiling is part of the price. `capacity` was defined on every plan and
+                      rendered nowhere on this page, so the buyer met the number only on /pricing
+                      - or after signing. Quoting a tier without its ceiling reads as unlimited. */}
+                  <p className="mt-2 text-sm text-muted">{plan.capacity}</p>
                 </div>
                 <div className="space-y-6 py-7">
                   <PlanField label="Best for" value={plan.bestFor} />
