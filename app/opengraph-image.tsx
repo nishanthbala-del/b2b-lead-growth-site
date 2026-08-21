@@ -101,7 +101,7 @@ export default function OpengraphImage() {
             $750 · $1,500 · $2,500 / mo
           </div>
           <div style={{ fontSize: 22, color: MUTED }}>
-            No setup fee · Month-to-month · You approve every message
+            No setup fee · Month-to-month · You approve the messaging
           </div>
         </div>
       </div>

@@ -6,8 +6,15 @@
 // supposed to point at production even when rendered from a preview build, so pinning
 // is the SEO-correct behavior. An explicit NEXT_PUBLIC_SITE_URL still overrides — set
 // it only if a real custom domain is added later.
-export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://b2b-lead-growth-site.vercel.app";
+// DELIBERATELY NOT an env var, for the same reason as `bookingUrl` below: an env
+// override cannot be read from the repo, so nothing can verify what the deployed
+// build actually canonicalised to. A stale NEXT_PUBLIC_SITE_URL left over from the
+// pre-domain deployment would silently keep pointing every canonical, og:url,
+// sitemap entry and JSON-LD @id at the throwaway *.vercel.app hostname while the
+// brand domain served identical content - which is exactly the state this replaced.
+// Canonical URLs are supposed to name production even when rendered from a preview
+// build, so a single pinned value is also the SEO-correct behaviour.
+export const siteUrl = "https://www.b2bleadgrowth.com";
 
 export const brandName = "B2B Lead Growth";
 
@@ -29,13 +36,23 @@ export const orgDescription =
 // NEXT_PUBLIC_* is inlined at BUILD time — changing it in Vercel requires a
 // redeploy, so the hardcoded default is the canonical link rather than an
 // empty string. That way a misconfigured build still books real calls.
-export const bookingUrl =
-  process.env.NEXT_PUBLIC_BOOKING_URL?.trim() ||
-  "https://calendar.app.google/nvD1n6y2gzRzjeMS7";
+// DELIBERATELY NOT an env var. This link had FOUR values across the system at once
+// (nvD1n6y2 canonical, cyDCVBd2 + FsAYPV9Y retired, and 1gmKxyRv shipped by a stale
+// Vercel env var that silently overrode the code). An env override cannot be verified
+// from the repo, so `scripts/check_cross_repo.py` in the operating-system repo could
+// only ever warn about it. Hardcoding makes the deployed value readable from the
+// commit and keeps the site and the outbound email signature provably identical.
+// Canonical source: 00_CONTROL_CENTER/sender_identity.yaml -> booking_link.
+export const bookingUrl = "https://calendar.app.google/nvD1n6y2gzRzjeMS7";
 
 // The scheduler's actual appointment length. Stated on the site so the promise
 // matches the calendar slot a visitor lands on.
 export const callLengthMinutes = 15;
+
+// The intake form's real length, published in ONE place. It was quoted as "60 seconds"
+// on the homepage and "2 minutes" on every guide page — one form, two promises, and the
+// shorter one is the one a visitor measures you against.
+export const intakeMinutes = 2;
 
 // The work is delivered remotely, so any US business can be served — that stays
 // the JSON-LD `areaServed`. But the campaigns actually running today are focused
@@ -61,13 +78,16 @@ export const currentFocusArea = "New Jersey";
 // `mailto:${contactEmail}` unguarded, so an unset variable would publish an empty
 // mailto on a legal page, which is worse than degrading honestly.
 export const contactEmail =
-  process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "nishanthbala419@gmail.com";
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "nishanth@b2bleadgrowth.com";
 export const legalEntity = process.env.NEXT_PUBLIC_LEGAL_ENTITY?.trim() || "";
 
-// The legal name shown on legal pages. Keep this as the TRADE name until the LLC is
-// verified formed and in good standing — do NOT publish "LLC" the entity can't back.
-// Once formation is confirmed, set this to the exact registered name.
-export const legalEntityName = "B2B Lead Growth";
+// The legal name shown on legal pages. This was held at the TRADE name while formation
+// was unverified. Formation is now CONFIRMED — the operating-system repo's
+// 00_CONTROL_CENTER/sender_identity.yaml records entity_confirmed: true and
+// entity_legal_name "B2B Lead Growth LLC" (Certificate of Formation filed + EIN issued,
+// Mini Balaji as sole member/signatory, New Jersey, owner-confirmed 2026-08-21), so this
+// is now the exact registered name. Keep it in lockstep with that file.
+export const legalEntityName = "B2B Lead Growth LLC";
 
 // The named person behind the business. The site claims the service is founder-run and
 // that there is no account manager between the client and the person responsible — that
@@ -81,8 +101,13 @@ export const founderName = "Nishanth Balaji";
 // Leave "" until a commercial address exists — the address line renders ONLY when this is set.
 export const businessMailingAddress = "";
 
-// Governing-law state for the Terms of Service (CONFIRM with counsel).
+// Governing-law state for the Terms of Service (CONFIRM with counsel). Same state as
+// formation (sender_identity.yaml entity_state).
 export const governingLawState = "New Jersey";
+
+// State of formation, published on /terms so the contracting party is identifiable.
+// Source: 00_CONTROL_CENTER/sender_identity.yaml -> entity_state.
+export const entityFormationState = "New Jersey";
 
 // Notice window (in days) either party may cancel on. Published on /terms AND asserted in
 // marketing copy, so it lives in one place — a mismatch between the pricing pitch and the

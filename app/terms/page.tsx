@@ -7,6 +7,7 @@ import {
   businessMailingAddress,
   contactEmail,
   governingLawState,
+  entityFormationState,
   legalLastUpdated,
   cancellationNoticeDays,
 } from "@/lib/site";
@@ -94,13 +95,12 @@ export default function TermsPage() {
 
         <Section title="1. Who we are">
           <p className="leading-7 text-muted">
-            {brandName} is the trading name of a founder-run lead-generation service based in{" "}
-            {governingLawState}, United States. {founderName} is the founder and the person who
-            does the work and who you deal with directly; the business is not yet incorporated, so
-            these Terms are entered into under the trading name above rather than by a registered
-            company. If and when a registered entity is formed, we will update this page and the
-            name on our invoices and agreements, and any signed services agreement will name the
-            contracting party and its authorised signatory. You can reach us at{" "}
+            {brandName} is the trading name of {legalEntityName}, a limited liability company
+            formed in {entityFormationState}, United States. {legalEntityName} is the contracting
+            party under these Terms and on every invoice and services agreement. {founderName} is
+            the founder and operational lead — the person who does the work and who you deal with
+            directly — and any signed services agreement names the contracting party and its
+            authorised signatory, who may be a different person. You can reach us at{" "}
             <a
               href={`mailto:${contactEmail}`}
               className="text-gold-200 underline-offset-4 hover:underline"

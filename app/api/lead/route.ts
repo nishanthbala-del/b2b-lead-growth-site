@@ -22,7 +22,7 @@ type LeadPayload = {
   currentProspecting?: string;
   consent?: boolean;
   // Honeypot — must stay empty for real humans.
-  company_website?: string;
+  hp_leave_blank?: string;
 };
 
 // On Vercel (and any serverless host) the filesystem is ephemeral: a local write
@@ -52,6 +52,8 @@ const CSV_COLUMNS = [
   "currentProspecting",
   "icpNotes",
   "source",
+  "consent",
+  "consentAt",
   "ip",
 ] as const;
 
@@ -267,7 +269,15 @@ export async function POST(req: NextRequest) {
   }
 
   // Honeypot: bots fill hidden fields. Return a fake success so they move on.
-  if (body.company_website) {
+  //
+  // The field is `hp_leave_blank`, NOT `company_website`. Chrome ignores
+  // autocomplete="off" on contact-shaped fields, and this form also has a REAL
+  // `website` input - so a browser that autofilled a hidden `company_website`
+  // would trip this branch for a real person and hand them a fake success while
+  // the lead was discarded. A discard is also recorded: a silent filter with no
+  // counter cannot be audited after the fact.
+  if (body.hp_leave_blank) {
+    await appendEvent({ type: "honeypot_discard", timestamp: new Date().toISOString(), ip });
     return Response.json({ ok: true, id: genId() });
   }
 
@@ -342,7 +352,14 @@ export async function POST(req: NextRequest) {
     currentProspecting: field(body.currentProspecting, 800),
     icpNotes: field(body.icpNotes, 1500),
     source: "website",
-    ip,
+    // Proof of consent. It was validated on the way in and then dropped, so nothing
+    // downstream could show WHEN a contact agreed to be contacted - the one record
+    // you need if a recipient ever disputes it.
+    consent: "true",
+    consentAt: timestamp,
+    // `ip` derives from client-settable headers, so it is attacker-controlled free
+    // text and takes the same formula guard as every visible field.
+    ip: neutralizeFormula(ip),
   };
 
   const localOk = await appendLocal(record);

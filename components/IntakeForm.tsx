@@ -15,7 +15,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
-import { bookingUrl, callLengthMinutes } from "@/lib/site";
+import { bookingUrl, callLengthMinutes, intakeMinutes } from "@/lib/site";
 import { pauseSmoothScroll } from "@/lib/smooth-scroll";
 
 /* -------------------------------------------------------------------------- */
@@ -91,7 +91,7 @@ type FormState = {
   icpNotes: string;
   consent: boolean;
   // Honeypot — must stay empty.
-  company_website: string;
+  hp_leave_blank: string;
 };
 
 const EMPTY_FORM: FormState = {
@@ -107,7 +107,7 @@ const EMPTY_FORM: FormState = {
   currentProspecting: "",
   icpNotes: "",
   consent: false,
-  company_website: "",
+  hp_leave_blank: "",
 };
 
 type Errors = Partial<Record<keyof FormState, string>>;
@@ -595,7 +595,7 @@ function IntakeForm({
                     ← Back
                   </button>
                 ) : (
-                  <span className="text-xs text-muted">Takes about 60 seconds.</span>
+                  <span className="text-xs text-muted">Takes about {intakeMinutes} minutes.</span>
                 )}
                 <button
                   type="submit"
@@ -618,14 +618,14 @@ function IntakeForm({
 
             {/* Honeypot — visually hidden, off-screen, not announced. */}
             <div aria-hidden="true" className="absolute h-0 w-0 overflow-hidden opacity-0">
-              <label htmlFor="company_website">Leave this field empty</label>
+              <label htmlFor="hp_leave_blank">Leave this field empty</label>
               <input
-                id="company_website"
+                id="hp_leave_blank"
                 type="text"
                 tabIndex={-1}
                 autoComplete="off"
-                value={form.company_website}
-                onChange={(e) => update("company_website", e.target.value)}
+                value={form.hp_leave_blank}
+                onChange={(e) => update("hp_leave_blank", e.target.value)}
               />
             </div>
           </motion.div>

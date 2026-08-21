@@ -181,18 +181,27 @@ function json(obj) {
 
 ## Step 2 — Booking link
 
-Already wired to your Google Calendar appointment schedule in `.env.local`:
+Hardcoded in `lib/site.ts` — deliberately NOT an environment variable:
 
 ```
-NEXT_PUBLIC_BOOKING_URL=https://calendar.app.google/cyDCVBd2XhpuBCvG9
+export const bookingUrl = "https://calendar.app.google/nvD1n6y2gzRzjeMS7";
 ```
+
+This link must stay identical to `00_CONTROL_CENTER/sender_identity.yaml -> booking_link` in the
+operating-system repo, because that is the link your cold emails carry. It lived in an env var
+once and drifted: the deployed site booked into a calendar that appeared nowhere in the OS, while
+the code fell back to a retired one. Keeping it in the commit is what makes it checkable.
 
 After a visitor submits the form they get a **"Choose a time"** button that opens this scheduler
 in a new tab. (Google's `calendar.app.google` links refuse to load inside an iframe, so opening
 in a new tab is the reliable behavior. If you ever switch to **Calendly** or **Cal.com**, the form
 will automatically show the scheduler *inline* — no code change needed.)
 
-To change the link, edit `NEXT_PUBLIC_BOOKING_URL` and restart dev (or update it in Vercel).
+To change the link, edit `bookingUrl` in `lib/site.ts` — it is intentionally NOT an
+environment variable, so the deployed value is always readable from the commit. If
+`NEXT_PUBLIC_BOOKING_URL` or `NEXT_PUBLIC_SITE_URL` are still set in Vercel, delete
+them: they are ignored now, and a stale value is what previously pointed the live
+site at a calendar nobody watched.
 
 ---
 
@@ -207,13 +216,14 @@ To change the link, edit `NEXT_PUBLIC_BOOKING_URL` and restart dev (or update it
    git push -u origin main
    ```
 2. Go to **vercel.com → Add New → Project → Import** your GitHub repo. Framework auto-detects as Next.js.
-3. **Before deploying, add Environment Variables** (Settings → Environment Variables):
+3. **Before deploying, add Environment Variables** (Settings → Environment Variables).
+   Do NOT set `NEXT_PUBLIC_BOOKING_URL` or `NEXT_PUBLIC_SITE_URL` — the code no longer reads
+   them, and stale copies are what previously sent live traffic to the wrong calendar and
+   kept every canonical URL pointing at the old `*.vercel.app` hostname. Delete them if present.
    | Name | Value |
    | --- | --- |
-   | `NEXT_PUBLIC_BOOKING_URL` | `https://calendar.app.google/cyDCVBd2XhpuBCvG9` |
    | `SHEETS_WEBHOOK_URL` | the Apps Script `/exec` URL from Step 1 |
    | `SHEETS_WEBHOOK_SECRET` | the secret (only if you set one) |
-   | `NEXT_PUBLIC_SITE_URL` | your final Vercel URL (e.g. `https://your-site.vercel.app`) |
 4. **Deploy.** Submit the live form once to confirm a row lands in your Sheet.
 
 > Prefer the CLI? `npm i -g vercel && vercel` (then `vercel --prod`). You'll still set the env

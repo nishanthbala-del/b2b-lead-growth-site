@@ -95,16 +95,16 @@ export type Differentiator = { title: string; body: string };
 
 export const differentiators: Differentiator[] = [
   {
-    title: "You approve every message",
-    body: "Outreach is written per prospect and goes out only after you sign off — not templated mail-merge running on autopilot in your name.",
+    title: "You approve the targeting and the messaging",
+    body: "Outreach is written per prospect, never templated mail-merge running on autopilot in your name. You sign off on the targeting, the messaging pattern, and the first batch before anything goes out, and you can pause or change the messaging at any point after that.",
   },
   {
     title: "Everything we build is yours",
     body: "Your list, your sending account, your CRM. Outreach goes out from your own domain with your sign-off, and the lists, scripts, and trackers stay yours to keep — nothing is locked inside a tool you lose access to when the engagement ends.",
   },
   {
-    title: "No citation, no outreach",
-    body: "Every prospect is sourced from free public data and carries the source it came from, plus a fit reason and a data-confidence note. That is a hard rule in the system, not a best effort — a record without a citation cannot be contacted. No bought broker lists, no invented companies, no borrowed logos, no fabricated case studies.",
+    title: "No citation, no cold outreach",
+    body: "Every prospect we research from public sources carries the source it came from, plus a fit reason and a data-confidence note. That is a hard rule in the system, not a best effort — a researched record without a citation cannot be contacted. Records you supply from your own customer history are governed differently: they are yours, you approve them, and we never research, buy or infer them. No bought broker lists, no invented companies, no borrowed logos, no fabricated case studies.",
   },
   {
     title: "One clear line of ownership",
@@ -183,22 +183,22 @@ export const faqs: Faq[] = [
   {
     question: "Who controls the outreach and the sending account?",
     answer:
-      "You do. Outreach runs from your own sending account, every message is personalized and approved by you before it sends, and you set the volume and can pause anytime. Sender reputation and deliverability depend on your domain setup and sending history, which stay in your hands — so you should confirm the email, privacy, and platform rules that apply to your market before outreach begins.",
+      "You do. Outreach runs from your own sending account, every message is personalized to the prospect, and you approve the targeting, the messaging pattern, and the first batch before anything goes out. You set the volume and can pause at any time. Sender reputation and deliverability depend on your domain setup and sending history, which stay in your hands — so you should confirm the email, privacy, and platform rules that apply to your market before outreach begins.",
   },
   {
     question: "How do we start, and is there a long-term contract?",
     answer:
-      "No long-term contract and no setup fee — pricing is a flat monthly fee, month-to-month, and you can cancel anytime, so you're not locked in while you find out whether outbound works for your market. You can move between tiers as your needs change, and everything built for you is yours to keep. It often makes sense to start with the tier that fits today — often Lead Engine, to see the quality first — then move up to done-for-you outreach once it proves out. It all begins with a 15-minute strategy call to confirm fit and define your ICP before any work starts.",
+      "No long-term contract and no setup fee — pricing is a flat monthly fee, month-to-month on a short written services agreement, and either side can end it on 14 days' notice, so you're not locked in while you find out whether outbound works for your market. You can move between tiers as your needs change, and everything built for you is yours to keep. It often makes sense to start with the tier that fits today — often Lead Engine, to see the quality first — then move up to done-for-you outreach once it proves out. It all begins with a 15-minute strategy call to confirm fit and define your ICP before any work starts.",
   },
   {
     question: "What do you need from me to get started?",
     answer:
-      "Three things: a clear picture of who you sell to, your approval on the messaging, and someone available to take the calls. On the outreach tiers you also provide the sending account or domain the messages go out from, so the relationship and the sender reputation stay yours. We handle the targeting, research, list building, and — on the done-for-you tiers — the outreach and follow-up. We confirm exactly what's needed for your tier on the strategy call before any work starts.",
+      "Three things, and a fourth if you sell to consumers: a clear picture of who you sell to, your approval on the targeting and messaging, and someone available to take the calls. If your buyers are homeowners or consumers rather than businesses, you also export the demand you already own — past customers, open and expired estimates, lapsed plans, prior inquiries. We cannot research, buy or infer those records, so nothing can be contacted until they are imported and you have approved them. On the outreach tiers you also provide the sending account or domain the messages go out from, so the relationship and the sender reputation stay yours. We handle the targeting, research, list building, and — on the done-for-you tiers — the outreach and follow-up. We confirm exactly what's needed for your tier on the strategy call before any work starts.",
   },
   {
     question: "What happens on the free strategy call?",
     answer:
-      "It's a 15-minute, no-obligation call to confirm whether this is a fit and to define your ideal customer profile. We talk through who you sell to, what a good deal looks like, and which tier makes sense to start with. You also get a short written lead audit out of it — a few specific observations about your market and one clear next step — and it's yours to keep whether or not we work together. No work begins until you decide to move forward, and there's a roughly 60-second intake beforehand so the call starts with context.",
+      "It's a 15-minute, no-obligation call to confirm whether this is a fit and to define your ideal customer profile. We talk through who you sell to, what a good deal looks like, and which tier makes sense to start with. You also get a short written lead audit out of it — a few specific observations about your market and one clear next step — and it's yours to keep whether or not we work together. No work begins until you decide to move forward, and there's a short 2-minute intake beforehand so the call starts with context.",
   },
 ];
 

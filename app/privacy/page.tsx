@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { brandName, contactEmail, legalEntity } from "@/lib/site";
+import {
+  brandName,
+  contactEmail,
+  legalEntity,
+  legalEntityName,
+  legalLastUpdated,
+} from "@/lib/site";
 
 const PAGE_TITLE = "Privacy Policy";
 const PAGE_DESCRIPTION =
@@ -28,7 +34,7 @@ export const metadata: Metadata = {
   },
 };
 
-const LAST_UPDATED = "August 6, 2026";
+
 
 export default function PrivacyPage() {
   return (
@@ -55,7 +61,7 @@ export default function PrivacyPage() {
         <h1 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
           Privacy Policy
         </h1>
-        <p className="mt-4 text-sm text-muted">Last updated: {LAST_UPDATED}</p>
+        <p className="mt-4 text-sm text-muted">Last updated: {legalLastUpdated}</p>
 
         <p className="mt-8 leading-7 text-muted">
           This Privacy Policy explains how {brandName} (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or
@@ -177,9 +183,9 @@ export default function PrivacyPage() {
               </>
             ) : (
               <>
-                {brandName} is a founder-run business operating from the United States, and is
-                responsible for the information described in this policy. Full registered business
-                details are available on request.
+                {brandName} is the trading name of {legalEntityName}, a limited liability company
+                formed in the United States, which is responsible for the information described in
+                this policy. Full registered business details are available on request.
               </>
             )}
           </p>

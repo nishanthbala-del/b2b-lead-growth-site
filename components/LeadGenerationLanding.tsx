@@ -11,8 +11,9 @@ import {
   useState,
 } from "react";
 import { IntakeProvider, useIntake } from "./IntakeForm";
-import { differentiators, faqs, idealFor, notFor, plans } from "@/lib/content";
-import { callLengthMinutes, contactEmail, currentFocusArea } from "@/lib/site";
+import { audit, differentiators, faqs, idealFor, notFor, plans } from "@/lib/content";
+import { callLengthMinutes, contactEmail, currentFocusArea, intakeMinutes } from "@/lib/site";
+import { guidePages } from "@/lib/pages";
 import { registerSmoothScroll } from "@/lib/smooth-scroll";
 
 // Bridge so ProcessSection's lazily-loaded ScrollTrigger can stay in sync with the
@@ -33,6 +34,7 @@ const disclaimer =
 const brandName = "B2B Lead Growth";
 
 const navItems = [
+  { label: "Free audit", href: "#get-audit" },
   { label: "Who it's for", href: "#who-its-for" },
   { label: "How it works", href: "#how-it-works" },
   { label: "Services", href: "#services" },
@@ -107,7 +109,7 @@ const services = [
   {
     title: "Personalized Outreach",
     description: "Done-for-you messaging written per prospect — not templated mail-merge — tied to a real reason to reach out.",
-    deliverables: "Per-prospect first touch + sequence, angle bank, every message client-approved before send",
+    deliverables: "Per-prospect first touch + sequence, angle bank, targeting and messaging client-approved before send",
   },
   {
     title: "Follow-up & Reply Triage",
@@ -140,7 +142,7 @@ const qualificationStandards = [
   },
   {
     title: "Source Citation",
-    body: "Every prospect carries the public source it came from. No citation, no outreach — that is a hard rule, not a preference.",
+    body: "Every prospect we research carries the public source it came from. No citation, no cold outreach — that is a hard rule, not a preference.",
   },
   {
     title: "Enforced Compliance Controls",
@@ -258,6 +260,7 @@ export default function LeadGenerationLanding() {
       <main id="main" tabIndex={-1} className="outline-none">
         <Hero prefersReducedMotion={Boolean(prefersReducedMotion)} />
         <PositioningSection />
+        <AuditSection />
         <WhoItsForSection />
         <ProcessSection />
         <ServicesSection />
@@ -440,27 +443,27 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
       </div>
       <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
         <div ref={headlineRef} style={restStyle}>
-          <Reveal>
+          <Reveal immediate>
             <p className="mb-5 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/90 sm:mb-7">
               <span className="h-px w-10 bg-gold-500/80" aria-hidden="true" />
               B2B lead generation
             </p>
           </Reveal>
-          <Reveal delay={0.08}>
+          <Reveal immediate>
             <h1 className="max-w-[20rem] font-display text-[2.05rem] leading-[1.1] text-bone sm:max-w-5xl sm:text-6xl lg:text-7xl">
               A steady pipeline of qualified B2B leads — not a bulk list or a black box.
             </h1>
           </Reveal>
-          <Reveal delay={0.16}>
+          <Reveal immediate>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted sm:mt-7 sm:text-lg sm:leading-8 lg:text-xl">
-              We find your best-fit buyers and hand you a cited, scored pipeline — or run the outreach and book qualified calls straight onto your calendar. You choose how much we handle, and you approve every message before it sends.
+              We find your best-fit buyers and hand you a cited, scored pipeline — or run the outreach and book qualified calls straight onto your calendar. You choose how much we handle, and you approve the targeting and the messaging before anything goes out.
             </p>
             <p className="mt-3 max-w-2xl text-sm font-semibold uppercase tracking-[0.18em] text-gold-200/80 sm:mt-4">
               For contractors, service businesses, agencies &amp; software teams selling
               high-value work.
             </p>
           </Reveal>
-          <Reveal delay={0.24}>
+          <Reveal immediate>
             <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row">
               <MagneticAnchor
                 href="#contact"
@@ -482,7 +485,7 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
               </MagneticAnchor>
             </div>
             <p className="mt-4 text-sm text-muted">
-              Free {callLengthMinutes}-minute call · 60-second intake · you keep the lead audit
+              Free {callLengthMinutes}-minute call · {intakeMinutes}-minute intake · you keep the audit
               either way
             </p>
           </Reveal>
@@ -500,7 +503,7 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
             <div className="space-y-4">
               {[
                 ["Source", "Best-fit accounts + buyers, with a real reason to care"],
-                ["Outreach", "Personalized messages — you approve before they send"],
+                ["Outreach", "Personalized messages — you approve the pattern before they send"],
                 ["Follow-up", "Tracked multi-touch cadence; replies triaged by interest"],
                 ["Book", "Qualified calls booked straight onto your calendar"],
               ].map(([label, body], index) => (
@@ -518,6 +521,74 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
                 </div>
               ))}
             </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+// The Free Pipeline Audit is the primary trust offer. With no case studies to point
+// at, giving away a real, checkable piece of the paid work IS the proof - so this
+// section has to exist ON the homepage, and `id="get-audit"` has to exist because
+// every guide page's only CTA links to /#get-audit. Both halves went missing once;
+// the CTA on five pages pointed at an anchor that was not here.
+function AuditSection() {
+  const { openIntake } = useIntake();
+
+  return (
+    <section id="get-audit" className="relative scroll-mt-24 border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
+      <div className="mx-auto max-w-7xl">
+        <Reveal>
+          <div className="max-w-3xl">
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+              Start here — free
+            </p>
+            <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+              {audit.name}
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-muted">{audit.tagline}</p>
+          </div>
+        </Reveal>
+        <div className="mt-12 grid gap-4 md:grid-cols-2">
+          {audit.includes.map((item, index) => (
+            <Reveal key={item.title} delay={Math.min(index, 4) * 0.06}>
+              <div className="h-full rounded-lg border border-gold-500/18 bg-ink-950/60 p-6">
+                <h3 className="text-xl font-semibold text-bone">{item.title}</h3>
+                <p className="mt-3 leading-7 text-muted">{item.body}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal delay={0.1}>
+          <div className="mt-10 rounded-lg border border-gold-500/18 bg-ink-950/60 p-6">
+            <p className="leading-7 text-muted">
+              <span className="font-semibold text-gold-200">Why it&rsquo;s free: </span>
+              {audit.whyFree}
+            </p>
+            <p className="mt-4 leading-7 text-muted">
+              <span className="font-semibold text-gold-200">What it is not: </span>
+              {audit.guardrail}
+            </p>
+          </div>
+        </Reveal>
+        <Reveal delay={0.16}>
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <button
+              type="button"
+              onClick={() => openIntake()}
+              className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 font-semibold text-ink-950 shadow-gold"
+              data-cursor-label="Open"
+            >
+              Request my free pipeline audit <span className="ml-3" aria-hidden="true">&rarr;</span>
+            </button>
+            <a
+              href="/free-pipeline-audit"
+              className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/28 px-6 font-semibold text-gold-200 transition-colors hover:border-gold-200/65 hover:bg-gold-500/8"
+              data-cursor-label="Read"
+            >
+              See exactly what&rsquo;s included
+            </a>
           </div>
         </Reveal>
       </div>
@@ -1044,7 +1115,7 @@ function PricingSection() {
               <span aria-hidden="true" className="text-gold-500/60">·</span>
               <span>No setup fee</span>
               <span aria-hidden="true" className="text-gold-500/60">·</span>
-              <span>Month-to-month, cancel anytime</span>
+              <span>Month-to-month, 14 days&rsquo; notice</span>
               <span aria-hidden="true" className="text-gold-500/60">·</span>
               <span>Everything we build is yours to keep</span>
             </p>
@@ -1203,7 +1274,7 @@ function ProofSection() {
               We have no client case studies to show you yet, and we won&rsquo;t borrow anyone
               else&rsquo;s. What we can show you is the standard: the exact fields, scoring context,
               and citations that ship with every record. Judge that, then judge the first real list
-              — one month, no contract, cancel if it isn&rsquo;t good.
+              — one month at a time, on a month-to-month agreement either side can end on 14 days&rsquo; notice, and the work is yours to keep.
             </p>
             <div className="mt-8">
               <button
@@ -1267,22 +1338,17 @@ function FAQSection() {
           </div>
         </Reveal>
         <div className="mt-12 divide-y divide-gold-500/12 border-y border-gold-500/12">
+          {/* Every question AND its answer render open by default - no <details>, accordion or
+              expander. Answers must be readable (and crawlable) without interaction, which is
+              also what keeps the FAQPage JSON-LD in app/page.tsx honest: structured data may
+              only mirror text a visitor can actually see. Re-collapsing this is a regression:
+              it was removed once for that reason and came back. */}
           {faqs.map((faq, index) => (
-            <Reveal key={faq.question} delay={index * 0.05}>
-              {/* The <summary> is wrapped in an <h3> so all twelve questions show up in
-                  screen-reader heading navigation — otherwise the largest block of
-                  content on the page is unreachable that way. */}
-              <details className="group py-6">
-                <h3>
-                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-6 text-left text-xl font-semibold text-bone">
-                    {faq.question}
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm border border-gold-500/35 text-gold-200 transition-transform group-open:rotate-45">
-                      +
-                    </span>
-                  </summary>
-                </h3>
+            <Reveal key={faq.question} delay={Math.min(index, 4) * 0.05}>
+              <div className="py-6">
+                <h3 className="text-xl font-semibold text-bone">{faq.question}</h3>
                 <p className="mt-4 max-w-3xl leading-7 text-muted">{faq.answer}</p>
-              </details>
+              </div>
             </Reveal>
           ))}
         </div>
@@ -1330,7 +1396,7 @@ function FinalCTA() {
               Book a Lead Strategy Call Now <span className="ml-3" aria-hidden="true">→</span>
             </MagneticAnchor>
             <span className="text-sm leading-6 text-muted">
-              60-second intake · then pick a time
+              {intakeMinutes}-minute intake · then pick a time
             </span>
           </div>
         </Reveal>
@@ -1379,7 +1445,34 @@ function SiteFooter() {
             ) : null}
           </p>
         </div>
-        <p className="max-w-2xl leading-6">
+        {/* Guides + legal navigation. Without this the site's highest-authority page
+            links to nothing but /privacy: /pricing, /terms and all four guide pages
+            had zero internal inbound links, and a Terms of Service that /terms itself
+            treats as binding on submission was unreachable from the page the visitor
+            converts on. */}
+        <nav aria-label="More from B2B Lead Growth" className="md:min-w-56">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-200/80">
+            Guides
+          </p>
+          <ul className="mt-3 space-y-1">
+            {guidePages.map((page) => (
+              <li key={page.slug}>
+                <a
+                  href={`/${page.slug}`}
+                  className="inline-block py-1 transition-colors hover:text-gold-200"
+                >
+                  {page.navLabel}
+                </a>
+              </li>
+            ))}
+            <li>
+              <a href="/terms" className="inline-block py-1 transition-colors hover:text-gold-200">
+                Terms of Service
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <p className="max-w-xl leading-6">
           <span className="font-semibold text-gold-200">Disclaimer:</span> {disclaimer}
         </p>
       </div>
@@ -1409,12 +1502,27 @@ function Reveal({
   children,
   className = "",
   delay = 0,
+  immediate = false,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
+  immediate?: boolean;
 }) {
   const prefersReducedMotion = useReducedMotion();
+
+  // `immediate` is for ABOVE-THE-FOLD content. Every other Reveal server-renders at
+  // style="opacity:0" and only becomes visible once framer-motion has hydrated and
+  // the IntersectionObserver has fired. That is fine for content the visitor has to
+  // scroll to, but it made the hero - the LCP element - invisible for the whole time
+  // the 170 kB client bundle was downloading and parsing: on a phone the first paint
+  // was a black screen with one eyebrow label. The <noscript> fallback in app/layout
+  // only helps clients with scripting DISABLED, not slow ones, so it never covered
+  // this. Rendering the hero unconditionally costs nothing and fixes both the bounce
+  // and the Core Web Vital.
+  if (immediate) {
+    return <div className={className}>{children}</div>;
+  }
 
   // `initial` and `whileInView` stay identical on the server and the client — they
   // decide the first rendered markup, so branching them on a client-only media query

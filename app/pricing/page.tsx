@@ -140,7 +140,7 @@ export default function PricingPage() {
                   {p.includes}
                 </p>
                 <p className="mt-2 leading-7">
-                  <span className="font-semibold text-gold-200/90">Not included \u2014 stays with you: </span>
+                  <span className="font-semibold text-gold-200/90">Not included — stays with you: </span>
                   {p.guardrails}
                 </p>
               </div>
