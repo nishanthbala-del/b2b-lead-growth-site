@@ -8,7 +8,7 @@ import { ImageResponse } from "next/og";
 // crawler re-rendered the same PNG on demand. On the Node runtime it is generated
 // once at build and served from the CDN.
 export const alt =
-  "B2B Lead Growth — done-for-you B2B lead generation: cited prospects, outreach, booked calls";
+  "B2B Lead Growth — HVAC lead generation and appointment setting: reactivate unsold estimates and lapsed agreements, work your referral partners, book appointments";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -79,10 +79,11 @@ export default function OpengraphImage() {
               maxWidth: 980,
             }}
           >
-            A steady pipeline of qualified leads
+            HVAC lead generation, done the honest way
           </div>
           <div style={{ fontSize: 30, color: MUTED, maxWidth: 920, lineHeight: 1.35 }}>
-            Cited prospects, done-for-you outreach, and qualified calls booked on your calendar.
+            Reactivate the estimates and agreements already in your system. Work your referral
+            partners. Book appointments.
           </div>
         </div>
 
@@ -101,7 +102,7 @@ export default function OpengraphImage() {
             $750 · $1,500 · $2,500 / mo
           </div>
           <div style={{ fontSize: 22, color: MUTED }}>
-            No setup fee · Month-to-month · You approve the messaging
+            No setup fee · Month-to-month · Never sold per lead
           </div>
         </div>
       </div>

@@ -6,7 +6,10 @@
 // site it typically cuts Bing discovery from weeks to hours. The key file is
 // served from /public/<key>.txt so the endpoint can verify ownership.
 
-const HOST = (process.env.NEXT_PUBLIC_SITE_URL || "https://b2b-lead-growth-site.vercel.app")
+// Default MUST match lib/site.ts `siteUrl`. It pointed at the old throwaway
+// *.vercel.app hostname long after the brand domain went live, so every ping
+// announced URLs on a host we no longer publish.
+const HOST = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.b2bleadgrowth.com")
   .replace(/^https?:\/\//, "")
   .replace(/\/$/, "");
 const KEY = "fa2d37dcda78121e04e0e0748d3bf823";

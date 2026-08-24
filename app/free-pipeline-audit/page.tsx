@@ -24,7 +24,7 @@ const pageFaqs = [
   {
     question: "Is the free pipeline audit actually free?",
     answer:
-      "Yes. There is no charge, no card on file, and no obligation. You receive the ICP snapshot, the 3–5 individually vetted prospects with cited reasons, and the sample outreach message, and they are yours to keep whether or not you ever hire us.",
+      "Yes. There is no charge, no card on file, and no obligation. You receive the job profile, the 3–5 individually vetted referral partners with cited reasons, and the sample outreach message, and they are yours to keep whether or not you ever hire us.",
   },
   {
     question: "Is it just a disguised sales pitch?",
@@ -34,12 +34,12 @@ const pageFaqs = [
   {
     question: "Does the audit guarantee leads or meetings?",
     answer:
-      "No. The audit shows the quality of the research and writing — it does not promise replies, meetings, or revenue, and nothing we sell does either. Sales outcomes depend on your offer, market, follow-up, and closing, which no honest vendor can guarantee.",
+      "No. The audit shows the quality of the research and writing — it does not promise replies, appointments, or revenue, and nothing we sell does either. Whether a job closes depends on your pricing, your reputation, your timing, and how the visit goes, which no honest vendor can guarantee.",
   },
   {
     question: "How long does it take to receive?",
     answer:
-      "The intake form takes about two minutes. Every prospect is individually researched, cited, and then independently re-verified against its own source before it can be included, so the audit arrives within a few business days, not instantly. Speed would defeat the point: the deliverable is proof of care, not a bulk export.",
+      "The intake form takes about two minutes. Every partner is individually researched, cited, and then independently re-verified against its own source before it can be included, so the audit arrives within a few business days, not instantly. Speed would defeat the point: the deliverable is proof of care, not a bulk export.",
   },
   {
     question: "Why would a company give this away?",
@@ -86,16 +86,22 @@ export default function FreePipelineAuditPage() {
       <GuideLayout
         page={page}
         eyebrow="Start here"
-        h1="The Free Pipeline Audit: what it includes and how it works"
+        h1="The Free Pipeline Audit for HVAC companies: what it includes and how it works"
         intro={
           <>
             <p>
-              A pipeline audit is a short, concrete review of who your best-fit buyers are and
-              whether your current targeting actually reaches them. Ours is free and delivered as
-              real work product: a sharpened ideal-customer profile, 3–5 real prospects in your
-              market, each individually vetted with a cited reason it is worth contacting, and one sample
-              outreach message written the way we would actually send it. You keep all of it,
-              whether or not you ever pay us anything.
+              A pipeline audit is a short, concrete review of where your next jobs are most likely
+              to come from and whether anything is currently going after them. Ours is free and
+              delivered as real work product: a sharpened profile of the jobs worth chasing, 3–5
+              real referral partners in your service area — each a named business, individually
+              vetted, with a cited reason it is worth contacting — and one sample outreach message
+              written the way we would actually send it. You keep all of it, whether or not you ever
+              pay us anything.
+            </p>
+            <p>
+              To be explicit about what it is not: the audit does not include homeowner records. We
+              cannot research, buy, or infer those for anyone — they come from your own export, and
+              only once you are a client and have approved it.
             </p>
             <p>
               This page explains exactly what arrives, how the process works, and — because
@@ -121,13 +127,15 @@ export default function FreePipelineAuditPage() {
           <ol className="list-decimal space-y-3 pl-5">
             <li>
               <span className="font-semibold text-bone">A 2-minute intake.</span> You tell us your
-              market, average deal size, and how you prospect today. No card, no commitment.
+              service area, your average job value, and how new work reaches you today. No card, no
+              commitment.
             </li>
             <li>
-              <span className="font-semibold text-bone">We research each prospect individually.</span> The
-              company is real, the buyer path is mapped, and the reason to contact them is cited to
-              a public source you can click. Nothing is bulk-scraped, and every prospect is independently re-verified
-              against its own cited source before it can be included.
+              <span className="font-semibold text-bone">We research each partner individually.</span> The
+              business is real, it operates in your service area, the contact path is mapped, and the
+              reason to approach them is cited to a public source you can click. Nothing is
+              bulk-scraped, and every record is independently re-verified against its own cited
+              source before it can be included.
             </li>
             <li>
               <span className="font-semibold text-bone">You get the audit, then an optional
@@ -149,8 +157,8 @@ export default function FreePipelineAuditPage() {
               exists inside a sales call, it is a pitch, not an audit.
             </li>
             <li>
-              <span className="text-bone">Named, checkable specifics.</span> Real companies, real
-              roles, real sources — not &ldquo;we found 47 opportunities in your market.&rdquo;
+              <span className="text-bone">Named, checkable specifics.</span> Real businesses, real
+              roles, real sources — not &ldquo;we found 47 opportunities in your area.&rdquo;
             </li>
             <li>
               <span className="text-bone">The reasoning, not just the list.</span> You should see
@@ -169,7 +177,8 @@ export default function FreePipelineAuditPage() {
 
         <GuideSection title="What we will not do">
           <ul className="list-disc space-y-2 pl-5">
-            <li>We will not guarantee lead counts, reply rates, meetings, or revenue — on the audit or on any paid tier.</li>
+            <li>We will not guarantee lead counts, reply rates, appointments, or revenue — on the audit or on any paid tier.</li>
+            <li>We will not hand you a homeowner list. Not in the audit, not at any tier, not at any price.</li>
             <li>We will not pad the audit with bulk-scraped contacts to make it look bigger.</li>
             <li>We will not invent testimonials or case studies we do not have. We are new; the audit exists precisely because of that.</li>
             <li>We will not chase you. One deliverable, one optional walkthrough, your decision.</li>

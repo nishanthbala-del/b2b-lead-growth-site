@@ -35,7 +35,7 @@ function isFinePointer(): boolean {
 }
 
 const disclaimer =
-  "We guarantee the system and the work, and we report the results honestly — we do not guarantee revenue, jobs, customers, or a set number of appointments. Sales outcomes depend on your offer, your market, your follow-up, and your closing.";
+  "We guarantee the system and the work, and we report the results honestly — we do not guarantee jobs, revenue, customers, or a set number of appointments. Whether a homeowner books and buys depends on your pricing, your reputation, your timing, and how the visit goes.";
 
 const brandName = "B2B Lead Growth";
 
@@ -49,15 +49,16 @@ const navItems = [
   { label: "FAQ", href: "#faq" },
 ];
 
-// "Cited sources" rather than "verified contacts": what the system actually
-// guarantees is that every prospect carries a public source citation before anyone
-// is contacted. Contact-data confidence is noted, not certified — so the pillar
-// claims the thing that is genuinely true and checkable.
+// Four things an HVAC owner can check, not four adjectives. "Cited sources" rather
+// than "verified contacts": what the system actually guarantees is that every
+// RESEARCHED prospect carries a public source citation before anyone is contacted.
+// Contact-data confidence is noted, not certified — so the pillar claims the thing
+// that is genuinely true and checkable.
 const valuePillars = [
-  "Sharper ICP focus",
+  "Your list, cleaned and ranked",
   "Cited public sources",
-  "Priority scoring",
-  "CRM-ready pipeline",
+  "Sent from your domain",
+  "Nothing sold per lead",
 ];
 
 // The full pipeline, not just the list-building half. `from` names the lowest tier
@@ -65,141 +66,143 @@ const valuePillars = [
 // pricing table and nobody buys expecting a step their tier doesn't cover.
 const processSteps = [
   {
-    title: "Agree the profile",
+    title: "Agree the job profile",
     from: "Lead Engine",
-    body: "Set the industries, service areas, company profiles, buyer roles, exclusions, and qualification filters that define a true fit.",
+    body: "Service area, system types, residential or light commercial, replacement versus repair, and the jobs you would rather screen out than win.",
   },
   {
-    title: "Research and cite",
+    title: "Import and rank your history",
     from: "Lead Engine",
-    body: "Find companies that match the criteria from free public sources, each with its source citation and a specific, checkable reason to reach out.",
+    body: "Your export — unsold estimates, lapsed agreements, past customers, missed calls — cleaned, deduped, checked against your never-contact list, and ranked by how close each one is to a real job.",
   },
   {
-    title: "Score and organise",
+    title: "Research the partner lane",
     from: "Lead Engine",
-    body: "Rank by fit and deliver annotated, prioritised records with the fields your team needs to filter, assign, and follow up — plus the outreach scripts.",
+    body: "Builders, property managers, realtors, plumbers, and inspectors in your service area, found from free public sources, each with the source link and a specific reason to reach out now.",
   },
   {
     title: "Write and verify",
     from: "Outreach Engine",
-    body: "Draft outreach per prospect, checked before it can send — cited, on-profile, compliant, not over-promising — and put in front of you to approve.",
+    body: "Outreach drafted per record against its real reason — the estimate, the lapsed agreement, the system age — then independently checked before it can send, and put in front of you to approve.",
   },
   {
     title: "Send and follow up",
     from: "Outreach Engine",
-    body: "Run the multi-touch cadence from your own sending account, within daily caps, with opt-outs suppressed immediately and permanently.",
+    body: "Run the multi-touch cadence from your own domain, within daily caps, starting slow to protect your sender reputation, with opt-outs suppressed immediately and permanently.",
   },
   {
     title: "Qualify and book",
     from: "Appointment Engine",
-    body: "Classify every reply, qualify interest against your criteria, and put the call on your calendar — then use what came back to sharpen the next batch.",
+    body: "Classify every reply, qualify it against your criteria, and put the appointment on your calendar — then use what came back to sharpen the next batch.",
   },
 ];
 
 const services = [
   {
-    title: "ICP & Targeting",
-    description: "Turn broad market assumptions into a precise, agreed definition of a true-fit buyer.",
-    deliverables: "ICP worksheet, target criteria, exclusion list, qualification rules",
+    title: "Job Profile & Targeting",
+    description: "Turn “we’ll take anything” into a precise, agreed definition of the work worth chasing — and the work worth declining.",
+    deliverables: "Job profile, service-area map, target criteria, exclusion list, qualification rules",
   },
   {
-    title: "Sourcing & Citation",
-    description: "Find the accounts and decision-makers that match the profile, using free public sources only — never a bought broker list.",
-    deliverables: "Company + buyer records, role/title, contact path, public source citation, data-confidence note",
+    title: "List Cleanup & Reactivation Ranking",
+    description: "Your own history turned into a workable list: deduped, standardized, suppression-checked, and ranked by how close each record is to a real job.",
+    deliverables: "Cleaned customer file, dedupe report, priority bands, reason-to-contact per record, never-contact enforcement",
   },
   {
-    title: "Lead Scoring & Prioritization",
-    description: "Rank prospects by fit, signal, and account quality so effort lands on the strongest opportunities first.",
-    deliverables: "Lead score, reason for fit, priority tier (A/B/C), suggested angle",
+    title: "Referral Partner Sourcing",
+    description: "Find the builders, property managers, realtors, and trades in your area who already send work to someone — using free public sources, never a bought list.",
+    deliverables: "Business + contact records, role/title, contact path, public source citation, data-confidence note",
   },
   {
     title: "Personalized Outreach",
-    description: "Done-for-you messaging written per prospect — not templated mail-merge — tied to a real reason to reach out.",
-    deliverables: "Per-prospect first touch + sequence, angle bank, targeting and messaging client-approved before send",
+    description: "Done-for-you messaging written per record and tied to its real reason — the specific estimate, the lapsed plan, the system age — not templated mail-merge.",
+    deliverables: "Per-record first touch + sequence, angle bank, targeting and messaging approved by you before send",
   },
   {
     title: "Follow-up & Reply Triage",
-    description: "Multi-touch follow-up that keeps the conversation alive, with replies flagged by interest.",
-    deliverables: "Tracked cadence, reply classification, hand-off notes, opt-out handling",
+    description: "Multi-touch follow-up that keeps the conversation alive, with replies flagged by how ready they are to talk.",
+    deliverables: "Tracked cadence, reply classification, hand-off notes, immediate opt-out handling",
   },
   {
     title: "Qualification & Booking",
-    description: "Qualify interested replies against your criteria and book the call straight onto your calendar.",
-    deliverables: "Qualification check, booked call + confirmations/reminders, CRM-ready status",
+    description: "Qualify interested replies against your criteria and put the appointment straight onto your calendar.",
+    deliverables: "Qualification check, booked appointment + confirmations/reminders, CRM-ready status",
   },
 ];
 
 const qualificationStandards = [
   {
-    title: "Account Fit",
-    body: "The company matches the agreed industry, geography, size, service need, and exclusion criteria.",
+    title: "Job Fit",
+    body: "The record matches the service area, system types, job value, and exclusion rules you agreed — so a tune-up in the next county does not get worked as a replacement lead.",
   },
   {
-    title: "Buyer Relevance",
-    body: "The contact connects to a decision-making, budget-influencing, growth, operations, or department-specific role.",
+    title: "A Real Reason to Reach Out",
+    body: "Every record carries a specific, checkable reason: the estimate number and date, the maintenance agreement that lapsed, the install year that puts the system at replacement age, or the public signal behind a partner approach.",
   },
   {
-    title: "Data Usability",
-    body: "Each record includes enough context to contact, filter, prioritize, and track the prospect.",
+    title: "Contact Path",
+    body: "A usable way to reach the right person — the homeowner on file, or the named decision-maker at a partner business — with a note on how confident we are in it.",
   },
   {
-    title: "Reason for Fit",
-    body: "High-priority leads include a concise explanation for why they belong in the campaign.",
+    title: "Provenance",
+    body: "Every record is labelled with where it came from: your approved export, or public research. The two are never mixed, and a record claiming to be from your list that is not in the file you approved is blocked outright.",
   },
   {
     title: "Source Citation",
-    body: "Every prospect we research carries the public source it came from. No citation, no cold outreach — that is a hard rule, not a preference.",
+    body: "Every prospect we research carries the public source it came from. No citation, no cold outreach — that is a hard rule in the system, not a preference.",
   },
   {
     title: "Enforced Compliance Controls",
-    body: "Opt-outs are suppressed immediately and permanently, duplicates and conflicts are blocked, and daily sending caps are enforced automatically on every send. You remain responsible for the email, privacy, and platform rules that apply in your market, and we'll confirm them with you before outreach begins.",
+    body: "Opt-outs are suppressed immediately and permanently, duplicates and your never-contact list are blocked, and daily sending caps are enforced automatically on every send. You remain responsible for the email, privacy, and platform rules that apply in your market, and we will confirm them with you before outreach begins.",
   },
 ];
 
 const leadTiers = [
   {
     tier: "Band A",
-    title: "High fit — top scores",
-    body: "Strong profile match, a relevant buyer path, and a clear, cited reason to reach out. Work these first.",
+    title: "Closest to a job",
+    body: "An unsold replacement estimate, a system past its expected life, or a lapsed agreement on a property you have already worked. Strong fit, real reason, clear contact path. Work these first.",
   },
   {
     tier: "Band B",
-    title: "Good fit — mid scores",
-    body: "Matches most of the criteria but needs more context, a confirmed buyer, or a timing signal.",
+    title: "Worth working",
+    body: "Matches most of the profile but needs more context — an ageing system with no quote history, or a partner whose referral pattern is not yet confirmed.",
   },
   {
     tier: "Band C",
-    title: "Possible fit — low scores",
-    body: "Some relevance, but a weaker signal, incomplete data, or a less obvious buyer.",
+    title: "Possible, lower signal",
+    body: "Some relevance, but a weaker or older signal, incomplete data, or a less obvious route to the person who decides.",
   },
 ];
 
 // Only what the system actually produces. "Verified contact percentage" and
 // "client-approved lead percentage" were metrics nothing in the pipeline computes.
+// Nothing here is a job, a sale, or a dollar figure: the system cannot observe what
+// happened in the driveway, so reporting it would be inventing it.
 const reportingItems = [
-  "Leads delivered, with fit scores",
-  "Priority-band distribution",
+  "Records imported and ranked, by band",
+  "Reactivation vs. partner split",
   "Prospects contacted (outreach tiers)",
   "Replies, and how many were positive",
-  "Calls booked (Appointment Engine)",
-  "Lead-quality feedback notes",
+  "Appointments booked (Appointment Engine)",
+  "Opt-outs and suppression events",
 ];
 
 const framework = [
   {
-    period: "Days 1–30",
-    title: "Clarify and validate",
-    body: "Clarify the ICP, validate data quality, and watch early response signals.",
+    period: "Days 1-30",
+    title: "Import and start",
+    body: "Get your history in, agree the job profile, rank the list, and start outreach slowly to protect your sending reputation.",
   },
   {
-    period: "Days 31–60",
-    title: "Refine targeting",
-    body: "Use lead-quality feedback to tighten segments, scoring, and priority rules.",
+    period: "Days 31-60",
+    title: "Tighten the targeting",
+    body: "Use what actually replied to sharpen the bands, the angles, and which slice of your list is worth working next.",
   },
   {
-    period: "Days 61–90",
-    title: "Evaluate scale",
-    body: "Evaluate quality, pipeline movement, conversion signals, and whether to scale.",
+    period: "Days 61-90",
+    title: "Decide on scale",
+    body: "Look at reply quality and appointment quality against your own job values, and decide whether to hold, change tier, or stop.",
   },
 ];
 
@@ -207,16 +210,16 @@ const framework = [
 // system's own split exactly — no capability here that isn't actually built.
 const systemHandles = [
   {
-    title: "Research & targeting",
-    body: "Sourcing accounts that fit the agreed profile, from free public sources, each with its citation.",
+    title: "Your list, made workable",
+    body: "Your export cleaned, deduped, suppression-checked, and ranked by how close each record is to a real job.",
   },
   {
-    title: "Messaging & angles",
-    body: "Per-prospect outreach and follow-up written against a real, cited reason to reach out.",
+    title: "Partner research & citation",
+    body: "Referral businesses in your service area sourced from free public sources, each with its citation and a reason to reach out.",
   },
   {
-    title: "Verification before send",
-    body: "An independent check on every draft, plus hard gates for citations, opt-outs, duplicates, and daily caps.",
+    title: "Writing & verification before send",
+    body: "Per-record outreach written against a real reason, then independently checked, with hard gates for citations, opt-outs, duplicates, and daily caps.",
   },
   {
     title: "Replies & reporting",
@@ -226,16 +229,20 @@ const systemHandles = [
 
 const youHandle = [
   {
-    title: "Approve the messaging",
-    body: "Nothing goes out in your name until you've signed off on it.",
+    title: "Send us your history",
+    body: "One export from your CRM or field-service software. Nothing gets contacted until it is imported and you have approved it.",
   },
   {
-    title: "Take the calls",
-    body: "The conversation with an interested buyer is yours to run.",
+    title: "Approve the messaging",
+    body: "Nothing goes out in your company's name until you have signed off on it.",
+  },
+  {
+    title: "Run the visit",
+    body: "The conversation, the in-home visit, and the quote are yours to run.",
   },
   {
     title: "Close, and tell us what happened",
-    body: "You own the offer and the close, and confirm the real outcomes so the reporting stays true.",
+    body: "You own the price and the close, and confirm the real outcomes so the reporting stays true.",
   },
 ];
 
@@ -452,21 +459,24 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
           <Reveal immediate>
             <p className="mb-5 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/90 sm:mb-7">
               <span className="h-px w-10 bg-gold-500/80" aria-hidden="true" />
-              B2B lead generation
+              HVAC lead generation &amp; appointment setting
             </p>
           </Reveal>
           <Reveal immediate>
             <h1 className="max-w-[20rem] font-display text-[2.05rem] leading-[1.1] text-bone sm:max-w-5xl sm:text-6xl lg:text-7xl">
-              A steady pipeline of qualified B2B leads — not a bulk list or a black box.
+              Established HVAC companies are sitting on two pipelines they never work.
             </h1>
           </Reveal>
           <Reveal immediate>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted sm:mt-7 sm:text-lg sm:leading-8 lg:text-xl">
-              We find your best-fit buyers and hand you a cited, scored pipeline — or run the outreach and book qualified calls straight onto your calendar. You choose how much we handle, and you approve the targeting and the messaging before anything goes out.
+              The unsold estimates, lapsed maintenance agreements and past customers already in your system. And the builders, property managers and realtors nearby who refer work to somebody else today. We work both &mdash; from your own domain, with your sign-off before anything sends.
             </p>
+            {/* Kept SHORT on purpose. This line sits directly above the primary CTA, and the
+                mobile fold on a 360x740 screen has roughly three lines of spare room before
+                the button drops below it. The full qualifier (trucks, service history,
+                capacity) is stated in WhoItsForSection, where there is space for it. */}
             <p className="mt-3 max-w-2xl text-sm font-semibold uppercase tracking-[0.18em] text-gold-200/80 sm:mt-4">
-              For contractors, service businesses, agencies &amp; software teams selling
-              high-value work.
+              For established residential HVAC companies.
             </p>
           </Reveal>
           <Reveal immediate>
@@ -480,7 +490,7 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
                 className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 font-semibold text-ink-950 shadow-gold"
                 data-cursor-label="Open"
               >
-                Start Building Your Pipeline <span className="ml-3" aria-hidden="true">→</span>
+                Get My Free Pipeline Audit <span className="ml-3" aria-hidden="true">→</span>
               </MagneticAnchor>
               <MagneticAnchor
                 href="#how-it-works"
@@ -501,17 +511,17 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-200/70 to-transparent" />
             <div className="mb-6 flex items-center justify-between border-b border-gold-500/14 pb-5">
               <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-gold-200/80">Service promise</p>
-                <p className="mt-2 font-display text-3xl text-bone">Clarity your sales team can act on.</p>
+                <p className="text-xs uppercase tracking-[0.22em] text-gold-200/80">How it runs</p>
+                <p className="mt-2 font-display text-3xl text-bone">Work you already earned, finally followed up.</p>
               </div>
               <div className="h-12 w-12 rounded-sm border border-gold-500/35 bg-gold-500/10" aria-hidden="true" />
             </div>
             <div className="space-y-4">
               {[
-                ["Source", "Best-fit accounts + buyers, with a real reason to care"],
-                ["Outreach", "Personalized messages — you approve the pattern before they send"],
-                ["Follow-up", "Tracked multi-touch cadence; replies triaged by interest"],
-                ["Book", "Qualified calls booked straight onto your calendar"],
+                ["Import", "Your estimates, agreements and past customers — cleaned and ranked"],
+                ["Research", "Referral partners in your service area, each with a cited source"],
+                ["Outreach", "Written per record, sent from your domain, approved by you first"],
+                ["Book", "Qualified appointments placed straight onto your calendar"],
               ].map(([label, body], index) => (
                 <div
                   key={label}
@@ -610,18 +620,18 @@ function PositioningSection() {
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
             <div>
               <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
-                Qualified B2B leads
+                The demand you already paid for
               </p>
               <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-                The wrong accounts are more expensive than they look.
+                The most expensive lead you will ever buy is the one you already bought.
               </h2>
             </div>
             <div className="space-y-5 text-lg leading-8 text-muted">
               <p>
-                Most teams do not lose pipeline because they lack effort. They lose it because their research is too broad, their data is aging, and their sales team is working accounts that were never a strong fit.
+                You paid to generate every estimate you ever wrote. The ones that did not close are still in your system, along with the maintenance agreements that lapsed, the customers whose systems are now past their expected life, and the calls that came in on a busy Tuesday and never got returned. That is demand you have already bought once.
               </p>
               <p>
-                {brandName} narrows the market, verifies the path to the right buyers, and turns scattered research into a pipeline your team can measure, prioritize, and improve over time.
+                Almost nobody works it, and the reason is not laziness. Your techs are on trucks, your office is answering phones, and follow-up is the first thing that gets dropped in season. {brandName} makes that list workable, writes the follow-up, and &mdash; on the managed tiers &mdash; runs it every week from your own domain, so the work happens whether or not anyone has a quiet afternoon.
               </p>
             </div>
           </div>
@@ -656,10 +666,10 @@ function WhoItsForSection() {
               Who it&rsquo;s for
             </p>
             <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-              Built for B2B teams with a clear offer and real deals to win.
+              Built for HVAC companies with history worth working.
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted">
-              The system works best when the fit is right. Here&rsquo;s who we do our best work for — and who we&rsquo;re honestly not the right choice for.
+              This needs something to work with: a real customer list and capacity to take the jobs. Here&rsquo;s who we do our best work for &mdash; and who we&rsquo;re honestly not the right choice for.
             </p>
           </div>
         </Reveal>
@@ -702,16 +712,18 @@ function WhoItsForSection() {
         <Reveal delay={0.12}>
           <div className="mt-10 text-center">
             <p className="mx-auto max-w-2xl text-base leading-7 text-muted">
-              The work is done remotely for businesses across the US. Campaigns are currently
-              focused on {currentFocusArea}, starting with residential HVAC contractors — so
-              that&rsquo;s where the sharpest local market knowledge sits today.
+              The work is done remotely for HVAC companies across the US. Campaigns are
+              currently focused on {currentFocusArea}, so that&rsquo;s where the sharpest local
+              market knowledge sits today &mdash; seasonality, permit patterns, and the local
+              referral network. Being elsewhere doesn&rsquo;t disqualify you; it just means less
+              local context on day one.
             </p>
             <button
               type="button"
               onClick={() => openIntake()}
               className="link-wipe mt-6 inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
             >
-              Sounds like you? Book a strategy call →
+              Sounds like you? Get your free pipeline audit →
             </button>
           </div>
         </Reveal>
@@ -794,10 +806,10 @@ function ProcessSection() {
               How it works
             </p>
             <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-              Proof starts with the way the work is done.
+              Six steps, and you can inspect every one.
             </h2>
             <p className="mt-6 max-w-xl text-lg leading-8 text-muted">
-              No vague lists. No borrowed credibility. Just visible criteria, traceable sourcing, verification notes, scoring logic, and CRM-ready delivery your team can inspect.
+              No vague lists and no borrowed credibility. Agreed criteria, your own records handled openly, traceable sourcing for anything we research, and delivery in a format your office can actually work. Each step is tagged with the lowest tier that includes it, so nothing here is a surprise after you buy.
             </p>
           </Reveal>
           <div className="mt-10 hidden gap-2 lg:flex" aria-hidden="true">
@@ -860,11 +872,11 @@ function ServicesSection() {
                 Services and deliverables
               </p>
               <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-                A done-for-you outbound system, not a contact export.
+                A follow-up system, not a lead subscription.
               </h2>
             </div>
             <p className="text-lg leading-8 text-muted">
-              Each campaign is built around your ICP, qualification criteria, and sales priorities — from sourcing the right buyers to running the outreach and booking the calls. How much you hand to us is the tier you choose; the standards stay the same.
+              Everything is built around your job profile, your service area, and your own history &mdash; from making that list workable, to researching the partners around you, to running the outreach and booking the appointments. How much you hand over is the tier you choose; the standards stay the same.
             </p>
           </div>
         </Reveal>
@@ -900,13 +912,13 @@ function LeadQualitySection() {
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
             <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
-              Lead qualification standards
+              Record standards
             </p>
             <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-              Trust comes from standards buyers can see.
+              Every record has to earn its place before anyone is contacted.
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted">
-              A lead is only useful when your team understands why it belongs in the pipeline. These standards make quality visible before outreach begins.
+              A record is only worth working when you can see why it is there. These are the checks each one passes first &mdash; and every one of them is enforced in code, not left to whoever is doing the work that day.
             </p>
           </div>
         </Reveal>
@@ -927,15 +939,15 @@ function LeadQualitySection() {
           <div className="mt-12 overflow-hidden rounded-lg border border-gold-500/18 bg-ink-900/72">
             <div className="border-b border-gold-500/14 p-6">
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
-                Lead scoring model
+                Priority bands
               </p>
               <h3 className="mt-3 text-2xl font-semibold text-bone">
-                Every prospect gets a fit score, and the score sets the band
+                Every record gets a score, and the score sets the band
               </h3>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-muted">
                 Each record is scored against the criteria you agreed, and the score decides which
-                band it lands in — so &ldquo;high priority&rdquo; means a number you can check, not
-                a label someone assigned by feel.
+                band it lands in &mdash; so &ldquo;high priority&rdquo; means a number you can
+                check, not a label someone assigned by feel. Your office works Band A first.
               </p>
             </div>
             <div className="grid divide-y divide-gold-500/12 md:grid-cols-3 md:divide-x md:divide-y-0">
@@ -966,11 +978,11 @@ function DifferentiatorsSection() {
                 Why B2B Lead Growth
               </p>
               <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-                A pipeline you control, with quality you can see.
+                Nobody else is being sold the same homeowner.
               </h2>
             </div>
             <p className="text-lg leading-8 text-muted">
-              A lot of &ldquo;lead gen&rdquo; means bulk lists, templated blasts sent in your name, and numbers you can&rsquo;t verify. This is built the opposite way: you stay in control, you see the quality, and the reporting stays honest.
+              Most of what gets sold to HVAC companies is a shared lead, a bulk list, or a blast sent in your name that you never saw. This is built the opposite way: your list stays yours, the outreach goes out under your own name with your sign-off, and nothing is priced per lead.
             </p>
           </div>
         </Reveal>
@@ -1013,11 +1025,12 @@ function FounderSection() {
             </h2>
             <div className="mt-6 space-y-5 text-lg leading-8 text-muted">
               <p>
-                We&rsquo;d rather tell you this up front than let you find out later: the research,
-                scoring, writing, follow-up, and reply handling are run by an AI system, not by a
-                room of junior staff. That&rsquo;s precisely why every prospect arrives with a
-                public source citation and a specific reason to reach out — consistently, on every
-                record, not just when someone has time.
+                We&rsquo;d rather tell you this up front than let you find out later: the list work,
+                research, scoring, writing, follow-up, and reply handling are run by an AI system,
+                not by a room of junior staff. That is precisely why the 900th record in your
+                export gets the same attention as the first, and why every researched prospect
+                arrives with a public source citation and a specific reason to reach out &mdash;
+                consistently, not just when someone has a quiet afternoon.
               </p>
               <p>
                 It is not left unattended. Every draft is independently checked before it can be
@@ -1028,9 +1041,9 @@ function FounderSection() {
                 targeting, the messaging pattern, and the first batch it goes out in.
               </p>
               <p>
-                And a person stands behind it: {founderName}, the founder — the one who takes
-                your call, answers for the numbers, and is who you talk to when something needs to
-                change. Not an account manager, and not a rotating queue.
+                And a person stands behind it: {founderName}, the founder &mdash; the one who
+                takes your call, answers for the numbers, and is who you talk to when something
+                needs to change. Not an account manager, and not a rotating queue.
               </p>
             </div>
             <div className="mt-8">
@@ -1039,7 +1052,7 @@ function FounderSection() {
                 onClick={() => openIntake()}
                 className="link-wipe inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
               >
-                Book a strategy call →
+                Book a call →
               </button>
             </div>
           </Reveal>
@@ -1113,10 +1126,10 @@ function PricingSection() {
               Pricing
             </p>
             <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-              The smartest investment is the tier your team can actually use.
+              Pick the tier your office can actually absorb.
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted">
-              Each tier de-risks the next: Lead Engine proves the list, Outreach Engine proves the messaging, and Appointment Engine runs the whole system through to booked calls on your calendar.
+              Each tier de-risks the next: Lead Engine proves the list is worth working, Outreach Engine proves the messaging gets replies, and Appointment Engine runs the whole thing through to appointments on your calendar. If your office has time to make calls, start low. If it doesn&rsquo;t, that is exactly what the higher tiers are for.
             </p>
             <p className="mt-5 inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm font-semibold text-gold-200/90">
               <span>Flat monthly fee</span>
@@ -1182,9 +1195,10 @@ function PricingSection() {
         </div>
         <Reveal delay={0.08}>
           <p className="mx-auto mt-10 max-w-3xl text-center text-base leading-7 text-bone/85">
-            A lower-risk way to build pipeline before you commit to hiring: every tier costs less
-            than a full-time SDR — no salary, tooling, ramp time, or long-term headcount — so you
-            can find out whether outbound works for your market first.
+            A lower-risk way to get the follow-up done than hiring for it: every tier costs less
+            than a full-time office or inside-sales role &mdash; no salary, payroll tax, tooling,
+            ramp time, or year-round headcount through a slow season &mdash; so you can find out
+            whether this works for your market before you commit to a person.
           </p>
         </Reveal>
         <Reveal delay={0.1}>
@@ -1208,17 +1222,18 @@ function FrameworkSection() {
               Reporting and evaluation
             </p>
             <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-              Measure what matters before you scale.
+              Judge it on your own job values, not our adjectives.
             </h2>
           </Reveal>
           <Reveal delay={0.08}>
             <p className="text-xl leading-9 text-muted">
-              A <CountUp value={90} />-day review window turns lead generation from a list purchase into a learning system.
+              A <CountUp value={90} />-day window is long enough to tell whether this works for your market, and short enough that you are never trapped in it.
             </p>
             <p className="mt-4 leading-7 text-muted">
-              Track lead quality, pipeline movement, and response signals, then decide whether the
-              system is worth scaling — on your own numbers, against your own deal size. We
-              don&rsquo;t model your return for you, because we have no way to know it.
+              Track reply quality, appointment quality, and which slice of your list is producing,
+              then decide whether it is worth continuing &mdash; on your own numbers, against your
+              own average job value. We don&rsquo;t model your return for you, because we have no
+              way to know what a job is worth to you or what closed after the visit.
             </p>
           </Reveal>
         </div>
@@ -1240,15 +1255,15 @@ function FrameworkSection() {
                 Client expectations
               </p>
               <p className="mt-4 leading-7 text-muted">
-                {brandName} owns targeting, research quality, the writing, the sending and
-                follow-up on the outreach tiers, and honest reporting. You approve the messaging,
-                own the offer, take the calls, close, and confirm what actually happened. That
-                clarity keeps the partnership honest.
+                {brandName} owns the list work, research quality, the writing, the sending and
+                follow-up on the outreach tiers, and honest reporting. You send the export, approve
+                the messaging, own your pricing, run the visit, close, and confirm what actually
+                happened. That clarity keeps the partnership honest.
               </p>
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
-                Reporting dashboard
+                What the report shows
               </p>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 {reportingItems.map((item) => (
@@ -1280,13 +1295,15 @@ function ProofSection() {
               Proof you can inspect
             </p>
             <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-              See the quality standard before you invest.
+              See the quality standard before you spend anything.
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted">
               We have no client case studies to show you yet, and we won&rsquo;t borrow anyone
-              else&rsquo;s. What we can show you is the standard: the exact fields, scoring context,
-              and citations that ship with every record. Judge that, then judge the first real list
-              — one month at a time, on a month-to-month agreement either side can end on 14 days&rsquo; notice, and the work is yours to keep.
+              else&rsquo;s. What we can show you is the standard: the exact fields, the priority
+              context, and the citation that ships with every record. Judge that, then judge the
+              free audit, then judge the first real list &mdash; one month at a time, on a
+              month-to-month agreement either side can end on 14 days&rsquo; notice, with the work
+              yours to keep.
             </p>
             <div className="mt-8">
               <button
@@ -1294,7 +1311,7 @@ function ProofSection() {
                 onClick={() => openIntake("Lead Engine")}
                 className="link-wipe inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
               >
-                Start with Lead Engine and see the quality →
+                Start with the free audit and see the quality →
               </button>
             </div>
           </Reveal>
@@ -1316,15 +1333,15 @@ function ProofSection() {
               <div className="relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-ink-950/42 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="origin-center transition-transform duration-500 group-hover:scale-[1.018]">
-                  <SampleRow label="Company" value="Anonymized business record" />
-                  <SampleRow label="Contact" value="Relevant buyer role or influence point mapped" />
-                  <SampleRow label="Website" value="Checked and cited" />
-                  <SampleRow label="Industry / location" value="Company field prepared for filtering" />
-                  <SampleRow label="Contact path" value="Email, phone, or LinkedIn/profile when available" />
-                  <SampleRow label="Source/confidence" value="Verification status or data confidence noted" />
-                  <SampleRow label="Priority tier" value="Tier A / Tier B / Tier C (illustrative)" />
-                  <SampleRow label="Fit reason" value="Short explanation for why the lead belongs in the campaign" />
-                  <SampleRow label="Outreach angle" value="Suggested angle tied to segment context" />
+                  <SampleRow label="Record" value="Anonymized — a past customer, an open estimate, or a partner business" />
+                  <SampleRow label="Provenance" value="Your approved export, or public research (never mixed)" />
+                  <SampleRow label="Contact path" value="Email, phone, or public profile, with a confidence note" />
+                  <SampleRow label="Service area / job type" value="Prepared for filtering and routing" />
+                  <SampleRow label="Reason to contact" value="Estimate date, agreement lapse, system age, or cited public signal" />
+                  <SampleRow label="Source link" value="Required on every researched record — no citation, no contact" />
+                  <SampleRow label="Priority band" value="Band A / Band B / Band C (illustrative)" />
+                  <SampleRow label="Suppression check" value="Opt-out, duplicate, and never-contact status" />
+                  <SampleRow label="Outreach angle" value="Suggested angle tied to that record’s real reason" />
                 </div>
               </div>
             </div>
@@ -1345,7 +1362,7 @@ function FAQSection() {
               FAQ
             </p>
             <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-              Clear answers before you commit.
+              The questions HVAC owners actually ask.
             </h2>
           </div>
         </Reveal>
@@ -1383,17 +1400,18 @@ function FinalCTA() {
       <div className="relative z-10 mx-auto max-w-5xl text-center">
         <Reveal>
           <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
-            Stop chasing poor-fit prospects
+            Start with the free audit
           </p>
           <h2 className="font-display text-5xl leading-tight text-bone sm:text-6xl">
-            Put right-fit prospects in front of your sales team.
+            Find out what your list is worth before you pay us anything.
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted">
-            Every week spent chasing poor-fit prospects is sales attention you cannot recover.
-            Book a free {callLengthMinutes}-minute call to define your ideal customer and find
-            the tier that fits your market. You&rsquo;ll leave with a short written lead audit —
-            a few specific observations and one next step — and it&rsquo;s yours to keep whether
-            or not we work together.
+            Every season an unsold estimate sits untouched, it gets colder and someone else
+            eventually does that install. Book a free {callLengthMinutes}-minute call to define
+            the jobs worth chasing and the tier that fits your office. You&rsquo;ll leave with a
+            written pipeline audit &mdash; a sharpened job profile, {"3\u20135"} real referral
+            partners with cited reasons, and one sample message &mdash; and it&rsquo;s yours to
+            keep whether or not we work together.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <MagneticAnchor
@@ -1405,7 +1423,7 @@ function FinalCTA() {
               className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-7 font-semibold text-ink-950 shadow-gold"
               data-cursor-label="Open"
             >
-              Book a Lead Strategy Call Now <span className="ml-3" aria-hidden="true">→</span>
+              Get My Free Pipeline Audit <span className="ml-3" aria-hidden="true">→</span>
             </MagneticAnchor>
             <span className="text-sm leading-6 text-muted">
               {intakeMinutes}-minute intake · then pick a time
@@ -1431,10 +1449,11 @@ function SiteFooter() {
             className="link-wipe mt-2 inline-flex min-h-11 items-center text-left text-gold-200 transition-colors hover:text-gold-400"
             data-cursor-label="Open"
           >
-            Book a strategy call →
+            Get your free pipeline audit →
           </button>
           <p className="mt-2">
-            Remote across the US · currently focused on {currentFocusArea}
+            HVAC lead generation &amp; appointment setting · remote across the US · currently
+            focused on {currentFocusArea}
           </p>
           <p className="mt-2">
             © {new Date().getFullYear()} ·{" "}

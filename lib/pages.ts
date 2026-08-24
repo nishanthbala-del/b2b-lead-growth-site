@@ -9,7 +9,7 @@ import { siteUrl, brandName } from "@/lib/site";
 // Homepage content date for the sitemap — bump ONLY on substantive homepage edits.
 // NOTE: when adding a guide page here, also add its URL to scripts/indexnow-ping.mjs
 // and public/llms.txt (both carry an explicit URL list).
-export const homepageDateModified = "2026-08-08";
+export const homepageDateModified = "2026-08-24";
 
 export type GuidePage = {
   slug: string;
@@ -24,20 +24,20 @@ export const guidePages: GuidePage[] = [
   {
     slug: "free-pipeline-audit",
     navLabel: "Free Pipeline Audit",
-    metaTitle: "Free Pipeline Audit: What's Included and How It Works",
+    metaTitle: "Free HVAC Pipeline Audit: What's Included and How It Works",
     description:
-      "What a legitimate free lead-generation audit should include — and exactly what ours delivers: a sharpened ICP, 3–5 individually vetted prospects with cited reasons, and one sample outreach message. Yours to keep, free.",
+      "What a legitimate free audit should include for an HVAC company — and exactly what ours delivers: a sharpened job profile, 3–5 vetted referral partners with cited reasons, and one sample outreach message. Yours to keep, free.",
     datePublished: "2026-08-08",
-    dateModified: "2026-08-08",
+    dateModified: "2026-08-24",
   },
   {
     slug: "pricing",
     navLabel: "Pricing",
-    metaTitle: "Lead Generation Pricing: $750–$2,500/Month, No Setup Fee",
+    metaTitle: "HVAC Lead Generation Pricing: $750–$2,500/Mo, No Setup Fee",
     description:
-      "Transparent B2B lead generation and appointment setting pricing: $750, $1,500, or $2,500 per month, month-to-month, no setup fee — with cited market context on what agencies typically charge.",
+      "Transparent HVAC lead generation and appointment setting pricing: $750, $1,500, or $2,500 per month, month-to-month, no setup fee, never priced per lead — with cited market context on what agencies typically charge.",
     datePublished: "2026-08-08",
-    dateModified: "2026-08-08",
+    dateModified: "2026-08-24",
   },
   {
     slug: "hvac-lead-generation-new-jersey",
@@ -46,7 +46,7 @@ export const guidePages: GuidePage[] = [
     description:
       "What HVAC leads actually cost New Jersey contractors across Angi, Google Local Services Ads, and per-lead sellers — and an honest comparison of the alternatives, from a NJ-first lead generation company.",
     datePublished: "2026-08-08",
-    dateModified: "2026-08-08",
+    dateModified: "2026-08-24",
   },
   {
     slug: "shared-vs-exclusive-hvac-leads",
@@ -55,16 +55,16 @@ export const guidePages: GuidePage[] = [
     description:
       "Shared leads look cheap until you do the cost-per-booked-job math. A neutral, cited comparison of shared and exclusive HVAC leads — including the FTC's case against HomeAdvisor — from a company that sells neither.",
     datePublished: "2026-08-08",
-    dateModified: "2026-08-08",
+    dateModified: "2026-08-24",
   },
   {
     slug: "how-to-choose-a-lead-generation-agency",
-    navLabel: "Choosing an Agency",
-    metaTitle: "How to Choose a Lead Generation Agency: Red Flags and Questions to Ask",
+    navLabel: "Choosing a Vendor",
+    metaTitle: "How to Choose an HVAC Lead Generation Company: Red Flags and Questions",
     description:
-      "The questions that expose a bad lead-gen agency — guaranteed-results promises, data lock-in, hidden fees, long contracts — and our own straight answers to every one of them, including the uncomfortable ones.",
+      "The questions that expose a bad HVAC lead-gen vendor — guaranteed-results promises, shared leads, data lock-in, hidden fees, long contracts — and our own straight answers to every one of them, including the uncomfortable ones.",
     datePublished: "2026-08-08",
-    dateModified: "2026-08-08",
+    dateModified: "2026-08-24",
   },
 ];
 

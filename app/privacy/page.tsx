@@ -74,7 +74,7 @@ export default function PrivacyPage() {
           <p className="leading-7 text-muted">
             <strong className="text-bone/90">Information you give us.</strong> When you submit the
             request form, we collect the details you choose to provide: your name, work email,
-            company, website, role, target market, average deal size, sales goals, current
+            company, website, role, service area, average job value, goals, current
             prospecting method, and any ideal-customer notes. Please share only what you&rsquo;re
             comfortable providing.
           </p>

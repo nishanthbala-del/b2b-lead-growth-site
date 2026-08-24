@@ -19,11 +19,13 @@ export const siteUrl = "https://www.b2bleadgrowth.com";
 export const brandName = "B2B Lead Growth";
 
 // Canonical organization/service description used in JSON-LD structured data.
-// Describes what is actually delivered — researched prospects carrying a public
-// source citation, and optionally the outreach and booking on top — rather than the
-// "verified" contact-data claim the system does not make.
+// Names the ONE niche (established residential HVAC) and both lanes the service
+// actually runs — reactivating the client's own records, and researched referral
+// partners carrying a public source citation. It deliberately does NOT claim to
+// generate homeowner leads: homeowner records are the client's own export under
+// gate #0f and are never researched, bought, or inferred.
 export const orgDescription =
-  "B2B Lead Growth builds outbound pipelines for contractors, service businesses, and B2B teams: researched prospects with public source citations, plus done-for-you outreach and booked calls.";
+  "B2B Lead Growth is an HVAC lead generation and appointment setting service for established residential HVAC companies: it reactivates the unsold estimates, lapsed maintenance agreements, and past customers already in your system, and builds referral-partner pipelines from cited public sources. Not a lead seller.";
 
 // ---------------------------------------------------------------------------
 // Booking
@@ -54,7 +56,7 @@ export const callLengthMinutes = 15;
 // shorter one is the one a visitor measures you against.
 export const intakeMinutes = 2;
 
-// The work is delivered remotely, so any US business can be served — that stays
+// The work is delivered remotely, so any US HVAC company can be served — that stays
 // the JSON-LD `areaServed`. But the campaigns actually running today are focused
 // on New Jersey, so the visible copy says so: it is both more honest and more
 // relevant to the people the outbound is currently reaching.

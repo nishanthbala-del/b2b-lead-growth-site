@@ -306,7 +306,7 @@ export async function POST(req: NextRequest) {
     ["email", "Work email"],
     ["company", "Company"],
     ["targetMarket", "Target market"],
-    ["avgDealSize", "Average deal size"],
+    ["avgDealSize", "Average job value"],
     ["currentProspecting", "Current prospecting method"],
   ];
   const missing = required

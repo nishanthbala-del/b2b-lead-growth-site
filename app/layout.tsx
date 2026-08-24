@@ -15,13 +15,14 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-// Title kept under ~60 characters so Google doesn't truncate it, and "B2B" is not
-// repeated three times. Description under ~155 characters, and it names the market
-// and the commitment rather than the "verified contact paths" claim the system does
-// not actually make.
-const siteTitle = "B2B Lead Growth | Done-For-You Lead Generation";
+// Title kept under ~60 characters so Google doesn't truncate it. It leads with the
+// NICHE + the service, because "HVAC lead generation" is what the buyer searches and
+// "B2B Lead Growth" is a brand nobody is looking for yet. Description under ~155
+// characters, and it names the actual mechanism (your own list + referral partners)
+// rather than implying we sell homeowner leads, which we do not.
+const siteTitle = "HVAC Lead Generation & Appointment Setting | B2B Lead Growth";
 const siteDescription =
-  "Researched, cited prospects for contractors, service businesses, and B2B teams — or done-for-you outreach and booked calls. From $750/mo, month-to-month.";
+  "Reactivate the unsold estimates and lapsed agreements already in your system, plus referral-partner outreach. For established HVAC companies. From $750/mo.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -29,12 +30,13 @@ export const metadata: Metadata = {
   description: siteDescription,
   applicationName: brandName,
   keywords: [
-    "B2B lead generation",
-    "appointment setting",
-    "qualified sales leads",
-    "outbound prospecting",
-    "ICP targeting",
-    "sales pipeline",
+    "HVAC lead generation",
+    "HVAC appointment setting",
+    "HVAC customer reactivation",
+    "HVAC marketing New Jersey",
+    "unsold estimate follow-up",
+    "HVAC referral partners",
+    "HVAC maintenance agreement renewals",
   ],
   alternates: { canonical: "/" },
   openGraph: {

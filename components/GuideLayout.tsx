@@ -68,10 +68,11 @@ export default function GuideLayout({
             Get a free pipeline audit — yours to keep.
           </h2>
           <p className="mt-4 leading-7 text-muted">
-            A sharpened ICP, 3–5 real, individually vetted prospects in your market with cited reasons to
-            reach out, and one sample outreach message. Free, no card, no obligation — you keep the
-            work whether or not you ever hire us. It shows the quality of the work, not a promised
-            result: no guaranteed leads, replies, or meetings.
+            A sharpened profile of the jobs worth chasing, 3–5 real referral partners in your
+            service area with cited reasons to reach out, and one sample outreach message. Free, no
+            card, no obligation — you keep the work whether or not you ever hire us. It shows the
+            quality of the work, not a promised result: no guaranteed leads, replies, or
+            appointments, and no homeowner list.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link

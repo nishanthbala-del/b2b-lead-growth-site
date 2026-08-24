@@ -57,23 +57,28 @@ export function IntakeProvider({ children }: { children: ReactNode }) {
 
 const PACKAGE_OPTIONS = ["Not sure yet", "Lead Engine", "Outreach Engine", "Appointment Engine"];
 
+// Average JOB value, in bands an HVAC company actually recognises: a service call and
+// a full system replacement are an order of magnitude apart, and the old generic B2B
+// bands ("$25,000-$100,000") described deals nobody in this niche writes.
 const DEAL_SIZE_OPTIONS = [
-  "Under $1,000",
-  "$1,000 – $5,000",
-  "$5,000 – $25,000",
-  "$25,000 – $100,000",
-  "$100,000+",
+  "Under $2,500 (service and repair)",
+  "$2,500 – $7,500",
+  "$7,500 – $15,000 (typical replacement)",
+  "$15,000 – $40,000 (multi-system / light commercial)",
+  "$40,000+",
 ];
 
+// How new work reaches an HVAC company today. These double as a qualifier: anyone
+// picking "buying leads" is already paying per lead, which is the exact comparison
+// the pricing page is built around.
 const PROSPECTING_OPTIONS = [
-  "No consistent system yet",
-  "Cold email",
-  "Cold calling",
-  "LinkedIn outreach",
-  "Referrals / word of mouth",
-  "Inbound / content",
-  "Paid ads",
-  "Bought lead lists",
+  "Nothing consistent — mostly word of mouth",
+  "Repeat customers and referrals",
+  "Google Ads / Local Services Ads",
+  "Angi, Thumbtack, or a similar lead seller",
+  "Direct mail or home shows",
+  "Someone here calls past customers when there's time",
+  "We have a maintenance-agreement renewal process",
   "Other",
 ];
 
@@ -245,7 +250,7 @@ function IntakeForm({
   function validateStep2(): boolean {
     const next: Errors = {};
     if (!form.targetMarket.trim()) next.targetMarket = "Tell us who you sell to.";
-    if (!form.avgDealSize) next.avgDealSize = "Select an average deal size.";
+    if (!form.avgDealSize) next.avgDealSize = "Select an average job value.";
     if (!form.currentProspecting) next.currentProspecting = "Select your current approach.";
     if (!form.consent) next.consent = "Please confirm so we can reply to you.";
     setErrors(next);
@@ -464,9 +469,9 @@ function IntakeForm({
               {step === 2 ? (
                 <div className="grid gap-5">
                   <Field
-                    label="Who do you sell to?"
+                    label="Service area, and the work you want more of"
                     htmlFor="f-market"
-                    hint="industry, geography, company size"
+                    hint="counties or towns, plus job types"
                     error={errors.targetMarket}
                     required
                   >
@@ -474,14 +479,14 @@ function IntakeForm({
                       id="f-market"
                       value={form.targetMarket}
                       onChange={(v) => update("targetMarket", v)}
-                      placeholder="e.g. NJ-based HVAC contractors, 5–50 employees"
+                      placeholder="e.g. Middlesex and Somerset County NJ — residential replacements and maintenance agreements"
                       rows={2}
                       invalid={!!errors.targetMarket}
                     />
                   </Field>
                   <div className="grid gap-5 sm:grid-cols-2">
                     <Field
-                      label="Average deal size"
+                      label="Average job value"
                       htmlFor="f-deal"
                       error={errors.avgDealSize}
                       required
@@ -496,7 +501,7 @@ function IntakeForm({
                       />
                     </Field>
                     <Field
-                      label="Current prospecting method"
+                      label="How new work reaches you today"
                       htmlFor="f-prospecting"
                       error={errors.currentProspecting}
                       required
@@ -521,13 +526,13 @@ function IntakeForm({
                       id="f-goals"
                       value={form.salesGoals}
                       onChange={(v) => update("salesGoals", v)}
-                      placeholder="e.g. a steady flow of qualified conversations and a cleaner pipeline to work"
+                      placeholder="e.g. our unsold estimates actually followed up, and the schedule fuller in the shoulder season"
                       rows={2}
                       invalid={!!errors.salesGoals}
                     />
                   </Field>
                   <Field
-                    label="Ideal customer notes / exclusions"
+                    label="Job notes / work you'd rather not take"
                     htmlFor="f-icp"
                     hint="optional"
                   >
@@ -535,7 +540,7 @@ function IntakeForm({
                       id="f-icp"
                       value={form.icpNotes}
                       onChange={(v) => update("icpNotes", v)}
-                      placeholder="Anything that makes a prospect a great fit — or one to avoid"
+                      placeholder="e.g. no oil-to-gas conversions, no rentals, prefer replacements over service calls"
                       rows={2}
                     />
                   </Field>
