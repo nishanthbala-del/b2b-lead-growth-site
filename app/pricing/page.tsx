@@ -254,7 +254,7 @@ export default function PricingPage() {
             ~150), every researched prospect is cited individually, and we deliberately cap how
             many clients we take on. We are also a new company earning a track record in public — our pricing
             reflects that instead of pretending otherwise. What lower price never buys,
-            here or anywhere: guaranteed replies, meetings, or revenue. Anyone selling a guarantee
+            here or anywhere: guaranteed replies, appointments, jobs, or revenue. Anyone selling a guarantee
             is selling the churn math behind it.
           </p>
         </GuideSection>

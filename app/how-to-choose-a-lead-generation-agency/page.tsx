@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 // Rendered visibly and mirrored into FAQPage markup below (verbatim match).
 const hardQuestions = [
   {
-    question: "Do you guarantee a number of leads or meetings?",
+    question: "Do you guarantee a number of leads, appointments, or jobs?",
     ourAnswer:
       "No — and we think you should walk away from anyone who does. Whether a homeowner books and buys depends on your pricing, your reputation, your timing, and how the visit goes. A vendor controls the quality of the research and the outreach, not the buyer's decision. We sell defined activity (records worked, personalized outreach, appointment handling by tier), never outcomes.",
   },

@@ -32,7 +32,7 @@ const pageFaqs = [
       "The audit is real work product, not a teaser. You get the deliverables before any sales conversation. We do offer a short walkthrough call afterward, and yes — if the work is useful, we hope you consider the paid tiers. But the deliverable does not depend on taking the call or buying anything.",
   },
   {
-    question: "Does the audit guarantee leads or meetings?",
+    question: "Does the audit guarantee leads, appointments, or jobs?",
     answer:
       "No. The audit shows the quality of the research and writing — it does not promise replies, appointments, or revenue, and nothing we sell does either. Whether a job closes depends on your pricing, your reputation, your timing, and how the visit goes, which no honest vendor can guarantee.",
   },
@@ -170,7 +170,7 @@ export default function FreePipelineAuditPage() {
             </li>
             <li>
               <span className="text-bone">No guaranteed outcomes.</span> Anyone promising a specific
-              number of leads or meetings from a free audit is guessing out loud.
+              number of leads or appointments from a free audit is guessing out loud.
             </li>
           </ul>
         </GuideSection>
