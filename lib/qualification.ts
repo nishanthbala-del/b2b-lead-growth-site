@@ -39,7 +39,7 @@ export const RECORD_VOLUME = [
   {
     value: "none",
     label: "We don't really have a customer list yet",
-    hint: "Nothing exported, or too new to have history",
+    hint: "Too new to have built one up",
   },
   { value: "few-hundred", label: "A few hundred customers and estimates" },
   { value: "1k-5k", label: "Roughly 1,000 to 5,000 records" },
@@ -144,7 +144,7 @@ export const BUDGET = [
   { value: "750", label: "$750/mo", hint: "Lead Engine" },
   { value: "1500", label: "$1,500/mo", hint: "Outreach Engine" },
   { value: "2500", label: "$2,500/mo", hint: "Appointment Engine" },
-  { value: "unsure", label: "Not sure yet", hint: "The call decides it" },
+  { value: "unsure", label: "Not sure yet", hint: "The audit comes first" },
 ] as const satisfies readonly Option[];
 
 type ValueOf<T extends readonly Option[]> = T[number]["value"];
@@ -390,7 +390,7 @@ function buildReasons(a: QualificationAnswers): string[] {
 
   if (a.recordVolume === "1k-5k" || a.recordVolume === "5k-plus" || a.recordVolume === "unsure-but-years") {
     out.push(
-      "You have real history to work — that is the raw material the reactivation lane runs on, and most of it has never been followed up.",
+      "You have real history to work with — that is what we follow up on, and most of it has never been chased.",
     );
   }
   if (a.followUpOwner === "nobody") {

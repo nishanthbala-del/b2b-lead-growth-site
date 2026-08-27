@@ -33,7 +33,7 @@ export const plans: Plan[] = [
       "Your ideal-job profile, with the work you want screened out",
       "Your own records cleaned, deduped and ranked by how close each is to a job",
       "Referral partners researched near you, each with a cited public source",
-      "Outreach angles and a follow-up skeleton to work from",
+      "Outreach scripts and a follow-up sequence to work from",
       "Delivered CRM-ready",
     ],
     youKeep: "You send everything and handle every reply. No outreach runs at this tier.",
@@ -51,7 +51,7 @@ export const plans: Plan[] = [
       "Replies triaged and flagged by who is ready to talk",
       "A monthly report: contacted, replied, positive",
     ],
-    youKeep: "You own the domain it sends from and the sales conversation.",
+    youKeep: "You take the sales conversation. No appointments are booked at this tier.",
     featured: true,
   },
   {
@@ -59,7 +59,7 @@ export const plans: Plan[] = [
     price: 2500,
     oneLiner: "We qualify the replies and book the appointments.",
     capacity: "Up to ~150 records a month",
-    bestFor: "You want both lanes run end to end, with appointments landing on the calendar.",
+    bestFor: "You want your own list and your referral partners both worked end to end, with appointments on the calendar.",
     includes: [
       "Everything in Outreach Engine",
       "Every reply qualified against your criteria",
@@ -92,7 +92,6 @@ export const idealFor: string[] = [
   "Your customer list is old enough that installed systems are reaching replacement age",
   "You want referral partners — builders, property managers, realtors, plumbers, inspectors — worked deliberately",
   "You want the follow-up done weekly without hiring for it",
-  "Light commercial and mechanical service companies selling maintenance and replacement work",
 ];
 
 // Honest disqualifiers. Two of these are load-bearing rather than cosmetic:
@@ -217,7 +216,7 @@ export const faqs: Faq[] = [
     question: "How many records or messages do I get each month?",
     group: "What you can expect",
     answer:
-      "Each tier publishes a monthly ceiling — roughly 40, 100, or 150 records worked — and we set the real number with you on the call, because the honest answer depends on how much usable history your export contains and what your sending setup can safely support. We deliberately don't advertise a bigger headline number: chasing a quota is what pushes a vendor to loosen the targeting or exceed safe sending limits, which is exactly the failure this is built to avoid. You'll know the agreed volume before any work starts, and the report shows what was actually delivered against it.",
+      "Each tier publishes a monthly ceiling — roughly 40, 100, or 150 records worked — and we agree the real number with you, because the honest answer depends on how much usable history your export contains and what your sending setup can safely support. We deliberately don't advertise a bigger headline number: chasing a quota is what pushes a vendor to loosen the targeting or exceed safe sending limits, which is exactly the failure this is built to avoid. You'll know the agreed volume before any work starts, and the report shows what was actually delivered against it.",
   },
   {
     question: "What do I have to send you, and how hard is it?",
@@ -229,7 +228,7 @@ export const faqs: Faq[] = [
     question: "How are the records delivered?",
     group: "What you can expect",
     answer:
-      "As a spreadsheet, CRM-ready file, or agreed system, with fields, tags, notes, status tracking, priority bands, the fit reason, and — for every researched partner — the public source citation. On the outreach tiers you also get the sending log, so you can see exactly what went to whom and when.",
+      "As a spreadsheet, a CRM-ready file, or into a system you name — ranked highest-priority first, with contact details, notes, status, why each one was picked, and, for every researched partner, a source link you can open. On the outreach tiers you also get the sending log, so you can see exactly what went to whom and when.",
   },
   {
     question: "Whose email address does this go out from?",

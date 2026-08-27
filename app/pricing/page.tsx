@@ -124,7 +124,7 @@ export default function PricingPage() {
                   ))}
                 </ul>
                 <p className="mt-3 leading-7">
-                  <span className="font-semibold text-gold-200/90">Stays with you: </span>
+                  <span className="font-semibold text-gold-200/90">Your side: </span>
                   {p.youKeep}
                 </p>
                 {/* This page listed all three prices and offered no way to act on any of
@@ -144,7 +144,7 @@ export default function PricingPage() {
           </div>
           <p className="mt-4 text-sm leading-6 text-muted/80">
             No tier can be bought from this page, deliberately. The {intakeMinutes}-minute fit
-            check and the call come first, because which tier fits depends on what your export
+            check comes first, because which tier fits depends on what your export
             actually contains and who in your office has time to work it.
           </p>
         </GuideSection>
@@ -272,6 +272,11 @@ export default function PricingPage() {
               <li key={p.label} className="border-l-2 border-gold-200/30 pl-4">
                 <span className="block text-bone">
                   {p.band} — {p.label}
+                  {p.owner === "you" ? (
+                    <span className="ml-2 align-middle text-[11px] font-semibold uppercase tracking-[0.14em] text-gold-200/85">
+                      Yours
+                    </span>
+                  ) : null}
                 </span>
                 <span className="block text-sm opacity-80">{p.detail}</span>
               </li>

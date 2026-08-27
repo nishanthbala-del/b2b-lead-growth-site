@@ -208,3 +208,69 @@ describe("the privacy policy describes the form that actually exists", () => {
     assert.match(policy, /fit assessment/i);
   });
 });
+
+describe("no fabricated proof", () => {
+  // The site's entire credibility argument is that it has NO clients yet and says so.
+  // A single popularity or track-record claim anywhere in the copy destroys that
+  // argument, and it is the easiest thing in the world to write by accident: the
+  // "Most chosen starting point" badge shipped on the featured pricing card, two
+  // sections above this same page's line "No case studies, and we will not borrow any".
+  // Nobody had chosen anything, because there were no clients.
+  //
+  // These patterns describe claims about OTHER buyers, past results, or third-party
+  // endorsement. None of them can be true until there is a client, and when there is
+  // one, the honest version will be a specific cited case study rather than a badge.
+  const FABRICATED = [
+    // "most contractors skip X" is a claim about the market, not about our client base,
+    // and it appears legitimately in the guide pages — so the popularity sense has to be
+    // matched precisely rather than by the bare phrase "most contractors".
+    /\bmost (chosen|popular|requested|selected)\b/i,
+    /\bmost[- ]picked\b/i,
+    /\bour (customers|clients) (choose|chose|pick|picked|trust|rate)\b/i,
+    /\bjoin \d/i,
+    /\btrusted by\b/i,
+    /\bused by \d/i,
+    /\b\d+\+? (clients|customers|companies) (served|helped|trust)/i,
+    /\bour clients (see|get|report|average)\b/i,
+    /\btestimonial/i,
+    /\bcase stud(y|ies) (show|prove)/i,
+    /\b(rated|voted) (#?\d|best|top)\b/i,
+    /\bindustry[- ]leading\b/i,
+    /\baward[- ]winning\b/i,
+  ];
+
+  test("no rendered copy claims other buyers, results, or endorsements", () => {
+    const hits: string[] = [];
+    for (const file of copyFiles) {
+      // Comments are not shipped copy. Without this the guard trips on the very comment
+      // that explains why the guard exists, which would teach the next person to delete it.
+      const text = readFileSync(file, "utf8")
+        .replace(/\/\*[\s\S]*?\*\//g, " ")
+        .replace(/(^|\s)\/\/[^\n]*/g, " ");
+      for (const re of FABRICATED) {
+        const m = text.match(re);
+        if (!m) continue;
+        // A negated mention is the honest form and is allowed:
+        // "we have no case studies", "we will not borrow any".
+        const at = text.indexOf(m[0]);
+        const window = text.slice(Math.max(0, at - 90), at + m[0].length);
+        if (/\b(no|not|never|without|zero|none|won'?t|cannot|can'?t)\b/i.test(window)) continue;
+        hits.push(`${path.relative(repoRoot, file)}: ${JSON.stringify(m[0])}`);
+      }
+    }
+    assert.deepEqual(
+      hits,
+      [],
+      `copy claims proof this business does not have:\n  ${hits.join("\n  ")}`,
+    );
+  });
+
+  test("the guard would catch the badge that actually shipped", () => {
+    // Proves the patterns above are live rather than decorative.
+    const shipped = "Most chosen starting point";
+    assert.ok(
+      FABRICATED.some((re) => re.test(shipped)),
+      "the regression this test exists for would pass unnoticed",
+    );
+  });
+});

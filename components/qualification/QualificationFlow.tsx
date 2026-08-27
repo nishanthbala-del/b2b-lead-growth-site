@@ -559,7 +559,7 @@ function ResultStep({
     result.outcome === "strong"
       ? { border: "border-gold-500/45", chip: "Strong fit", chipClass: "border-gold-500/60 bg-gold-500/12 text-gold-200" }
       : result.outcome === "explore"
-        ? { border: "border-gold-500/25", chip: "Worth a conversation", chipClass: "border-gold-500/35 bg-gold-500/8 text-gold-200" }
+        ? { border: "border-gold-500/25", chip: "Likely fit", chipClass: "border-gold-500/35 bg-gold-500/8 text-gold-200" }
         : { border: "border-muted/25", chip: "Not a fit today", chipClass: "border-muted/35 bg-ink-950/60 text-muted" };
 
   return (

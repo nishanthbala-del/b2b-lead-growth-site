@@ -39,7 +39,7 @@ const CTA_HREF = "/start";
 // Four nav items. It was seven, which on a page this short is a table of contents for
 // a document nobody is going to read end to end.
 const navItems = [
-  { label: "What you get", href: "#offer" },
+  { label: "The free audit", href: "#offer" },
   { label: "How it works", href: "#how-it-works" },
   { label: "Pricing", href: "#pricing" },
   { label: "FAQ", href: "#faq" },
@@ -51,12 +51,12 @@ const steps = [
     body: "Past customers, open and expired estimates, maintenance agreements, missed calls. Straight out of ServiceTitan, Housecall Pro, Jobber, QuickBooks or a spreadsheet. It does not need to be clean.",
   },
   {
-    title: "We agree what a good job looks like",
-    body: "Service area, system types, job values you want — and the work you would rather turn down. You correct it. We do not proceed on a definition you have not seen.",
+    title: "We draft the job profile, you correct it",
+    body: "Service area, system types, job values you want — and the work you would rather turn down. We do not proceed on a definition you have not seen.",
   },
   {
     title: "We rank your list and research your partners",
-    body: "Your records deduped, suppression-checked and ranked by how close each one is to a real job. Referral partners near you researched from public sources, each with the source link attached.",
+    body: "Your records cleaned of duplicates and of anyone who asked not to be contacted, then ranked by how close each one is to a real job. Referral partners near you researched from public sources, each with the source link attached.",
   },
   {
     title: "You approve the messaging and the first batch",
@@ -242,18 +242,18 @@ function Hero() {
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-muted sm:text-xl">
           We follow up the unsold estimates, lapsed maintenance agreements and past customers
-          inside your own records — and build referral partnerships near you. For established
+          inside your own records — and reach out to referral partners near you. For established
           residential HVAC companies. Sent from your domain, with your sign-off.
         </p>
         <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
           <PrimaryCta />
           <p className="text-sm leading-6 text-muted">
-            {intakeMinutes} minutes · a straight answer either way
+            10 questions, {intakeMinutes} minutes · a straight answer either way
           </p>
         </div>
         <p className="mt-6 max-w-2xl border-l-2 border-gold-500/40 pl-4 text-base leading-7 text-bone/85">
-          Start with a {audit.name.toLowerCase()}: real work on your company, sent to you in
-          writing. No call required, and yours to keep whether or not you hire us.
+          Start with a {audit.name}: 3–5 referral partners near you, each with a source link you
+          can open, plus a sample message. No call required, and yours to keep either way.
         </p>
       </div>
     </section>
@@ -349,8 +349,8 @@ function WhoItsForSection() {
         </div>
       </div>
       <p className="mt-6 max-w-2xl leading-7 text-muted">
-        Work is done remotely for HVAC companies across the US. Campaigns currently focus on{" "}
-        {currentFocusArea}, so that is where the local knowledge is sharpest today.
+        Work is done remotely for HVAC companies across the US. Our market research is focused
+        on {currentFocusArea}, so that is where the local knowledge is sharpest today.
       </p>
     </Section>
   );
@@ -411,6 +411,15 @@ function PricingSection() {
       title="Flat monthly fee. Never priced per lead."
       intro="The tiers differ by how much of the work stays in your office. No setup fee, month-to-month, 14 days’ notice either side, and everything built for you is yours to keep."
     >
+      {/* The unit every price is quoted in, defined before the first number that uses it.
+          "Up to ~40 records a month" was on all three cards and the word appeared 33 times
+          across the site, but the only definition sat in an FAQ far below the table — so a
+          buyer met the price before he could tell whether 40 was a lot. */}
+      <p className="mt-6 rounded-lg border border-gold-500/18 bg-ink-900/60 p-4 leading-7 text-muted">
+        <span className="font-semibold text-gold-200">One record</span> = one person or business
+        to reach out to: a past customer, an unsold estimate, a lapsed agreement, or one referral
+        partner.
+      </p>
       <div className="mt-10 grid gap-4 lg:grid-cols-3">
         {plans.map((plan) => (
           <div
@@ -423,7 +432,7 @@ function PricingSection() {
           >
             {plan.featured ? (
               <p className="mb-4 w-fit rounded-sm border border-gold-500/45 bg-gold-500/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-200">
-                Most chosen starting point
+                Where we suggest starting
               </p>
             ) : null}
             <h3 className="font-display text-2xl text-bone">{plan.name}</h3>
@@ -445,7 +454,7 @@ function PricingSection() {
               ))}
             </ul>
             <p className="mt-4 border-t border-gold-500/14 pt-4 text-sm leading-6 text-muted/85">
-              <span className="font-semibold text-gold-200/90">Stays with you: </span>
+              <span className="font-semibold text-gold-200/90">Your side: </span>
               {plan.youKeep}
             </p>
           </div>
@@ -586,11 +595,11 @@ function FinalCta() {
     >
       <div className="mx-auto max-w-3xl text-center">
         <h2 className="font-display text-3xl leading-tight text-bone sm:text-4xl">
-          Find out what your list is worth before you pay anything.
+          See the work before you pay anything.
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-lg leading-8 text-muted">
           {intakeMinutes} minutes of questions, then a straight answer. If it is a fit, we build
-          your {audit.name.toLowerCase()} and send it over in writing.
+          your {audit.name.toLowerCase()} and email it within a few business days.
         </p>
         <div className="mt-8 flex justify-center">
           <PrimaryCta />

@@ -33,7 +33,7 @@ const pageFaqs = [
   {
     question: "How long does it take to receive?",
     answer:
-      "The intake form takes about two minutes. Every partner is individually researched, cited, and then independently re-verified against its own source before it can be included, so the audit arrives within a few business days, not instantly. Speed would defeat the point: the deliverable is proof of care, not a bulk export.",
+      `The fit check takes about ${intakeMinutes} minutes. Every partner is individually researched, cited, and then re-checked against its own source before it can be included, so the audit arrives within a few business days, not instantly. Speed would defeat the point: the deliverable is proof of care, not a bulk export.`,
   },
   {
     question: "Why would a company give this away?",
@@ -128,7 +128,7 @@ export default function FreePipelineAuditPage() {
               <span className="font-semibold text-bone">We research each partner individually.</span> The
               business is real, it operates in your service area, the contact path is mapped, and the
               reason to approach them is cited to a public source you can click. Nothing is
-              bulk-scraped, and every record is independently re-verified against its own cited
+              bulk-scraped, and every record is re-checked against its own cited
               source before it can be included.
             </li>
             <li>
