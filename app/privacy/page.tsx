@@ -83,7 +83,10 @@ export default function PrivacyPage() {
             your submission for as long as we keep the submission, not just for the moment of the
             check. If you click &ldquo;Choose a time&rdquo; on the booking step, we also record that
             you reached that step, so we know which enquiries went on to book. We also record
-            which page you completed the fit check on. This site does{" "}
+            which page you completed the fit check on, and — if you arrived from one of our
+            outreach emails via a tagged link — the short campaign tag in that link, so we can
+            tell which message you came from. The tag identifies the message, not you. This site
+            does{" "}
             <em>not</em> use third-party advertising, analytics, or cross-site tracking cookies, and
             it sets no cookies of its own.
           </p>

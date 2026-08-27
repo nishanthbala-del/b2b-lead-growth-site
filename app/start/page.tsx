@@ -32,16 +32,27 @@ const breadcrumbJsonLd = {
 // What the visitor is agreeing to before they start answering. Stated up front
 // because the flow asks for real information about their business, and the reason
 // it asks is the reason it is worth answering honestly.
+// Three short guarantees, shown as one line ABOVE the form, then in full BELOW it.
+//
+// They used to render as three cards between the intro and the first question, which
+// on a 390px phone put the first input 1,353px down — 1.6 screens. A prospect arriving
+// from an outbound email saw a headline, a paragraph and three boxes, and no form at
+// all, which is the single largest abandonment risk on the page. The reassurance still
+// has to come before the questions to make anyone willing to start, so it does — in
+// eight words each, with the full version kept underneath for anyone who wants it.
 const promises = [
   {
+    short: "A straight answer, including no",
     title: "A straight answer, including no",
     body: "If your answers say we can't help you, the last screen says so and tells you why. It won't offer you a calendar to be polite.",
   },
   {
+    short: "Free audit, no call required",
     title: "The audit is free, and no call is required",
     body: "If it is a fit, we build your pipeline audit — a job profile, 3–5 cited referral partners, one sample message — and email it to you. You never have to get on a call to receive it.",
   },
   {
+    short: `A ${callLengthMinutes}-minute call only if you want one`,
     title: "A call only if you want one",
     body: `If you would rather walk through it together, pick a ${callLengthMinutes}-minute slot on the last screen. Nothing to email back and forth.`,
   },
@@ -59,14 +70,29 @@ export default function StartPage() {
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
             Fit check · about {intakeMinutes} minutes
           </p>
-          <h1 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
-            Before we take up your time, let&rsquo;s find out if this is even for you.
+          {/* Smaller on mobile than the rest of the site's H1s, deliberately. This page
+              is a form, not a pitch: every vertical pixel above the first question is a
+              pixel of abandonment risk on a phone. */}
+          <h1 className="font-display text-3xl leading-tight text-bone sm:text-5xl">
+            Let&rsquo;s find out if this is for you.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-muted">
-            This only works for established residential HVAC companies with real customer history
-            and room for more work. Ten questions is enough to tell whether that&rsquo;s you.
-            You&rsquo;ll get the answer on the last screen, not in an email three days later.
+          <p className="mt-4 max-w-2xl leading-7 text-muted sm:text-lg sm:leading-8">
+            For established residential HVAC companies with real customer history and room for more
+            work. Ten questions, and you get the answer on the last screen.
           </p>
+
+          <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
+            {promises.map((p) => (
+              <li key={p.title} className="flex items-center gap-2 text-sm text-bone/85">
+                <span aria-hidden="true" className="text-gold-200">✓</span>
+                {p.short}
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-8 rounded-lg border border-gold-500/22 bg-ink-900/72 px-6 py-2 shadow-panel sm:px-8">
+            <QualificationFlow />
+          </div>
 
           <ul className="mt-10 grid gap-4 sm:grid-cols-3">
             {promises.map((p) => (
@@ -76,10 +102,6 @@ export default function StartPage() {
               </li>
             ))}
           </ul>
-
-          <div className="mt-10 rounded-lg border border-gold-500/22 bg-ink-900/72 px-6 py-2 shadow-panel sm:px-8">
-            <QualificationFlow />
-          </div>
 
           <section className="mt-12 border-t border-gold-500/14 pt-8">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">

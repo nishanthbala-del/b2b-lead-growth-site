@@ -27,8 +27,10 @@ type LeadPayload = {
   serviceArea?: string;
   notes?: string;
   consent?: boolean;
-  /** Which surface the flow was completed on — the modal or the /start page. */
+  /** Which surface the flow was completed on. */
   source?: string;
+  /** Campaign tag from /start?src=… , so outbound batches are attributable. */
+  campaign?: string;
   // Honeypot — must stay empty for real humans.
   hp_leave_blank?: string;
   // The rule-bearing answers. Typed loosely here because they arrive untrusted;
@@ -99,6 +101,7 @@ const CSV_COLUMNS = [
   "fitScore",
   "recommendedTier",
   "qualificationSummary",
+  "campaign",
 ] as const;
 
 // Best-effort in-memory rate limiter (per server instance). A light deterrent,
@@ -461,6 +464,9 @@ export async function POST(req: NextRequest) {
     fitScore: `${fit.score}/${fit.maxScore}`,
     recommendedTier: fit.recommendedTier ?? "",
     qualificationSummary: field(summarizeAnswers(answers), 1000),
+    // Closed character set, re-validated here: the browser is not trusted with a value
+    // that lands in a spreadsheet cell.
+    campaign: /^[A-Za-z0-9_-]{1,40}$/.test(String(body.campaign ?? "")) ? String(body.campaign) : "",
   };
 
   const localOk = await appendLocal(record);

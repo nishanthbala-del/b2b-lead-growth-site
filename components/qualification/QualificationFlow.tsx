@@ -93,6 +93,17 @@ export default function QualificationFlow() {
   const [result, setResult] = useState<FitResult | null>(null);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
 
+  // Campaign tag from the URL (/start?src=hvac-batch-3), so a submission can be traced
+  // back to the outreach that produced it. Read from window rather than useSearchParams
+  // because the latter forces this page out of static generation for a value that is
+  // purely informational. Cookieless, first-party, and never read back to the visitor.
+  const [campaign, setCampaign] = useState("");
+  useEffect(() => {
+    const raw = new URLSearchParams(window.location.search).get("src") ?? "";
+    // Closed character set: this string ends up in the owner's spreadsheet.
+    if (/^[A-Za-z0-9_-]{1,40}$/.test(raw)) setCampaign(raw);
+  }, []);
+
   const rootRef = useRef<HTMLDivElement>(null);
   const stepHeadingRef = useRef<HTMLParagraphElement>(null);
 
@@ -167,7 +178,7 @@ export default function QualificationFlow() {
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "submit", ...contact, ...answers, source: "page" }),
+        body: JSON.stringify({ action: "submit", ...contact, ...answers, source: "page", campaign }),
       });
       const data = (await res.json()) as {
         ok: boolean;
