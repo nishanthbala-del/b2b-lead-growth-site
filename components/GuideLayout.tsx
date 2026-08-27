@@ -49,45 +49,28 @@ export default function GuideLayout({
 
         {children}
 
-        {/* Conversion path, tiered by intent. A guide reader is mid-research: some are
-            ready to be qualified, some want to understand the mechanism first, and some
-            only want the number. One button for each, in that order, instead of funnelling
-            all three into the same modal and losing the two who weren't ready. */}
+        {/* ONE call to action, the same one used on every page. This carried three
+            competing buttons; a reader at the end of a guide needs a next step, not a
+            menu. The two secondary destinations are still linked from the homepage. */}
         <section className="mt-14 rounded-lg border border-gold-500/20 bg-ink-900/72 p-6 sm:p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
-            Where to go from here
-          </p>
-          <h2 className="mt-3 font-display text-3xl text-bone">
+          <h2 className="font-display text-2xl text-bone sm:text-3xl">
             Find out whether this is a fit — and get the audit either way.
           </h2>
           <p className="mt-4 leading-7 text-muted">
             {intakeMinutes} minutes of questions and you get a straight answer, including
-            &ldquo;no&rdquo; if that&rsquo;s the answer. If it is a fit, we build your free
-            pipeline audit and send it over in writing: a sharpened profile of the jobs worth
-            chasing, 3–5 real referral partners in your service area with cited reasons to reach
-            out, and one sample outreach message. No call is required to receive it, and it&rsquo;s
-            yours to keep whether or not you ever hire us. It shows the quality of the work, not a
-            promised result — no guaranteed leads, replies, or appointments, and no homeowner list.
+            &ldquo;no&rdquo;. If it is a fit, we build your free pipeline audit and send it in
+            writing: a sharpened job profile, 3–5 named referral partners with cited reasons, and
+            one sample message. No call is required to receive it, and it is yours to keep whether
+            or not you hire us. It shows the quality of the work, not a promised result.
           </p>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
             <Link
               href="/start"
               className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 font-semibold text-ink-950 shadow-gold"
             >
               See if we&rsquo;re a fit <span className="ml-3" aria-hidden="true">→</span>
             </Link>
-            <Link
-              href="/#how-it-works"
-              className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/28 px-6 font-semibold text-gold-200 transition-colors hover:border-gold-200/65 hover:bg-gold-500/8"
-            >
-              See how it works first
-            </Link>
-            <Link
-              href="/pricing"
-              className="link-wipe inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
-            >
-              Just the pricing →
-            </Link>
+            <span className="text-sm text-muted">No card. A straight answer either way.</span>
           </div>
         </section>
 
@@ -101,7 +84,7 @@ export default function GuideLayout({
               <li key={g.slug}>
                 <Link
                   href={`/${g.slug}`}
-                  className="text-gold-200 underline underline-offset-4 transition-colors hover:text-gold-400"
+                  className="inline-flex min-h-11 items-center text-gold-200 underline underline-offset-4 transition-colors hover:text-gold-400"
                 >
                   {g.metaTitle}
                 </Link>
@@ -116,9 +99,18 @@ export default function GuideLayout({
 
 /* Shared typographic building blocks for guide content. */
 
-export function GuideSection({ title, children }: { title: string; children: ReactNode }) {
+export function GuideSection({
+  id,
+  title,
+  children,
+}: {
+  /** Optional anchor, so another page can deep-link to a specific section. */
+  id?: string;
+  title: string;
+  children: ReactNode;
+}) {
   return (
-    <section className="mt-12">
+    <section id={id} className="mt-12 scroll-mt-20">
       <h2 className="font-display text-3xl leading-tight text-bone">{title}</h2>
       <div className="mt-4 space-y-4 leading-7 text-muted">{children}</div>
     </section>

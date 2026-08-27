@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { siteUrl, brandName, orgDescription, areaServed } from "@/lib/site";
+import { siteUrl, brandName, orgDescription, areaServed, founderName } from "@/lib/site";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -72,6 +72,15 @@ const orgJsonLd = {
       logo: `${siteUrl}/icon.svg`,
       description: orgDescription,
       areaServed: areaServed,
+      founder: { "@type": "Person", name: founderName },
+      // What this company is competent in, stated plainly for answer engines.
+      knowsAbout: [
+        "HVAC customer reactivation",
+        "Unsold estimate follow-up",
+        "Lapsed maintenance agreement renewals",
+        "HVAC referral partner outreach",
+        "B2B appointment setting",
+      ],
     },
     {
       "@type": "WebSite",
@@ -90,18 +99,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <head>
-        {/* The scroll-reveal animation server-renders every content block with an
-            inline `opacity:0`, which framer-motion clears once it takes over. With
-            JavaScript unavailable or broken, nothing ever clears it and the page is
-            blank. This override only applies in that case and costs nothing
-            otherwise. */}
-        <noscript
-          dangerouslySetInnerHTML={{
-            __html: `<style>[style*="opacity:0"]{opacity:1!important;transform:none!important}</style>`,
-          }}
-        />
-      </head>
       <body>
         <script
           type="application/ld+json"

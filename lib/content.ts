@@ -7,15 +7,18 @@ import { callLengthMinutes, intakeMinutes } from "./site.ts";
 export type Plan = {
   name: string;
   price: number;
-  volume: string;
-  // Stated monthly volume ceiling. Published so a buyer knows what they are
-  // agreeing to before they agree to it — the work is capacity-limited and
-  // quoting a tier without its ceiling reads as unlimited.
+  /** One sentence: what this tier actually does for you. */
+  oneLiner: string;
+  /** Stated monthly ceiling. The work is capacity-limited; quoting a tier without
+   *  its ceiling reads as unlimited. */
   capacity: string;
+  /** Who should pick this one, in a single sentence. */
   bestFor: string;
-  includes: string;
-  guardrails: string;
-  cta: string;
+  /** Short bullets. This was one 60-word semicolon-spliced sentence per tier, which
+   *  is unreadable on a phone and impossible to compare across three columns. */
+  includes: string[];
+  /** What stays with you. Named on the card, not buried in the contract. */
+  youKeep: string;
   featured?: boolean;
 };
 
@@ -23,45 +26,48 @@ export const plans: Plan[] = [
   {
     name: "Lead Engine",
     price: 750,
-    volume: "Your reactivation list and referral targets, built and ranked",
-    capacity: "Up to ~40 records researched, cited and delivered per month (capacity-limited)",
-    bestFor:
-      "HVAC companies with someone in the office who will actually work a list — you want it built, cleaned and ranked, and you'll make the calls and send the emails.",
-    includes:
-      "Your ideal-job profile with bad-fit exclusions; your own customer records cleaned, deduped and priority-ranked for reactivation (unsold estimates, lapsed maintenance agreements, replacement-age systems, missed calls); researched referral partners in your service area, each with a cited public source; 2-3 outreach angles plus a follow-up skeleton; CRM-ready delivery and handoff",
-    guardrails:
-      "You own all sending, follow-up, qualifying, and booking; no outreach is run for you at this tier",
-    cta: "Start with Lead Engine",
+    oneLiner: "We build the list. You work it.",
+    capacity: "Up to ~40 records a month",
+    bestFor: "You have someone in the office who will actually make the calls.",
+    includes: [
+      "Your ideal-job profile, with the work you want screened out",
+      "Your own records cleaned, deduped and ranked by how close each is to a job",
+      "Referral partners researched near you, each with a cited public source",
+      "Outreach angles and a follow-up skeleton to work from",
+      "Delivered CRM-ready",
+    ],
+    youKeep: "You send everything and handle every reply. No outreach runs at this tier.",
   },
   {
     name: "Outreach Engine",
     price: 1500,
-    volume: "We run the outreach — your office answers the interested replies",
-    capacity: "Up to ~100 records worked per month",
-    bestFor:
-      "HVAC companies that want the follow-up going out every week without pulling a tech off a truck or hiring an office role to chase it.",
-    includes:
-      "Everything in Lead Engine; outreach written per record and tied to its real reason — the specific estimate, the lapsed agreement, the system age — never templated mail-merge; multi-touch follow-up cadence, tracked; reply triage that flags who is ready to talk; monthly report (contacted → replies → positive)",
-    guardrails:
-      "You own the sending domain and the sales conversation; no guaranteed reply volume or booked jobs",
-    cta: "Build My Pipeline",
+    oneLiner: "We write and send the follow-up every week.",
+    capacity: "Up to ~100 records a month",
+    bestFor: "Nobody in your office has time to chase follow-up, and you don't want to hire for it.",
+    includes: [
+      "Everything in Lead Engine",
+      "Outreach written per record against its real reason — never mail-merge",
+      "A multi-touch follow-up cadence, tracked",
+      "Replies triaged and flagged by who is ready to talk",
+      "A monthly report: contacted, replied, positive",
+    ],
+    youKeep: "You own the domain it sends from and the sales conversation.",
     featured: true,
   },
   {
     name: "Appointment Engine",
     price: 2500,
-    // Activity, not outcome. This string is also the `description` on the schema.org
-    // Offer emitted by app/page.tsx, so "Qualified appointments land on your schedule"
-    // was publishing a promised result as structured data.
-    volume: "We qualify the replies and book the appointments onto your calendar",
-    capacity: "Up to ~150 records worked per month",
-    bestFor:
-      "Established HVAC companies that want both lanes — reactivation and referral partners — run end to end, with appointments landing on the calendar.",
-    includes:
-      "Everything in Outreach Engine; every reply qualified against your criteria (job type, service area, system age, timing); appointments booked straight onto your calendar with confirmations and reminders; full CRM and pipeline tracking; weekly report plus a weekly optimization experiment",
-    guardrails:
-      "You own the in-home visit, the quote, and the close; no guaranteed revenue or fixed number of appointments",
-    cta: "Scale with Appointment Engine",
+    oneLiner: "We qualify the replies and book the appointments.",
+    capacity: "Up to ~150 records a month",
+    bestFor: "You want both lanes run end to end, with appointments landing on the calendar.",
+    includes: [
+      "Everything in Outreach Engine",
+      "Every reply qualified against your criteria",
+      "Appointments booked on your calendar, with confirmations and reminders",
+      "Full pipeline tracking",
+      "A weekly report and one optimization experiment",
+    ],
+    youKeep: "You run the visit, the quote and the close.",
   },
 ];
 
@@ -281,30 +287,31 @@ export const faqs: Faq[] = [
 // hand over homeowner leads, which is exactly what this business does not do.
 export const audit = {
   name: "Free Pipeline Audit",
+  /** One sentence. It was a 55-word sentence with three em-dashed asides. */
   tagline:
-    "A sharpened profile of the jobs worth chasing, 3-5 real referral partners in your service area — each a named business with a cited public reason to reach out — and one sample outreach message written the way we would actually send it. Yours to keep, before you pay anything.",
+    "Real work, done for your company, before you pay anything — and yours to keep either way.",
   includes: [
     {
       title: "A job profile worth targeting",
-      body: "What a good job actually looks like for you — service area, system types, residential or light commercial, replacement versus repair — plus the work you would rather screen out than win.",
+      body: "What a good job looks like for you: service area, system types, replacement versus repair — and the work you would rather turn down.",
     },
     {
-      title: "3-5 real referral partners, individually vetted",
-      body: "Named businesses in your service area that could send you work — builders, property managers, realtors, plumbers, home inspectors — each with a mapped contact path, a cited public reason they are worth approaching now, a source link, and a priority ranking.",
+      title: "3-5 referral partners, named and checked",
+      body: "Real businesses near you that could send you work. Each one has a contact path, a cited public reason to call now, and a source link you can open.",
     },
     {
       title: "One sample outreach message",
-      body: "A personalized first touch written for one of those partners, tied to its real, cited reason — so you see the voice and the specificity rather than a mail-merge template.",
+      body: "Written for one of those partners, tied to its real reason. You see the actual voice, not a template.",
     },
     {
-      title: "A read of where your work comes from today",
-      body: "An honest look at your current lead flow and the one gap most likely costing you booked jobs — most often the unsold estimates and lapsed agreements nobody has time to go back to.",
+      title: "A read on where your work comes from",
+      body: "Your current lead flow, and the one gap most likely costing you jobs.",
     },
   ],
   whyFree:
-    "We would rather show you the quality than tell you about it. There is no track record to point to yet, so the audit is the proof. If it is useful, we will talk about running it at scale. If it is not, you keep the work and owe nothing.",
+    "We have no case studies yet, so the audit is the proof. If it is useful, we will talk. If it is not, you keep it and owe nothing.",
   guardrail:
-    "The audit shows you the quality of the work, not a promised result — no guaranteed leads, calls, or jobs. It is a real deliverable you keep whether or not you ever hire us. Every partner is individually researched and cited, never bulk-scraped. It does not include homeowner records: those come from your own list, and only after you are a client and have approved the export.",
+    "It shows you the quality of the work, not a promised result. No guaranteed leads, calls or jobs. It contains no homeowner records — those come from your own list, only after you are a client and have approved the export.",
 } as const;
 
 // The service timeline for the managed tiers (Outreach / Appointment), shown so a

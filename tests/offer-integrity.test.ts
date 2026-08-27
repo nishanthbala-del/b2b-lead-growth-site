@@ -143,7 +143,13 @@ describe("nothing promises an outcome", () => {
 
   test("the published plan copy states activity, not results", () => {
     for (const plan of plans) {
-      const text = [plan.volume, plan.capacity, plan.bestFor, plan.includes, plan.guardrails, plan.cta].join(" ");
+      const text = [
+        plan.oneLiner,
+        plan.capacity,
+        plan.bestFor,
+        ...plan.includes,
+        plan.youKeep,
+      ].join(" ");
       assert.deepEqual(outcomePromises(text), [], `${plan.name} promises an outcome`);
     }
   });

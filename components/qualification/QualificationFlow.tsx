@@ -38,12 +38,9 @@ import { Field, FieldError, Input, OptionCards, Textarea, focusFirstField, focus
 // Step 5 is the outcome. `evaluateFit` decides it; the same function runs on the
 // server so the record the owner reads is not the one the browser asserted.
 //
-// Rendered in two places from ONE definition: the modal (components/IntakeForm.tsx)
-// and the standalone page (app/start/page.tsx). Divergence between "the form in the
-// popup" and "the form on the page" is how two different qualification standards end
-// up live at once.
-
-export type FlowVariant = "modal" | "page";
+// This is the site's ONLY conversion surface. It used to be duplicated behind a modal
+// on the homepage as well; the modal is gone, so there is one qualification standard,
+// at one URL that can be linked from an email or bookmarked mid-decision.
 
 type ContactState = {
   name: string;
@@ -81,29 +78,10 @@ const LAST_QUESTION_STEP = 4;
 
 type Errors = Partial<Record<string, string>>;
 
-export default function QualificationFlow({
-  variant,
-  initialTier,
-  onClose,
-  onStepChange,
-  onDirtyChange,
-}: {
-  variant: FlowVariant;
-  /** Pre-selects a budget when the visitor arrived from a specific pricing card. */
-  initialTier?: string;
-  /** Modal only. */
-  onClose?: () => void;
-  /** Lets the host retitle its chrome as the visitor moves through. */
-  onStepChange?: (step: number, isResult: boolean) => void;
-  /** True once anything has been typed or answered — the modal guards its backdrop on it. */
-  onDirtyChange?: (dirty: boolean) => void;
-}) {
+export default function QualificationFlow() {
   const [step, setStep] = useState(1);
   const [contact, setContact] = useState<ContactState>(EMPTY_CONTACT);
-  const [answers, setAnswers] = useState<QualificationAnswers>(() => ({
-    ...EMPTY_ANSWERS,
-    budget: tierToBudget(initialTier),
-  }));
+  const [answers, setAnswers] = useState<QualificationAnswers>({ ...EMPTY_ANSWERS });
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -124,10 +102,6 @@ export default function QualificationFlow({
   // the first time they hear anything. Cheap: `evaluateFit` is pure and synchronous.
   const provisional = useMemo(() => evaluateFit(answers), [answers]);
 
-  useEffect(() => {
-    onStepChange?.(step, isResult);
-  }, [step, isResult, onStepChange]);
-
   // Move focus to the first field of the new step. On the result there are no fields,
   // so focus the step heading instead: a freshly inserted role="status" node is
   // unreliably announced, whereas moving focus reliably says what changed.
@@ -135,11 +109,11 @@ export default function QualificationFlow({
     const raf = requestAnimationFrame(() => {
       if (isResult) stepHeadingRef.current?.focus();
       else focusFirstField(rootRef.current);
-      // On the standalone page the panel can be below the fold after a step change.
-      if (variant === "page") rootRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
+      // The panel can sit below the fold after a step change on a short screen.
+      rootRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
     });
     return () => cancelAnimationFrame(raf);
-  }, [step, isResult, variant]);
+  }, [step, isResult]);
 
   function setContactField<K extends keyof ContactState>(key: K, value: ContactState[K]) {
     setContact((c) => ({ ...c, [key]: value }));
@@ -193,7 +167,7 @@ export default function QualificationFlow({
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "submit", ...contact, ...answers, source: variant }),
+        body: JSON.stringify({ action: "submit", ...contact, ...answers, source: "page" }),
       });
       const data = (await res.json()) as {
         ok: boolean;
@@ -228,14 +202,6 @@ export default function QualificationFlow({
       keepalive: true,
     }).catch(() => {});
   }
-
-  /** Has the visitor invested anything yet? Drives the modal's backdrop-click guard. */
-  const dirty =
-    step > 1 || Boolean(contact.name || contact.email || contact.company || contact.website);
-
-  useEffect(() => {
-    onDirtyChange?.(dirty);
-  }, [dirty, onDirtyChange]);
 
   return (
     <div ref={rootRef} className="scroll-mt-24">
@@ -546,8 +512,6 @@ export default function QualificationFlow({
           bookingConfirmed={bookingConfirmed}
           onOpenScheduler={handleOpenScheduler}
           headingRef={stepHeadingRef}
-          onClose={onClose}
-          variant={variant}
         />
       )}
     </div>
@@ -572,8 +536,6 @@ function ResultStep({
   bookingConfirmed,
   onOpenScheduler,
   headingRef,
-  onClose,
-  variant,
 }: {
   result: FitResult;
   leadId: string;
@@ -581,8 +543,6 @@ function ResultStep({
   bookingConfirmed: boolean;
   onOpenScheduler: () => void;
   headingRef: React.RefObject<HTMLParagraphElement | null>;
-  onClose?: () => void;
-  variant: FlowVariant;
 }) {
   const tone =
     result.outcome === "strong"
@@ -724,22 +684,12 @@ function ResultStep({
         </p>
       ) : null}
 
-      {onClose ? (
-        <button
-          type="button"
-          onClick={onClose}
-          className="-ml-2 inline-flex min-h-11 w-fit items-center px-2 text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
-        >
-          {result.offerBooking ? "Done" : "Close"}
-        </button>
-      ) : variant === "page" ? (
-        <Link
-          href="/"
-          className="-ml-2 inline-flex min-h-11 w-fit items-center px-2 text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
-        >
-          ← Back to the site
-        </Link>
-      ) : null}
+      <Link
+        href="/"
+        className="-ml-2 inline-flex min-h-11 w-fit items-center px-2 text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+      >
+        ← Back to the site
+      </Link>
     </div>
   );
 }
@@ -773,10 +723,3 @@ function StepIndicator({ step }: { step: number }) {
   );
 }
 
-/** Maps a pricing-card click onto the budget answer, so the tier carries through. */
-function tierToBudget(tier?: string): QualificationAnswers["budget"] {
-  if (tier === "Lead Engine") return "750";
-  if (tier === "Outreach Engine") return "1500";
-  if (tier === "Appointment Engine") return "2500";
-  return "";
-}

@@ -160,10 +160,26 @@ export function serviceJsonLd() {
     serviceType: "HVAC Lead Generation and Appointment Setting",
     areaServed,
     provider: { "@id": `${siteUrl}/#organization` },
+    // Named explicitly so an answer engine can state WHO this is for without having to
+    // infer it from marketing copy. The niche is the single most important fact about
+    // this business and the one most easily lost in summarisation.
+    audience: {
+      "@type": "BusinessAudience",
+      name: "Established residential HVAC companies",
+      audienceType: "Residential HVAC contractors with existing customer history",
+    },
+    // The two lanes, kept separate, because conflating them is the specific
+    // misunderstanding that would misrepresent the service: homeowner records are the
+    // client's own and are never sourced by us.
+    serviceOutput: [
+      { "@type": "Thing", name: "Reactivation list built from the client's own customer records" },
+      { "@type": "Thing", name: "Researched referral-partner prospects, each with a cited public source" },
+    ],
+    termsOfService: `${siteUrl}/terms`,
     offers: plans.map((p) => ({
       "@type": "Offer",
       name: p.name,
-      description: p.volume,
+      description: p.oneLiner,
       // price/priceCurrency are set on the Offer itself as well as in the nested
       // specification: Google reads the former, and an Offer carrying only a nested
       // priceSpecification is treated as having no price at all.

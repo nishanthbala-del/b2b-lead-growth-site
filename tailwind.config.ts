@@ -46,8 +46,13 @@ const config: Config = {
         panel: "0 24px 80px rgba(0, 0, 0, 0.42)",
       },
       backgroundImage: {
+        // The primary button's fill. The terminal stop used to be #8A6A23, against
+        // which the button's own near-black label measured 3.93:1 — below the 4.5:1
+        // WCAG AA threshold for text this size. Text sitting over the bottom-right of
+        // every primary CTA on the site was therefore failing contrast. #A8842F is
+        // 5.66:1 and still reads as a deep gold.
         "gold-sheen":
-          "linear-gradient(135deg, #E8D9A8 0%, #D4AF37 40%, #8A6A23 100%)",
+          "linear-gradient(135deg, #E8D9A8 0%, #D4AF37 40%, #A8842F 100%)",
       },
     },
   },

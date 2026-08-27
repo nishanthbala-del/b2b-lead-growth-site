@@ -38,12 +38,12 @@ const promises = [
     body: "If your answers say we can't help you, the last screen says so and tells you why. It won't offer you a calendar to be polite.",
   },
   {
-    title: "The audit costs you nothing, including a meeting",
-    body: "If it is a fit, we build your pipeline audit — a job profile, 3–5 cited referral partners, one sample message — and send it to you in writing. Booking a call is never the price of it.",
+    title: "The audit is free, and no call is required",
+    body: "If it is a fit, we build your pipeline audit — a job profile, 3–5 cited referral partners, one sample message — and email it to you. You never have to get on a call to receive it.",
   },
   {
-    title: "No calendar ping-pong",
-    body: `If you do want to walk through it together, you pick a ${callLengthMinutes}-minute slot on the same screen. Nothing to email back and forth.`,
+    title: "A call only if you want one",
+    body: `If you would rather walk through it together, pick a ${callLengthMinutes}-minute slot on the last screen. Nothing to email back and forth.`,
   },
 ];
 
@@ -78,7 +78,7 @@ export default function StartPage() {
           </ul>
 
           <div className="mt-10 rounded-lg border border-gold-500/22 bg-ink-900/72 px-6 py-2 shadow-panel sm:px-8">
-            <QualificationFlow variant="page" />
+            <QualificationFlow />
           </div>
 
           <section className="mt-12 border-t border-gold-500/14 pt-8">

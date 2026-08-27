@@ -11,9 +11,9 @@ import type { Option } from "@/lib/qualification";
 /* -------------------------------------------------------------------------- */
 /*  Form primitives shared by the qualification flow                            */
 /* -------------------------------------------------------------------------- */
-// Lifted out of IntakeForm so the same controls render in the modal and on the
-// standalone /start page. One copy, one set of accessibility behaviours: the two
-// hosts differ only in their chrome.
+// The controls the fit check is built from. They live here rather than inline so the
+// accessibility behaviour (labelling, error association, focus management) is defined
+// once instead of per field.
 
 export function Field({
   label,

@@ -36,18 +36,20 @@ export default function NotFound() {
           The link may be out of date, or the address may have a typo in it. Everything about the
           service — how it works, what&rsquo;s included, and what it costs — is on the home page.
         </p>
-        <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+        {/* Same single call to action as every other page. A 404 that only offers
+            "go home" wastes the one visitor who was already looking for something. */}
+        <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
           <Link
-            href="/"
+            href="/start"
             className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 font-semibold text-ink-950 shadow-gold"
           >
-            Go to the home page
+            See if we&rsquo;re a fit <span className="ml-3" aria-hidden="true">→</span>
           </Link>
           <Link
-            href="/#pricing"
-            className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/28 px-6 font-semibold text-gold-200 transition-colors hover:border-gold-200/65 hover:bg-gold-500/8"
+            href="/"
+            className="text-sm font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400"
           >
-            See pricing
+            Or go to the home page
           </Link>
         </div>
       </main>

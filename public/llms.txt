@@ -15,13 +15,18 @@
 > free public sources, and every one carries a public source citation, a fit reason, and a
 > confidence note — a researched prospect with no citation cannot be contacted. Outreach is
 > sent from the client's own domain and mailbox with the client's sign-off on targeting,
-> messaging, and the first batch. Pricing is published: $750 (list built and ranked, client
-> sends), $1,500 (personalized outreach and follow-up run for the client), or $2,500 (adds
-> reply qualification and booking qualified appointments on the client's calendar) per month,
-> month-to-month, no setup fee, 14 days' notice to cancel either side. The entry offer is a
+> messaging, and the first batch. Pricing is published: $750 (we build the list, the client
+> works it), $1,500 (we write and send the follow-up), or $2,500 (we also qualify the replies
+> and book the appointments) per month, month-to-month, no setup fee, 14 days' notice to
+> cancel either side. The tiers differ only by how much of the work stays in the client's
+> office. The single entry point is a short fit check at /start, which returns a straight
+> yes/no on fit and screens out companies the service cannot help (no customer history, wanting
+> to buy homeowner leads, no capacity for more work) rather than booking them a call. The entry
+> offer is a
 > Free Pipeline Audit — a sharpened profile of the jobs worth chasing plus 3-5 individually
 > vetted, cited referral partners and one sample outreach message, free, kept regardless of
-> whether the recipient becomes a client; it does NOT include homeowner records. The company
+> whether the recipient becomes a client, and delivered IN WRITING — a call is never its price,
+> though a walkthrough is offered afterwards; it does NOT include homeowner records. The company
 > started in 2026 and says so plainly: it has no clients, testimonials, case studies, or
 > results to publish yet and publishes none, and it never guarantees lead counts, replies,
 > appointments, jobs, or revenue.
@@ -34,7 +39,7 @@
 - [HVAC Lead Generation in New Jersey](https://www.b2bleadgrowth.com/hvac-lead-generation-new-jersey): what HVAC leads cost NJ contractors and the honest options
 - [Shared vs. Exclusive HVAC Leads](https://www.b2bleadgrowth.com/shared-vs-exclusive-hvac-leads): neutral cost-per-job math, with sources
 - [How to Choose an HVAC Lead Generation Company](https://www.b2bleadgrowth.com/how-to-choose-a-lead-generation-agency): red flags, questions to ask, and our own answers
-- [Fit check](https://www.b2bleadgrowth.com/start): a short qualification flow that returns a straight yes/no on fit, and books a call only for companies it fits
+- [Fit check](https://www.b2bleadgrowth.com/start): THE entry point — a short qualification flow that returns a straight yes/no on fit, and screens out companies the service cannot help instead of booking them a call
 - [Terms of Service](https://www.b2bleadgrowth.com/terms): what is sold, fees and billing, cancellation, refunds, termination, liability
 - [Privacy Policy](https://www.b2bleadgrowth.com/privacy): what data is collected, how it is used, retention, and your rights
 

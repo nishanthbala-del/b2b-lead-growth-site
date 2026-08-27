@@ -112,15 +112,20 @@ export default function PricingPage() {
                     <span className="text-sm font-normal text-muted">/mo</span>
                   </p>
                 </div>
-                <p className="mt-2 font-semibold text-bone/90">{p.volume}</p>
+                <p className="mt-2 font-semibold text-bone/90">{p.oneLiner}</p>
                 <p className="mt-1 text-sm">{p.capacity}</p>
+                <p className="mt-3 leading-7">{p.bestFor}</p>
+                <ul className="mt-3 space-y-1.5">
+                  {p.includes.map((line) => (
+                    <li key={line} className="flex gap-2 leading-7">
+                      <span aria-hidden="true" className="mt-0.5 shrink-0 text-gold-200">✓</span>
+                      <span>{line}</span>
+                    </li>
+                  ))}
+                </ul>
                 <p className="mt-3 leading-7">
-                  <span className="font-semibold text-gold-200/90">Includes: </span>
-                  {p.includes}
-                </p>
-                <p className="mt-2 leading-7">
-                  <span className="font-semibold text-gold-200/90">Not included — stays with you: </span>
-                  {p.guardrails}
+                  <span className="font-semibold text-gold-200/90">Stays with you: </span>
+                  {p.youKeep}
                 </p>
                 {/* This page listed all three prices and offered no way to act on any of
                     them: the only CTA was the shared one at the very bottom of the layout,
@@ -249,7 +254,7 @@ export default function PricingPage() {
           </p>
         </GuideSection>
 
-        <GuideSection title="What happens after you sign, and when">
+        <GuideSection id="timeline" title="What happens after you sign, and when">
           <p>
             Day 0 is the day the agreement is signed and the first payment clears — no work
             begins before it. From there:
