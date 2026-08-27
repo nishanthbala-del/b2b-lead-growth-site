@@ -4,6 +4,23 @@ const config: Config = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      // A full 0-100 opacity scale, in whole percent.
+      //
+      // Tailwind's DEFAULT scale is 5-step (5, 10, 15, 20 …), and a modifier outside
+      // it silently compiles to nothing — no warning, no error, no CSS. This design
+      // leans on fine gradations for its hairlines and panel fills, and 109 class
+      // occurrences across the site used values like /12, /14, /18, /22, /72 that were
+      // therefore emitting NOTHING. The visible result was not "slightly off": with no
+      // `border-color` rule, Tailwind's preflight default (#e5e7eb) applied, so every
+      // intended faint-gold hairline shipped as a light grey line on near-black, and
+      // every `bg-ink-900/72` panel shipped fully transparent.
+      //
+      // Declaring the whole range removes the failure mode rather than the symptom.
+      // JIT only emits the combinations actually used, so this costs nothing.
+      // tests/design-tokens.test.ts fails if a modifier outside this scale reappears.
+      opacity: Object.fromEntries(
+        Array.from({ length: 101 }, (_, i) => [String(i), String(i / 100)]),
+      ),
       colors: {
         ink: {
           950: "#0A0A0B",

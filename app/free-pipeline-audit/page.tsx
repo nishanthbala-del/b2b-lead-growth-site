@@ -1,22 +1,16 @@
 import type { Metadata } from "next";
 import GuideLayout, { GuideSection } from "@/components/GuideLayout";
 import { audit } from "@/lib/content";
-import { getGuidePage, guideJsonLd } from "@/lib/pages";
-import { siteUrl, brandName } from "@/lib/site";
+import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
+import { siteUrl, brandName, intakeMinutes } from "@/lib/site";
 
 const page = getGuidePage("free-pipeline-audit");
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: `/${page.slug}`,
   title: page.metaTitle,
   description: page.description,
-  alternates: { canonical: `/${page.slug}` },
-  openGraph: {
-    title: page.metaTitle,
-    description: page.description,
-    type: "article",
-    url: `/${page.slug}`,
-  },
-};
+});
 
 // Visible Q&A on this page — FAQPage markup below is built from this same array
 // so the structured data always matches the visible text verbatim.
@@ -126,7 +120,7 @@ export default function FreePipelineAuditPage() {
         <GuideSection title="How the process works">
           <ol className="list-decimal space-y-3 pl-5">
             <li>
-              <span className="font-semibold text-bone">A 2-minute intake.</span> You tell us your
+              <span className="font-semibold text-bone">A {intakeMinutes}-minute fit check.</span> You tell us your
               service area, your average job value, and how new work reaches you today. No card, no
               commitment.
             </li>

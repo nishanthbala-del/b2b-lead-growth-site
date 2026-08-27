@@ -1,22 +1,17 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import GuideLayout, { GuideSection, GuideTable, KeyAnswer, SourceNote } from "@/components/GuideLayout";
 import { plans, serviceTimeline, serviceTimelineDisclaimer } from "@/lib/content";
-import { getGuidePage, guideJsonLd } from "@/lib/pages";
-import { siteUrl, brandName, orgDescription } from "@/lib/site";
+import { getGuidePage, guideJsonLd, pageMetadata, serviceJsonLd } from "@/lib/pages";
+import { siteUrl, intakeMinutes } from "@/lib/site";
 
 const page = getGuidePage("pricing");
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: `/${page.slug}`,
   title: page.metaTitle,
   description: page.description,
-  alternates: { canonical: `/${page.slug}` },
-  openGraph: {
-    title: page.metaTitle,
-    description: page.description,
-    type: "article",
-    url: `/${page.slug}`,
-  },
-};
+});
 
 // Visible Q&A — mirrored verbatim into FAQPage JSON-LD below.
 const pageFaqs = [
@@ -65,29 +60,7 @@ const structuredData = {
         acceptedAnswer: { "@type": "Answer", text: f.answer },
       })),
     },
-    // Same Service entity as the homepage, built from the same plans array, so
-    // machine-readable pricing stays consistent everywhere it appears.
-    {
-      "@type": "Service",
-      "@id": `${siteUrl}/#service`,
-      name: brandName,
-      url: siteUrl,
-      description: orgDescription,
-      serviceType: "B2B Lead Generation Services",
-      areaServed: "United States",
-      provider: { "@id": `${siteUrl}/#organization` },
-      offers: plans.map((p) => ({
-        "@type": "Offer",
-        name: p.name,
-        description: p.volume,
-        priceSpecification: {
-          "@type": "UnitPriceSpecification",
-          price: String(p.price),
-          priceCurrency: "USD",
-          unitText: "MONTH",
-        },
-      })),
-    },
+    serviceJsonLd(),
   ],
 };
 
@@ -149,9 +122,26 @@ export default function PricingPage() {
                   <span className="font-semibold text-gold-200/90">Not included — stays with you: </span>
                   {p.guardrails}
                 </p>
+                {/* This page listed all three prices and offered no way to act on any of
+                    them: the only CTA was the shared one at the very bottom of the layout,
+                    below the market table and the FAQ. A price-shopper who arrived here from
+                    search read the number and had nowhere to go. The fit check is the honest
+                    next step rather than a buy button — nobody should be able to commit to a
+                    tier before anyone has looked at their list. */}
+                <Link
+                  href="/start"
+                  className="link-wipe mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+                >
+                  See if {p.name} fits your office →
+                </Link>
               </div>
             ))}
           </div>
+          <p className="mt-4 text-sm leading-6 text-muted/80">
+            No tier can be bought from this page, deliberately. The {intakeMinutes}-minute fit
+            check and the call come first, because which tier fits depends on what your export
+            actually contains and who in your office has time to work it.
+          </p>
         </GuideSection>
 
         <GuideSection title="What the market typically charges (with sources)">

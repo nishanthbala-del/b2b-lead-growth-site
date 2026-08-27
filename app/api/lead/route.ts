@@ -1,6 +1,15 @@
 import { NextRequest } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import {
+  ANSWER_KEYS,
+  ANSWER_OPTIONS,
+  QUESTION_LABELS,
+  evaluateFit,
+  sanitizeAnswers,
+  summarizeAnswers,
+  type FitResult,
+} from "@/lib/qualification";
 
 // Use the Node.js runtime (needs fs) and never cache this handler.
 export const runtime = "nodejs";
@@ -9,20 +18,32 @@ export const dynamic = "force-dynamic";
 type LeadPayload = {
   action?: "submit" | "booking_opened";
   id?: string;
-  package?: string;
+  // Contact + free text.
   name?: string;
   email?: string;
   company?: string;
   website?: string;
   role?: string;
-  targetMarket?: string;
-  icpNotes?: string;
-  avgDealSize?: string;
-  salesGoals?: string;
-  currentProspecting?: string;
+  serviceArea?: string;
+  notes?: string;
   consent?: boolean;
+  /** Which surface the flow was completed on — the modal or the /start page. */
+  source?: string;
   // Honeypot — must stay empty for real humans.
   hp_leave_blank?: string;
+  // The rule-bearing answers. Typed loosely here because they arrive untrusted;
+  // `sanitizeAnswers` narrows them to the published option sets before anything
+  // reads them.
+  yearsInBusiness?: string;
+  recordVolume?: string;
+  jobValue?: string;
+  growthProblem?: string;
+  currentApproach?: string;
+  followUpOwner?: string;
+  capacity?: string;
+  exportReadiness?: string;
+  timeline?: string;
+  budget?: string;
 };
 
 // On Vercel (and any serverless host) the filesystem is ephemeral: a local write
@@ -36,6 +57,17 @@ const JSONL_FILE = path.join(DATA_DIR, "submissions.jsonl");
 const EVENTS_FILE = path.join(DATA_DIR, "events.jsonl");
 
 // CSV column order — also the human-readable header row.
+//
+// APPEND ONLY. The owner's Google Sheet was created against this order and its
+// header row already exists; reordering or removing a column would silently shift
+// every value in every future row into the wrong place, and nothing here would
+// error. New questions therefore go on the end, and the four legacy names below are
+// kept and fed from their nearest equivalent in the new flow rather than renamed:
+//   targetMarket       <- serviceArea    (same question, older wording)
+//   avgDealSize        <- jobValue
+//   currentProspecting <- currentApproach
+//   salesGoals         <- growthProblem  (what the visitor wants to change)
+//   icpNotes           <- notes
 const CSV_COLUMNS = [
   "id",
   "timestamp",
@@ -55,6 +87,18 @@ const CSV_COLUMNS = [
   "consent",
   "consentAt",
   "ip",
+  // Added with the qualification flow.
+  "yearsInBusiness",
+  "recordVolume",
+  "followUpOwner",
+  "capacity",
+  "exportReadiness",
+  "timeline",
+  "budget",
+  "fitOutcome",
+  "fitScore",
+  "recommendedTier",
+  "qualificationSummary",
 ] as const;
 
 // Best-effort in-memory rate limiter (per server instance). A light deterrent,
@@ -78,6 +122,14 @@ function rateLimited(ip: string): boolean {
   recent.push(now);
   hits.set(ip, recent);
   return recent.length > RATE_LIMIT;
+}
+
+// The owner reads a spreadsheet, not rule values: store "More than 15 years", not
+// "over-15". The label is looked up from the same published option set the visitor
+// clicked, so the two can never describe different things.
+function labelFor(key: (typeof ANSWER_KEYS)[number], value: string): string {
+  if (!value) return "";
+  return ANSWER_OPTIONS[key].find((o) => o.value === value)?.label ?? value;
 }
 
 function isEmail(value: string): boolean {
@@ -132,12 +184,38 @@ function getIp(req: NextRequest): string {
   return last || "unknown";
 }
 
+const CSV_HEADER = CSV_COLUMNS.join(",");
+
+/**
+ * Make sure the CSV we are about to append to actually has THIS header.
+ *
+ * The old version only wrote a header when the file was absent, so a file created
+ * under an earlier column set kept its stale header forever while every new row was
+ * written with the current columns. The result is silent misalignment: the file still
+ * parses, every value is just under the wrong heading. A local run here had exactly
+ * that — an 18-column header over 29-column rows, with `source` and `consent` swapped.
+ *
+ * A mismatched file is rotated aside rather than rewritten, because the rows already
+ * in it are correct for the header they were written under, and rewriting the header
+ * would corrupt them instead.
+ */
 async function ensureCsvHeader(): Promise<void> {
+  let existing: string;
   try {
-    await fs.access(CSV_FILE);
+    existing = await fs.readFile(CSV_FILE, "utf8");
   } catch {
-    await fs.writeFile(CSV_FILE, CSV_COLUMNS.join(",") + "\n", "utf8");
+    await fs.writeFile(CSV_FILE, CSV_HEADER + "\n", "utf8");
+    return;
   }
+  const firstLine = existing.split("\n", 1)[0] ?? "";
+  if (firstLine === CSV_HEADER) return;
+  const archived = CSV_FILE.replace(/\.csv$/, `.superseded-${Date.now()}.csv`);
+  await fs.rename(CSV_FILE, archived);
+  console.warn(
+    `[lead] ${path.basename(CSV_FILE)} had a stale header and was moved to ` +
+      `${path.basename(archived)}; a new file was started with the current columns.`,
+  );
+  await fs.writeFile(CSV_FILE, CSV_HEADER + "\n", "utf8");
 }
 
 async function appendLocal(record: Record<string, unknown>): Promise<boolean> {
@@ -296,22 +374,27 @@ export async function POST(req: NextRequest) {
   }
 
   // action === "submit"
-  // Deliberately short. Everything here is either needed to reply (name, email,
-  // company) or needed to judge fit before the call (market, deal size, current
-  // approach). "What does success look like" is a genuinely useful answer but it
-  // is an essay standing between a visitor and the booking link, so it is asked
-  // and kept optional — the call covers it either way.
+  // Free-text fields needed to reply to a human being at all.
   const required: Array<[keyof LeadPayload, string]> = [
     ["name", "Name"],
     ["email", "Work email"],
     ["company", "Company"],
-    ["targetMarket", "Target market"],
-    ["avgDealSize", "Average job value"],
-    ["currentProspecting", "Current prospecting method"],
+    ["serviceArea", "Service area"],
   ];
   const missing = required
     .filter(([key]) => !String(body[key] ?? "").trim())
     .map(([, label]) => label);
+
+  // Every rule-bearing answer is required, because the fit verdict is only honest if
+  // it was computed from a complete set. `sanitizeAnswers` has already discarded any
+  // value that isn't in the published option set, so a blank here means either "not
+  // answered" or "answered with something we never offered" — and both must be
+  // rejected rather than scored as zero.
+  const answers = sanitizeAnswers(body as Record<string, unknown>);
+  for (const key of ANSWER_KEYS) {
+    if (!answers[key]) missing.push(QUESTION_LABELS[key]);
+  }
+
   if (missing.length) {
     return Response.json(
       { ok: false, error: `Please complete: ${missing.join(", ")}.` },
@@ -336,22 +419,29 @@ export async function POST(req: NextRequest) {
   const field = (value: unknown, max: number): string =>
     neutralizeFormula(String(value ?? "").trim().slice(0, max));
 
+  // The fit verdict is recomputed HERE, from the sanitized answers, and the browser's
+  // copy is never read. A forged outcome would otherwise put a company the site says
+  // it cannot serve into the owner's queue marked "strong fit".
+  const fit: FitResult = evaluateFit(answers);
+
   const record: Record<string, string> = {
     id,
     timestamp,
-    status: "New",
-    package: field(body.package ?? "Not specified", 60),
+    // A screened-out lead that sits in the queue as "New" gets worked like any other,
+    // which is the exact cost this whole flow exists to remove.
+    status: fit.outcome === "not_yet" ? "Screened out" : "New",
+    package: field(fit.recommendedTier ?? "Not specified", 60),
     name: field(body.name, 120),
     email: field(body.email, 160),
     company: field(body.company, 160),
     website: field(body.website, 200),
     role: field(body.role, 120),
-    targetMarket: field(body.targetMarket, 400),
-    avgDealSize: field(body.avgDealSize, 80),
-    salesGoals: field(body.salesGoals, 800),
-    currentProspecting: field(body.currentProspecting, 800),
-    icpNotes: field(body.icpNotes, 1500),
-    source: "website",
+    targetMarket: field(body.serviceArea, 400),
+    avgDealSize: field(labelFor("jobValue", answers.jobValue), 80),
+    salesGoals: field(labelFor("growthProblem", answers.growthProblem), 800),
+    currentProspecting: field(labelFor("currentApproach", answers.currentApproach), 800),
+    icpNotes: field(body.notes, 1500),
+    source: field(body.source === "page" ? "website:/start" : "website", 40),
     // Proof of consent. It was validated on the way in and then dropped, so nothing
     // downstream could show WHEN a contact agreed to be contacted - the one record
     // you need if a recipient ever disputes it.
@@ -360,6 +450,17 @@ export async function POST(req: NextRequest) {
     // `ip` derives from client-settable headers, so it is attacker-controlled free
     // text and takes the same formula guard as every visible field.
     ip: neutralizeFormula(ip),
+    yearsInBusiness: labelFor("yearsInBusiness", answers.yearsInBusiness),
+    recordVolume: labelFor("recordVolume", answers.recordVolume),
+    followUpOwner: labelFor("followUpOwner", answers.followUpOwner),
+    capacity: labelFor("capacity", answers.capacity),
+    exportReadiness: labelFor("exportReadiness", answers.exportReadiness),
+    timeline: labelFor("timeline", answers.timeline),
+    budget: labelFor("budget", answers.budget),
+    fitOutcome: fit.outcome,
+    fitScore: `${fit.score}/${fit.maxScore}`,
+    recommendedTier: fit.recommendedTier ?? "",
+    qualificationSummary: field(summarizeAnswers(answers), 1000),
   };
 
   const localOk = await appendLocal(record);
@@ -384,6 +485,9 @@ export async function POST(req: NextRequest) {
     ok: true,
     id,
     stored,
+    // The verdict the visitor is shown is the same object written onto the record,
+    // so the result page and the owner's queue can never disagree.
+    fit,
     sheets: sheet.ok === true,
     sheetStatus: sheet.status ?? null,
   });

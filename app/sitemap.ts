@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteUrl, legalLastUpdatedISO } from "@/lib/site";
-import { guidePages, homepageDateModified } from "@/lib/pages";
+import { guidePages, homepageDateModified, standaloneRoutes } from "@/lib/pages";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date(`${homepageDateModified}T12:00:00Z`);
@@ -14,6 +14,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(`${p.dateModified}T12:00:00Z`),
       changeFrequency: "monthly" as const,
       priority: 0.8,
+    })),
+    ...standaloneRoutes.map((r) => ({
+      url: `${siteUrl}/${r.slug}`,
+      lastModified: new Date(`${r.dateModified}T12:00:00Z`),
+      changeFrequency: "monthly" as const,
+      priority: r.priority,
     })),
     { url: `${siteUrl}/privacy`, lastModified: legalModified, changeFrequency: "yearly", priority: 0.3 },
     { url: `${siteUrl}/terms`, lastModified: legalModified, changeFrequency: "yearly", priority: 0.3 },

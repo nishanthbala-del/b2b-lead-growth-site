@@ -1,21 +1,15 @@
 import type { Metadata } from "next";
 import GuideLayout, { GuideSection, GuideTable, KeyAnswer, SourceNote } from "@/components/GuideLayout";
-import { getGuidePage, guideJsonLd } from "@/lib/pages";
+import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
 import { siteUrl } from "@/lib/site";
 
 const page = getGuidePage("shared-vs-exclusive-hvac-leads");
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: `/${page.slug}`,
   title: page.metaTitle,
   description: page.description,
-  alternates: { canonical: `/${page.slug}` },
-  openGraph: {
-    title: page.metaTitle,
-    description: page.description,
-    type: "article",
-    url: `/${page.slug}`,
-  },
-};
+});
 
 // Visible Q&A — mirrored verbatim into FAQPage JSON-LD below.
 const pageFaqs = [

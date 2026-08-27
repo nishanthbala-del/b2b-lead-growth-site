@@ -21,3 +21,34 @@ export function registerSmoothScroll(handler: ((paused: boolean) => void) | null
 export function pauseSmoothScroll(paused: boolean): void {
   pauseHandler?.(paused);
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Jumping to an element while Lenis owns the scroll position                 */
+/* -------------------------------------------------------------------------- */
+//
+// Lenis drives `window.scroll` from its own rAF loop, so an external
+// `scrollIntoView` is overwritten on the very next frame — the page visibly does
+// nothing. Deep links were landing every visitor at the top of the page because of
+// this: `/#pricing` from the 404 page, from a guide, or from an outbound email put
+// them on the hero with no indication anything had been missed.
+//
+// The second trap is `behavior: "auto"`. It does NOT mean "jump": per spec it means
+// "use the CSS `scroll-behavior`", and globals.css sets `scroll-behavior: smooth` on
+// <html>. Only `"instant"` actually forces an immediate jump.
+
+let scrollToHandler: ((target: HTMLElement) => void) | null = null;
+
+/** Published by the smooth-scroll hook so jumps go through Lenis when it is running. */
+export function registerScrollTo(handler: ((target: HTMLElement) => void) | null): void {
+  scrollToHandler = handler;
+}
+
+/**
+ * Jump to an element immediately, whether or not smooth scrolling is active.
+ * Falls back to the native call on touch devices and under reduced motion, where
+ * Lenis deliberately never starts.
+ */
+export function scrollToInstant(target: HTMLElement): void {
+  if (scrollToHandler) scrollToHandler(target);
+  else target.scrollIntoView({ behavior: "instant", block: "start" });
+}

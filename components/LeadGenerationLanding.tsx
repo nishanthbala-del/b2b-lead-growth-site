@@ -11,16 +11,26 @@ import {
   useState,
 } from "react";
 import { IntakeProvider, useIntake } from "./IntakeForm";
-import { audit, differentiators, faqs, idealFor, notFor, plans } from "@/lib/content";
 import {
-  callLengthMinutes,
+  audit,
+  differentiators,
+  faqGroups,
+  faqSlug,
+  faqs,
+  idealFor,
+  notFor,
+  plans,
+  serviceTimeline,
+  serviceTimelineDisclaimer,
+} from "@/lib/content";
+import {
   contactEmail,
   currentFocusArea,
   founderName,
   intakeMinutes,
 } from "@/lib/site";
 import { guidePages } from "@/lib/pages";
-import { registerSmoothScroll } from "@/lib/smooth-scroll";
+import { registerScrollTo, registerSmoothScroll, scrollToInstant } from "@/lib/smooth-scroll";
 
 // Bridge so ProcessSection's lazily-loaded ScrollTrigger can stay in sync with the
 // Lenis smooth-scroll instance without statically importing GSAP into the page bundle.
@@ -34,19 +44,28 @@ function isFinePointer(): boolean {
   return finePointerMql.matches;
 }
 
+// Opened with "We guarantee the system and the work" until 2026-08-27. /terms §4 is
+// titled "No guarantee of results" and §11 disclaims warranties of any kind — so the
+// marketing page was using the exact word the contract refuses, on a site whose own
+// vendor-selection guide tells buyers to treat a guarantee as a red flag. What is
+// actually true is a commitment to do the work and report it honestly, so it says that.
 const disclaimer =
-  "We guarantee the system and the work, and we report the results honestly — we do not guarantee jobs, revenue, customers, or a set number of appointments. Whether a homeowner books and buys depends on your pricing, your reputation, your timing, and how the visit goes.";
+  "We commit to running the system, doing the work to the stated standard, and reporting the results honestly — we do not promise jobs, revenue, customers, or a set number of appointments. Whether a homeowner books and buys depends on your pricing, your reputation, your timing, and how the visit goes.";
 
 const brandName = "B2B Lead Growth";
 
+// Every label is a question an HVAC owner is actually asking, in the order they ask
+// it. It used to read "Services · Why us · FAQ" — our filing system, not their
+// problem — and a visitor arriving from a cold email had to guess which of our
+// internal categories held the answer to "is this even for me".
 const navItems = [
-  { label: "Free audit", href: "#get-audit" },
-  { label: "Who it's for", href: "#who-its-for" },
+  { label: "The problem", href: "#the-problem" },
+  { label: "Is this you?", href: "#who-its-for" },
   { label: "How it works", href: "#how-it-works" },
-  { label: "Services", href: "#services" },
-  { label: "Why us", href: "#why-us" },
+  { label: "What you get", href: "#services" },
+  { label: "How we're different", href: "#why-us" },
   { label: "Pricing", href: "#pricing" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Answers", href: "#faq" },
 ];
 
 // Four things an HVAC owner can check, not four adjectives. "Cited sources" rather
@@ -253,6 +272,7 @@ export default function LeadGenerationLanding() {
 
   useSmoothScroll(Boolean(prefersReducedMotion));
   useAmbientPointer(shellRef, Boolean(prefersReducedMotion));
+  useDeepLinkLanding();
 
   return (
     <IntakeProvider>
@@ -273,17 +293,27 @@ export default function LeadGenerationLanding() {
       <main id="main" tabIndex={-1} className="outline-none">
         <Hero prefersReducedMotion={Boolean(prefersReducedMotion)} />
         <PositioningSection />
-        <AuditSection />
+        {/* Qualify, THEN offer. The free audit used to come third, before a visitor
+            had been told who this is and isn't for — so the first thing an unsuitable
+            company was asked to do was claim something they could not use. */}
         <WhoItsForSection />
+        <AuditSection />
         <ProcessSection />
         <ServicesSection />
         <LeadQualitySection />
+        {/* Proof belongs beside the standards it illustrates, and BEFORE the price. It
+            used to render two sections after the pricing table, so the honest "we have
+            no case studies and won't borrow anyone else's" line — the only trust anchor
+            a business with zero clients has — arrived after the visitor had already been
+            asked to choose a tier. */}
+        <ProofSection />
         <DifferentiatorsSection />
         <FounderSection />
         <PricingSection />
+        <AfterYouSignSection />
         <FrameworkSection />
-        <ProofSection />
         <FAQSection />
+        <GuidesSection />
         <FinalCTA />
       </main>
       <SiteFooter />
@@ -364,7 +394,10 @@ function SiteNav() {
             className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-sm border border-gold-500/55 bg-gold-sheen px-3.5 text-xs font-semibold text-ink-950 shadow-gold transition-transform hover:scale-[1.015] sm:px-5 sm:text-sm"
             data-cursor-label="Open"
           >
-            Start Now
+            {/* "Start Now" told a visitor nothing about what happens when they press it.
+                This names the actual next step, which is also the honest one: the flow
+                can end in "no". */}
+            See if we&rsquo;re a fit
           </MagneticAnchor>
           <button
             type="button"
@@ -388,7 +421,7 @@ function SiteNav() {
         id="mobile-nav"
         hidden={!menuOpen}
         aria-label="Mobile navigation"
-        className="border-t border-gold-500/15 bg-ink-950/95 backdrop-blur-xl lg:hidden"
+        className="max-h-[calc(100svh-4.5rem)] overflow-y-auto border-t border-gold-500/15 bg-ink-950/95 backdrop-blur-xl lg:hidden"
       >
         <div className="mx-auto flex max-w-7xl flex-col px-5 py-1 sm:px-8">
           {navItems.map((item) => (
@@ -396,9 +429,25 @@ function SiteNav() {
               key={item.href}
               href={item.href}
               onClick={() => setMenuOpen(false)}
-              className="flex min-h-11 items-center border-b border-gold-500/10 py-3.5 text-sm text-muted transition-colors last:border-0 hover:text-gold-200"
+              className="flex min-h-11 items-center border-b border-gold-500/10 py-3.5 text-sm text-muted transition-colors hover:text-gold-200"
             >
               {item.label}
+            </a>
+          ))}
+          {/* The guides answer the questions a visitor has BEFORE they trust anyone —
+              what leads cost, shared vs exclusive, how to vet a vendor. On a phone they
+              were reachable only by scrolling past the entire page to the footer. */}
+          <p className="pt-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-gold-200/70">
+            Read first
+          </p>
+          {guidePages.map((page) => (
+            <a
+              key={page.slug}
+              href={`/${page.slug}`}
+              onClick={() => setMenuOpen(false)}
+              className="flex min-h-11 items-center border-b border-gold-500/10 py-3.5 text-sm text-muted transition-colors last:border-0 hover:text-gold-200"
+            >
+              {page.navLabel}
             </a>
           ))}
         </div>
@@ -480,7 +529,10 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
             </p>
           </Reveal>
           <Reveal immediate>
-            <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row">
+            {/* Three next steps, because visitors arrive at three different distances
+                from a decision: qualify me, explain it to me, or just tell me the
+                price. Sending all three into the same modal loses two of them. */}
+            <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center">
               <MagneticAnchor
                 href="#contact"
                 onClick={(event) => {
@@ -490,7 +542,7 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
                 className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 font-semibold text-ink-950 shadow-gold"
                 data-cursor-label="Open"
               >
-                Get My Free Pipeline Audit <span className="ml-3" aria-hidden="true">→</span>
+                See if we&rsquo;re a fit <span className="ml-3" aria-hidden="true">→</span>
               </MagneticAnchor>
               <MagneticAnchor
                 href="#how-it-works"
@@ -499,10 +551,17 @@ function Hero({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
               >
                 See how it works
               </MagneticAnchor>
+              <MagneticAnchor
+                href="#pricing"
+                className="link-wipe inline-flex min-h-11 items-center px-1 text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+                data-cursor-label="View"
+              >
+                Straight to pricing →
+              </MagneticAnchor>
             </div>
             <p className="mt-4 text-sm text-muted">
-              Free {callLengthMinutes}-minute call · {intakeMinutes}-minute intake · you keep the audit
-              either way
+              {intakeMinutes}-minute fit check · a straight answer either way · the audit is sent
+              to you in writing, with no call required
             </p>
           </Reveal>
         </div>
@@ -614,7 +673,7 @@ function AuditSection() {
 
 function PositioningSection() {
   return (
-    <section className="relative border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
+    <section id="the-problem" className="relative scroll-mt-24 border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
@@ -657,7 +716,7 @@ function WhoItsForSection() {
   const { openIntake } = useIntake();
 
   return (
-    <section id="who-its-for" className="relative bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
+    <section id="who-its-for" className="relative scroll-mt-24 bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
       <div className="ambient-light pointer-events-none absolute inset-0 opacity-40" />
       <div className="relative z-10 mx-auto max-w-7xl">
         <Reveal>
@@ -732,11 +791,71 @@ function WhoItsForSection() {
   );
 }
 
+/* -------------------------------------------------------------------------- */
+/*  Deep-link landing                                                          */
+/* -------------------------------------------------------------------------- */
+//
+// Two independent things broke every `/#section` link into this page:
+//
+//   1. Lenis owns the scroll position and rewrites it from its own rAF loop, so the
+//      browser's initial hash scroll was undone within a frame. EVERY deep link
+//      landed the visitor on the hero — /#pricing from the 404 page, /#get-audit
+//      from all five guide pages, and any anchor in an outbound email. Measured on a
+//      production build: /#pricing loaded at scrollY 0 with the pricing section
+//      15,087px further down; it now loads with that section 96px from the top.
+//   2. ProcessSection pins for `processSteps.length * 540` px, inserting a ~4,300px
+//      spacer into the document. It does that only once `import("gsap")` resolves,
+//      which is necessarily after the browser has placed the visitor — so every
+//      anchor below it moved that far down underneath them.
+//
+// So the landing is re-run twice: once on mount, and again after the pin exists.
+// `scrollToInstant` routes through Lenis when it is running (and uses
+// `behavior: "instant"` otherwise — "auto" defers to the CSS `scroll-behavior:
+// smooth`, which is why the first version of this fix moved nothing at all).
+
+// The scroll position we last placed the visitor at. `null` means we have not moved
+// them yet. If the real position has drifted from this, the visitor has scrolled
+// themselves and must not be yanked — a correction is only welcome before they have
+// started reading.
+let lastAutoScrollY: number | null = null;
+
+function landOnHash() {
+  if (typeof window === "undefined") return;
+  const hash = window.location.hash;
+  // Only plain `#id` fragments: `getElementById` is safe, but the hash is
+  // attacker-supplied via the URL and nothing else should be treated as a selector.
+  if (!/^#[A-Za-z][\w-]*$/.test(hash)) return;
+
+  const drifted =
+    lastAutoScrollY === null
+      ? window.scrollY > 2
+      : Math.abs(window.scrollY - lastAutoScrollY) > 2;
+  if (drifted) return;
+
+  const target = document.getElementById(hash.slice(1));
+  if (!target) return;
+
+  scrollToInstant(target);
+  // Lenis applies the jump on its next frame, so record where we actually ended up
+  // rather than where we asked to go.
+  requestAnimationFrame(() => {
+    lastAutoScrollY = window.scrollY;
+  });
+}
+
+/** Resolve the URL hash once the first paint has settled. */
+function useDeepLinkLanding() {
+  useEffect(() => {
+    lastAutoScrollY = null;
+    const raf = requestAnimationFrame(() => landOnHash());
+    return () => cancelAnimationFrame(raf);
+  }, []);
+}
+
 function ProcessSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [activeStep, setActiveStep] = useState(0);
   const prefersReducedMotion = useReducedMotion();
-
   useEffect(() => {
     if (prefersReducedMotion || !sectionRef.current) return;
     const section = sectionRef.current;
@@ -781,6 +900,9 @@ function ProcessSection() {
             setActiveStep((current) => (current === nextIndex ? current : nextIndex));
           },
         });
+        // The pin has just changed the document height; put the visitor back on the
+        // anchor they asked for. `landOnHash` no-ops if they have already scrolled.
+        landOnHash();
         return () => trigger.kill();
       });
     })();
@@ -796,7 +918,7 @@ function ProcessSection() {
     <section
       ref={sectionRef}
       id="how-it-works"
-      className="relative bg-ink-950 px-5 py-24 sm:px-8 lg:min-h-screen lg:py-0"
+      className="relative scroll-mt-24 bg-ink-950 px-5 py-24 sm:px-8 lg:min-h-screen lg:py-0"
     >
       <div className="ambient-light pointer-events-none absolute inset-0 opacity-55" />
       <div className="relative z-10 mx-auto grid max-w-7xl gap-12 lg:min-h-screen lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
@@ -823,7 +945,7 @@ function ProcessSection() {
             ))}
           </div>
         </div>
-        <div id="process" className="grid gap-4">
+        <div className="grid gap-4">
           {processSteps.map((step, index) => (
             <motion.article
               key={step.title}
@@ -863,7 +985,7 @@ function ProcessSection() {
 
 function ServicesSection() {
   return (
-    <section id="services" className="relative border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
+    <section id="services" className="relative scroll-mt-24 border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
@@ -906,7 +1028,7 @@ function ServicesSection() {
 
 function LeadQualitySection() {
   return (
-    <section id="lead-quality" className="relative bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
+    <section id="lead-quality" className="relative scroll-mt-24 bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
       <div className="ambient-light pointer-events-none absolute inset-0 opacity-40" />
       <div className="relative z-10 mx-auto max-w-7xl">
         <Reveal>
@@ -968,7 +1090,7 @@ function LeadQualitySection() {
 
 function DifferentiatorsSection() {
   return (
-    <section id="why-us" className="relative bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
+    <section id="why-us" className="relative scroll-mt-24 bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
       <div className="ambient-light pointer-events-none absolute inset-0 opacity-40" />
       <div className="relative z-10 mx-auto max-w-7xl">
         <Reveal>
@@ -1012,7 +1134,7 @@ function FounderSection() {
   const { openIntake } = useIntake();
 
   return (
-    <section id="founder" className="relative bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
+    <section id="founder" className="relative scroll-mt-24 bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
       <div className="ambient-light pointer-events-none absolute inset-0 opacity-40" />
       <div className="relative z-10 mx-auto max-w-7xl">
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
@@ -1027,8 +1149,8 @@ function FounderSection() {
               <p>
                 We&rsquo;d rather tell you this up front than let you find out later: the list work,
                 research, scoring, writing, follow-up, and reply handling are run by an AI system,
-                not by a room of junior staff. That is precisely why the 900th record in your
-                export gets the same attention as the first, and why every researched prospect
+                not by a room of junior staff. That is precisely why the last record worked in a
+                month gets the same attention as the first, and why every researched prospect
                 arrives with a public source citation and a specific reason to reach out &mdash;
                 consistently, not just when someone has a quiet afternoon.
               </p>
@@ -1118,7 +1240,7 @@ function PricingSection() {
   const { openIntake } = useIntake();
 
   return (
-    <section id="pricing" className="relative border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
+    <section id="pricing" className="relative scroll-mt-24 border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
@@ -1129,7 +1251,7 @@ function PricingSection() {
               Pick the tier your office can actually absorb.
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted">
-              Each tier de-risks the next: Lead Engine proves the list is worth working, Outreach Engine proves the messaging gets replies, and Appointment Engine runs the whole thing through to appointments on your calendar. If your office has time to make calls, start low. If it doesn&rsquo;t, that is exactly what the higher tiers are for.
+              The tiers differ by how much of the work stays with your office. Lead Engine hands you the list, built and ranked, and you work it. Outreach Engine writes and runs the outreach for you. Appointment Engine adds qualifying the replies and putting the appointments on your calendar. If someone in your office has time to make the calls, start low. If nobody does, that is what the higher tiers are for.
             </p>
             <p className="mt-5 inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm font-semibold text-gold-200/90">
               <span>Flat monthly fee</span>
@@ -1194,17 +1316,106 @@ function PricingSection() {
           ))}
         </div>
         <Reveal delay={0.08}>
+          {/* Was "every tier costs less than a full-time office or inside-sales role" —
+              an uncited comparative on a site that cites everything, and one that depends
+              on a wage we do not know. The arithmetic is the honest version: we state our
+              own number and let the reader supply theirs. */}
           <p className="mx-auto mt-10 max-w-3xl text-center text-base leading-7 text-bone/85">
-            A lower-risk way to get the follow-up done than hiring for it: every tier costs less
-            than a full-time office or inside-sales role &mdash; no salary, payroll tax, tooling,
-            ramp time, or year-round headcount through a slow season &mdash; so you can find out
-            whether this works for your market before you commit to a person.
+            The top tier is ${(2500 * 12).toLocaleString()} a year, and the bottom one is $
+            {(750 * 12).toLocaleString()} &mdash; with no salary, payroll tax, tooling, ramp time,
+            or year-round headcount carried through a slow season. Put that next to what an office
+            or inside-sales hire would actually cost you, and you can find out whether the approach
+            works for your market before you commit to a person.
           </p>
         </Reveal>
-        <Reveal delay={0.1}>
+        <Reveal delay={0.11}>
+          {/* Names the relationship between this section and /pricing explicitly. Both
+              were labelled just "Pricing" — one in the nav, one in the footer — and they
+              are different documents. */}
+          <p className="mt-6 text-center text-sm leading-6 text-muted">
+            <a
+              href="/pricing"
+              className="link-wipe font-semibold text-gold-200 transition-colors hover:text-gold-400"
+            >
+              See the full pricing page
+            </a>{" "}
+            for what the market typically charges, with sources, plus billing, cancellation and
+            refund terms.
+          </p>
+        </Reveal>
+        <Reveal delay={0.12}>
           <div className="mt-9 rounded-lg border border-gold-500/20 bg-ink-950/72 p-5 text-center text-sm leading-6 text-muted">
             <span className="font-semibold text-gold-200">Disclaimer:</span> {disclaimer}
           </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+// What a buyer is actually agreeing to, placed directly after the price.
+//
+// This timeline existed in lib/content.ts and rendered on /pricing only — so the
+// visitor who never leaves the homepage (almost all of them) saw three monthly fees
+// and no answer to "what happens the week after I say yes". Half the phases are the
+// CLIENT's, which is the part worth knowing before signing rather than after.
+//
+// CANONICAL SOURCE: the operating-system repo's core/timeline.py. `serviceTimeline`
+// is a rendering of that module and scripts/check_cross_repo.py asserts every band
+// and label matches it verbatim. Reword a phase THERE, never here.
+function AfterYouSignSection() {
+  const ownerLabel = { you: "You", we: "We", both: "Both" } as const;
+
+  return (
+    <section
+      id="what-happens-next"
+      className="relative scroll-mt-24 bg-ink-950 px-5 py-24 sm:px-8 lg:py-32"
+    >
+      <div className="ambient-light pointer-events-none absolute inset-0 opacity-40" />
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <Reveal>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+              What happens next
+            </p>
+            <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+              Know what you&rsquo;re agreeing to before you agree to it.
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-muted">
+              The whole sequence from signature to the first review, including the steps that are
+              yours. Nothing here is dated against a result &mdash; every band describes work, not
+              an outcome.
+            </p>
+          </div>
+        </Reveal>
+        <ol className="mt-14 grid gap-4 lg:grid-cols-2">
+          {serviceTimeline.map((phase, index) => (
+            <Reveal key={phase.label} delay={Math.min(index, 5) * 0.05}>
+              <li className="h-full rounded-lg border border-gold-500/14 bg-ink-900/70 p-5">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                  <span className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-200/85">
+                    {phase.band}
+                  </span>
+                  <span
+                    className={`rounded-sm border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${
+                      phase.owner === "you"
+                        ? "border-gold-500/55 bg-gold-500/12 text-gold-200"
+                        : "border-gold-500/18 text-muted"
+                    }`}
+                  >
+                    {ownerLabel[phase.owner]}
+                  </span>
+                </div>
+                <h3 className="mt-3 text-lg font-semibold leading-7 text-bone">{phase.label}</h3>
+                <p className="mt-2 text-sm leading-6 text-muted">{phase.detail}</p>
+              </li>
+            </Reveal>
+          ))}
+        </ol>
+        <Reveal delay={0.1}>
+          <p className="mx-auto mt-9 max-w-3xl rounded-lg border border-gold-500/18 bg-ink-900/70 p-5 text-sm leading-6 text-muted">
+            {serviceTimelineDisclaimer}
+          </p>
         </Reveal>
       </div>
     </section>
@@ -1354,7 +1565,7 @@ function ProofSection() {
 
 function FAQSection() {
   return (
-    <section id="faq" className="bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
+    <section id="faq" className="scroll-mt-24 bg-ink-950 px-5 py-24 sm:px-8 lg:py-32">
       <div className="mx-auto max-w-5xl">
         <Reveal>
           <div className="text-center">
@@ -1366,20 +1577,38 @@ function FAQSection() {
             </h2>
           </div>
         </Reveal>
-        <div className="mt-12 divide-y divide-gold-500/12 border-y border-gold-500/12">
-          {/* Every question AND its answer render open by default - no <details>, accordion or
-              expander. Answers must be readable (and crawlable) without interaction, which is
-              also what keeps the FAQPage JSON-LD in app/page.tsx honest: structured data may
-              only mirror text a visitor can actually see. Re-collapsing this is a regression:
-              it was removed once for that reason and came back. */}
-          {faqs.map((faq, index) => (
-            <Reveal key={faq.question} delay={Math.min(index, 4) * 0.05}>
-              <div className="py-6">
-                <h3 className="text-xl font-semibold text-bone">{faq.question}</h3>
-                <p className="mt-4 max-w-3xl leading-7 text-muted">{faq.answer}</p>
+        {/* Every question AND its answer render open by default - no <details>, accordion or
+            expander. Answers must be readable (and crawlable) without interaction, which is
+            also what keeps the FAQPage JSON-LD in app/page.tsx honest: structured data may
+            only mirror text a visitor can actually see. Re-collapsing this is a regression:
+            it was removed once for that reason and came back.
+
+            Grouped since 2026-08-27: seventeen questions spanning four unrelated concerns
+            rendered as one flat column, so the reader had to scan all of them to find the
+            one they came for. Each question also carries a stable id, so a reply or an
+            outbound email can link to a specific answer instead of "see the FAQ". */}
+        <div className="mt-12 space-y-10">
+          {faqGroups.map((group) => {
+            const inGroup = faqs.filter((f) => f.group === group);
+            if (inGroup.length === 0) return null;
+            return (
+              <div key={group}>
+                <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
+                  {group}
+                </h3>
+                <div className="mt-4 divide-y divide-gold-500/12 border-y border-gold-500/12">
+                  {inGroup.map((faq, index) => (
+                    <Reveal key={faq.question} delay={Math.min(index, 3) * 0.05}>
+                      <div id={faqSlug(faq.question)} className="scroll-mt-24 py-6">
+                        <h4 className="text-xl font-semibold text-bone">{faq.question}</h4>
+                        <p className="mt-4 max-w-3xl leading-7 text-muted">{faq.answer}</p>
+                      </div>
+                    </Reveal>
+                  ))}
+                </div>
               </div>
-            </Reveal>
-          ))}
+            );
+          })}
         </div>
         <Reveal delay={0.1}>
           <p className="mt-8 rounded-lg border border-gold-500/18 bg-ink-900/70 p-5 text-sm leading-6 text-muted">
@@ -1391,11 +1620,65 @@ function FAQSection() {
   );
 }
 
+// The content layer, given a home on the page that links to it.
+//
+// These five pages answer the questions a contractor has BEFORE he trusts any vendor —
+// what leads actually cost here, whether shared leads are worth it, how to tell a bad
+// agency from a good one. Every one of them was reachable from the homepage only by
+// scrolling past all fifteen sections to a footer list, which is the same as not being
+// linked at all. They are also the lowest-commitment thing on the site: the visitor who
+// is not ready to answer questions about his business can still leave with something.
+function GuidesSection() {
+  return (
+    <section
+      id="guides"
+      className="relative scroll-mt-24 border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32"
+    >
+      <div className="mx-auto max-w-7xl">
+        <Reveal>
+          <div className="max-w-3xl">
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+              Read before you decide
+            </p>
+            <h2 className="font-display text-4xl leading-tight text-bone sm:text-5xl">
+              Not ready to talk to anyone? Start here instead.
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-muted">
+              Written for contractors weighing up their options, including the options that
+              aren&rsquo;t us. Cited throughout, no form in front of any of it.
+            </p>
+          </div>
+        </Reveal>
+        <div className="mt-12 grid gap-4 md:grid-cols-2">
+          {guidePages.map((page, index) => (
+            <Reveal key={page.slug} delay={Math.min(index, 4) * 0.05}>
+              <a
+                href={`/${page.slug}`}
+                className="gold-border-draw group flex h-full flex-col rounded-lg border border-gold-500/18 bg-ink-950/60 p-6 transition-colors hover:border-gold-500/40"
+                data-cursor-label="Read"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-200/75">
+                  {page.navLabel}
+                </p>
+                <h3 className="mt-3 text-xl font-semibold leading-7 text-bone">{page.metaTitle}</h3>
+                <p className="mt-3 leading-7 text-muted">{page.description}</p>
+                <span className="mt-4 text-sm font-semibold text-gold-200 transition-colors group-hover:text-gold-400">
+                  Read it &rarr;
+                </span>
+              </a>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FinalCTA() {
   const { openIntake } = useIntake();
 
   return (
-    <section id="contact" className="relative overflow-hidden border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
+    <section id="contact" className="relative scroll-mt-24 overflow-hidden border-y border-gold-500/12 bg-ink-900 px-5 py-24 sm:px-8 lg:py-32">
       <div className="ambient-light pointer-events-none absolute inset-0 opacity-60" />
       <div className="relative z-10 mx-auto max-w-5xl text-center">
         <Reveal>
@@ -1407,11 +1690,11 @@ function FinalCTA() {
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted">
             Every season an unsold estimate sits untouched, it gets colder and someone else
-            eventually does that install. Book a free {callLengthMinutes}-minute call to define
-            the jobs worth chasing and the tier that fits your office. You&rsquo;ll leave with a
-            written pipeline audit &mdash; a sharpened job profile, {"3\u20135"} real referral
-            partners with cited reasons, and one sample message &mdash; and it&rsquo;s yours to
-            keep whether or not we work together.
+            eventually does that install. Take the {intakeMinutes}-minute fit check and, if
+            it&rsquo;s a fit, we build your pipeline audit and send it over in writing &mdash; a
+            sharpened job profile, {"3\u20135"} real referral partners with cited reasons, and one
+            sample message. No call required to receive it, and it&rsquo;s yours to keep whether
+            or not we ever work together.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <MagneticAnchor
@@ -1426,7 +1709,7 @@ function FinalCTA() {
               Get My Free Pipeline Audit <span className="ml-3" aria-hidden="true">→</span>
             </MagneticAnchor>
             <span className="text-sm leading-6 text-muted">
-              {intakeMinutes}-minute intake · then pick a time
+              {intakeMinutes} minutes · no card · a walkthrough call is offered, never required
             </span>
           </div>
         </Reveal>
@@ -1823,6 +2106,18 @@ function useSmoothScroll(prefersReducedMotion: boolean) {
       lerp: 0.08,
       wheelMultiplier: 0.9,
       smoothWheel: true,
+      // Let Lenis own anchor clicks, since it owns the scroll position.
+      //
+      // With the default (`anchors: false`) the browser performs its native jump and
+      // Lenis syncs to it afterwards, which mostly works — but it loses to any wheel
+      // inertia still in flight, so clicking a nav item mid-scroll drifts off the
+      // target. Handing Lenis the click makes the movement deterministic and cancels
+      // that inertia.
+      //
+      // `offset` clears the fixed header. It is the same 6rem the targets carry as
+      // `scroll-mt-24`; Lenis scrolls to `offsetTop + offset` and does not read
+      // scroll-margin itself, so the two do not double-apply.
+      anchors: { offset: -96 },
     });
 
     // Keep ProcessSection's ScrollTrigger (lazy-loaded) in sync with smooth scroll.
@@ -1830,6 +2125,9 @@ function useSmoothScroll(prefersReducedMotion: boolean) {
 
     // Let the intake modal park Lenis while it is open.
     registerSmoothScroll((paused) => (paused ? lenis.stop() : lenis.start()));
+    // Route anchor jumps through Lenis. Anything that writes window.scroll directly
+    // is overwritten by Lenis's own rAF loop on the very next frame.
+    registerScrollTo((target) => lenis.scrollTo(target, { immediate: true, force: true }));
 
     let frame = 0;
     const raf = (time: number) => {
@@ -1841,6 +2139,7 @@ function useSmoothScroll(prefersReducedMotion: boolean) {
     return () => {
       cancelAnimationFrame(frame);
       registerSmoothScroll(null);
+      registerScrollTo(null);
       lenis.destroy();
     };
   }, [prefersReducedMotion]);

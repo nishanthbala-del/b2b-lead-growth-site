@@ -14,6 +14,8 @@ const HOST = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.b2bleadgrowth.com
   .replace(/\/$/, "");
 const KEY = "fa2d37dcda78121e04e0e0748d3bf823";
 
+// Keep in sync with `indexablePaths` in lib/pages.ts — tests/routes.test.ts asserts it.
+// (This file is plain .mjs run outside the bundler, so it cannot import that registry.)
 const urls = [
   "/",
   "/free-pipeline-audit",
@@ -21,6 +23,7 @@ const urls = [
   "/hvac-lead-generation-new-jersey",
   "/shared-vs-exclusive-hvac-leads",
   "/how-to-choose-a-lead-generation-agency",
+  "/start",
   "/privacy",
   "/terms",
 ].map((p) => `https://${HOST}${p}`);

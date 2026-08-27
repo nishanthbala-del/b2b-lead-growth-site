@@ -1,21 +1,15 @@
 import type { Metadata } from "next";
 import GuideLayout, { GuideSection, KeyAnswer } from "@/components/GuideLayout";
-import { getGuidePage, guideJsonLd } from "@/lib/pages";
+import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
 import { siteUrl } from "@/lib/site";
 
 const page = getGuidePage("how-to-choose-a-lead-generation-agency");
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: `/${page.slug}`,
   title: page.metaTitle,
   description: page.description,
-  alternates: { canonical: `/${page.slug}` },
-  openGraph: {
-    title: page.metaTitle,
-    description: page.description,
-    type: "article",
-    url: `/${page.slug}`,
-  },
-};
+});
 
 // The hard questions a buyer should ask — and our own on-the-record answers.
 // Rendered visibly and mirrored into FAQPage markup below (verbatim match).

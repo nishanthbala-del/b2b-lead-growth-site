@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/pages";
 import Link from "next/link";
 import {
   brandName,
@@ -13,13 +14,12 @@ import {
 } from "@/lib/site";
 import { plans } from "@/lib/content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/terms",
   title: "Terms of Service",
   description:
     "The terms that govern the B2B Lead Growth website, the free pipeline audit, and our paid monthly services — including fees, billing, cancellation, refunds, and termination.",
-  alternates: { canonical: "/terms" },
-  openGraph: { url: "/terms" },
-};
+});
 
 const priceList = plans.map((p) => `$${p.price.toLocaleString()}`).join(", ");
 
@@ -167,8 +167,9 @@ export default function TermsPage() {
           </p>
           <p className="mt-4 leading-7 text-muted">
             <strong className="text-bone/90">Who we serve.</strong> We offer these services to
-            businesses in the United States, with our active focus on New Jersey home-service
-            contractors. This is a business-to-business service; it is not offered to consumers.
+            businesses in the United States, with our active focus on established New Jersey
+            residential HVAC companies. This is a business-to-business service; it is not offered
+            to consumers.
           </p>
         </Section>
 

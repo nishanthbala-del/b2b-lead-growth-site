@@ -2,6 +2,8 @@
 // that emits FAQPage + Offer JSON-LD — one source of truth keeps the structured data
 // verbatim-matched to the visible text (a Google rich-results requirement).
 
+import { callLengthMinutes, intakeMinutes } from "./site.ts";
+
 export type Plan = {
   name: string;
   price: number;
@@ -48,7 +50,10 @@ export const plans: Plan[] = [
   {
     name: "Appointment Engine",
     price: 2500,
-    volume: "Qualified appointments land on your schedule",
+    // Activity, not outcome. This string is also the `description` on the schema.org
+    // Offer emitted by app/page.tsx, so "Qualified appointments land on your schedule"
+    // was publishing a promised result as structured data.
+    volume: "We qualify the replies and book the appointments onto your calendar",
     capacity: "Up to ~150 records worked per month",
     bestFor:
       "Established HVAC companies that want both lanes — reactivation and referral partners — run end to end, with appointments landing on the calendar.",
@@ -129,93 +134,137 @@ export const differentiators: Differentiator[] = [
   },
 ];
 
-export type Faq = { question: string; answer: string };
+// Grouping is presentational only. The FAQPage JSON-LD in app/page.tsx still maps the
+// flat array, so the structured data stays a verbatim mirror of the visible text — the
+// rich-results requirement — while the reader gets seventeen questions sorted into the
+// five things they are actually asking about instead of one undifferentiated column.
+export const faqGroups = [
+  "What this is",
+  "Where the records come from",
+  "How the outreach runs",
+  "What you can expect",
+  "Money, terms and getting started",
+] as const;
+
+export type FaqGroup = (typeof faqGroups)[number];
+
+export type Faq = { question: string; answer: string; group: FaqGroup };
+
+/** Stable anchor for one question, so a specific answer can be linked to directly. */
+export function faqSlug(question: string): string {
+  return (
+    "faq-" +
+    question
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 60)
+      .replace(/-+$/, "")
+  );
+}
 
 export const faqs: Faq[] = [
   {
     question: "What exactly do you do for an HVAC company?",
+    group: "What this is",
     answer:
       "We work the two pipelines an established HVAC company already has and rarely gets to. First, reactivation: your own records — unsold replacement estimates, expired proposals, lapsed maintenance agreements, past customers whose systems are now at replacement age, and missed calls — cleaned, deduped, ranked, and worked with a real follow-up sequence. Second, referral partners: builders, general contractors, property managers, realtors, plumbers, electricians, and home inspectors in your service area who send work to somebody today, researched from public sources with a cited reason to reach out. Depending on the tier, we either hand you that list and the scripts, or we run the outreach and book the appointments.",
   },
   {
     question: "Do you cold-call or cold-email homeowners?",
+    group: "Where the records come from",
     answer:
       "No, and we could not even if you asked. Homeowner records come from your own export and nothing else — people who already called you, bought from you, or asked you for a price. We cannot research, buy, or infer homeowner records, and the system blocks any record that claims to come from your list but isn't in the file you approved. The only people we research from scratch are businesses: the referral partners in your service area.",
   },
   {
     question: "Where do the records actually come from?",
+    group: "Where the records come from",
     answer:
       "Two places, kept strictly separate. Your homeowner records come from you — a CRM, field-service software, or spreadsheet export that you send and then approve before anything is contacted. Referral-partner prospects are researched from free public sources, and every one ships with the source link, a fit reason, and a verification note. Nothing is bought from a data broker and nothing is invented: a researched prospect with no citation cannot be contacted at all.",
   },
   {
     question: "How is this different from Angi, Thumbtack, or a per-lead seller?",
+    group: "What this is",
     answer:
       "Those sell you a lead, usually the same lead they sold to three other contractors, and you pay again every time. We sell no leads at all. There is a flat monthly fee for work done on your own customer list and your own service area, so nobody else is being sold the same homeowner, nothing is priced per lead, and the list, the scripts, and the trackers stay yours if you leave. The trade-off is honest: a lead marketplace can hand you a name today, and reactivation and partner outreach take weeks to build momentum.",
   },
   {
     question: "We already have a marketing company running ads. Does this replace them?",
+    group: "What this is",
     answer:
       "No, and it usually shouldn't. Ads and local search buy attention from people who don't know you yet. This works the demand you have already paid for once — the estimate that never closed, the maintenance plan that lapsed, the customer from nine years ago whose system is now at the end of its life — plus the partners who could refer you work. The two run alongside each other, and we don't touch your ad accounts, your website, or your Google Business Profile.",
   },
   {
     question: "What makes a record worth contacting?",
+    group: "Where the records come from",
     answer:
       "For a record from your list: it matches the job profile you agreed, it has a usable contact path, and it has a specific, checkable reason to reach out — the estimate number and date, the agreement that lapsed, the install year that puts the system at replacement age. For a researched referral partner: it matches the agreed profile, it connects to a real decision-maker or influence point, and it carries the public source the reason came from. No reason, no contact.",
   },
   {
     question: "Do you guarantee jobs, appointments, or revenue?",
+    group: "What you can expect",
     answer:
       "No. Whether a homeowner replaces a system depends on your price, your reputation, your timing, and how the visit goes — so we don't promise jobs, revenue, or a set number of appointments, and you should be wary of anyone in this industry who does. What we commit to is running the system, doing the list and research work to the stated standard, and reporting the results honestly. The Appointment Engine tier includes booking qualified appointments on your calendar; no tier promises how many.",
   },
   {
     question: "How many records or messages do I get each month?",
+    group: "What you can expect",
     answer:
       "Each tier publishes a monthly ceiling — roughly 40, 100, or 150 records worked — and we set the real number with you on the call, because the honest answer depends on how much usable history your export contains and what your sending setup can safely support. We deliberately don't advertise a bigger headline number: chasing a quota is what pushes a vendor to loosen the targeting or exceed safe sending limits, which is exactly the failure this is built to avoid. You'll know the agreed volume before any work starts, and the report shows what was actually delivered against it.",
   },
   {
     question: "What do I have to send you, and how hard is it?",
+    group: "Money, terms and getting started",
     answer:
       "One export from wherever your history lives — ServiceTitan, Housecall Pro, Jobber, QuickBooks, or a spreadsheet. Ideally it includes past customers, open and expired estimates, maintenance agreements and their status, install dates or equipment age, and missed or unreturned calls. It does not have to be clean; cleaning, deduping, and ranking it is part of the work. If you can only get part of it, we start with what you have. This is the step that sets the whole schedule, because nothing can be contacted until it is imported and you have approved it.",
   },
   {
     question: "How are the records delivered?",
+    group: "What you can expect",
     answer:
       "As a spreadsheet, CRM-ready file, or agreed system, with fields, tags, notes, status tracking, priority bands, the fit reason, and — for every researched partner — the public source citation. On the outreach tiers you also get the sending log, so you can see exactly what went to whom and when.",
   },
   {
     question: "Whose email address does this go out from?",
+    group: "How the outreach runs",
     answer:
       "Yours. Outreach runs from your own domain and mailbox, so a past customer sees the company they already know rather than a stranger, and you can open the sent folder and read every message. You approve the targeting, the messaging pattern, and the first batch before anything sends, you set the volume, and you can pause at any time. Sender reputation and deliverability depend on your domain setup and sending history, which stay in your hands — so you should confirm the email, privacy, and platform rules that apply in your market before outreach begins.",
   },
   {
     question: "What happens if someone asks not to be contacted?",
+    group: "How the outreach runs",
     answer:
       "They are added to a suppression list immediately and never contacted again on your campaign. Opt-out handling, deduplication, and daily sending caps run as automated checks on every single send rather than something a person has to remember — and opt-outs are processed even while a campaign is paused.",
   },
   {
     question: "How is this different from hiring an inside-sales or office person?",
+    group: "Money, terms and getting started",
     answer:
       "A full-time hire carries salary, payroll tax, tooling, ramp time, and management — and in most shops the follow-up is the first thing that gets dropped when the phones get busy. This is a system you can start in weeks, move up or down a tier as the season changes, and measure against clear reporting, without adding fixed headcount before you know the approach works for your market. Every tier costs less than a full-time hire.",
   },
   {
     question: "Do you have case studies or client results I can see?",
+    group: "What you can expect",
     answer:
       "Not yet, and we won't invent any. This is an early, founder-led service, so there are no published client results to show — which is exactly why this site shows you the standards, the record format, the process, and the pricing instead. Start with the free audit or the Lead Engine tier and judge the first list on its own merits; that is the proof that actually matters before you scale spend.",
   },
   {
     question: "Where are you based, and who do you serve?",
+    group: "What this is",
     answer:
       "The work is done remotely and can be delivered for HVAC companies across the United States. Campaigns are currently focused on New Jersey, so that is where the sharpest local market knowledge sits today — permit patterns, seasonality, and the local referral network. Being outside New Jersey doesn't disqualify you; it just means less local context on day one.",
   },
   {
     question: "How do we start, and is there a long-term contract?",
+    group: "Money, terms and getting started",
     answer:
-      "No long-term contract and no setup fee — a flat monthly fee, month-to-month on a short written services agreement, and either side can end it on 14 days' notice, so you are not locked in while you find out whether this works for your market. You can move between tiers as the season changes, and everything built for you is yours to keep. It starts with a 15-minute call to confirm fit and define the job profile before any work begins, with a short 2-minute intake beforehand so the call starts with context.",
+      `No long-term contract and no setup fee — a flat monthly fee, month-to-month on a short written services agreement, and either side can end it on 14 days' notice, so you are not locked in while you find out whether this works for your market. You can move between tiers as the season changes, and everything built for you is yours to keep. It starts with a ${intakeMinutes}-minute fit check on this site, which tells you on the spot whether this is a fit — including when it isn't. If it is, we build your free pipeline audit and send it to you in writing; a ${callLengthMinutes}-minute walkthrough is offered after that, never required.`,
   },
   {
-    question: "What happens on the free call?",
+    question: "Do I have to get on a call to get the free audit?",
+    group: "Money, terms and getting started",
     answer:
-      "It's a 15-minute, no-obligation call to confirm whether this is a fit and to define what a good job looks like for you — service area, job types you want more of, the ones you'd rather not take, and what your history actually contains. You also get a short written pipeline audit out of it: a few specific observations about your market and one clear next step, yours to keep whether or not we work together. No work begins until you decide to move forward.",
+      `It's a ${callLengthMinutes}-minute, no-obligation walkthrough of the audit we already sent you — not a pitch, and not the price of the audit. We go through the job profile and the partners we picked, you tell us where we read your market wrong, and you decide with the work already in hand whether running it at scale is worth paying for. You can skip it entirely and keep the audit. No work begins until you decide to move forward.`,
   },
 ];
 

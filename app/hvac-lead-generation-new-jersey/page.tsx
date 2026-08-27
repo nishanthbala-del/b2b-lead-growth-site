@@ -1,21 +1,15 @@
 import type { Metadata } from "next";
 import GuideLayout, { GuideSection, GuideTable, KeyAnswer, SourceNote } from "@/components/GuideLayout";
-import { getGuidePage, guideJsonLd } from "@/lib/pages";
+import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
 import { siteUrl, brandName } from "@/lib/site";
 
 const page = getGuidePage("hvac-lead-generation-new-jersey");
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: `/${page.slug}`,
   title: page.metaTitle,
   description: page.description,
-  alternates: { canonical: `/${page.slug}` },
-  openGraph: {
-    title: page.metaTitle,
-    description: page.description,
-    type: "article",
-    url: `/${page.slug}`,
-  },
-};
+});
 
 // Visible Q&A — mirrored verbatim into FAQPage JSON-LD below.
 const pageFaqs = [
@@ -32,7 +26,7 @@ const pageFaqs = [
   {
     question: "Do you sell HVAC leads?",
     answer:
-      "No. We don't sell leads at all — shared or exclusive. We're a flat-fee research and outreach service: we help NJ contractors book more of the demand they already generate and build referral relationships. We never cold-scrape homeowners.",
+      "No. We don't sell leads at all — shared or exclusive. We're a flat-fee research and outreach service: we work the demand you have already generated — unsold estimates, lapsed maintenance agreements, past customers — and research referral partners in your service area. We never cold-scrape homeowners, and we don't promise you a number of jobs.",
   },
   {
     question: "What does the free audit contain for an HVAC contractor?",
@@ -112,9 +106,10 @@ export default function HvacNjPage() {
               the one most contractors already paid for and aren&rsquo;t using.
             </p>
             <p>
-              We&rsquo;re {brandName}, a NJ-first lead generation shop for home-service
-              contractors. We sell the fourth option, we&rsquo;re new, and we&rsquo;d rather show
-              you the whole map honestly than pretend the other three don&rsquo;t exist.
+              We&rsquo;re {brandName}, a NJ-first lead generation shop for established
+              residential HVAC companies. We sell the fourth option, we&rsquo;re new, and
+              we&rsquo;d rather show you the whole map honestly than pretend the other three
+              don&rsquo;t exist.
             </p>
           </>
         }
@@ -230,8 +225,9 @@ export default function HvacNjPage() {
           <ol className="list-decimal space-y-3 pl-5">
             <li>
               <span className="font-semibold text-bone">Free pipeline audit first.</span> A
-              sharpened picture of your best-fit demand plus 3–5 real, individually vetted prospects with
-              cited reasons and one sample message —{" "}
+              sharpened profile of the jobs worth chasing plus 3–5 real referral partners in your
+              service area, individually vetted, each with a cited public reason, and one sample
+              message —{" "}
               <a href="/free-pipeline-audit" className="text-gold-200 underline underline-offset-4">
                 yours to keep, free
               </a>

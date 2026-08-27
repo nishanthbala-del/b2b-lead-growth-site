@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import PageShell from "@/components/PageShell";
 import { guidePages, type GuidePage } from "@/lib/pages";
-import { contactEmail, legalEntityName } from "@/lib/site";
+import { intakeMinutes } from "@/lib/site";
 
 // Server-rendered shell for the guide pages: same ink/gold language as the
 // landing page, none of its animation weight. Content pages must stay fast,
@@ -34,18 +35,7 @@ export default function GuideLayout({
   const otherGuides = guidePages.filter((p) => p.slug !== page.slug);
 
   return (
-    <div className="min-h-screen bg-ink-950 text-bone">
-      <header className="border-b border-gold-500/14">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-5 sm:px-8">
-          <Link href="/" className="font-display text-lg text-gold-200">
-            B2B Lead Growth
-          </Link>
-          <Link href="/" className="text-sm text-muted transition-colors hover:text-gold-200">
-            ← Back to site
-          </Link>
-        </div>
-      </header>
-
+    <PageShell>
       <main className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
           {eyebrow}
@@ -59,29 +49,45 @@ export default function GuideLayout({
 
         {children}
 
-        {/* Conversion path: one clear next step, honestly framed. */}
+        {/* Conversion path, tiered by intent. A guide reader is mid-research: some are
+            ready to be qualified, some want to understand the mechanism first, and some
+            only want the number. One button for each, in that order, instead of funnelling
+            all three into the same modal and losing the two who weren't ready. */}
         <section className="mt-14 rounded-lg border border-gold-500/20 bg-ink-900/72 p-6 sm:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
-            The no-risk next step
+            Where to go from here
           </p>
           <h2 className="mt-3 font-display text-3xl text-bone">
-            Get a free pipeline audit — yours to keep.
+            Find out whether this is a fit — and get the audit either way.
           </h2>
           <p className="mt-4 leading-7 text-muted">
-            A sharpened profile of the jobs worth chasing, 3–5 real referral partners in your
-            service area with cited reasons to reach out, and one sample outreach message. Free, no
-            card, no obligation — you keep the work whether or not you ever hire us. It shows the
-            quality of the work, not a promised result: no guaranteed leads, replies, or
-            appointments, and no homeowner list.
+            {intakeMinutes} minutes of questions and you get a straight answer, including
+            &ldquo;no&rdquo; if that&rsquo;s the answer. If it is a fit, we build your free
+            pipeline audit and send it over in writing: a sharpened profile of the jobs worth
+            chasing, 3–5 real referral partners in your service area with cited reasons to reach
+            out, and one sample outreach message. No call is required to receive it, and it&rsquo;s
+            yours to keep whether or not you ever hire us. It shows the quality of the work, not a
+            promised result — no guaranteed leads, replies, or appointments, and no homeowner list.
           </p>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Link
-              href="/#get-audit"
+              href="/start"
               className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 font-semibold text-ink-950 shadow-gold"
             >
-              Get my free pipeline audit <span className="ml-3" aria-hidden="true">→</span>
+              See if we&rsquo;re a fit <span className="ml-3" aria-hidden="true">→</span>
             </Link>
-            <span className="text-sm text-muted">2-minute intake · audit in your inbox within a few business days</span>
+            <Link
+              href="/#how-it-works"
+              className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/28 px-6 font-semibold text-gold-200 transition-colors hover:border-gold-200/65 hover:bg-gold-500/8"
+            >
+              See how it works first
+            </Link>
+            <Link
+              href="/pricing"
+              className="link-wipe inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+            >
+              Just the pricing →
+            </Link>
           </div>
         </section>
 
@@ -104,38 +110,7 @@ export default function GuideLayout({
           </ul>
         </nav>
       </main>
-
-      <footer className="border-t border-gold-500/12 px-5 py-8 sm:px-8">
-        <div className="mx-auto flex max-w-3xl flex-col gap-2 text-sm text-muted">
-          <p className="leading-7">
-            © {new Date().getFullYear()} {legalEntityName} ·{" "}
-            <a href={`mailto:${contactEmail}`} className="transition-colors hover:text-gold-200">
-              {contactEmail}
-            </a>{" "}
-            ·{" "}
-            <Link href="/pricing" className="transition-colors hover:text-gold-200">
-              Pricing
-            </Link>{" "}
-            ·{" "}
-            <Link href="/terms#billing" className="transition-colors hover:text-gold-200">
-              Billing &amp; cancellation
-            </Link>{" "}
-            ·{" "}
-            <Link href="/privacy" className="transition-colors hover:text-gold-200">
-              Privacy
-            </Link>{" "}
-            ·{" "}
-            <Link href="/terms" className="transition-colors hover:text-gold-200">
-              Terms
-            </Link>
-          </p>
-          <p>
-            Lead generation improves prospect quality and pipeline inputs; sales outcomes depend on
-            your offer, market demand, outreach execution, follow-up discipline, and closing ability.
-          </p>
-        </div>
-      </footer>
-    </div>
+    </PageShell>
   );
 }
 

@@ -54,7 +54,12 @@ export const callLengthMinutes = 15;
 // The intake form's real length, published in ONE place. It was quoted as "60 seconds"
 // on the homepage and "2 minutes" on every guide page — one form, two promises, and the
 // shorter one is the one a visitor measures you against.
-export const intakeMinutes = 2;
+//
+// Raised from 2 to 3 when the two-step form became the four-step fit check. Ten of the
+// questions are one tap each, but four are free text, and 2 was the optimistic number
+// rather than the measured one. Understating it is a small lie of exactly the kind this
+// site is built to avoid, and it is the first promise a visitor gets to check.
+export const intakeMinutes = 3;
 
 // The work is delivered remotely, so any US HVAC company can be served — that stays
 // the JSON-LD `areaServed`. But the campaigns actually running today are focused
