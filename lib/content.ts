@@ -86,12 +86,13 @@ export const plans: Plan[] = [
 // a list that includes everyone tells an HVAC owner nothing about whether the
 // service understands his business.
 export const idealFor: string[] = [
-  "Established residential HVAC companies — multiple trucks, years of service history, and room on the schedule for more work",
-  "Companies sitting on unsold replacement estimates, expired proposals, and lapsed maintenance agreements nobody has time to chase",
-  "Contractors whose customer list is old enough that a meaningful share of installed systems are now at replacement age",
-  "Companies that want referral partners — builders, property managers, realtors, plumbers, electricians, home inspectors — worked deliberately instead of by chance",
-  "Owners who want the follow-up to happen every week without hiring an office role or pulling a tech off a truck to do it",
-  "Light commercial HVAC and mechanical service companies selling maintenance contracts and replacement work to property managers and facility teams",
+  "Established residential HVAC companies — multiple trucks, years of history, room for more work",
+  "You have unsold replacement estimates and expired proposals nobody has chased",
+  "You have lapsed maintenance agreements worth renewing",
+  "Your customer list is old enough that installed systems are reaching replacement age",
+  "You want referral partners — builders, property managers, realtors, plumbers, inspectors — worked deliberately",
+  "You want the follow-up done weekly without hiring for it",
+  "Light commercial and mechanical service companies selling maintenance and replacement work",
 ];
 
 // Honest disqualifiers. Two of these are load-bearing rather than cosmetic:
@@ -105,12 +106,12 @@ export const idealFor: string[] = [
 // papering over it — stating it plainly is what earns the benefit of the doubt
 // from a careful buyer.
 export const notFor: string[] = [
-  "Brand-new HVAC companies with no customer history yet — reactivation needs records to work, and you don't have them",
-  "Anyone looking to buy homeowner leads. We are not a lead seller: we do not sell, resell, or broker leads, shared or exclusive, and we cannot cold-source homeowners for you",
-  "Companies that want thousands of unverified addresses blasted overnight",
-  "Anyone expecting guaranteed jobs, guaranteed revenue, or a fixed number of appointments",
-  "Companies with no capacity to take the work, or nobody available to run the in-home visit and close",
-  "Anyone who needs published client case studies before they'll start — this is an early, founder-led service, and there are none yet",
+  "Brand-new companies with no customer history — reactivation needs records to work",
+  "Anyone wanting to buy homeowner leads. We are not a lead seller, and we cannot cold-source homeowners",
+  "Anyone wanting thousands of unverified addresses blasted overnight",
+  "Anyone expecting guaranteed jobs, revenue, or a set number of appointments",
+  "Companies with no capacity, or nobody to run the in-home visit and close",
+  "Anyone who needs published case studies before starting — there are none yet",
 ];
 
 // Differentiators / objection-reducers, written against what an HVAC owner has
