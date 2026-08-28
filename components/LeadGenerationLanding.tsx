@@ -8,8 +8,18 @@ import {
   idealFor,
   notFor,
   plans,
+  riskReversal,
 } from "@/lib/content";
-import { brandName, currentFocusArea, founderName, intakeMinutes } from "@/lib/site";
+import {
+  auditDeliveryWindow,
+  brandName,
+  contactEmail,
+  currentFocusArea,
+  entityFormationState,
+  founderName,
+  intakeMinutes,
+  legalEntityName,
+} from "@/lib/site";
 import { guidePages } from "@/lib/pages";
 
 /* -------------------------------------------------------------------------- */
@@ -102,6 +112,7 @@ export default function LeadGenerationLanding() {
       <SiteNav />
       <main id="main">
         <Hero />
+        <PositioningSection />
         <OfferSection />
         <WhoItsForSection />
         <HowItWorksSection />
@@ -255,6 +266,64 @@ function Hero() {
           Start with a {audit.name}: 3–5 referral partners near you, each with a source link you
           can open, plus a sample message. No call required, and yours to keep either way.
         </p>
+      </div>
+    </section>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+
+// The argument. The page used to go from the H1 straight to being sold a free thing:
+// one sentence of problem framing, then the offer, the fit lists, the process and the
+// price. Nowhere did it say why the stuff sitting in an HVAC owner's system is worth
+// money — which is the whole premise, and the only reason any of the rest matters.
+//
+// The copy is not new. `20_MARKETING_MY_SERVICES_SYSTEM/website_copy.md` has specified
+// this section, headline included, since the site was written; it was simply never
+// built. Keep the two in step.
+//
+// The discipline that makes it publishable: it invokes the buyer's economics WITHOUT
+// asserting a number. "You know what a replacement is worth to you" uses his arithmetic;
+// "these are worth $X to you" would be inventing one, and "this will recover N of them"
+// would be an outcome promise. Neither belongs here, at any point, ever.
+function PositioningSection() {
+  return (
+    <section className="scroll-mt-20 border-b border-gold-500/12 bg-ink-950 px-5 py-16 sm:px-8 sm:py-20 lg:py-24">
+      <div className="mx-auto max-w-5xl">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
+          Why this exists
+        </p>
+        <h2 className="mt-4 max-w-3xl font-display text-3xl leading-tight text-bone sm:text-4xl">
+          The most expensive lead you will ever buy is the one you already bought.
+        </h2>
+        <div className="mt-6 max-w-2xl space-y-5 text-lg leading-8 text-muted">
+          <p>
+            You paid to create every estimate you have ever written — the ad or the call that
+            brought it in, the drive, the hour in somebody&rsquo;s attic, the quote typed up that
+            evening. Most of them did not close. They are still in your system, next to the
+            maintenance agreements that lapsed, the customers whose systems are now past their
+            expected life, and the calls that came in on a busy Tuesday and never got returned.
+          </p>
+          <p>
+            Almost nobody works that list, and it is not laziness. The techs are on trucks, the
+            office is answering phones, and follow-up is the first thing that drops in season.
+          </p>
+          <p className="text-bone/90">
+            We are not going to tell you what any of it is worth — you know what a replacement is
+            worth to you far better than we ever will, and we do not promise that a single one of
+            them will close. What we will do is work it, every week, and show you exactly what went
+            where.
+          </p>
+        </div>
+        <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-gold-200">
+          <li>Your list, cleaned and ranked</li>
+          <li aria-hidden="true" className="text-gold-500/40">·</li>
+          <li>Cited public sources</li>
+          <li aria-hidden="true" className="text-gold-500/40">·</li>
+          <li>Sent from your domain</li>
+          <li aria-hidden="true" className="text-gold-500/40">·</li>
+          <li>Nothing sold per lead</li>
+        </ul>
       </div>
     </section>
   );
@@ -508,6 +577,43 @@ function CredibilitySection() {
         ))}
       </dl>
 
+      {/* The risk-reversal stack. Every line is a clause that already binds us — the
+          notice period, the refund of an unbegun month, the citation make-good, the
+          published-terms floor, work-product ownership, and data deletion. They existed
+          in the contract and in the Terms and were marketed nowhere, so a buyer weighing
+          a new company with no results had no idea how little he was actually risking.
+          Assembling them is the cheapest conversion work available here: nothing new is
+          promised, it is only that the promises are finally in one readable place. */}
+      <h3 className="mt-12 font-display text-2xl text-bone">What you are actually risking</h3>
+      <p className="mt-3 max-w-2xl leading-7 text-muted">
+        Every line below is already in the agreement or the published Terms. None of them is a
+        promise about results — no one can honestly make you one of those, and we do not.
+      </p>
+      <dl className="mt-5 grid gap-4 sm:grid-cols-2">
+        {riskReversal.map((item) => (
+          <div
+            key={item.title}
+            className="rounded-lg border border-gold-500/18 bg-ink-950/60 p-5"
+          >
+            <dt className="font-semibold text-bone">{item.title}</dt>
+            <dd className="mt-1.5 leading-7 text-muted">{item.body}</dd>
+            <dd className="mt-2 text-xs uppercase tracking-[0.14em] text-gold-200/70">
+              {item.clause}
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <p className="mt-4 text-sm leading-6 text-muted">
+        Read them yourself in the{" "}
+        <Link
+          href="/terms"
+          className="font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400"
+        >
+          Terms of Service
+        </Link>{" "}
+        before you talk to us, not after.
+      </p>
+
       <p className="mt-10 rounded-lg border border-gold-500/18 bg-ink-950/60 p-5 leading-7 text-muted">
         <span className="font-semibold text-gold-200">Who runs it. </span>
         The research, writing, follow-up and reply handling are run by an automated system, with{" "}
@@ -599,7 +705,7 @@ function FinalCta() {
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-lg leading-8 text-muted">
           {intakeMinutes} minutes of questions, then a straight answer. If it is a fit, we build
-          your {audit.name.toLowerCase()} and email it within a few business days.
+          your {audit.name.toLowerCase()} and email it within {auditDeliveryWindow}.
         </p>
         <div className="mt-8 flex justify-center">
           <PrimaryCta />
@@ -622,6 +728,26 @@ function SiteFooter() {
             <p className="mt-2 leading-6">
               HVAC lead generation and appointment setting for established residential HVAC
               companies. Remote across the US, currently focused on {currentFocusArea}.
+            </p>
+            {/* A reachable human. The site's single-CTA discipline is right, but it had
+                become a rule that there was NO way to contact this business without first
+                answering ten questions about your company — and an owner with one question
+                ("do you work with Trane dealers?") had nowhere to put it. A named person, a
+                real entity and a working mailbox are also the cheapest credibility a company
+                with no track record can offer, and all three already existed in config while
+                the footer printed none of them. */}
+            <p className="mt-4 leading-6">
+              <span className="text-bone">{legalEntityName}</span>, a {entityFormationState}{" "}
+              limited liability company. Founder-run by {founderName}.
+            </p>
+            <p className="mt-2 leading-6">
+              One question, no form:{" "}
+              <a
+                href={`mailto:${contactEmail}`}
+                className="font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400"
+              >
+                {contactEmail}
+              </a>
             </p>
           </div>
           <nav aria-label="Guides and legal" className="md:min-w-56">

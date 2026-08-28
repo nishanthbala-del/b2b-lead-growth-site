@@ -127,6 +127,10 @@ export const differentiators: Differentiator[] = [
     body: "Nobody else is being sold the same homeowner. We do not buy, sell, resell, or broker leads — shared or exclusive — and you are never bidding against three other contractors for the same form fill. There is no per-lead price here because there are no leads for sale: there is a flat monthly fee for work done on your own list and your own service area.",
   },
   {
+    title: "One HVAC company per service area, while you are a client",
+    body: "A conflict check runs before we accept anyone, and we work one HVAC company per service area. We will not take on a competing shop in your territory while we are working for you. The reason is practical rather than generous: your referral partners are the same builders, property managers and realtors a competitor would want, and pitching both of you to the same builder would make both campaigns worse. If you want that as a contractual right rather than an operating practice, ask for it in the order form before you sign — after being sold as one of five, pinning exclusivity down in writing is the right instinct.",
+  },
+  {
     title: "Your customer list stays yours, and we never invent one",
     body: "Homeowner records come from your export and nowhere else — past customers, unsold estimates, lapsed agreements, missed calls. We cannot research, buy, or infer them, and the system blocks any record claiming to come from your list that isn't in the file you approved. Referral partners are businesses, so those we do research from public sources — and every one arrives with the source link attached.",
   },
@@ -137,6 +141,59 @@ export const differentiators: Differentiator[] = [
   {
     title: "One clear line of ownership",
     body: "We own the list work, the research, the writing, and — on the outreach tiers — the sending, the follow-up, and the reply triage, and we report it honestly. You own the in-home visit, the quote, and the close. No confusion about who is responsible for what, and no account manager in between.",
+  },
+];
+
+// What a buyer is actually risking, assembled in one place.
+//
+// Every line here is a CLAUSE THAT ALREADY BINDS US, not a marketing promise invented
+// for this block. The business had more real risk reversal than most agencies and got
+// credit for none of it, because it was scattered across four pages: the notice period
+// sat in an FAQ, the make-good sat in a pricing-page answer, and the refund of an
+// unbegun period and the published-terms floor existed only inside the contract nobody
+// reads before buying.
+//
+// The hard constraint this block lives under: a business with zero results cannot offer
+// an OUTCOME guarantee, and must never imply one. So every entry below guarantees the
+// DELIVERY, the TERMS, or the OWNERSHIP — never the result. Read them again before
+// editing: "we replace a prospect that failed our own citation standard" is a quality
+// commitment; "we refund you if it doesn't work" would be an outcome guarantee wearing
+// a refund's clothes, and is exactly what must never appear here.
+//
+// Source of truth for each is named in `clause` and must stay accurate — these are the
+// citations that make the block checkable rather than reassuring.
+export type RiskReversal = { title: string; body: string; clause: string };
+
+export const riskReversal: RiskReversal[] = [
+  {
+    title: "No setup fee, no contract length, no exit fee",
+    body: "A flat monthly fee, month-to-month. Either side can end it on 14 days' written notice. There is no minimum term and nothing to buy out.",
+    clause: "Terms of Service §7",
+  },
+  {
+    title: "A month we have not started is refunded in full",
+    body: "If we have not begun work on a period, we refund that period in full on request. That is a stated obligation in the agreement, not a courtesy we may extend.",
+    clause: "Services agreement §10.5.1",
+  },
+  {
+    title: "A partner that fails our own citation check is replaced free",
+    body: "Every researched referral partner has to carry a real public source. If one we delivered fails that standard — meaning it should never have passed our own check — we replace it inside the same month at no charge. It is a commitment about the quality of the work, not about whether anybody buys.",
+    clause: "Services agreement §10.6.2",
+  },
+  {
+    title: "What is published beats what is in the contract",
+    body: "We publish our fees, cancellation and refund terms before any sales conversation. Where the published terms are better for you than the signed ones, the published terms win. We will not advertise one deal and put a narrower one in front of you to sign.",
+    clause: "Services agreement §10.5.2",
+  },
+  {
+    title: "Everything built for you stays yours",
+    body: "The lists, the scripts, the trackers, and your suppression list. Leaving does not claw any of it back, and we hand over the opt-out list within five business days so nobody who asked you to stop gets contacted again.",
+    clause: "Services agreement §10.6",
+  },
+  {
+    title: "Your data is deleted within 30 days of the end",
+    body: "We delete or de-identify your records from active systems within 30 days of the engagement ending. We keep exactly one thing permanently — the do-not-contact list — because destroying it is the only way somebody's opt-out could be forgotten.",
+    clause: "Services agreement §10.6 / §10.6.1",
   },
 ];
 
@@ -195,6 +252,16 @@ export const faqs: Faq[] = [
       "Those sell you a lead, usually the same lead they sold to three other contractors, and you pay again every time. We sell no leads at all. There is a flat monthly fee for work done on your own customer list and your own service area, so nobody else is being sold the same homeowner, nothing is priced per lead, and the list, the scripts, and the trackers stay yours if you leave. The trade-off is honest: a lead marketplace can hand you a name today, and reactivation and partner outreach take weeks to build momentum.",
   },
   {
+    // The nearest and cheapest substitute, and the one an established shop reaches for
+    // first: the marketing module inside the field-service software they already pay
+    // for. The site answered Angi, answered ads agencies, answered hiring — and never
+    // answered this, which is the objection most likely to end the conversation.
+    question: "ServiceTitan / Housecall Pro / Jobber already emails my customer list. Why pay you?",
+    group: "What this is",
+    answer:
+      "If you are already running those campaigns and working the replies, you may not need us — and we would rather say so than talk you out of software you have paid for. The difference is not the sending, it is what gets sent and to whom. Those tools blast a segment: everyone who has not booked in twelve months gets the same tune-up email. We go the other way — each record is looked at individually and gets a specific reason it is being contacted now, the estimate number and date, the agreement that lapsed, the install year that puts the system past its expected life. We also do a lane your software cannot do at all: researching the builders, property managers and realtors in your towns from public sources. And in practice the honest reason most shops do not get value from the built-in tool is not that it is bad, it is that nobody in the office has time to segment the list, write the copy, and work what comes back. That is the part we take.",
+  },
+  {
     question: "We already have a marketing company running ads. Does this replace them?",
     group: "What this is",
     answer:
@@ -217,6 +284,18 @@ export const faqs: Faq[] = [
     group: "What you can expect",
     answer:
       "Each tier publishes a monthly ceiling — roughly 40, 100, or 150 records worked — and we agree the real number with you, because the honest answer depends on how much usable history your export contains and what your sending setup can safely support. We deliberately don't advertise a bigger headline number: chasing a quota is what pushes a vendor to loosen the targeting or exceed safe sending limits, which is exactly the failure this is built to avoid. You'll know the agreed volume before any work starts, and the report shows what was actually delivered against it.",
+  },
+  {
+    // The arithmetic the best-fit buyer does on the spot. The fit check scores the
+    // BIGGEST lists as the strongest fit, and the tiers then cap at ~40/100/150 a
+    // month — so an owner with 3,000 records divides and gets "months to get through
+    // my own list once". Leaving that unanswered makes the cap look like a trick
+    // rather than what it is: a refusal to blast, and a deliberate ordering of the
+    // list so the most likely jobs are worked first.
+    question: "I have thousands of records and you cap at 100 a month. Won't that take years?",
+    group: "What you can expect",
+    answer:
+      "You would not want all of them contacted, and this is the part worth understanding before you buy. A raw history of several thousand rows is mostly duplicates, people who already bought, people who moved, bad addresses, and jobs too small to be worth a touch. Cleaning and deduping usually removes a large share of it before anything is ranked. What is left gets ordered by how close each one looks to a real job — the recent unsold replacement estimate outranks the tune-up customer from 2015 — and the monthly ceiling is worked from the top of that order down, so the strongest records are reached first rather than last. That is also why we will not lift the cap for a bigger headline number: sending faster than a domain can safely carry is what gets a mailbox filtered, and that is not recoverable in a month. If after the ranking there is genuinely more usable volume than a tier can carry, we will tell you that plainly and you can decide whether a higher tier is worth it. We would rather say the list is thinner than it looks than stretch it to fill a quota.",
   },
   {
     question: "What do I have to send you, and how hard is it?",

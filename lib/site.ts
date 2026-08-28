@@ -61,6 +61,22 @@ export const callLengthMinutes = 15;
 // site is built to avoid, and it is the first promise a visitor gets to check.
 export const intakeMinutes = 3;
 
+// How long the free audit takes to arrive, in ONE place.
+//
+// This promise was already published on /free-pipeline-audit ("the audit arrives within
+// a few business days, not instantly") and in the homepage's final CTA — but NOT on the
+// fit check's own result screen, which is the one moment a visitor actually needs it.
+// Someone who has just handed over their name, their company and ten answers was told
+// "we build your audit and send it over" with no indication of whether that meant this
+// afternoon or next month, and silence at that exact point is what an abandoned lead
+// looks like. Single-sourcing it means the result screen cannot drift from the page
+// that makes the promise.
+//
+// Deliberately the EXISTING published wording rather than a tighter number: stating a
+// specific day count would be a new operational commitment, and that is the owner's
+// call to make, not a side effect of fixing where the promise appears.
+export const auditDeliveryWindow = "a few business days";
+
 // The work is delivered remotely, so any US HVAC company can be served — that stays
 // the JSON-LD `areaServed`. But the campaigns actually running today are focused
 // on New Jersey, so the visible copy says so: it is both more honest and more

@@ -20,6 +20,11 @@
 //   * Every disqualifier must correspond to an entry in `notFor` in lib/content.ts.
 //     If the two drift, the site is screening on criteria it never published.
 
+// The one published delivery window, imported rather than restated. lib/site.ts holds
+// no React/Next imports either, so this stays usable from both the browser flow and the
+// server route.
+import { auditDeliveryWindow, contactEmail } from "./site.ts";
+
 /* -------------------------------------------------------------------------- */
 /*  Option sets — rendered by the UI, matched by the rules                      */
 /* -------------------------------------------------------------------------- */
@@ -503,7 +508,15 @@ export function evaluateFit(a: QualificationAnswers): FitResult {
       headline: block.headline,
       reasons: [],
       watchouts: [block.reason],
-      nextStep: block.nextStep,
+      // Every block is triggered by a SINGLE radio answer, and a visitor can pick the
+      // wrong one — "at capacity" from an owner who meant this month, "no records" from
+      // one who has them in a filing cabinet rather than a CRM. Screening people out
+      // honestly is the point of this flow and stays; screening them out with no way to
+      // say "you've read that wrong" is just a dead end. So the disqualification keeps
+      // its reason and its reading, and gains a person to reply to. Deliberately NOT a
+      // booking link: the block stands unless a human says otherwise, and offering a
+      // calendar here would be the politeness the outcome copy exists to refuse.
+      nextStep: `${block.nextStep} If we have read your situation wrong — and one answer on a form is a thin way to judge a business — reply to ${contactEmail} and tell us what we missed. A person reads it.`,
       offerBooking: false,
       recommendedTier: null,
       suggestedReading: block.reading,
@@ -522,7 +535,7 @@ export function evaluateFit(a: QualificationAnswers): FitResult {
       headline: "This is the kind of company we do our best work for.",
       reasons,
       watchouts,
-      nextStep: `Next: we build your free pipeline audit and send it over in writing — the job profile, 3-5 cited referral partners, and one sample message. You don't have to talk to anyone to get it${
+      nextStep: `Next: we build your free pipeline audit and send it over in writing, within ${auditDeliveryWindow} — the job profile, 3-5 cited referral partners, and one sample message. You don't have to talk to anyone to get it${
         tier ? `, and nothing is decided about ${tier} until you've seen the work` : ""
       }.`,
       offerBooking: true,
@@ -539,7 +552,7 @@ export function evaluateFit(a: QualificationAnswers): FitResult {
     reasons,
     watchouts,
     nextStep:
-      "Next: we build your free pipeline audit and send it over in writing, same as anyone else — the open questions above don't cost you the audit. If they turn out to be dealbreakers once we've looked, we'll tell you plainly instead of selling you a month of it.",
+      `Next: we build your free pipeline audit and send it over in writing within ${auditDeliveryWindow}, same as anyone else — the open questions above don't cost you the audit. If they turn out to be dealbreakers once we've looked, we'll tell you plainly instead of selling you a month of it.`,
     offerBooking: true,
     recommendedTier: tier,
     suggestedReading: suggestReading(a),
