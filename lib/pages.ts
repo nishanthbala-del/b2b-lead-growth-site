@@ -36,7 +36,10 @@ export const guidePages: GuidePage[] = [
     description:
       "What a legitimate free audit should include for an HVAC company — and exactly what ours delivers: a sharpened job profile, 3–5 vetted referral partners with cited reasons, and one sample outreach message. Yours to keep, free.",
     datePublished: "2026-08-08",
-    dateModified: "2026-08-24",
+    // 2026-08-29: gained the KeyAnswer extractable block it was the only guide missing.
+    // Real new visible text, so this is a real bump — the other guides changed only in
+    // sitewide Organization JSON-LD and are deliberately left alone.
+    dateModified: "2026-08-29",
   },
   {
     slug: "pricing",
@@ -52,7 +55,7 @@ export const guidePages: GuidePage[] = [
     dateModified: "2026-08-24",
   },
   {
-    slug: "hvac-lead-generation",
+    slug: "hvac-lead-generation-new-jersey",
     navLabel: "HVAC Leads in NJ",
     metaTitle: "HVAC Lead Generation in New Jersey: What Leads Cost and Your Options",
     description:

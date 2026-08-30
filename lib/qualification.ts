@@ -284,7 +284,7 @@ const BLOCKS: Block[] = [
     nextStep:
       "Come back when you have a year or two of estimates and customers in one place — that's when this starts paying for itself. Your details are with us either way.",
     reading: {
-      href: "/hvac-lead-generation",
+      href: "/hvac-lead-generation-new-jersey",
       label: "What HVAC leads actually cost, and your options right now",
     },
   },

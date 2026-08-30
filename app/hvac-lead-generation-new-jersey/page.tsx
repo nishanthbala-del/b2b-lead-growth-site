@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import GuideLayout, { GuideSection, GuideTable, KeyAnswer, SourceNote } from "@/components/GuideLayout";
 import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
-import { siteUrl, brandName } from "@/lib/site";
+import { siteUrl, brandName, orgDescription } from "@/lib/site";
 
-const page = getGuidePage("hvac-lead-generation");
+const page = getGuidePage("hvac-lead-generation-new-jersey");
 
 export const metadata: Metadata = pageMetadata({
   path: `/${page.slug}`,
@@ -41,7 +41,7 @@ const pageFaqs = [
   {
     question: "Why do you focus on New Jersey?",
     answer:
-      "Because we're based here and one niche done well beats five done thinly. New Jersey home-service contractors — starting with residential HVAC — are our active focus, so the research, seasonal timing, and market context in our work is NJ-specific rather than templated across all fifty states.",
+      "Because we're based here and one niche done well beats five done thinly. Established residential HVAC companies in New Jersey are our active focus, so the research, seasonal timing, and market context in our work is NJ-specific rather than templated across all fifty states.",
   },
   {
     question: "Do you guarantee a number of leads or booked jobs?",
@@ -68,16 +68,25 @@ const structuredData = {
       "@id": `${siteUrl}/${page.slug}#service`,
       name: `${brandName} — HVAC Lead Generation`,
       url: `${siteUrl}/${page.slug}`,
-      serviceType: "Lead generation for HVAC contractors",
+      description: orgDescription,
+      serviceType: "HVAC Lead Generation and Appointment Setting",
       provider: { "@id": `${siteUrl}/#organization` },
       areaServed: {
         "@type": "State",
         name: "New Jersey",
       },
+      // Kept in sync with the audience/serviceOutput shape in lib/pages.ts's
+      // serviceJsonLd() (see its comment) — this page needs its own @id (NJ-scoped
+      // areaServed differs from the sitewide node), not different facts under it.
       audience: {
-        "@type": "Audience",
-        audienceType: "Residential HVAC contractors and home-service businesses",
+        "@type": "BusinessAudience",
+        name: "Established residential HVAC companies",
+        audienceType: "Residential HVAC contractors with existing customer history",
       },
+      serviceOutput: [
+        { "@type": "Thing", name: "Reactivation list built from the client's own customer records" },
+        { "@type": "Thing", name: "Researched referral-partner prospects, each with a cited public source" },
+      ],
     },
   ],
 };

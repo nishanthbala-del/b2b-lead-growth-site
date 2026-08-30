@@ -42,6 +42,16 @@ results, testimonials, statistics, or credentials — the business has 0 clients
   and directories. Geo + niche is where a zero-authority site can genuinely rank — and it is
   exactly the business's active niche and territory.
 
+> **Re-checked 2026-08-29 (3 weeks after the original survey).** The shared-vs-exclusive
+> space is no longer near-empty. A single query now surfaces at least seven competing pages,
+> several published or refreshed in 2026 — rocketmedia, homeshowoff, baadigi, gowithhero,
+> peakintent, constructionleadpro, astraresults — with cost-per-booked-job math close to the
+> figures our own page argues. The *angle* survives (most of them sell leads or sell
+> marketing to lead buyers, so the neutral-party framing is still ours alone, and none cite
+> the FTC order), but "weakest SERP found" is no longer accurate for this cluster and should
+> not be used to justify effort allocation without re-checking. Treat every competitive claim
+> in §2 as perishable and re-run the queries before acting on it.
+
 ## 3. Keyword / search-intent map (business value first, not volume)
 
 | Cluster | Intent | Value | Winnable? | Where it lives |
@@ -124,6 +134,31 @@ owner accounts (§11): Search Console verification token and the post-deploy Ind
 
 ## 8. Changes implemented (in this repo, this pass)
 
+> **Correction, 2026-08-29.** Three items below were recorded as shipped but were never
+> on this branch. They were written in commit `2705c1a`, which is **not reachable from
+> `main`**; the later commit `c3c89a5` ("Restore /pricing, /terms and the guide pages")
+> restored this plan document and the guide pages but not the rest of `2705c1a`'s
+> technical layer. `git log --all -S<term>` finds each term in exactly two commits — the
+> one that wrote it and the one that reverted it — and in none that `main` can see.
+> A plan that claims its own completion is not evidence of completion.
+>
+> - **§8.4 `Organization.email` + `sameAs` wiring** — was absent; **restored 2026-08-29**
+>   (`app/layout.tsx`, `organizationProfiles` in `lib/site.ts`, empty until real profiles
+>   exist). Verified in the production build output.
+> - **§8.5 robots.ts AI-agent allow groups** — was absent; live `robots.txt` carried only
+>   `User-Agent: *`. **Restored 2026-08-29** and verified in the generated `robots.txt`.
+> - **§8.12 GSC verification wiring** — still absent, and now **obsolete rather than
+>   missing**: that wiring existed because DNS verification is impossible on a
+>   `*.vercel.app` subdomain. The site is on `b2bleadgrowth.com`, and two
+>   `google-site-verification` TXT records are live on the apex (confirmed by `dig`), so
+>   the domain property is already verified and covers `www`. Adding an unused
+>   `NEXT_PUBLIC_GSC_VERIFICATION` env var would be noise. **Do not restore it.**
+>
+> Everything else in §8 was re-checked against the working tree on 2026-08-29 and is
+> present, including the `KeyAnswer` component, the per-page FAQPage nodes, the registry,
+> the IndexNow script and key file, and `llms.txt`.
+
+
 1. **Five new statically-rendered guide pages** (above) — answer-first, fact-checked,
    source-linked, honest. Every external figure verified against its primary source on
    2026-08-07 and dated in the copy.
@@ -138,6 +173,7 @@ owner accounts (§11): Search Console verification token and the post-deploy Ind
    (same node as homepage, built from the same array), NJ-scoped Service on the HVAC page,
    Organization gains `email` + `sameAs` wiring (renders only when real profiles exist).
 5. **robots.ts** — explicit allow groups for all named AI search/user/training agents.
+   _(Never landed on `main`; restored 2026-08-29 — see the correction above.)_
 6. **sitemap.ts** — registry-driven, truthful per-page lastmod.
 7. **Homepage FAQ** — two new answer-engine-shaped entries: monthly cost (with cited market
    range + our exact pricing) and NJ/HVAC focus (owned-audience model, no homeowner scraping).
@@ -146,8 +182,9 @@ owner accounts (§11): Search Console verification token and the post-deploy Ind
    browser: modal opens).
 10. **`public/llms.txt`** — honest brand summary + page map (lowest-priority freebie).
 11. **IndexNow** — key file in `public/` + `scripts/indexnow-ping.mjs` (run post-deploy).
-12. **GSC verification wiring** — `NEXT_PUBLIC_GSC_VERIFICATION` env var renders the meta
-    verification tag; no code change needed when the owner verifies.
+12. ~~**GSC verification wiring** — `NEXT_PUBLIC_GSC_VERIFICATION` env var renders the meta
+    verification tag.~~ **Superseded 2026-08-29:** never landed, and no longer needed —
+    the domain is DNS-verified in Search Console. See the correction above.
 13. Carried the pending uncommitted honest-copy pass, then unified it further: prospect
     claims now read "individually vetted" site-wide (review found "hand-vetted" overclaims a
     software-assisted process; "individually vetted … human-reviewed before delivery" is true
@@ -216,12 +253,30 @@ Weekly, once GSC + Bing WMT are live (all free):
 
 ## 11. Remaining human actions (owner)
 
-1. **Push + deploy** (`git push` → Vercel). The live site is weeks stale; every other action
-   waits on this. Publishing is an owner call — nothing was pushed from this pass.
-2. **After deploy**: run `node scripts/indexnow-ping.mjs` (10 seconds, no account needed).
-3. **Google Search Console**: add URL-prefix property for the exact URL, choose HTML-tag
-   verification, set the token as `NEXT_PUBLIC_GSC_VERIFICATION` in Vercel env, redeploy,
-   verify, submit `/sitemap.xml`, request indexing on `/`.
+> **Status re-check, 2026-08-29.** Items 1, 3 (verification half), 6b and 7 below are now
+> **DONE** and are struck through. What is NOT done is the part that actually matters:
+> **the site is not indexed by Google.** An exact-domain search for `"b2bleadgrowth.com"`
+> and an exact-phrase search for the homepage H1 both return zero results. Deployment,
+> schema, and copy are no longer the constraint — *discovery* is, and every remaining
+> item below is an owner action because each one needs a login this system does not hold.
+
+1. ~~**Push + deploy**~~ **DONE.** Verified 2026-08-29: `reconcile` is identical to
+   `origin/main` (0 ahead / 0 behind), and all 12 live routes return 200 with the current
+   build's H1, metadata, and JSON-LD. The "live site is weeks stale" problem is resolved.
+2. ~~**After deploy**: run `node scripts/indexnow-ping.mjs`~~ **RUN 2026-08-29** against the
+   live production URL set: `202 Accepted`, 9 URLs submitted for `www.b2bleadgrowth.com`.
+   This is the Bing lane (and therefore the ChatGPT-search / Copilot / DuckDuckGo lane),
+   which §4.4 correctly identifies as the fast one for a zero-authority site.
+   Note there is still **no postbuild hook**, so this remains a manual step that has to be
+   repeated after each substantive deploy. A hook was deliberately not added: Vercel runs
+   `npm run build` for preview deployments too, and the script hardcodes the production
+   host, so a `postbuild` would announce production URLs from every preview build.
+3. **Google Search Console** — verification ~~HTML-tag~~ **DONE via DNS.** Two
+   `google-site-verification` TXT records are live on the apex, so the domain property is
+   verified and covers `www`. **Still outstanding, and this is now the single highest-value
+   action available:** open the property, **submit `/sitemap.xml`**, then use URL Inspection
+   → **Request indexing** on each of the 9 URLs. A verified property that was never given a
+   sitemap explains the zero-index state better than any on-page factor does.
 4. **Bing Webmaster Tools**: "Import from GSC" (~5 min).
 5. **Create free profiles** (LinkedIn company page, Crunchbase, Clutch, GoodFirms) with
    identical positioning, then add their URLs to `organizationProfiles` in `lib/site.ts`.
@@ -240,7 +295,8 @@ Weekly, once GSC + Bing WMT are live (all free):
    (e) set the booking link's
    minimum scheduling notice to ~3 business days so walkthrough calls land after the audit
    arrives (the site now promises audit-first).
-7. **Flagged decision — custom domain (~$10/yr).** The one paid item with outsized return:
+7. ~~**Flagged decision — custom domain (~$10/yr).**~~ **DONE** — `www.b2bleadgrowth.com`
+   is live and canonical, and `lib/site.ts` pins it. Original note kept for the reasoning: The one paid item with outsized return:
    fixes the shared-subdomain trust/crawl handicap, directory friction, AND is already
    required by the operating system's identity floor (`scripts/check_identity.py` needs an
    owned domain before any production send). One purchase resolves two blockers. If bought:
@@ -251,13 +307,20 @@ Weekly, once GSC + Bing WMT are live (all free):
 
 ## 12. Prioritized next steps
 
+_Re-prioritised 2026-08-29. P0, P1's ping half, and P4 are done; the list now leads with the
+only thing standing between this site and an AI citation, which is that Google has no record
+of it. On-page work is no longer the constraint and is ranked accordingly._
+
 | P | Action | Owner | Cost |
 |---|---|---|---|
-| 0 | Deploy current main (everything is invisible until then) | Owner | $0 |
-| 1 | GSC + Bing WMT + sitemap + IndexNow ping | Owner (35 min) | $0 |
-| 2 | LinkedIn page + Crunchbase/Clutch/GoodFirms profiles → `sameAs` | Owner (~1 hr) | $0 |
+| — | ~~Deploy current main~~ **DONE** — live == `origin/main`, all 12 routes 200 | — | — |
+| — | ~~IndexNow ping~~ **DONE 2026-08-29** — 202 Accepted, 9 URLs (Bing → ChatGPT/Copilot) | — | — |
+| — | ~~Custom domain~~ **DONE** — `www.b2bleadgrowth.com` live and canonical | — | — |
+| **0** | **GSC: submit `/sitemap.xml`, then Request Indexing on all 9 URLs.** The domain is already DNS-verified; the sitemap appears never to have been submitted. Zero Google results today. | Owner (~20 min) | $0 |
+| **1** | **Bing WMT: "Import from GSC".** IndexNow notifies Bing but WMT is where you see whether it indexed. | Owner (~5 min) | $0 |
+| **2** | LinkedIn company page + Crunchbase/Clutch/GoodFirms → paste URLs into `organizationProfiles` in `lib/site.ts` (wiring restored 2026-08-29; array is empty and renders no `sameAs` until then). **This is the entity-corroboration gap: nothing on the web currently says this company exists.** | Owner (~1 hr) | $0 |
 | 3 | Founder LinkedIn cadence + SOS/Qwoted monitoring | Owner (ongoing) | $0 |
-| 4 | Decide the custom-domain flag (also unblocks outbound sends) | Owner | ~$10/yr |
+| 4 | Re-verify §2's competitive claims before writing more guides — the shared-vs-exclusive SERP has filled in since 2026-08-07 (see §2 note) | Either | $0 |
 | 5 | 4–8-week refresh cycle on /pricing + HVAC pages (real updates only) + re-ping IndexNow | Either | $0 |
 | 6 | Benchmarks roundup page (cited third-party data, HVAC angle) when time allows | Either | $0 |
 | 7 | Own results content — only when real, permissioned data exists | Blocked on reality | $0 |

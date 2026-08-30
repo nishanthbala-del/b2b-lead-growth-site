@@ -39,18 +39,6 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   // Don't advertise the framework and version to anyone scanning for known CVEs.
   poweredByHeader: false,
-  async redirects() {
-    return [
-      // 2026-08-29: slug shortened from hvac-lead-generation-new-jersey. Google had
-      // already crawled the site under the old path, so a permanent redirect carries
-      // that signal forward instead of leaving a 404 behind.
-      {
-        source: "/hvac-lead-generation-new-jersey",
-        destination: "/hvac-lead-generation",
-        permanent: true,
-      },
-    ];
-  },
   async headers() {
     return [
       {
