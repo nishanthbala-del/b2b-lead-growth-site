@@ -52,7 +52,7 @@ export const guidePages: GuidePage[] = [
     dateModified: "2026-08-24",
   },
   {
-    slug: "hvac-lead-generation-new-jersey",
+    slug: "hvac-lead-generation",
     navLabel: "HVAC Leads in NJ",
     metaTitle: "HVAC Lead Generation in New Jersey: What Leads Cost and Your Options",
     description:

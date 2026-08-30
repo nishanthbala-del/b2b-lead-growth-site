@@ -20,7 +20,7 @@ const urls = [
   "/",
   "/free-pipeline-audit",
   "/pricing",
-  "/hvac-lead-generation-new-jersey",
+  "/hvac-lead-generation",
   "/shared-vs-exclusive-hvac-leads",
   "/how-to-choose-a-lead-generation-agency",
   "/start",

@@ -3,7 +3,7 @@ import GuideLayout, { GuideSection, GuideTable, KeyAnswer, SourceNote } from "@/
 import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
 import { siteUrl, brandName } from "@/lib/site";
 
-const page = getGuidePage("hvac-lead-generation-new-jersey");
+const page = getGuidePage("hvac-lead-generation");
 
 export const metadata: Metadata = pageMetadata({
   path: `/${page.slug}`,
