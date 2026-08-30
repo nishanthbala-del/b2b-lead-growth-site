@@ -16,7 +16,7 @@ const pageFaqs = [
   {
     question: "How much do HVAC leads cost in New Jersey?",
     answer:
-      "It depends on the channel. As of August 2026: 99Calls advertised exclusive NJ HVAC leads at $54.99 per lead; Angi publishes no dollar figures (its docs say fees vary by task, location, and demand), while third-party estimates such as Housecall Pro's 2026 guide put typical Angi leads at roughly $15–$85 with high-value trades over $100; Google Local Services Ads charge per valid lead at prices Google says vary by location, job type, and lead type.",
+      "It depends on the channel. As of August 2026: 99Calls advertised exclusive NJ HVAC leads at $54.99 per lead; Angi publishes no dollar figures (its docs say fees vary by task, location, and demand), while third-party estimates such as Housecall Pro's guide put typical Angi leads at $15–$85 per lead; Google Local Services Ads charge per valid lead at prices Google says vary by location, job type, and lead type.",
   },
   {
     question: "What's the difference between buying leads and hiring a lead generation service?",
@@ -130,7 +130,7 @@ export default function HvacNjPage() {
             rows={[
               [
                 <span key="angi" className="font-semibold text-bone">Angi / shared marketplaces</span>,
-                "Angi publishes no dollar figures — fees “change based on task, homeowner location, and demand.” Third-party estimate (Housecall Pro, Feb 2026): ~$15–$85/lead, $100+ for high-value trades.",
+                "Angi publishes no dollar figures — fees “change based on task, homeowner location, and demand.” Third-party estimate (Housecall Pro): $15–$85 per lead.",
                 "Angi's own docs: each request matched with up to five pros. HomeAdvisor's pro-facing docs go further — you pay for a connected lead whether or not you win the job.",
               ],
               [

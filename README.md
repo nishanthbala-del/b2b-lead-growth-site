@@ -16,14 +16,17 @@ npm run lint       # eslint
 | Piece | Where |
 | --- | --- |
 | Landing page | `components/LeadGenerationLanding.tsx` |
-| Intake modal + booking step | `components/IntakeForm.tsx` |
+| Fit check (`/start`): question flow + result | `components/qualification/QualificationFlow.tsx` |
+| Guide page shell (the five indexable content pages) | `components/GuideLayout.tsx` |
+| Page registry — drives the sitemap, nav, and per-page JSON-LD | `lib/pages.ts` |
 | Copy that also feeds JSON-LD (plans, FAQs, audience) | `lib/content.ts` |
 | Brand constants: canonical URL, booking link, call length, service area, legal identity | `lib/site.ts` |
 | Lead API (validation, anti-spam, storage) | `app/api/lead/route.ts` |
 | Security headers + CSP | `next.config.ts` |
 
-Every CTA opens the intake modal. On submit the lead is written to a Google Sheet
-via an Apps Script webhook, then the visitor picks a time on the booking link.
+The entry point is `/start`: a short fit check that returns a straight yes/no,
+including no, then writes the lead to a Google Sheet via an Apps Script webhook and
+offers the booking link on a pass.
 
 ## Before deploying
 

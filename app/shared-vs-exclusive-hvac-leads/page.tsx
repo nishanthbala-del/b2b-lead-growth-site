@@ -158,8 +158,8 @@ export default function SharedVsExclusivePage() {
           <p>
             The arithmetic below is illustrative — plug in your own numbers. The structure of it is
             the point: <span className="text-bone">divide what you spend by the jobs you actually
-            book</span>. Third-party estimates put typical Angi lead fees at roughly $15–$85, with
-            high-value trades over $100 (<a href="https://www.housecallpro.com/resources/what-is-angis-list-how-angi-works/" rel="nofollow noopener" target="_blank" className="text-gold-200 underline underline-offset-4">Housecall Pro&rsquo;s February 2026 guide</a> — Angi itself publishes no dollar figures and says fees vary by task, location, and demand).
+            book</span>. Third-party estimates put typical Angi lead fees at $15–$85 per lead
+            (<a href="https://www.housecallpro.com/resources/what-is-angis-list-how-angi-works/" rel="nofollow noopener" target="_blank" className="text-gold-200 underline underline-offset-4">Housecall Pro&rsquo;s guide</a> — Angi itself publishes no dollar figures and says fees vary by task, location, and demand).
           </p>
           <GuideTable
             caption="Illustrative cost-per-booked-job arithmetic for shared vs exclusive leads"

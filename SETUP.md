@@ -12,25 +12,25 @@ This site is a Next.js landing page for the **B2B Lead Growth Agency** with a bu
 
 | Piece | Where | What it does |
 | --- | --- | --- |
-| Landing page | `components/LeadGenerationLanding.tsx` | The marketing site. Every CTA opens the intake form. |
-| Intake form | `components/IntakeForm.tsx` | On-brand multi-step modal: business basics → pipeline/qualification → booking. |
+| Landing page | `components/LeadGenerationLanding.tsx` | The marketing site. CTAs point at `/start` or `/pricing`. |
+| Fit check | `components/qualification/QualificationFlow.tsx` | The standalone `/start` page: a short question flow (customer history, average job value, biggest pipeline gap, capacity, software in use) that ends in a straight fit verdict — including a real no, with a reason and a reading suggestion instead of a booking link. |
 | API route | `app/api/lead/route.ts` | Validates submissions, blocks bots (honeypot + rate limit), saves them. |
 | Local storage | `./data/` (gitignored) | `submissions.csv` + `.jsonl` for local dev / self-host. |
 | Cloud storage | Google Sheet (via Apps Script) | The durable source of truth in production. |
-| Booking | Your scheduler link | Shown right after a successful submission. |
+| Booking | Your scheduler link | Shown only on a fit result, after the free audit is offered — not the default outcome. |
 
 **The conversion flow:**
-CTA → intake form → qualification questions → submit (saved to Sheet + CSV) → booking step → call booked.
+`/start` fit check → answers submitted (saved to Sheet + CSV) → fit result (booking link
+offered) or a disqualifying result (reason + reading suggestion, no booking link).
 
-### What the intake form captures
-Contact basics (name, work email, company, website, role) **plus the six business-operations
-fields** you asked for:
-1. **Lead package** selected (pre-filled when a visitor clicks a specific plan)
-2. **Target market**
-3. **ICP notes** (ideal-customer notes / exclusions)
-4. **Average deal size**
-5. **Sales goals** ("what does success look like in 90 days?")
-6. **Current prospecting method**
+### What the fit check captures
+Business-operations signals used to score fit — customer history and count, average job
+value, the single biggest gap in current pipeline (unsold estimates, lapsed maintenance
+agreements, thin referral flow, or wanting to buy homeowner leads — the last one is an
+automatic disqualifier), current capacity, and whether field-service software is in use.
+See `lib/qualification.ts` for the exact question set and scoring rules; it changes
+independently of this doc, so treat that file as the source of truth for the current
+questions, not this list.
 
 ---
 
@@ -257,16 +257,14 @@ prioritize. Export anytime via **File → Download → CSV**.
   because of this; local writes are best-effort.)
 - **Spam protection:** a hidden honeypot field + a light per-IP rate limit. For higher volume,
   consider adding a captcha later.
-- **Privacy:** no public email address is shown (by design) — all contact runs through the form.
-  Add a privacy note/policy link before heavy outbound if your market requires it.
 - **No fabricated proof:** the site ships without case studies on purpose. Add real ones to the
   "Proof" section once you have client results.
-- **Still open:** a captcha for higher volume, and the two legal-identity values below.
-- **Legal identity:** set `NEXT_PUBLIC_CONTACT_EMAIL` and `NEXT_PUBLIC_LEGAL_ENTITY` in Vercel as
-  soon as the business details exist. Until they are set, the privacy policy says the registered
-  details are "available on request" and routes privacy requests through the intake form — which
-  works, but a named entity and a real contact inbox are what a US/EU privacy request actually
-  expects. Nothing is invented in their place.
+- **Still open:** a captcha for higher volume.
+- **Legal identity:** `contactEmail` and `legalEntityName` (`lib/site.ts`) already default to a
+  real branded mailbox (`nishanth@b2bleadgrowth.com`) and a real named LLC ("B2B Lead Growth
+  LLC", formed in New Jersey) — both are shown on the live privacy policy, not "available on
+  request." `NEXT_PUBLIC_CONTACT_EMAIL` and `NEXT_PUBLIC_LEGAL_ENTITY` remain available as env
+  overrides if either value needs to change without a code edit; unset, the code defaults apply.
 - **Have the privacy policy reviewed.** `app/privacy/page.tsx` describes what this codebase
   genuinely does, but it has not been reviewed by a lawyer against GDPR, CAN-SPAM, CASL, or US
   state privacy law. Do that before running outbound at volume.

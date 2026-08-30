@@ -6,21 +6,30 @@ results, testimonials, statistics, or credentials — the business has 0 clients
 
 ## 1. Current SEO / AI-search baseline
 
-- **The live deployment is stale.** `b2b-lead-growth-site.vercel.app` serves a pre-"Free
+> **Superseded, 2026-08-30.** Every bullet below described the pre-domain `vercel.app` world
+> and was left unedited by the 2026-08-29 correction pass, which fixed §2/§8/§11/§12 but not
+> this section — so it now flatly contradicts them. Current baseline: the site is live and
+> current on `www.b2bleadgrowth.com` (§11.7, DONE), `/terms` returns 200 on both hosts, and the
+> constraint is discovery, not deployment — Google Search Console has never been given the
+> sitemap (§12, P0). Kept below, struck through, for the record rather than silently deleted.
+
+- ~~**The live deployment is stale.** `b2b-lead-growth-site.vercel.app` serves a pre-"Free
   Pipeline Audit" build (old hero, "strategy call" copy, `/terms` 404s, the offer name appears
   0 times). Local `main` fixed all of this weeks ago but was never pushed. **Deploying current
-  `main` + this work is the single highest-impact action available.**
-- **Not indexed anywhere.** Searches for the exact subdomain, exact H1, and brand+vercel
-  combinations return zero hits in Google. Expected: zero backlinks, no Search Console
-  property, and `vercel.app` is on the Public Suffix List so the subdomain inherits nothing.
+  `main` + this work is the single highest-impact action available.**~~
+- **Not indexed anywhere.** Still true 2026-08-30: an exact-domain search and an exact-H1
+  search both return zero Google results. Cause is now precisely: zero backlinks, and Search
+  Console has never been given the sitemap (DNS verification is done — see §11.7).
 - **Technically indexable.** Verified live: no `X-Robots-Tag`/`noindex` on the production
   deployment (Vercel only noindexes previews and outdated production deploys), valid
   robots.txt + sitemap, full SSR, self-canonicals, Organization/WebSite/FAQPage/Service
   JSON-LD, OG image. The foundation was already healthy; the problems were discovery,
-  authority, and a one-page architecture.
-- **Structural handicap:** the `vercel.app` subdomain itself (shared-reputation crawl
-  deprioritization, buyer trust, directory friction). Free mitigations are in place;
-  see §11 for the flagged ~$10 decision that is the real fix.
+  authority, and (partially addressed since) a one-page architecture.
+- ~~**Structural handicap:** the `vercel.app` subdomain itself (shared-reputation crawl
+  deprioritization, buyer trust, directory friction). Free mitigations are in place; see §11
+  for the flagged ~$10 decision that is the real fix.~~ **DONE** — see §11.7: the custom domain
+  is live and canonical. The `vercel.app` host itself is still reachable and unredirected
+  (tracked as the one open sub-item in §11.7), but canonicals correctly point off it.
 
 ## 2. Competitor + demand research (what the SERPs actually look like)
 
@@ -123,14 +132,18 @@ filtered out:
 
 - Every guide interlinks to every other guide + a single honest CTA block.
 - Homepage footer carries a "Guides" nav (crawl discovery from the highest-authority page).
-- Conversion: guides CTA → `/#get-audit` deep link → intake modal auto-opens (new).
+- Conversion: guides CTA → `/#get-audit` deep link, scrolling straight to the homepage offer
+  section. ~~intake modal auto-opens~~ **stale 2026-08-30**: there is no modal; the intake
+  flow is the standalone `/start` fit check (`components/qualification/QualificationFlow.tsx`).
 - Future content (only when real data exists): a cited outreach-benchmarks roundup for
   home services; own verified numbers once real sends/results exist and clients permit.
 
 ## 7. Technical changes required
 
-All items below were required; **all are implemented** (see §8) except the two that need
-owner accounts (§11): Search Console verification token and the post-deploy IndexNow ping.
+All items below were required; **all are implemented** (see §8) except the owner-account
+actions in §11 — GSC sitemap submission + Request Indexing, and Bing WMT import. The
+IndexNow ping is code-complete and has been run manually (§11.2); GSC verification no longer
+needs an owner-account step at all — see §8's correction.
 
 ## 8. Changes implemented (in this repo, this pass)
 
@@ -178,8 +191,12 @@ owner accounts (§11): Search Console verification token and the post-deploy Ind
 7. **Homepage FAQ** — two new answer-engine-shaped entries: monthly cost (with cited market
    range + our exact pricing) and NJ/HVAC focus (owned-audience model, no homeowner scraping).
 8. **Footer "Guides" navigation** on the landing page.
-9. **`/#get-audit` deep link** — IntakeForm opens on load for guide-page CTAs (verified in
-   browser: modal opens).
+9. ~~**`/#get-audit` deep link** — IntakeForm opens on load for guide-page CTAs (verified in
+   browser: modal opens).~~ **Stale 2026-08-30**: `IntakeForm` and the modal it describes do
+   not exist in the current codebase. The `#get-audit` anchor is still live and still the
+   target of every guide-page CTA (`components/LeadGenerationLanding.tsx`, deliberately kept
+   for link compatibility) — it now scrolls to the homepage offer section, and the intake flow
+   itself lives at the standalone `/start` fit check.
 10. **`public/llms.txt`** — honest brand summary + page map (lowest-priority freebie).
 11. **IndexNow** — key file in `public/` + `scripts/indexnow-ping.mjs` (run post-deploy).
 12. ~~**GSC verification wiring** — `NEXT_PUBLIC_GSC_VERIFICATION` env var renders the meta
@@ -214,16 +231,28 @@ owner accounts (§11): Search Console verification token and the post-deploy Ind
 
 Ranked by effort-to-impact; researched Aug 2026:
 
-1. **Google Search Console + Bing Webmaster Tools** (owner, ~35 min total): URL-prefix
-   property + HTML-tag verification (DNS is impossible on vercel.app), submit sitemap, then
-   Bing's one-click "Import from GSC". Bing's index feeds ChatGPT/Copilot/DuckDuckGo.
+1. **Google Search Console + Bing Webmaster Tools** (owner, ~20 min). ~~URL-prefix property +
+   HTML-tag verification (DNS is impossible on vercel.app)~~ **stale 2026-08-30**: the site is
+   on `b2bleadgrowth.com` now, DNS verification is done (two `google-site-verification` TXT
+   records confirmed live on the apex), and the domain property already exists and covers
+   `www`. **What's actually outstanding: submit `/sitemap.xml` to that property, then Request
+   Indexing on each of the 9 URLs** (see §12, P0) — the property has apparently never been
+   given a sitemap. Then Bing's one-click "Import from GSC". Bing's index feeds
+   ChatGPT/Copilot/DuckDuckGo.
 2. **LinkedIn company page + founder-led zero-click posts** — the one channel where having
    no track record doesn't matter. Post observations/process (never invented outcomes); keep
    links out of captions (measured ~60% reach penalty); 2–3×/week founder habit.
-3. **Crunchbase free profile** (~DA 91, read by buyers doing diligence) and **Clutch free
-   profile** (+ **GoodFirms**; G2/Capterra are software-only — skip). Identical
-   name/description/pricing everywhere; then add each URL to `organizationProfiles` in
-   `lib/site.ts` so Organization.sameAs picks them up.
+3. ~~**Crunchbase free profile** (~DA 91, read by buyers doing diligence) and **Clutch free
+   profile** (+ **GoodFirms**; G2/Capterra are software-only — skip).~~ **Reconsidered
+   2026-08-30: reject Clutch and GoodFirms.** They are agency *review* directories; with 0
+   clients they publish an empty "no reviews yet" listing and place this business at the
+   bottom of "top HVAC lead-gen agency" comparisons against agencies with dozens of reviews —
+   worse than absence, and it manufactures the review surface this business has deliberately
+   chosen not to have. **Reject Crunchbase** too — a startup/funding database; a zero-funding
+   single-member LLC yields a thin auto-generated profile an HVAC contractor will never look
+   at. LinkedIn (item 2) is the one profile worth creating: add its URL to
+   `organizationProfiles` in `lib/site.ts` once it exists and resolves — never before, since a
+   `sameAs` pointing at a 404 is fabricated corroboration.
 4. **HARO successors** — Source of Sources (free), Qwoted free tier, Help a B2B Writer:
    expertise-based editorial quotes; slow drip, the only genuinely free editorial links.
 5. **Reddit/communities** (r/sweatystartup, r/smallbusiness) under the 9:1 rule with founder
@@ -237,8 +266,9 @@ Ranked by effort-to-impact; researched Aug 2026:
 
 Weekly, once GSC + Bing WMT are live (all free):
 
-- **Index coverage**: pages indexed in Google + Bing (target: all 8 within 4–6 weeks of
-  deploy + submission; the vercel.app handicap may slow Google — expected, documented).
+- **Index coverage**: pages indexed in Google + Bing (target: all 9 within 4–6 weeks of
+  sitemap submission — see §12, P0. The vercel.app "handicap" no longer applies; the site is
+  on its own domain).
 - **Impressions/clicks by cluster query** (GSC + Bing WMT query reports) — the map in §3 is
   the checklist; NJ+HVAC queries are the ones that matter, not total traffic.
 - **AI-citation spot checks** (manual, monthly): ask ChatGPT/Perplexity/Claude the cluster
@@ -261,8 +291,9 @@ Weekly, once GSC + Bing WMT are live (all free):
 > item below is an owner action because each one needs a login this system does not hold.
 
 1. ~~**Push + deploy**~~ **DONE.** Verified 2026-08-29: `reconcile` is identical to
-   `origin/main` (0 ahead / 0 behind), and all 12 live routes return 200 with the current
-   build's H1, metadata, and JSON-LD. The "live site is weeks stale" problem is resolved.
+   `origin/main` (0 ahead / 0 behind), and all 9 indexable routes (the sitemap's 9 `<loc>`
+   entries) return 200 with the current build's H1, metadata, and JSON-LD. The "live site is
+   weeks stale" problem is resolved.
 2. ~~**After deploy**: run `node scripts/indexnow-ping.mjs`~~ **RUN 2026-08-29** against the
    live production URL set: `202 Accepted`, 9 URLs submitted for `www.b2bleadgrowth.com`.
    This is the Bing lane (and therefore the ChatGPT-search / Copilot / DuckDuckGo lane),
@@ -278,14 +309,21 @@ Weekly, once GSC + Bing WMT are live (all free):
    → **Request indexing** on each of the 9 URLs. A verified property that was never given a
    sitemap explains the zero-index state better than any on-page factor does.
 4. **Bing Webmaster Tools**: "Import from GSC" (~5 min).
-5. **Create free profiles** (LinkedIn company page, Crunchbase, Clutch, GoodFirms) with
-   identical positioning, then add their URLs to `organizationProfiles` in `lib/site.ts`.
+5. ~~**Create free profiles** (LinkedIn company page, Crunchbase, Clutch, GoodFirms)~~
+   **Narrowed 2026-08-30 — see §9 item 3 for the reasoning: LinkedIn only.** Create a
+   LinkedIn company page with identical positioning, then add its URL to
+   `organizationProfiles` in `lib/site.ts`. Do not create Crunchbase, Clutch, or GoodFirms
+   profiles — with 0 clients they would rank this business at the bottom of review-based
+   comparisons, which is worse than not appearing at all.
 6. **Identity signals — the skeptical-buyer review's verdict.** The review's only FAIL was
    identity, not copy: a vercel.app URL + a numbered personal Gmail + no named founder reads
    as fly-by-night to the exact buyer the site targets, and it contradicts the site's own
    red-flag advice about inspectable sending identities. Owner decisions, in order of impact:
-   (a) the custom domain below; (b) a branded mailbox (hello@domain) replacing the Gmail in
-   `contactEmail`; (c) **done in the 2026-08-08 truth-audit pass** — `founderName` in
+   (a) the custom domain below — **DONE**; (b) ~~a branded mailbox (hello@domain) replacing
+   the Gmail in `contactEmail`~~ **DONE** — `contactEmail` (`lib/site.ts`) defaults to
+   `nishanth@b2bleadgrowth.com`, a mailbox on the owned domain, confirmed live in the footer
+   and the Organization JSON-LD; no `gmail.com` string appears anywhere on the site; (c)
+   **done in the 2026-08-08 truth-audit pass** — `founderName` in
    `lib/site.ts` now names the founder in the landing footer, the homepage proof block, the FAQ,
    and both legal pages, matching `from_name` in the OS repo's `sender_identity.yaml` so a
    prospect who receives an email sees the same name on the site. The earlier legal-name /
@@ -299,9 +337,15 @@ Weekly, once GSC + Bing WMT are live (all free):
    is live and canonical, and `lib/site.ts` pins it. Original note kept for the reasoning: The one paid item with outsized return:
    fixes the shared-subdomain trust/crawl handicap, directory friction, AND is already
    required by the operating system's identity floor (`scripts/check_identity.py` needs an
-   owned domain before any production send). One purchase resolves two blockers. If bought:
-   set `NEXT_PUBLIC_SITE_URL`, 301 the vercel.app host, keep canonicals on the new domain.
-   Recommendation only — not purchased here per the $0 constraint.
+   owned domain before any production send). One purchase resolves two blockers.
+   ~~If bought: set `NEXT_PUBLIC_SITE_URL`, 301 the vercel.app host, keep canonicals on the
+   new domain.~~ Domain purchase and canonicals are done; `NEXT_PUBLIC_SITE_URL` was never
+   needed (`siteUrl` is hardcoded in `lib/site.ts`, deliberately not an env var — see its
+   comment). **Still open: the vercel.app host is not 301'd.** Verified 2026-08-30:
+   `https://b2b-lead-growth-site.vercel.app/` still returns `200`, serving the full current
+   build with a correct cross-domain canonical to `www.b2bleadgrowth.com`. Low priority — the
+   canonical already prevents duplicate-content harm — but a clean fix: in Vercel → Project →
+   Domains, set the `.vercel.app` host to redirect to the production domain.
 8. Optional, later: chamber/ACCA memberships post-revenue; publish own verified benchmark
    numbers once real send data + client permission exist.
 
@@ -313,7 +357,7 @@ of it. On-page work is no longer the constraint and is ranked accordingly._
 
 | P | Action | Owner | Cost |
 |---|---|---|---|
-| — | ~~Deploy current main~~ **DONE** — live == `origin/main`, all 12 routes 200 | — | — |
+| — | ~~Deploy current main~~ **DONE** — live == `origin/main`, all 9 indexable routes 200 | — | — |
 | — | ~~IndexNow ping~~ **DONE 2026-08-29** — 202 Accepted, 9 URLs (Bing → ChatGPT/Copilot) | — | — |
 | — | ~~Custom domain~~ **DONE** — `www.b2bleadgrowth.com` live and canonical | — | — |
 | **0** | **GSC: submit `/sitemap.xml`, then Request Indexing on all 9 URLs.** The domain is already DNS-verified; the sitemap appears never to have been submitted. Zero Google results today. | Owner (~20 min) | $0 |
