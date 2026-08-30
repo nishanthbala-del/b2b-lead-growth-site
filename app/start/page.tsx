@@ -15,7 +15,7 @@ import { callLengthMinutes, intakeMinutes, siteUrl } from "@/lib/site";
 export const metadata: Metadata = pageMetadata({
   path: "/start",
   type: "website",
-  title: "See if we're a fit",
+  title: "Fit check for HVAC companies",
   description: `A ${intakeMinutes}-minute fit check for established HVAC companies. Answer ten questions and get a straight answer — including no. If it's a fit, we send your free pipeline audit in writing; the ${callLengthMinutes}-minute walkthrough is optional.`,
 });
 
