@@ -199,7 +199,7 @@ export const riskReversal: RiskReversal[] = [
 
 // Grouping is presentational only. The FAQPage JSON-LD in app/page.tsx still maps the
 // flat array, so the structured data stays a verbatim mirror of the visible text — the
-// rich-results requirement — while the reader gets seventeen questions sorted into the
+// rich-results requirement — while the reader gets every question sorted into the
 // five things they are actually asking about instead of one undifferentiated column.
 export const faqGroups = [
   "What this is",
@@ -349,7 +349,7 @@ export const faqs: Faq[] = [
     question: "Do I have to get on a call to get the free audit?",
     group: "Money, terms and getting started",
     answer:
-      `It's a ${callLengthMinutes}-minute, no-obligation walkthrough of the audit we already sent you — not a pitch, and not the price of the audit. We go through the job profile and the partners we picked, you tell us where we read your market wrong, and you decide with the work already in hand whether running it at scale is worth paying for. You can skip it entirely and keep the audit. No work begins until you decide to move forward.`,
+      `No. The call is a ${callLengthMinutes}-minute, no-obligation walkthrough of the audit we already sent you — not a pitch, and not the price of the audit. We go through the job profile and the partners we picked, you tell us where we read your market wrong, and you decide with the work already in hand whether running it at scale is worth paying for. You can skip it entirely and keep the audit. No work begins until you decide to move forward.`,
   },
 ];
 

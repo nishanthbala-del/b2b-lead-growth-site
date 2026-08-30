@@ -104,6 +104,24 @@ export const contactEmail =
   process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "nishanth@b2bleadgrowth.com";
 export const legalEntity = process.env.NEXT_PUBLIC_LEGAL_ENTITY?.trim() || "";
 
+// Real external profiles for Organization.sameAs — the entity-corroboration signal
+// search engines and answer engines use to decide a brand is a real, single entity
+// rather than one unattached page. It is also the specific gap that keeps a new
+// domain from being confidently named in an AI answer: nothing else on the web
+// currently says this company exists.
+//
+// ONLY add profiles that actually exist and are owned by this business (a LinkedIn
+// company page, Crunchbase, Clutch, GoodFirms). NEVER pre-add a planned one — a
+// sameAs pointing at a 404 is a fabricated corroboration signal and is exactly the
+// kind of claim this site is built not to make. The array renders nothing while
+// empty, so wiring it now costs nothing and adding a profile later is a one-line edit.
+//
+// Restored from commit 2705c1a, which SEO_GROWTH_PLAN.md §8.4 records as shipped but
+// which never reached this branch.
+// Note: Google Business Profile is deliberately absent — an online-only business is
+// ineligible under the 2026 rules (SEO_GROWTH_PLAN.md §9).
+export const organizationProfiles: string[] = [];
+
 // The legal name shown on legal pages. This was held at the TRADE name while formation
 // was unverified. Formation is now CONFIRMED — the operating-system repo's
 // 00_CONTROL_CENTER/sender_identity.yaml records entity_confirmed: true and

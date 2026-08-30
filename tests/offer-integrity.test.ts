@@ -165,6 +165,76 @@ describe("nothing promises an outcome", () => {
     }
   });
 
+  // The gap this closes: every assertion above reads a STRUCTURED source — plans, audit,
+  // faqs, evaluateFit() — while `copyFiles` (all of app/ + components/) was scanned only
+  // by the call-gating and fabricated-proof blocks. Arbitrary page prose was therefore
+  // never checked for outcome promises at all. That was survivable while the five guides
+  // were about what leads COST; it stops being survivable the moment a page is written
+  // about reactivation, because the entire third-party corpus on that subject is written
+  // in exactly the banned register ("20x returns", "12-16% conversion", "$50K recovered
+  // in 60-90 days") and that is the prose a writer would be reading while drafting.
+  //
+  // Comments are stripped first: this file and the copy files both quote the banned
+  // constructions in explanatory comments, and a guard that flags its own documentation
+  // gets deleted for crying wolf.
+  //
+  // USE vs MENTION. This site argues against outcome promises, so it has to be able to
+  // NAME one. `/how-to-choose-a-lead-generation-agency` lists "Guaranteed jobs,
+  // appointments, or revenue" as a red flag to check any vendor against — including us.
+  // That is the site warning you about the construction, not making it.
+  //
+  // The existing NEGATORS guard cannot see this: it looks 60 characters to the left for a
+  // negating word, and here the negation is structural (the string is an item in a
+  // `redFlags` array) rather than lexical. Loosening NEGATORS to catch it would blunt the
+  // guard against real promises, which is the wrong trade — a prose guard that has been
+  // widened until it passes everything is the failure mode this file already documents.
+  //
+  // So: an explicit, exact-match allowlist of known MENTIONS, each one justified. A new
+  // occurrence anywhere still fails, and the rot test below fails if an entry stops being
+  // real — an allowlist nobody can verify is just a disabled test with extra steps.
+  const KNOWN_MENTIONS: { phrase: string; file: string; why: string }[] = [
+    {
+      phrase: "Guaranteed jobs",
+      file: "app/how-to-choose-a-lead-generation-agency/page.tsx",
+      why: "Red-flag heading: 'Guaranteed jobs, appointments, or revenue' is listed as a warning sign to check every vendor against, us included. Naming the banned construction is the whole point of the page.",
+    },
+    {
+      phrase: "guaranteed jobs",
+      file: "lib/content.ts",
+      why: "`notFor` entry: 'Anyone expecting guaranteed jobs, revenue, or a set number of appointments' — the disqualification list, i.e. an explicit statement that this service is NOT for someone who wants that. NEGATORS misses it because the negation is the word 'Anyone', and \\bany\\b does not match inside 'Anyone'.",
+    },
+  ];
+
+  test("every allowlisted mention is still real, and still a mention", () => {
+    // Without this the allowlist silently becomes a permanent exemption for text that has
+    // since changed meaning — or been deleted, leaving a hole for a future real promise.
+    for (const m of KNOWN_MENTIONS) {
+      const full = path.join(repoRoot, m.file);
+      const text = stripComments(readFileSync(full, "utf8"));
+      assert.ok(
+        outcomePromises(text).includes(m.phrase),
+        `allowlisted mention "${m.phrase}" no longer appears in ${m.file} — delete the entry`,
+      );
+      assert.ok(m.why.length > 40, `allowlisted mention "${m.phrase}" needs a real justification`);
+    }
+  });
+
+  test("no page prose anywhere in app/ or components/ promises an outcome", () => {
+    for (const file of copyFiles) {
+      const rel = path.relative(repoRoot, file);
+      const text = stripComments(readFileSync(file, "utf8"));
+      const allowed = KNOWN_MENTIONS.filter((m) => m.file === rel).map((m) => m.phrase);
+      // Subtract each allowlisted phrase ONCE per entry, so a second occurrence of the
+      // same string in the same file still fails.
+      const hits = [...outcomePromises(text)];
+      for (const a of allowed) {
+        const i = hits.indexOf(a);
+        if (i !== -1) hits.splice(i, 1);
+      }
+      assert.deepEqual(hits, [], `${rel} promises an outcome`);
+    }
+  });
+
   test("no fit outcome, for any combination of answers, promises a result", () => {
     // Exhaustive over the two dimensions the outcome copy actually branches on, plus
     // the blocking answers — the reachable surface of every sentence this can render.

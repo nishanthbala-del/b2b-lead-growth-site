@@ -1,7 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { siteUrl, brandName, orgDescription, areaServed, founderName } from "@/lib/site";
+import {
+  siteUrl,
+  brandName,
+  orgDescription,
+  areaServed,
+  founderName,
+  contactEmail,
+  organizationProfiles,
+} from "@/lib/site";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -72,7 +80,13 @@ const orgJsonLd = {
       logo: `${siteUrl}/icon.svg`,
       description: orgDescription,
       areaServed: areaServed,
+      // A monitored inbox on the brand's own domain. Cheap, true, and one of the few
+      // machine-checkable signals a brand-new organisation can offer that it is real.
+      email: contactEmail,
       founder: { "@type": "Person", name: founderName },
+      // Renders ONLY once real owned profiles exist (see lib/site.ts). An empty array
+      // emits no sameAs at all rather than an empty one.
+      ...(organizationProfiles.length > 0 ? { sameAs: organizationProfiles } : {}),
       // What this company is competent in, stated plainly for answer engines.
       knowsAbout: [
         "HVAC customer reactivation",

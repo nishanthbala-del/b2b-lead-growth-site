@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import GuideLayout, { GuideSection } from "@/components/GuideLayout";
+import GuideLayout, { GuideSection, KeyAnswer } from "@/components/GuideLayout";
 import { audit } from "@/lib/content";
 import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
 import { siteUrl, brandName, intakeMinutes } from "@/lib/site";
@@ -64,6 +64,17 @@ const structuredData = {
       priceCurrency: "USD",
       url: `${siteUrl}/${page.slug}`,
       offeredBy: { "@id": `${siteUrl}/#organization` },
+      // Every value already exists in the `audit` object above — nothing new is
+      // asserted, this just tells a machine reader WHAT the $0 offer actually is.
+      itemOffered: {
+        "@type": "Service",
+        "@id": `${siteUrl}/${page.slug}#audit`,
+        name: audit.name,
+        description: audit.tagline,
+        serviceType: "HVAC sales pipeline audit",
+        provider: { "@id": `${siteUrl}/#organization` },
+        audience: { "@type": "BusinessAudience", name: "Established residential HVAC companies" },
+      },
     },
   ],
 };
@@ -106,6 +117,21 @@ export default function FreePipelineAuditPage() {
         }
       >
         <GuideSection title="What lands in your inbox">
+          {/* The extractable passage. Every other guide page carries one of these and this
+              one did not — which mattered more here than anywhere else, because this is the
+              page outbound email links to and the one an answer engine would quote to say
+              what a "free pipeline audit" is. Deliberately self-contained (it names the
+              company, the audience, the four deliverables, the price and the catch without
+              needing the surrounding page) and deliberately ~60 words. Every fact in it is
+              already stated elsewhere on this page; nothing new is claimed. */}
+          <KeyAnswer>
+            B2B Lead Growth&rsquo;s {audit.name} is a free, written deliverable for an
+            established residential HVAC company: a sharpened profile of the jobs worth
+            chasing, 3&ndash;5 named referral partners in your service area each with a
+            cited public source, one sample outreach message, and a read on where your work
+            comes from today. No call is required to receive it, and you keep it whether or
+            not you hire us. It contains no homeowner records and promises no results.
+          </KeyAnswer>
           <ul className="space-y-4">
             {audit.includes.map((item) => (
               <li key={item.title} className="rounded-lg border border-gold-500/14 bg-ink-900/60 p-5">
