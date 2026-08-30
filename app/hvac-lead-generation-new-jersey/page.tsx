@@ -31,7 +31,7 @@ const pageFaqs = [
   {
     question: "What does the free audit contain for an HVAC contractor?",
     answer:
-      "What we can honestly build from public data before you share anything: a sharpened picture of your best-fit demand, 3–5 individually vetted local referral-partner prospects — realtors, property managers, builders, complementary trades — each with a cited reason they're worth contacting, one sample outreach message, and a reactivation framework you can apply to your own past customers and open estimates. We can't see your estimate list before you hire us, and we never cold-scrape homeowners — so the audit works the parts that are public and hands you the method for the part that isn't.",
+      "What we can honestly build from public data before you share anything: a sharpened picture of your best-fit demand, 3–5 individually vetted local referral-partner prospects — realtors, property managers, builders, complementary trades — each with a cited reason they're worth contacting, and one sample outreach message. We can't see your estimate list before you hire us, and we never cold-scrape homeowners — so the audit works the parts that are public. Your own unsold estimates and lapsed agreements only enter the picture once you're a client and have approved that export.",
   },
   {
     question: "Will you work for my competitor down the road?",
@@ -199,7 +199,7 @@ export default function HvacNjPage() {
           </SourceNote>
         </GuideSection>
 
-        <GuideSection title="The demand you already paid for">
+        <GuideSection title="The demand you already paid for: unsold estimates and lapsed agreements">
           <KeyAnswer>
             Before buying a single lead, look at the demand your shop already generated: estimates
             that never closed, past customers whose systems are old enough to be replacement

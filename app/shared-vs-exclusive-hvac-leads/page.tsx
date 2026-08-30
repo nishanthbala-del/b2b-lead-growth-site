@@ -271,7 +271,7 @@ export default function SharedVsExclusivePage() {
           </SourceNote>
         </GuideSection>
 
-        <GuideSection title="The option most contractors skip: demand you already own">
+        <GuideSection title="The option most contractors skip: the unsold estimates you already own">
           <p>
             Before buying anyone&rsquo;s leads — shared or exclusive — the cheapest pipeline is
             usually sitting in your own records: past customers with aging systems, estimates that
