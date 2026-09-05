@@ -127,8 +127,17 @@ export const differentiators: Differentiator[] = [
     body: "Nobody else is being sold the same homeowner. We do not buy, sell, resell, or broker leads, shared or exclusive, so you are never bidding against three other contractors for one form fill. There is no per-lead price: a flat monthly fee buys work on your own list and service area.",
   },
   {
-    title: "One HVAC company per service area, while you are a client",
-    body: "A conflict check runs before we accept anyone: one HVAC company per service area, and no competing shop in your territory while we work for you. The reason is practical — your referral partners are the same builders and realtors a competitor would want. If you want it in writing, ask for it in the order form before you sign.",
+    // SEPARATE THE PRACTICE FROM THE CONTRACTUAL RIGHT. This card used to headline "One
+    // HVAC company per service area, while you are a client" and close with "if you want
+    // it in writing, ask for it in the order form" — which reads as though asking is all
+    // it takes. The agreement says otherwise: CSA §4 makes the Services non-exclusive by
+    // default and requires exclusivity "written into the Order Form as a priced add-on",
+    // and the Order Form's own checkbox defaults to "Not purchased (default —
+    // non-exclusive)". Nothing on the site said it costs extra. A buyer who has been sold
+    // as one of five shared leads is exactly the buyer who will check this clause, and
+    // finding the gap at the signature block is how a deal dies at the last step.
+    title: "One HVAC company per service area — and what that is worth",
+    body: "We run a conflict check before accepting anyone, and we work one HVAC company per service area: while we work for you, we will not take on a competing shop in your territory. The reason is practical — your referral partners are the same builders and realtors a competitor would want. Be clear on what this is, though. As standard it is an operating practice, not a contractual right: the agreement is non-exclusive by default. If you want it enforceable, contracted per-metro exclusivity is a priced add-on on the order form, and we will quote it before you sign rather than spring it on a call.",
   },
   {
     title: "Your customer list stays yours, and we never invent one",
@@ -493,22 +502,41 @@ export const serviceTimeline: TimelinePhase[] = [
     band: "About a week in, once the steps above are done",
     label: "First messages go out — deliberately slowly",
     owner: "we",
+    // The REAL ramp, from the array the send gate enforces: presend-gate.py WARMUP_RAMP
+    // = [(0,1),(1,2),(2,5),(4,10),(6,None)], mirrored in core/timeline.py:60. This line
+    // used to read "5 a day for three days, 10 a day for the next three" — overstating
+    // day one by 5x — because check_cross_repo.py compares only `band` and `label` and
+    // never `detail`, so the two could drift silently and did. The slower true ramp is
+    // also the better sentence for this reader: it is more obviously careful with the
+    // domain his own customers will see the mail arrive from.
     detail:
-      "We start at 5 a day for three days, 10 a day for the next three, then full volume. Starting slow protects your domain's reputation. A mailbox that opens at full speed gets filtered, and that is not recoverable in a month.",
+      "We start at 1 a day, 2 a day from day 1, 5 a day from day 2, 10 a day from day 4, then up to full volume from day 6. Starting slow protects your domain's reputation. A mailbox that opens at full speed gets filtered, and that is not recoverable in a month.",
   },
   {
     band: "About two weeks per prospect",
     label: "Each prospect gets a short, spaced sequence",
     owner: "we",
+    // 3 touches / 4 days apart, from core.timeline.touch_shape() against the live client
+    // template. This said "up to 4 touches, at least 3 days apart" — the inverse — which
+    // core/timeline.py:305-310 already records as an audited defect fixed in the proposal
+    // and never fixed here. It also broke the arithmetic on the tier cards: the "about 33
+    // prospects" behind a 100-message cap is 100/3, and on a 4-touch cadence 100 messages
+    // is 25 prospects, not 33.
     detail:
-      "Up to 4 touches, at least 3 days apart, each adding something new rather than chasing. Anyone who asks us to stop is suppressed immediately, in code, permanently.",
+      "Up to 3 touches, at least 4 days apart, each adding something new rather than chasing. Anyone who asks us to stop is suppressed immediately, in code, permanently.",
   },
   {
     band: "Ongoing, same day",
     label: "Replies are triaged as they arrive",
     owner: "we",
+    // TRIAGE IS EVERY MANAGED TIER; QUALIFICATION IS THE $2,500 TIER ONLY (D-020 §5, CSA
+    // §3 item 8). This detail said "Interested replies are qualified against the criteria
+    // you set" with no tier boundary, on a page that tells the reader "Outreach Engine and
+    // Appointment Engine include all of them" — promising at $1,500 what the agreement
+    // reserves for $2,500. core/offer.py:91 records the identical defect being fixed in
+    // the proposal and the call brief; the fix never reached the site.
     detail:
-      "Interested replies are qualified against the criteria you set. Opt-outs are processed automatically the moment they land.",
+      "Every reply is read and classified by interest, and the interested ones reach you the same day with the thread and the reason we contacted them. Opt-outs are processed automatically the moment they land. On Outreach Engine the screening conversation is yours; on Appointment Engine we check each interested reply against the criteria you set before anything reaches your calendar.",
   },
   {
     band: "Day 30",

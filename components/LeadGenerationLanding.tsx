@@ -74,7 +74,9 @@ const steps = [
   },
   {
     title: "It goes out from your domain, slowly",
-    body: "Five a day for the first three days, then ten, then full volume. Opt-outs are suppressed instantly and permanently. You can open your sent folder and read every message.",
+    // The ramp the send gate actually enforces (presend-gate.py WARMUP_RAMP). This read
+    // "Five a day for the first three days, then ten" — 5x the real day-one volume.
+    body: "One message the first day, two the next, then five, then ten, then full volume from about day six. Opt-outs are suppressed instantly and permanently. You can open your sent folder and read every message.",
   },
 ];
 

@@ -87,6 +87,11 @@ export default function TermsPage() {
             <BulletItem>
               If you leave, you keep the work we produced for you in the periods you paid for.
             </BulletItem>
+            <BulletItem>
+              Disputes on a paid engagement go to individual arbitration rather than court, with no
+              class actions — small claims and injunctions excepted, and we pay the arbitration fees
+              on claims of $10,000 or less. Section 18 has the detail.
+            </BulletItem>
           </ul>
           <p className="mt-4 text-muted/80">
             This summary is for convenience only; the numbered sections below control.
@@ -454,12 +459,45 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section title="18. Governing law and contact">
+        {/* DISPUTE RESOLUTION IS PUBLISHED HERE ON PURPOSE.
+          *
+          * Until 2026-09-05 this section said New Jersey courts had "exclusive
+          * jurisdiction" and the word arbitration appeared nowhere on the page — while
+          * §14.6 of the services agreement a client actually signs provides for binding
+          * individual AAA arbitration with a class-action waiver. Section 2 of these Terms
+          * says the signed agreement controls on conflict EXCEPT on fees, cancellation and
+          * refunds, and dispute resolution is outside that carve-out, so the published
+          * document was quietly the weaker one — on a page that promises in the next
+          * breath that we will not "advertise one deal and hand you a narrower one to
+          * sign". That is the single contradiction most likely to be found at the
+          * signature block, by the buyer least willing to forgive it.
+          *
+          * Publishing it costs nothing and buys something, because the real clause is
+          * unusually buyer-friendly: we pay the AAA fees under $10,000, small claims stays
+          * open, and injunctions stay in court. Keep this in lockstep with CSA §14.5-14.6. */}
+        <Section title="18. Governing law, disputes, and contact">
           <p className="leading-7 text-muted">
             These Terms are governed by the laws of the State of {governingLawState}, without regard
-            to its conflict-of-laws rules, and the state and federal courts located in{" "}
-            {governingLawState} have exclusive jurisdiction. Questions about these Terms, billing, or
-            cancellation? Reach us at{" "}
+            to its conflict-of-laws rules. For anything arising from this website or the free
+            pipeline audit, the state and federal courts located in {governingLawState} have
+            jurisdiction.
+          </p>
+          <p className="mt-4 leading-7 text-muted">
+            For a <strong className="font-semibold text-bone/90">paid engagement</strong>, the signed
+            services agreement sets the process, and we would rather you read it here than find it
+            above a signature line: first a good-faith attempt to resolve things for 30 days, then
+            binding arbitration before the American Arbitration Association, seated in{" "}
+            {governingLawState}, before a single arbitrator — on an individual basis only, with no
+            class, collective, or representative actions. Two carve-outs stay open to you: either of
+            us may bring a qualifying individual claim in small-claims court instead, and either of
+            us may go to court for an injunction to protect confidential information or intellectual
+            property. For any claim of $10,000 or less we pay the AAA filing fees, the
+            administrative fees and the arbitrator&rsquo;s compensation, so arbitration cannot cost
+            you more than small claims would have — which covers the claim sizes an engagement at
+            these prices realistically produces.
+          </p>
+          <p className="mt-4 leading-7 text-muted">
+            Questions about these Terms, billing, or cancellation? Reach us at{" "}
             <a
               href={`mailto:${contactEmail}`}
               className="text-gold-200 underline-offset-4 hover:underline"

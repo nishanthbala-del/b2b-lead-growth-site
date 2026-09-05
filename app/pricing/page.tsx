@@ -38,7 +38,7 @@ const pageFaqs = [
   {
     question: "What do the tiers exclude?",
     answer:
-      "Lead Engine excludes the outreach: you send. Outreach Engine excludes the sales conversation: you take it. Appointment Engine excludes the in-home visit, the quote, and the close. No tier includes guaranteed reply volume, appointment counts, or revenue. No tier includes homeowner lead sourcing, because we do not do that at any price. You always own your pricing, your sending identity, and the customer relationship.",
+      "Lead Engine excludes the outreach: you send. Outreach Engine excludes the sales conversation: you take it, and reply qualification against your criteria is Appointment Engine only. Appointment Engine excludes the in-home visit, the quote, and the close. No tier includes guaranteed reply volume, appointment counts, or revenue. No tier includes homeowner lead sourcing, because we do not do that at any price. No tier includes contractual territorial exclusivity — as standard we work one HVAC company per service area as an operating practice, and enforceable per-metro exclusivity is a separate priced add-on on the order form, quoted before you sign. You always own your pricing, your sending identity, and the customer relationship.",
   },
 ];
 

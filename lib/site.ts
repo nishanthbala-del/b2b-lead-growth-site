@@ -158,5 +158,5 @@ export const cancellationNoticeDays = 14;
 // Last-updated stamp shown on /terms and /privacy. Bump BOTH together, and only on a
 // substantive edit. The ISO form exists because app/sitemap.ts needs a machine-safe date —
 // parsing the display string relies on locale-dependent Date behaviour.
-export const legalLastUpdated = "August 8, 2026";
-export const legalLastUpdatedISO = "2026-08-08";
+export const legalLastUpdated = "September 5, 2026";
+export const legalLastUpdatedISO = "2026-09-05";
