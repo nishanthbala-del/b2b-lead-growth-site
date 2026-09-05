@@ -283,6 +283,34 @@ Weekly, once GSC + Bing WMT are live (all free):
 
 ## 11. Remaining human actions (owner)
 
+> **VERIFIED IN SEARCH CONSOLE, 2026-09-05 — the P0 below was already done, and the
+> zero-index premise underneath it is false.** Read this before acting on anything in §11
+> or §12. Every line was read off the console itself:
+>
+> - **The sitemap was submitted on 2026-08-29** — status *Success*, 9 pages discovered,
+>   last read by Google **2026-09-04**. It was never missing.
+> - **All 9 URLs return "URL is on Google — Page is indexed."** Each was inspected
+>   individually. The site is fully indexed and has been for days.
+> - The Pages report's 3 "not indexed" URLs are correct behaviour, proven with curl: the
+>   apex 308-redirects to `www` (2 × "Page with redirect") and the `.vercel.app` host
+>   serves a cross-domain canonical to `www` (1 × "Alternate page with proper canonical").
+> - **No manual actions.** The property is clean.
+>
+> **The real constraint is authority, not discovery.** 3-month Performance: 1 click, 22
+> impressions, **average position 37.4**. The site ranks on page 4 for the cluster it
+> targets — top queries are "exclusive hvac leads", "pay per lead hvac", "smart lead
+> generation for hvac contractors", which is the §3 map working. Ranking, not indexing,
+> is what is missing, and backlinks/entity corroboration (§9 items 2 and 3) are the only
+> levers left. On-page work no longer moves this number.
+>
+> Note also: **Google is ahead of Bing here** (Bing had 4 of 9 pages), which inverts §4.4's
+> "Bing first, Google as the slow lane" sequencing assumption. And a `site:` query on a
+> general web search tool returned nothing for this domain while the console showed all 9
+> indexed — only Search Console is evidence.
+>
+> This document has now asserted a false blocker twice (§1 was superseded on 2026-08-30 for
+> the same reason). Verify against the console before writing a status claim here.
+
 > **Status re-check, 2026-08-29.** Items 1, 3 (verification half), 6b and 7 below are now
 > **DONE** and are struck through. What is NOT done is the part that actually matters:
 > **the site is not indexed by Google.** An exact-domain search for `"b2bleadgrowth.com"`
@@ -360,8 +388,9 @@ of it. On-page work is no longer the constraint and is ranked accordingly._
 | — | ~~Deploy current main~~ **DONE** — live == `origin/main`, all 9 indexable routes 200 | — | — |
 | — | ~~IndexNow ping~~ **DONE 2026-08-29** — 202 Accepted, 9 URLs (Bing → ChatGPT/Copilot) | — | — |
 | — | ~~Custom domain~~ **DONE** — `www.b2bleadgrowth.com` live and canonical | — | — |
-| **0** | **GSC: submit `/sitemap.xml`, then Request Indexing on all 9 URLs.** The domain is already DNS-verified; the sitemap appears never to have been submitted. Zero Google results today. | Owner (~20 min) | $0 |
-| **1** | **Bing WMT: "Import from GSC".** IndexNow notifies Bing but WMT is where you see whether it indexed. | Owner (~5 min) | $0 |
+| — | ~~GSC: submit `/sitemap.xml`, then Request Indexing~~ **BOTH DONE.** Sitemap submitted 2026-08-29 (Success, 9 discovered, last read 2026-09-04); all 9 URLs verified **indexed** 2026-09-05; Request Indexing submitted for the 7 URLs changed by that day's deploy. | — | — |
+| **0** | **Bing WMT: "Import from GSC".** Bing has only 4 of 9 pages. **Owner-only:** signing in creates a Bing account and accepts Microsoft's terms, which only the signatory (Mini Balaji) may do. | Owner (~5 min) | $0 |
+| **1** | **Backlinks / entity corroboration — now the only thing that moves rankings.** Position 37.4 is an authority problem; nothing on the web says this company exists. Start with the LinkedIn company page (P2 below). | Owner (ongoing) | $0 |
 | **2** | LinkedIn company page + Crunchbase/Clutch/GoodFirms → paste URLs into `organizationProfiles` in `lib/site.ts` (wiring restored 2026-08-29; array is empty and renders no `sameAs` until then). **This is the entity-corroboration gap: nothing on the web currently says this company exists.** | Owner (~1 hr) | $0 |
 | 3 | Founder LinkedIn cadence + SOS/Qwoted monitoring | Owner (ongoing) | $0 |
 | 4 | Re-verify §2's competitive claims before writing more guides — the shared-vs-exclusive SERP has filled in since 2026-08-07 (see §2 note) | Either | $0 |
