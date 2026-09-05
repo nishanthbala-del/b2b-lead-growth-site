@@ -67,66 +67,66 @@ export default function StartPage() {
       />
       <PageShell width="wide">
         <main className="mx-auto max-w-4xl px-5 py-14 sm:px-8 sm:py-20">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
             Fit check · about {intakeMinutes} minutes
           </p>
           {/* Smaller on mobile than the rest of the site's H1s, deliberately. This page
               is a form, not a pitch: every vertical pixel above the first question is a
               pixel of abandonment risk on a phone. */}
-          <h1 className="font-display text-3xl leading-tight text-bone sm:text-5xl">
+          <h1 className="font-display text-3xl leading-tight text-ink sm:text-5xl">
             Let&rsquo;s find out if this is for you.
           </h1>
-          <p className="mt-4 max-w-2xl leading-7 text-muted sm:text-lg sm:leading-8">
+          <p className="mt-4 max-w-2xl leading-7 text-subtle sm:text-lg sm:leading-8">
             For established residential HVAC companies with real customer history and room for more
             work. Ten questions, and you get the answer on the last screen.
           </p>
 
           <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
             {promises.map((p) => (
-              <li key={p.title} className="flex items-center gap-2 text-sm text-bone/85">
-                <span aria-hidden="true" className="text-gold-200">✓</span>
+              <li key={p.title} className="flex items-center gap-2 text-sm text-subtle">
+                <span aria-hidden="true" className="text-accent">✓</span>
                 {p.short}
               </li>
             ))}
           </ul>
 
-          <div className="mt-8 rounded-lg border border-gold-500/22 bg-ink-900/72 px-6 py-2 shadow-panel sm:px-8">
+          <div className="mt-8 rounded-lg border border-line bg-surface px-6 py-2 shadow-card sm:px-8">
             <QualificationFlow />
           </div>
 
           <ul className="mt-10 grid gap-4 sm:grid-cols-3">
             {promises.map((p) => (
-              <li key={p.title} className="rounded-lg border border-gold-500/16 bg-ink-900/60 p-5">
-                <h2 className="text-sm font-semibold text-bone">{p.title}</h2>
-                <p className="mt-2 text-sm leading-6 text-muted">{p.body}</p>
+              <li key={p.title} className="rounded-lg border border-line bg-surface p-5">
+                <h2 className="text-sm font-semibold text-ink">{p.title}</h2>
+                <p className="mt-2 text-sm leading-6 text-subtle">{p.body}</p>
               </li>
             ))}
           </ul>
 
-          <section className="mt-12 border-t border-gold-500/14 pt-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
+          <section className="mt-12 border-t border-line pt-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
               Not ready to answer questions?
             </p>
-            <p className="mt-3 leading-7 text-muted">
+            <p className="mt-3 leading-7 text-subtle">
               Reasonable. Read how the work actually runs, or go straight to what it costs — both
               are on the site in full, with no form in front of them.
             </p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <Link
                 href="/#how-it-works"
-                className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/28 px-6 font-semibold text-gold-200 transition-colors hover:border-gold-200/65 hover:bg-gold-500/8"
+                className="inline-flex min-h-12 items-center justify-center rounded-sm border border-line px-6 font-semibold text-accent transition-colors hover:border-line hover:bg-accent-soft"
               >
                 How it works
               </Link>
               <Link
                 href="/pricing"
-                className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/28 px-6 font-semibold text-gold-200 transition-colors hover:border-gold-200/65 hover:bg-gold-500/8"
+                className="inline-flex min-h-12 items-center justify-center rounded-sm border border-line px-6 font-semibold text-accent transition-colors hover:border-line hover:bg-accent-soft"
               >
                 Pricing, in full
               </Link>
               <Link
                 href="/#who-its-for"
-                className="link-wipe inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+                className="link-wipe inline-flex min-h-11 items-center text-sm font-semibold text-accent transition-colors hover:text-accent"
               >
                 Who this is and isn&rsquo;t for →
               </Link>

@@ -136,8 +136,8 @@ export default function FreePipelineAuditPage() {
           </KeyAnswer>
           <ul className="space-y-4">
             {audit.includes.map((item) => (
-              <li key={item.title} className="rounded-lg border border-gold-500/14 bg-ink-900/60 p-5">
-                <p className="font-semibold text-bone">{item.title}</p>
+              <li key={item.title} className="rounded-lg border border-line bg-surface p-5">
+                <p className="font-semibold text-ink">{item.title}</p>
                 <p className="mt-2 leading-7">{item.body}</p>
               </li>
             ))}
@@ -148,19 +148,19 @@ export default function FreePipelineAuditPage() {
         <GuideSection title="How the process works, in three steps">
           <ol className="list-decimal space-y-3 pl-5">
             <li>
-              <span className="font-semibold text-bone">A {intakeMinutes}-minute fit check.</span> You
+              <span className="font-semibold text-ink">A {intakeMinutes}-minute fit check.</span> You
               tell us your service area, your average job value, and how new work reaches you
               today. No card, no commitment.
             </li>
             <li>
-              <span className="font-semibold text-bone">We research each partner individually.</span>{" "}
+              <span className="font-semibold text-ink">We research each partner individually.</span>{" "}
               The business is real, it operates in your service area, the contact path is mapped,
               and the reason to approach them is cited to a public source you can click. Nothing is
               bulk-scraped, and every record is re-checked against its own cited source before it
               can be included.
             </li>
             <li>
-              <span className="font-semibold text-bone">You get the audit, then an optional
+              <span className="font-semibold text-ink">You get the audit, then an optional
               walkthrough.</span> The deliverable arrives in your inbox. If you want it, we go
               through it together and you decide, with the work already in hand, whether running
               it at scale is worth paying for.
@@ -175,23 +175,23 @@ export default function FreePipelineAuditPage() {
           </p>
           <ul className="list-disc space-y-2 pl-5">
             <li>
-              <span className="text-bone">Work you can keep.</span> If the &ldquo;audit&rdquo; only
+              <span className="text-ink">Work you can keep.</span> If the &ldquo;audit&rdquo; only
               exists inside a sales call, it is a pitch, not an audit.
             </li>
             <li>
-              <span className="text-bone">Named, checkable specifics.</span> Real businesses, real
+              <span className="text-ink">Named, checkable specifics.</span> Real businesses, real
               roles, real sources — not &ldquo;we found 47 opportunities in your area.&rdquo;
             </li>
             <li>
-              <span className="text-bone">The reasoning, not just the list.</span> You should see
+              <span className="text-ink">The reasoning, not just the list.</span> You should see
               why each prospect fits and who should be excluded, so the thinking is inspectable.
             </li>
             <li>
-              <span className="text-bone">No manufactured urgency.</span> A real audit is just as
+              <span className="text-ink">No manufactured urgency.</span> A real audit is just as
               true next week.
             </li>
             <li>
-              <span className="text-bone">No guaranteed outcomes.</span> Anyone promising a specific
+              <span className="text-ink">No guaranteed outcomes.</span> Anyone promising a specific
               number of leads or appointments from a free audit is guessing out loud.
             </li>
           </ul>
@@ -212,15 +212,15 @@ export default function FreePipelineAuditPage() {
               above cites the same fragment — so a specific answer is linkable and quotable on
               its own. Rewording a question changes its anchor, which is a URL change: check
               nothing external deep-links to the old one first. */}
-          <div className="divide-y divide-gold-500/12 border-y border-gold-500/12">
+          <div className="divide-y divide-line border-y border-line">
             {pageFaqs.map((f) => (
               <div key={f.question} id={faqSlug(f.question)} className="scroll-mt-20 py-5">
-                <h3 className="text-lg font-semibold text-bone">{f.question}</h3>
+                <h3 className="text-lg font-semibold text-ink">{f.question}</h3>
                 <p className="mt-2 leading-7">{f.answer}</p>
               </div>
             ))}
           </div>
-          <p className="text-sm text-muted/80">
+          <p className="text-sm text-subtle">
             {brandName} is the operating name of this service. The audit shows work quality, not a
             promised result.
           </p>

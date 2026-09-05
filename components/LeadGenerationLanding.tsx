@@ -105,10 +105,10 @@ const credibility = [
 
 export default function LeadGenerationLanding() {
   return (
-    <div className="min-h-screen bg-ink-950 text-bone">
+    <div className="min-h-screen bg-paper text-ink">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-sm focus:border focus:border-gold-500/70 focus:bg-ink-900 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-gold-200"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-sm focus:border focus:border-accent/45 focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-accent"
       >
         Skip to content
       </a>
@@ -137,7 +137,7 @@ function PrimaryCta({ className = "" }: { className?: string }) {
   return (
     <Link
       href={CTA_HREF}
-      className={`inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 font-semibold text-ink-950 shadow-gold transition-transform hover:scale-[1.015] ${className}`}
+      className={`inline-flex min-h-12 items-center justify-center rounded-sm border border-accent/45 bg-accent-fill px-6 font-semibold text-paper shadow-lift transition-transform hover:scale-[1.015] ${className}`}
     >
       {CTA_LABEL} <span aria-hidden="true" className="ml-3">→</span>
     </Link>
@@ -162,18 +162,18 @@ function Section({
   return (
     <section
       id={id}
-      className={`scroll-mt-20 border-t border-gold-500/12 px-5 py-16 sm:px-8 sm:py-20 lg:py-24 ${
-        tint ? "bg-ink-900" : "bg-ink-950"
+      className={`scroll-mt-20 border-t border-line px-5 py-16 sm:px-8 sm:py-20 lg:py-24 ${
+        tint ? "bg-surface" : "bg-paper"
       }`}
     >
       <div className="mx-auto max-w-5xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
           {eyebrow}
         </p>
-        <h2 className="mt-4 max-w-3xl font-display text-3xl leading-tight text-bone sm:text-4xl">
+        <h2 className="mt-4 max-w-3xl font-display text-3xl leading-tight text-ink sm:text-4xl">
           {title}
         </h2>
-        {intro ? <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">{intro}</p> : null}
+        {intro ? <p className="mt-4 max-w-2xl text-lg leading-8 text-subtle">{intro}</p> : null}
         {children}
       </div>
     </section>
@@ -187,12 +187,12 @@ function Section({
 // previous version was a React state toggle that needed the whole bundle to open.
 function SiteNav() {
   return (
-    <header className="border-b border-gold-500/14 bg-ink-950">
+    <header className="border-b border-line bg-paper">
       <nav
         className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-4 sm:px-8"
         aria-label="Primary"
       >
-        <Link href="/" className="font-display text-lg text-gold-200 sm:text-xl">
+        <Link href="/" className="font-display text-lg text-accent sm:text-xl">
           {brandName}
         </Link>
         <div className="hidden items-center gap-7 md:flex">
@@ -200,7 +200,7 @@ function SiteNav() {
             <a
               key={item.href}
               href={item.href}
-              className="text-sm text-muted transition-colors hover:text-gold-200"
+              className="text-sm text-subtle transition-colors hover:text-accent"
             >
               {item.label}
             </a>
@@ -209,25 +209,25 @@ function SiteNav() {
         <div className="flex items-center gap-2">
           <Link
             href={CTA_HREF}
-            className="inline-flex min-h-11 shrink-0 items-center rounded-sm border border-gold-500/55 bg-gold-sheen px-4 text-xs font-semibold text-ink-950 sm:text-sm"
+            className="inline-flex min-h-11 shrink-0 items-center rounded-sm border border-accent/45 bg-accent-fill px-4 text-xs font-semibold text-paper sm:text-sm"
           >
             {CTA_LABEL}
           </Link>
           <details className="relative md:hidden">
             <summary
-              className="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-sm border border-gold-500/40 text-gold-200 [&::-webkit-details-marker]:hidden"
+              className="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-sm border border-accent/45 text-accent [&::-webkit-details-marker]:hidden"
               aria-label="Menu"
             >
               <span aria-hidden="true" className="text-lg leading-none">
                 ☰
               </span>
             </summary>
-            <div className="absolute right-0 top-12 z-20 w-56 rounded-sm border border-gold-500/25 bg-ink-900 p-1 shadow-panel">
+            <div className="absolute right-0 top-12 z-20 w-56 rounded-sm border border-line bg-surface p-1 shadow-card">
               {navItems.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
-                  className="flex min-h-11 items-center border-b border-gold-500/10 px-3 text-sm text-muted last:border-0 hover:text-gold-200"
+                  className="flex min-h-11 items-center border-b border-line px-3 text-sm text-subtle last:border-0 hover:text-accent"
                 >
                   {item.label}
                 </a>
@@ -267,15 +267,15 @@ function SiteNav() {
 // never promised — that is what makes the sentence shippable at zero clients.
 function Hero() {
   return (
-    <section className="border-b border-gold-500/12 bg-ink-950 px-5 py-16 sm:px-8 sm:py-24">
+    <section className="border-b border-line bg-paper px-5 py-16 sm:px-8 sm:py-24">
       <div className="mx-auto max-w-5xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/85">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
           HVAC lead generation for established residential contractors
         </p>
-        <h1 className="mt-5 max-w-3xl font-display text-4xl leading-[1.1] text-bone sm:text-5xl lg:text-6xl">
+        <h1 className="mt-5 max-w-3xl font-display text-4xl leading-[1.1] text-ink sm:text-5xl lg:text-6xl">
           The jobs you already quoted are still sitting in your system.
         </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-muted sm:text-xl">
+        <p className="mt-6 max-w-2xl text-lg leading-8 text-subtle sm:text-xl">
           {brandName} runs the outbound and the follow-up for established HVAC companies, and we
           measure the work by one thing: qualified conversations started. That means your unsold
           estimates, lapsed maintenance agreements and past customers — plus researched referral
@@ -283,11 +283,11 @@ function Hero() {
         </p>
         <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
           <PrimaryCta />
-          <p className="text-sm leading-6 text-muted">
+          <p className="text-sm leading-6 text-subtle">
             10 questions, {intakeMinutes} minutes · a straight answer either way
           </p>
         </div>
-        <p className="mt-6 max-w-2xl border-l-2 border-gold-500/40 pl-4 text-base leading-7 text-bone/85">
+        <p className="mt-6 max-w-2xl border-l-2 border-accent/45 pl-4 text-base leading-7 text-subtle">
           Start with a {audit.name}: 3–5 referral partners near you, each with a source link you
           can open, plus one sample message. No call required. Yours to keep either way.
         </p>
@@ -316,15 +316,15 @@ function Hero() {
 // would be an outcome promise. Neither belongs here, at any point, ever.
 function PositioningSection() {
   return (
-    <section className="scroll-mt-20 border-b border-gold-500/12 bg-ink-950 px-5 py-16 sm:px-8 sm:py-20 lg:py-24">
+    <section className="scroll-mt-20 border-b border-line bg-paper px-5 py-16 sm:px-8 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-5xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
           Why this exists
         </p>
-        <h2 className="mt-4 max-w-3xl font-display text-3xl leading-tight text-bone sm:text-4xl">
+        <h2 className="mt-4 max-w-3xl font-display text-3xl leading-tight text-ink sm:text-4xl">
           The most expensive lead you will ever buy is the one you already bought.
         </h2>
-        <div className="mt-6 max-w-2xl space-y-5 text-lg leading-8 text-muted">
+        <div className="mt-6 max-w-2xl space-y-5 text-lg leading-8 text-subtle">
           <p>
             You already paid for every estimate you have written: the ad that brought it in, the
             drive, the hour in somebody&rsquo;s attic. Most did not close. They are still in your
@@ -335,19 +335,19 @@ function PositioningSection() {
             Almost nobody works that list. The techs are on trucks, the office is answering phones,
             and follow-up is the first thing that drops in season.
           </p>
-          <p className="text-bone/90">
+          <p className="text-ink/90">
             We will not tell you what that is worth — you know what a replacement is worth to you
             better than we do. We do not promise that a single one of them will close. What we do
             is work the list every week and show you exactly what went where.
           </p>
         </div>
-        <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-gold-200">
+        <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-accent">
           <li>Your list, cleaned and ranked</li>
-          <li aria-hidden="true" className="text-gold-500/40">·</li>
+          <li aria-hidden="true" className="text-accent">·</li>
           <li>Cited public sources</li>
-          <li aria-hidden="true" className="text-gold-500/40">·</li>
+          <li aria-hidden="true" className="text-accent">·</li>
           <li>Sent from your domain</li>
-          <li aria-hidden="true" className="text-gold-500/40">·</li>
+          <li aria-hidden="true" className="text-accent">·</li>
           <li>Nothing sold per lead</li>
         </ul>
       </div>
@@ -372,19 +372,19 @@ function OfferSection() {
       <div id="get-audit" className="scroll-mt-20" />
       <ul className="mt-10 grid gap-4 sm:grid-cols-2">
         {audit.includes.map((item) => (
-          <li key={item.title} className="rounded-lg border border-gold-500/18 bg-ink-950/60 p-5">
-            <h3 className="text-lg font-semibold text-bone">{item.title}</h3>
-            <p className="mt-2 leading-7 text-muted">{item.body}</p>
+          <li key={item.title} className="rounded-lg border border-line bg-surface p-5">
+            <h3 className="text-lg font-semibold text-ink">{item.title}</h3>
+            <p className="mt-2 leading-7 text-subtle">{item.body}</p>
           </li>
         ))}
       </ul>
-      <div className="mt-6 grid gap-4 rounded-lg border border-gold-500/18 bg-ink-950/60 p-5 sm:grid-cols-2">
-        <p className="leading-7 text-muted">
-          <span className="font-semibold text-gold-200">Why it’s free. </span>
+      <div className="mt-6 grid gap-4 rounded-lg border border-line bg-surface p-5 sm:grid-cols-2">
+        <p className="leading-7 text-subtle">
+          <span className="font-semibold text-accent">Why it’s free. </span>
           {audit.whyFree}
         </p>
-        <p className="leading-7 text-muted">
-          <span className="font-semibold text-gold-200">What it is not. </span>
+        <p className="leading-7 text-subtle">
+          <span className="font-semibold text-accent">What it is not. </span>
           {audit.guardrail}
         </p>
       </div>
@@ -392,7 +392,7 @@ function OfferSection() {
         <PrimaryCta />
         <Link
           href="/free-pipeline-audit"
-          className="text-sm font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400"
+          className="text-sm font-semibold text-accent underline underline-offset-4 hover:text-accent"
         >
           What’s in the audit, in full
         </Link>
@@ -412,14 +412,14 @@ function WhoItsForSection() {
       intro="Two lists, so you can rule yourself in or out in about ten seconds."
     >
       <div className="mt-10 grid gap-5 lg:grid-cols-2">
-        <div className="rounded-lg border border-gold-500/30 bg-ink-900/70 p-6">
-          <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-200">
+        <div className="rounded-lg border border-line bg-surface p-6">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
             A strong fit
           </h3>
           <ul className="mt-5 space-y-3">
             {idealFor.map((item) => (
-              <li key={item} className="flex gap-3 leading-7 text-bone/90">
-                <span aria-hidden="true" className="mt-1 shrink-0 text-gold-200">
+              <li key={item} className="flex gap-3 leading-7 text-ink/90">
+                <span aria-hidden="true" className="mt-1 shrink-0 text-accent">
                   ✓
                 </span>
                 <span>{item}</span>
@@ -427,14 +427,14 @@ function WhoItsForSection() {
             ))}
           </ul>
         </div>
-        <div className="rounded-lg border border-gold-500/12 bg-ink-900/40 p-6">
-          <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+        <div className="rounded-lg border border-line bg-surface p-6">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-subtle">
             Not a fit
           </h3>
           <ul className="mt-5 space-y-3">
             {notFor.map((item) => (
-              <li key={item} className="flex gap-3 leading-7 text-muted">
-                <span aria-hidden="true" className="mt-1 shrink-0 text-muted/70">
+              <li key={item} className="flex gap-3 leading-7 text-subtle">
+                <span aria-hidden="true" className="mt-1 shrink-0 text-subtle">
                   —
                 </span>
                 <span>{item}</span>
@@ -447,7 +447,7 @@ function WhoItsForSection() {
           and never where the company IS — a fact the footer and the New Jersey guide both
           state, and the one an answer engine needs to ground the entity. Both halves read
           from config so they cannot drift from the legal footer. */}
-      <p className="mt-6 max-w-2xl leading-7 text-muted">
+      <p className="mt-6 max-w-2xl leading-7 text-subtle">
         {brandName} is a {entityFormationState} company and works remotely with HVAC companies
         across the US. Our market research is focused on {currentFocusArea}, so that is where the
         local knowledge is sharpest today.
@@ -471,25 +471,25 @@ function HowItWorksSection() {
         {steps.map((step, index) => (
           <li
             key={step.title}
-            className="grid gap-4 rounded-lg border border-gold-500/14 bg-ink-950/60 p-5 sm:grid-cols-[auto_1fr]"
+            className="grid gap-4 rounded-lg border border-line bg-surface p-5 sm:grid-cols-[auto_1fr]"
           >
             <span
               aria-hidden="true"
-              className="flex h-9 w-9 items-center justify-center rounded-sm border border-gold-500/32 text-sm font-semibold text-gold-200"
+              className="flex h-9 w-9 items-center justify-center rounded-sm border border-line text-sm font-semibold text-accent"
             >
               {index + 1}
             </span>
             <div>
-              <h3 className="text-lg font-semibold text-bone">{step.title}</h3>
-              <p className="mt-2 leading-7 text-muted">{step.body}</p>
+              <h3 className="text-lg font-semibold text-ink">{step.title}</h3>
+              <p className="mt-2 leading-7 text-subtle">{step.body}</p>
             </div>
           </li>
         ))}
       </ol>
-      <p className="mt-6 leading-7 text-muted">
+      <p className="mt-6 leading-7 text-subtle">
         <Link
           href="/pricing#timeline"
-          className="font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400"
+          className="font-semibold text-accent underline underline-offset-4 hover:text-accent"
         >
           The full timeline, day by day
         </Link>{" "}
@@ -521,8 +521,8 @@ function PricingSection() {
           "Up to ~40 records a month" was on all three cards and the word appeared 33 times
           across the site, but the only definition sat in an FAQ far below the table — so a
           buyer met the price before he could tell whether 40 was a lot. */}
-      <p className="mt-6 rounded-lg border border-gold-500/18 bg-ink-900/60 p-4 leading-7 text-muted">
-        <span className="font-semibold text-gold-200">One record</span> = one person or business
+      <p className="mt-6 rounded-lg border border-line bg-surface p-4 leading-7 text-subtle">
+        <span className="font-semibold text-accent">One record</span> = one person or business
         to reach out to: a past customer, an unsold estimate, a lapsed agreement, or one referral
         partner.
       </p>
@@ -544,36 +544,36 @@ function PricingSection() {
             id={`plan-${plan.name.toLowerCase().replace(/\s+/g, "-")}`}
             className={`flex scroll-mt-20 flex-col rounded-lg border p-6 ${
               plan.featured
-                ? "border-gold-500/60 bg-ink-900"
-                : "border-gold-500/16 bg-ink-900/50"
+                ? "border-accent/45 bg-surface"
+                : "border-line bg-surface"
             }`}
           >
             {plan.featured ? (
-              <p className="mb-4 w-fit rounded-sm border border-gold-500/45 bg-gold-500/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-200">
+              <p className="mb-4 w-fit rounded-sm border border-accent/45 bg-accent-soft px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
                 Where we suggest starting
               </p>
             ) : null}
-            <h3 className="font-display text-2xl text-bone">{plan.name}</h3>
+            <h3 className="font-display text-2xl text-ink">{plan.name}</h3>
             <dl>
               <dt className="sr-only">Price</dt>
-              <dd className="mt-3 text-3xl font-semibold text-bone">
+              <dd className="mt-3 text-3xl font-semibold text-ink">
                 ${plan.price.toLocaleString()}
-                <span className="text-base font-normal text-muted">/mo</span>
+                <span className="text-base font-normal text-subtle">/mo</span>
               </dd>
               <dt className="sr-only">What this tier does</dt>
-              <dd className="mt-3 font-semibold text-gold-200">{plan.oneLiner}</dd>
+              <dd className="mt-3 font-semibold text-accent">{plan.oneLiner}</dd>
               <dt className="sr-only">Monthly ceiling</dt>
-              <dd className="mt-1 text-sm text-muted">{plan.capacity}</dd>
+              <dd className="mt-1 text-sm text-subtle">{plan.capacity}</dd>
               <dt className="sr-only">Best for</dt>
-              <dd className="mt-4 text-sm leading-6 text-bone/85">{plan.bestFor}</dd>
-              <dt className="mt-4 border-t border-gold-500/14 pt-4 text-xs font-semibold uppercase tracking-[0.16em] text-gold-200/80">
+              <dd className="mt-4 text-sm leading-6 text-subtle">{plan.bestFor}</dd>
+              <dt className="mt-4 border-t border-line pt-4 text-xs font-semibold uppercase tracking-[0.16em] text-accent">
                 Included
               </dt>
               <dd className="mt-3">
                 <ul className="space-y-2">
                   {plan.includes.map((line) => (
-                    <li key={line} className="flex gap-2 text-sm leading-6 text-muted">
-                      <span aria-hidden="true" className="mt-0.5 shrink-0 text-gold-200">
+                    <li key={line} className="flex gap-2 text-sm leading-6 text-subtle">
+                      <span aria-hidden="true" className="mt-0.5 shrink-0 text-accent">
                         ✓
                       </span>
                       <span>{line}</span>
@@ -581,21 +581,21 @@ function PricingSection() {
                   ))}
                 </ul>
               </dd>
-              <dt className="mt-4 border-t border-gold-500/14 pt-4 text-xs font-semibold uppercase tracking-[0.16em] text-gold-200/80">
+              <dt className="mt-4 border-t border-line pt-4 text-xs font-semibold uppercase tracking-[0.16em] text-accent">
                 Your side
               </dt>
-              <dd className="mt-2 text-sm leading-6 text-muted/85">{plan.youKeep}</dd>
+              <dd className="mt-2 text-sm leading-6 text-subtle">{plan.youKeep}</dd>
             </dl>
           </li>
         ))}
       </ul>
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
         <PrimaryCta />
-        <p className="text-sm leading-6 text-muted">
+        <p className="text-sm leading-6 text-subtle">
           The fit check recommends a tier. Nothing is agreed until you have seen the audit.{" "}
           <Link
             href="/pricing"
-            className="font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400"
+            className="font-semibold text-accent underline underline-offset-4 hover:text-accent"
           >
             Billing and cancellation terms
           </Link>
@@ -650,19 +650,19 @@ function CredibilitySection() {
       </p>
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
         {credibility.map((item) => (
-          <div key={item.title} className="rounded-lg border border-gold-500/16 bg-ink-950/60 p-5">
-            <h3 className="text-lg font-semibold text-bone">{item.title}</h3>
-            <p className="mt-2 leading-7 text-muted">{item.body}</p>
+          <div key={item.title} className="rounded-lg border border-line bg-surface p-5">
+            <h3 className="text-lg font-semibold text-ink">{item.title}</h3>
+            <p className="mt-2 leading-7 text-subtle">{item.body}</p>
           </div>
         ))}
       </div>
 
-      <h3 className="mt-12 font-display text-2xl text-bone">What makes this different</h3>
+      <h3 className="mt-12 font-display text-2xl text-ink">What makes this different</h3>
       <dl className="mt-5 space-y-5">
         {differentiators.map((item) => (
-          <div key={item.title} className="border-l-2 border-gold-500/35 pl-4">
-            <dt className="font-semibold text-bone">{item.title}</dt>
-            <dd className="mt-1.5 leading-7 text-muted">{item.body}</dd>
+          <div key={item.title} className="border-l-2 border-accent/45 pl-4">
+            <dt className="font-semibold text-ink">{item.title}</dt>
+            <dd className="mt-1.5 leading-7 text-subtle">{item.body}</dd>
           </div>
         ))}
       </dl>
@@ -674,8 +674,8 @@ function CredibilitySection() {
           a new company with no results had no idea how little he was actually risking.
           Assembling them is the cheapest conversion work available here: nothing new is
           promised, it is only that the promises are finally in one readable place. */}
-      <h3 className="mt-12 font-display text-2xl text-bone">What you are actually risking</h3>
-      <p className="mt-3 max-w-2xl leading-7 text-muted">
+      <h3 className="mt-12 font-display text-2xl text-ink">What you are actually risking</h3>
+      <p className="mt-3 max-w-2xl leading-7 text-subtle">
         Every line below is already in the agreement or the published Terms. None of them is a
         promise about results. Nobody can honestly make you one of those.
       </p>
@@ -683,29 +683,29 @@ function CredibilitySection() {
         {riskReversal.map((item) => (
           <div
             key={item.title}
-            className="rounded-lg border border-gold-500/18 bg-ink-950/60 p-5"
+            className="rounded-lg border border-line bg-surface p-5"
           >
-            <dt className="font-semibold text-bone">{item.title}</dt>
-            <dd className="mt-1.5 leading-7 text-muted">{item.body}</dd>
-            <dd className="mt-2 text-xs uppercase tracking-[0.14em] text-gold-200/70">
+            <dt className="font-semibold text-ink">{item.title}</dt>
+            <dd className="mt-1.5 leading-7 text-subtle">{item.body}</dd>
+            <dd className="mt-2 text-xs uppercase tracking-[0.14em] text-accent">
               {item.clause}
             </dd>
           </div>
         ))}
       </dl>
-      <p className="mt-4 text-sm leading-6 text-muted">
+      <p className="mt-4 text-sm leading-6 text-subtle">
         Read them yourself in the{" "}
         <Link
           href="/terms"
-          className="font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400"
+          className="font-semibold text-accent underline underline-offset-4 hover:text-accent"
         >
           Terms of Service
         </Link>{" "}
         before you talk to us, not after.
       </p>
 
-      <p className="mt-10 rounded-lg border border-gold-500/18 bg-ink-950/60 p-5 leading-7 text-muted">
-        <span className="font-semibold text-gold-200">Who runs it. </span>
+      <p className="mt-10 rounded-lg border border-line bg-surface p-5 leading-7 text-subtle">
+        <span className="font-semibold text-accent">Who runs it. </span>
         The research, writing, follow-up and reply handling run on an automated system, with{" "}
         {founderName} accountable for it. Every draft clears hard gates before it can send:
         citations, opt-out suppression, duplicates, daily sending caps. There is no account
@@ -734,14 +734,14 @@ function FaqSection() {
           if (inGroup.length === 0) return null;
           return (
             <div key={group}>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-200/80">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
                 {group}
               </h3>
-              <div className="mt-3 divide-y divide-gold-500/12 border-y border-gold-500/12">
+              <div className="mt-3 divide-y divide-line border-y border-line">
                 {inGroup.map((faq) => (
                   <div key={faq.question} id={faqSlug(faq.question)} className="scroll-mt-20 py-5">
-                    <h4 className="text-lg font-semibold text-bone">{faq.question}</h4>
-                    <p className="mt-2 max-w-3xl leading-7 text-muted">{faq.answer}</p>
+                    <h4 className="text-lg font-semibold text-ink">{faq.question}</h4>
+                    <p className="mt-2 max-w-3xl leading-7 text-subtle">{faq.answer}</p>
                   </div>
                 ))}
               </div>
@@ -773,15 +773,15 @@ function GuidesSection() {
         {guidePages.map((page) => (
           <li
             key={page.slug}
-            className="relative flex h-full flex-col rounded-lg border border-gold-500/16 bg-ink-950/60 p-4 transition-colors hover:border-gold-500/40"
+            className="relative flex h-full flex-col rounded-lg border border-line bg-surface p-4 transition-colors hover:border-accent/45"
           >
             <Link
               href={`/${page.slug}`}
-              className="font-semibold leading-7 text-bone after:absolute after:inset-0 after:content-['']"
+              className="font-semibold leading-7 text-ink after:absolute after:inset-0 after:content-['']"
             >
               {page.navLabel}
             </Link>
-            <span className="mt-1 text-sm leading-6 text-muted">{page.description}</span>
+            <span className="mt-1 text-sm leading-6 text-subtle">{page.description}</span>
           </li>
         ))}
       </ul>
@@ -795,20 +795,20 @@ function FinalCta() {
   return (
     <section
       id="contact"
-      className="scroll-mt-20 border-t border-gold-500/12 bg-ink-950 px-5 py-16 sm:px-8 sm:py-24"
+      className="scroll-mt-20 border-t border-line bg-paper px-5 py-16 sm:px-8 sm:py-24"
     >
       <div className="mx-auto max-w-3xl text-center">
-        <h2 className="font-display text-3xl leading-tight text-bone sm:text-4xl">
+        <h2 className="font-display text-3xl leading-tight text-ink sm:text-4xl">
           See the work before you pay anything.
         </h2>
-        <p className="mx-auto mt-5 max-w-xl text-lg leading-8 text-muted">
+        <p className="mx-auto mt-5 max-w-xl text-lg leading-8 text-subtle">
           {intakeMinutes} minutes of questions, then a straight answer either way. If it is a fit,
           we build your {audit.name.toLowerCase()} and email it within {auditDeliveryWindow}.
         </p>
         <div className="mt-8 flex justify-center">
           <PrimaryCta />
         </div>
-        <p className="mt-4 text-sm text-muted">No card, and no call required to get the audit.</p>
+        <p className="mt-4 text-sm text-subtle">No card, and no call required to get the audit.</p>
       </div>
     </section>
   );
@@ -818,11 +818,11 @@ function FinalCta() {
 
 function SiteFooter() {
   return (
-    <footer className="border-t border-gold-500/12 bg-ink-950 px-5 py-10 sm:px-8">
-      <div className="mx-auto max-w-5xl text-sm text-muted">
+    <footer className="border-t border-line bg-paper px-5 py-10 sm:px-8">
+      <div className="mx-auto max-w-5xl text-sm text-subtle">
         <div className="flex flex-col gap-6 md:flex-row md:justify-between">
           <div className="max-w-sm">
-            <p className="font-display text-lg text-gold-200">{brandName}</p>
+            <p className="font-display text-lg text-accent">{brandName}</p>
             <p className="mt-2 leading-6">
               HVAC lead generation and appointment setting for established residential HVAC
               companies. Remote across the US, currently focused on {currentFocusArea}.
@@ -835,21 +835,21 @@ function SiteFooter() {
                 with no track record can offer, and all three already existed in config while
                 the footer printed none of them. */}
             <p className="mt-4 leading-6">
-              <span className="text-bone">{legalEntityName}</span>, a {entityFormationState}{" "}
+              <span className="text-ink">{legalEntityName}</span>, a {entityFormationState}{" "}
               limited liability company. Founder-run by {founderName}.
             </p>
             <p className="mt-2 leading-6">
               One question, no form:{" "}
               <a
                 href={`mailto:${contactEmail}`}
-                className="font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400"
+                className="font-semibold text-accent underline underline-offset-4 hover:text-accent"
               >
                 {contactEmail}
               </a>
             </p>
           </div>
           <nav aria-label="Guides and legal" className="md:min-w-56">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-200/80">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               More
             </p>
             <ul className="mt-1">
@@ -857,19 +857,19 @@ function SiteFooter() {
                 <li key={page.slug}>
                   <Link
                     href={`/${page.slug}`}
-                    className="inline-flex min-h-11 items-center hover:text-gold-200"
+                    className="inline-flex min-h-11 items-center hover:text-accent"
                   >
                     {page.navLabel}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link href="/terms" className="inline-flex min-h-11 items-center hover:text-gold-200">
+                <Link href="/terms" className="inline-flex min-h-11 items-center hover:text-accent">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="inline-flex min-h-11 items-center hover:text-gold-200">
+                <Link href="/privacy" className="inline-flex min-h-11 items-center hover:text-accent">
                   Privacy Policy
                 </Link>
               </li>
@@ -883,7 +883,7 @@ function SiteFooter() {
             The refusal itself is load-bearing and must not be trimmed further. "A set number of
             appointments" is deliberate: the Appointment Engine tier DOES book appointments, so a
             blunter "we do not promise appointments" would contradict the product. */}
-        <p className="mt-8 border-t border-gold-500/12 pt-6 leading-6">
+        <p className="mt-8 border-t border-line pt-6 leading-6">
           © {new Date().getFullYear()} {brandName} · We commit to running the system, doing the
           work to the stated standard, and reporting honestly. We do not promise jobs, revenue,
           customers, or a set number of appointments.

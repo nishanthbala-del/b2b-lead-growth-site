@@ -111,7 +111,7 @@ export default function HvacNjPage() {
                 carries the prices and their attributions in under 40 words and has to make
                 sense lifted out of the page. Every figure in it is repeated with its full
                 source in the channel table below — nothing is asserted only here. */}
-            <p className="text-bone">
+            <p className="text-ink">
               HVAC leads in New Jersey cost $54.99 per exclusive lead (99Calls) and roughly
               $15–$85 per shared Angi lead (a third-party estimate), with Google Local Services
               Ads priced per valid lead at rates Google says vary. Checked August 2026.
@@ -135,22 +135,22 @@ export default function HvacNjPage() {
             head={["Channel", "Published cost", "The catch to price in"]}
             rows={[
               [
-                <span key="angi" className="font-semibold text-bone">Angi / shared marketplaces</span>,
+                <span key="angi" className="font-semibold text-ink">Angi / shared marketplaces</span>,
                 "Angi publishes no dollar figures — fees “change based on task, homeowner location, and demand.” Third-party estimate (Housecall Pro): $15–$85 per lead.",
                 "Angi's own docs: each request matched with up to five pros. HomeAdvisor's pro-facing docs go further — you pay for a connected lead whether or not you win the job.",
               ],
               [
-                <span key="excl" className="font-semibold text-bone">Exclusive per-lead sellers</span>,
+                <span key="excl" className="font-semibold text-ink">Exclusive per-lead sellers</span>,
                 "99Calls advertised exclusive NJ HVAC leads at a $54.99 flat rate (organic-SEO leads, checked Aug 2026).",
                 "Higher per-lead price; volume depends on the seller's local presence. Verify exclusivity in writing.",
               ],
               [
-                <span key="lsa" className="font-semibold text-bone">Google Local Services Ads</span>,
+                <span key="lsa" className="font-semibold text-ink">Google Local Services Ads</span>,
                 "Pay per valid lead (calls/messages, not clicks); Google says prices vary by location, job type, and lead type.",
                 "Requires passing Google's screening and verification; competitive NJ metros bid up lead prices.",
               ],
               [
-                <span key="own" className="font-semibold text-bone">Demand you already own</span>,
+                <span key="own" className="font-semibold text-ink">Demand you already own</span>,
                 "No per-lead fee — past customers, unclosed estimates, lapsed maintenance plans, referral partners.",
                 "Requires consistent follow-up nobody in a busy shop has time to run. That gap is the actual product we sell.",
               ],
@@ -162,7 +162,7 @@ export default function HvacNjPage() {
               href="https://intercom.help/angi/en/articles/6221483-opportunities-and-leads-frequently-asked-questions"
               rel="nofollow noopener"
               target="_blank"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               Angi Help Center
             </a>{" "}
@@ -171,7 +171,7 @@ export default function HvacNjPage() {
               href="https://www.housecallpro.com/resources/what-is-angis-list-how-angi-works/"
               rel="nofollow noopener"
               target="_blank"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               Housecall Pro Angi cost guide (Feb 2026, third-party estimate)
             </a>{" "}
@@ -180,7 +180,7 @@ export default function HvacNjPage() {
               href="https://99calls.com/locations/New-Jersey/HVAC-Leads.htm"
               rel="nofollow noopener"
               target="_blank"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               99Calls New Jersey HVAC leads
             </a>{" "}
@@ -189,7 +189,7 @@ export default function HvacNjPage() {
               href="https://support.google.com/localservices/answer/7195435"
               rel="nofollow noopener"
               target="_blank"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               Google Local Services Ads documentation
             </a>
@@ -197,7 +197,7 @@ export default function HvacNjPage() {
             shared-vs-exclusive arithmetic, see{" "}
             <a
               href="/shared-vs-exclusive-hvac-leads"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               our cost-per-job breakdown
             </a>
@@ -237,26 +237,26 @@ export default function HvacNjPage() {
         <GuideSection title="What working with us looks like">
           <ol className="list-decimal space-y-3 pl-5">
             <li>
-              <span className="font-semibold text-bone">Free pipeline audit first.</span> A
+              <span className="font-semibold text-ink">Free pipeline audit first.</span> A
               sharpened profile of the jobs worth chasing, 3–5 real referral partners in your
               service area, individually vetted, each with a cited public reason, and one sample
               message. Yours to keep, before any decision. See{" "}
-              <a href="/free-pipeline-audit" className="text-gold-200 underline underline-offset-4">
+              <a href="/free-pipeline-audit" className="text-accent underline underline-offset-4">
                 what the free HVAC pipeline audit includes
               </a>
               .
             </li>
             <li>
-              <span className="font-semibold text-bone">Flat monthly fee if you continue.</span>{" "}
+              <span className="font-semibold text-ink">Flat monthly fee if you continue.</span>{" "}
               $750, $1,500, or $2,500 per month, depending on how much you hand off. No setup fee,
               month-to-month, and you keep the work we produced for you if you leave. See{" "}
-              <a href="/pricing" className="text-gold-200 underline underline-offset-4">
+              <a href="/pricing" className="text-accent underline underline-offset-4">
                 our published HVAC lead generation pricing
               </a>
               .
             </li>
             <li>
-              <span className="font-semibold text-bone">Verified reporting.</span> Real numbers
+              <span className="font-semibold text-ink">Verified reporting.</span> Real numbers
               only, never projections. Where we run the outreach, that means what was contacted and
               what came back. At $750 we hand over the researched list and the scripts and you run
               the sending, so the response data is yours. You own the live calls and the close at
@@ -264,7 +264,7 @@ export default function HvacNjPage() {
             </li>
           </ol>
           <p>
-            <span className="text-bone">How the tiers translate for a contractor.</span> Each tier
+            <span className="text-ink">How the tiers translate for a contractor.</span> Each tier
             caps how many <em>contacts we work per month</em>. Those contacts are a mix of two
             things: referral-partner prospects we research and cite from public sources, and people
             from lists you give us, such as past customers, unclosed estimates, and lapsed
@@ -280,17 +280,17 @@ export default function HvacNjPage() {
             head={["Monthly fee", "Volume per month", "Who runs the sending"]}
             rows={[
               [
-                <span key="t750" className="font-semibold text-bone">$750</span>,
+                <span key="t750" className="font-semibold text-ink">$750</span>,
                 "About 40 prospects per batch",
                 "You do. We prepare the researched list, the messaging and the scripts.",
               ],
               [
-                <span key="t1500" className="font-semibold text-bone">$1,500</span>,
+                <span key="t1500" className="font-semibold text-ink">$1,500</span>,
                 "About 100 outreach messages, follow-ups included (roughly 33 prospects)",
                 "We do. We run the outreach and the follow-up sequence.",
               ],
               [
-                <span key="t2500" className="font-semibold text-bone">$2,500</span>,
+                <span key="t2500" className="font-semibold text-ink">$2,500</span>,
                 "About 150 outreach messages, follow-ups included (roughly 50 prospects)",
                 "We do, and we qualify the interested replies and book the calls.",
               ],
@@ -309,7 +309,7 @@ export default function HvacNjPage() {
             Ask these of any vendor, not only us. The longer checklist is in{" "}
             <a
               href="/how-to-choose-a-lead-generation-agency"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               the seven questions to ask an HVAC lead generation company
             </a>
@@ -319,10 +319,10 @@ export default function HvacNjPage() {
               fragment as each Question's url, so a specific answer is citable and linkable.
               faqSlug() is the shared slug rule the homepage already uses; the guide pages
               were the half that rendered the answers with no anchor at all. */}
-          <div className="divide-y divide-gold-500/12 border-y border-gold-500/12">
+          <div className="divide-y divide-line border-y border-line">
             {pageFaqs.map((f) => (
               <div key={f.question} id={faqSlug(f.question)} className="scroll-mt-20 py-5">
-                <h3 className="text-lg font-semibold text-bone">{f.question}</h3>
+                <h3 className="text-lg font-semibold text-ink">{f.question}</h3>
                 <p className="mt-2 leading-7">{f.answer}</p>
               </div>
             ))}

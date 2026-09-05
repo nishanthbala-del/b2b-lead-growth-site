@@ -12,13 +12,18 @@ export const alt =
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Brand palette (mirrors tailwind.config.ts / icon.svg).
-const INK = "#0A0A0B";
-const GOLD_400 = "#D4AF37";
-const GOLD_200 = "#E8D9A8";
-const BRONZE = "#9D7A2B";
-const BONE = "#F5F1E8";
-const MUTED = "#B8B3A8";
+// Brand palette — mirrors tailwind.config.ts, and it has to. This card is the first
+// thing anyone sees of the brand when the link is pasted into a Slack or a text, and
+// until 2026-09-05 it rendered the retired near-black-and-gold scheme, so a shared link
+// previewed one company and opened another. Relit with the same semantic tokens the
+// site uses; the comment above was already claiming this and was simply untrue.
+const PAPER = "#FFFFFF";
+const SURFACE = "#F8F7F4";
+const INK = "#15151A";
+const SUBTLE = "#56565F";
+const ACCENT = "#8A6A23";
+const ACCENT_LIGHT = "#96742A";
+const LINE = "#E4E1DA";
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -30,8 +35,11 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          backgroundColor: INK,
-          backgroundImage: `radial-gradient(circle at 78% 8%, rgba(201,162,75,0.22), transparent 55%)`,
+          backgroundColor: PAPER,
+          // A whisper of the accent in one corner instead of the old gold bloom: enough to
+          // stop a pure-white card disappearing into a white chat background, not enough
+          // to tint the headline sitting over it.
+          backgroundImage: `radial-gradient(circle at 88% 6%, ${SURFACE}, transparent 60%)`,
           padding: "72px 80px",
           fontFamily: "sans-serif",
         }}
@@ -44,23 +52,23 @@ export default function OpengraphImage() {
             left: 0,
             right: 0,
             height: 6,
-            backgroundImage: `linear-gradient(90deg, ${GOLD_200}, ${GOLD_400} 45%, ${BRONZE})`,
+            backgroundImage: `linear-gradient(90deg, ${ACCENT_LIGHT}, ${ACCENT} 60%, ${ACCENT})`,
           }}
         />
 
         {/* Wordmark with the ascending-bars motif from the favicon */}
         <div style={{ display: "flex", alignItems: "flex-end", gap: 18 }}>
           <div style={{ display: "flex", alignItems: "flex-end", gap: 6 }}>
-            <div style={{ width: 14, height: 26, borderRadius: 3, backgroundColor: BRONZE }} />
-            <div style={{ width: 14, height: 40, borderRadius: 3, backgroundColor: GOLD_400 }} />
-            <div style={{ width: 14, height: 56, borderRadius: 3, backgroundColor: GOLD_200 }} />
+            <div style={{ width: 14, height: 26, borderRadius: 3, backgroundColor: LINE }} />
+            <div style={{ width: 14, height: 40, borderRadius: 3, backgroundColor: ACCENT_LIGHT }} />
+            <div style={{ width: 14, height: 56, borderRadius: 3, backgroundColor: ACCENT }} />
           </div>
           <div
             style={{
               fontSize: 30,
               fontWeight: 700,
               letterSpacing: 2,
-              color: GOLD_200,
+              color: ACCENT,
               textTransform: "uppercase",
             }}
           >
@@ -75,13 +83,13 @@ export default function OpengraphImage() {
               fontSize: 68,
               fontWeight: 700,
               lineHeight: 1.08,
-              color: BONE,
+              color: INK,
               maxWidth: 980,
             }}
           >
             HVAC lead generation, done the honest way
           </div>
-          <div style={{ fontSize: 30, color: MUTED, maxWidth: 920, lineHeight: 1.35 }}>
+          <div style={{ fontSize: 30, color: SUBTLE, maxWidth: 920, lineHeight: 1.35 }}>
             Reactivate the estimates and agreements already in your system. Work your referral
             partners. Book appointments.
           </div>
@@ -93,15 +101,15 @@ export default function OpengraphImage() {
             style={{
               fontSize: 22,
               fontWeight: 600,
-              color: INK,
-              backgroundImage: `linear-gradient(135deg, ${GOLD_200}, ${GOLD_400} 40%, ${BRONZE})`,
+              color: PAPER,
+              backgroundImage: `linear-gradient(180deg, ${ACCENT_LIGHT}, ${ACCENT})`,
               padding: "12px 26px",
               borderRadius: 4,
             }}
           >
             $750 · $1,500 · $2,500 / mo
           </div>
-          <div style={{ fontSize: 22, color: MUTED }}>
+          <div style={{ fontSize: 22, color: SUBTLE }}>
             No setup fee · Month-to-month · Never sold per lead
           </div>
         </div>

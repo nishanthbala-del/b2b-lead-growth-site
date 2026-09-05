@@ -35,12 +35,12 @@ export function Field({
     <div>
       <label
         htmlFor={htmlFor}
-        className="mb-2 flex flex-wrap items-center gap-x-2 text-xs font-semibold uppercase tracking-[0.18em] text-gold-200/75"
+        className="mb-2 flex flex-wrap items-center gap-x-2 text-xs font-semibold uppercase tracking-[0.18em] text-accent"
       >
         {label}
-        {required ? <span className="text-gold-400">*</span> : null}
+        {required ? <span className="text-accent">*</span> : null}
         {hint ? (
-          <span className="font-normal normal-case tracking-normal text-muted/70">· {hint}</span>
+          <span className="font-normal normal-case tracking-normal text-subtle">· {hint}</span>
         ) : null}
       </label>
       {isValidElement(children)
@@ -71,10 +71,20 @@ export function FieldError({ id, children }: { id?: string; children: ReactNode 
 // out — which on a phone leaves the rest of the form scrolled off-screen mid-way
 // through filling it in. Back to 14px from `sm:` up, where no such rule applies.
 const inputBase =
-  "w-full rounded-sm border bg-ink-950/60 px-4 py-3 text-base text-bone placeholder:text-muted/70 outline-none transition-colors focus:border-gold-400/70 focus:ring-1 focus:ring-gold-400/40 sm:text-sm";
+  "w-full rounded-sm border bg-surface px-4 py-3 text-base text-ink placeholder:text-subtle outline-none transition-colors focus:border-accent focus:ring-1 focus:ring-accent sm:text-sm";
 
+// `control`, NOT `line`. An interactive boundary has to clear 3:1 (WCAG 1.4.11);
+// `line` is the decorative hairline between blocks and measures 1.31:1 against the
+// page. The previous dark build had exactly this bug in its own palette — text
+// inputs with a 1.02:1 fill and a 1.45:1 boundary, so an empty field on the site's
+// ONLY conversion form was very nearly invisible — and the mechanical re-light would
+// have carried it straight over, because a field and a divider had been sharing one
+// colour. That is the whole reason `control` exists as its own token.
+//
+// The invalid state stays a distinct hue rather than a darker bronze: an error that
+// is a shade of the brand accent is not an error anyone reads as one.
 function borderClass(invalid?: boolean) {
-  return invalid ? "border-red-400/60" : "border-gold-500/22";
+  return invalid ? "border-red-500" : "border-control";
 }
 
 export function Input({
@@ -190,7 +200,7 @@ export function Select({
         </option>
       ) : null}
       {options.map((opt) => (
-        <option key={opt.value} value={opt.value} className="bg-ink-900 text-bone">
+        <option key={opt.value} value={opt.value} className="bg-surface text-ink">
           {opt.hint ? `${opt.label} — ${opt.hint}` : opt.label}
         </option>
       ))}
@@ -233,11 +243,11 @@ export function OptionCards({
   const errorId = error ? `${name}-error` : undefined;
   return (
     <fieldset aria-describedby={errorId} aria-invalid={error ? true : undefined}>
-      <legend className="mb-3 flex flex-wrap items-center gap-x-2 text-xs font-semibold uppercase tracking-[0.18em] text-gold-200/75">
+      <legend className="mb-3 flex flex-wrap items-center gap-x-2 text-xs font-semibold uppercase tracking-[0.18em] text-accent">
         {legend}
-        <span className="text-gold-400">*</span>
+        <span className="text-accent">*</span>
         {hint ? (
-          <span className="font-normal normal-case tracking-normal text-muted/70">· {hint}</span>
+          <span className="font-normal normal-case tracking-normal text-subtle">· {hint}</span>
         ) : null}
       </legend>
       <div className={`grid gap-2 ${columns === 2 ? "sm:grid-cols-2" : ""}`}>
@@ -250,10 +260,10 @@ export function OptionCards({
               htmlFor={id}
               className={`flex min-h-12 cursor-pointer items-start gap-3 rounded-sm border px-4 py-3 transition-colors ${
                 selected
-                  ? "border-gold-500/70 bg-gold-500/10"
+                  ? "border-accent/45 bg-accent-soft"
                   : error
-                    ? "border-red-400/50 hover:border-gold-500/45 hover:bg-gold-500/5"
-                    : "border-gold-500/20 hover:border-gold-500/45 hover:bg-gold-500/5"
+                    ? "border-red-500 hover:border-accent hover:bg-accent-soft"
+                    : "border-control hover:border-accent hover:bg-accent-soft"
               }`}
             >
               <input
@@ -270,19 +280,19 @@ export function OptionCards({
               <span
                 aria-hidden="true"
                 className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
-                  selected ? "border-gold-400 bg-gold-400" : "border-gold-500/45"
+                  selected ? "border-accent bg-accent" : "border-accent/45"
                 }`}
               >
-                {selected ? <span className="h-1.5 w-1.5 rounded-full bg-ink-950" /> : null}
+                {selected ? <span className="h-1.5 w-1.5 rounded-full bg-paper" /> : null}
               </span>
               <span className="min-w-0">
                 <span
-                  className={`block text-sm leading-6 ${selected ? "text-bone" : "text-muted"}`}
+                  className={`block text-sm leading-6 ${selected ? "text-ink" : "text-subtle"}`}
                 >
                   {opt.label}
                 </span>
                 {opt.hint ? (
-                  <span className="mt-0.5 block text-xs leading-5 text-muted/70">{opt.hint}</span>
+                  <span className="mt-0.5 block text-xs leading-5 text-subtle">{opt.hint}</span>
                 ) : null}
               </span>
             </label>

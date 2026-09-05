@@ -20,13 +20,13 @@ export default function PageShell({
 }) {
   const max = width === "wide" ? "max-w-4xl" : "max-w-3xl";
   return (
-    <div className="min-h-screen bg-ink-950 text-bone">
-      <header className="border-b border-gold-500/14">
+    <div className="min-h-screen bg-paper text-ink">
+      <header className="border-b border-line">
         <div className={`mx-auto flex ${max} items-center justify-between px-5 py-5 sm:px-8`}>
-          <Link href="/" className="font-display text-lg text-gold-200">
+          <Link href="/" className="font-display text-lg text-accent">
             B2B Lead Growth
           </Link>
-          <Link href="/" className="text-sm text-muted transition-colors hover:text-gold-200">
+          <Link href="/" className="text-sm text-subtle transition-colors hover:text-accent">
             ← Back to site
           </Link>
         </div>
@@ -34,27 +34,27 @@ export default function PageShell({
 
       {children}
 
-      <footer className="border-t border-gold-500/12 px-5 py-8 sm:px-8">
-        <div className={`mx-auto flex ${max} flex-col gap-2 text-sm text-muted`}>
+      <footer className="border-t border-line px-5 py-8 sm:px-8">
+        <div className={`mx-auto flex ${max} flex-col gap-2 text-sm text-subtle`}>
           <p className="leading-7">
             © {new Date().getFullYear()} {legalEntityName} ·{" "}
-            <a href={`mailto:${contactEmail}`} className="transition-colors hover:text-gold-200">
+            <a href={`mailto:${contactEmail}`} className="transition-colors hover:text-accent">
               {contactEmail}
             </a>{" "}
             ·{" "}
-            <Link href="/pricing" className="transition-colors hover:text-gold-200">
+            <Link href="/pricing" className="transition-colors hover:text-accent">
               Pricing
             </Link>{" "}
             ·{" "}
-            <Link href="/terms#billing" className="transition-colors hover:text-gold-200">
+            <Link href="/terms#billing" className="transition-colors hover:text-accent">
               Billing &amp; cancellation
             </Link>{" "}
             ·{" "}
-            <Link href="/privacy" className="transition-colors hover:text-gold-200">
+            <Link href="/privacy" className="transition-colors hover:text-accent">
               Privacy
             </Link>{" "}
             ·{" "}
-            <Link href="/terms" className="transition-colors hover:text-gold-200">
+            <Link href="/terms" className="transition-colors hover:text-accent">
               Terms
             </Link>
           </p>

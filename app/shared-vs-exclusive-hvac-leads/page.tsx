@@ -80,13 +80,13 @@ export default function SharedVsExclusivePage() {
                 words, because this paragraph is what an answer engine lifts out of the page.
                 The Angi "up to five" citation stays in the lead — it is the fact the whole
                 comparison rests on. */}
-            <p className="text-bone">
+            <p className="text-ink">
               A shared HVAC lead goes to several contractors at once — up to five on Angi, per
               Angi&rsquo;s help documentation. An exclusive lead goes to one. The cost that matters
               is cost per booked job, not cost per lead.
             </p>
             <p>
-              One disclosure before the math: <span className="text-bone">we sell neither kind of
+              One disclosure before the math: <span className="text-ink">we sell neither kind of
               lead</span>. B2B Lead Growth charges a flat monthly fee, so no per-lead margin rides
               on which option you pick. Pages on this question are usually published by a company
               selling one of the two.
@@ -103,7 +103,7 @@ export default function SharedVsExclusivePage() {
             head={["Model", "How it works", "What you pay"]}
             rows={[
               [
-                <span key="shared" className="font-semibold text-bone">
+                <span key="shared" className="font-semibold text-ink">
                   Shared (marketplace) leads
                 </span>,
                 <span key="shared-how">
@@ -120,14 +120,14 @@ export default function SharedVsExclusivePage() {
                 </span>,
               ],
               [
-                <span key="excl" className="font-semibold text-bone">
+                <span key="excl" className="font-semibold text-ink">
                   Exclusive leads
                 </span>,
                 "Sold to one contractor.",
                 "Priced higher per lead. Example with published pricing: 99Calls advertised exclusive New Jersey HVAC leads at a $54.99 flat rate per lead from its organic-SEO program when we checked in August 2026.",
               ],
               [
-                <span key="lsa" className="font-semibold text-bone">
+                <span key="lsa" className="font-semibold text-ink">
                   Pay-per-lead ads (Google Local Services Ads)
                 </span>,
                 <span key="lsa-how">
@@ -145,7 +145,7 @@ export default function SharedVsExclusivePage() {
               href="https://intercom.help/angi/en/articles/6221483-opportunities-and-leads-frequently-asked-questions"
               rel="nofollow noopener"
               target="_blank"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               Angi Help Center
             </a>{" "}
@@ -154,7 +154,7 @@ export default function SharedVsExclusivePage() {
               href="https://www.homeadvisor.com/spa/how-it-works"
               rel="nofollow noopener"
               target="_blank"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               HomeAdvisor, How It Works
             </a>{" "}
@@ -163,7 +163,7 @@ export default function SharedVsExclusivePage() {
               href="https://99calls.com/locations/New-Jersey/HVAC-Leads.htm"
               rel="nofollow noopener"
               target="_blank"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               99Calls NJ HVAC pricing
             </a>{" "}
@@ -172,7 +172,7 @@ export default function SharedVsExclusivePage() {
               href="https://support.google.com/localservices/answer/7195435"
               rel="nofollow noopener"
               target="_blank"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               Google, How Local Services leads work
             </a>
@@ -180,7 +180,7 @@ export default function SharedVsExclusivePage() {
             these same channels priced out for one market, see{" "}
             <a
               href="/hvac-lead-generation-new-jersey"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               what HVAC leads cost in New Jersey, by channel
             </a>
@@ -191,9 +191,9 @@ export default function SharedVsExclusivePage() {
         <GuideSection title="The math: cost per booked job, not cost per lead">
           <p>
             The arithmetic below is illustrative. Plug in your own numbers; the structure is the
-            point: <span className="text-bone">divide what you spend by the jobs you actually
+            point: <span className="text-ink">divide what you spend by the jobs you actually
             book</span>. Third-party estimates put typical Angi lead fees at $15–$85 per lead
-            (<a href="https://www.housecallpro.com/resources/what-is-angis-list-how-angi-works/" rel="nofollow noopener" target="_blank" className="text-gold-200 underline underline-offset-4">Housecall Pro&rsquo;s guide</a> — Angi itself publishes no dollar figures and says fees vary by task, location, and demand).
+            (<a href="https://www.housecallpro.com/resources/what-is-angis-list-how-angi-works/" rel="nofollow noopener" target="_blank" className="text-accent underline underline-offset-4">Housecall Pro&rsquo;s guide</a> — Angi itself publishes no dollar figures and says fees vary by task, location, and demand).
           </p>
           <GuideTable
             caption="Illustrative cost-per-booked-job arithmetic for shared vs exclusive leads"
@@ -202,33 +202,33 @@ export default function SharedVsExclusivePage() {
               [
                 "Shared lead at $60, and with up to five pros competing you close 1 in 8",
                 "$60 × 8 leads bought per job won",
-                <span key="a" className="font-semibold text-bone">$480</span>,
+                <span key="a" className="font-semibold text-ink">$480</span>,
               ],
               [
                 "Same shared lead, closing 1 in 5",
                 "$60 × 5",
-                <span key="b" className="font-semibold text-bone">$300</span>,
+                <span key="b" className="font-semibold text-ink">$300</span>,
               ],
               [
                 "Shared lead at $25 (toward the low end of the cited $15\u2013$85 range), closing 1 in 5",
                 "$25 × 5",
-                <span key="c" className="font-semibold text-bone">$125</span>,
+                <span key="c" className="font-semibold text-ink">$125</span>,
               ],
               [
                 "Exclusive lead at $54.99 (99Calls' published NJ rate), closing 1 in 3",
                 "$54.99 × 3",
-                <span key="d" className="font-semibold text-bone">~$165</span>,
+                <span key="d" className="font-semibold text-ink">~$165</span>,
               ],
               [
                 "An unclosed estimate you already paid to generate, revived with follow-up",
                 "Your follow-up time",
-                <span key="e" className="font-semibold text-bone">Marginal cost ≈ $0 in lead fees</span>,
+                <span key="e" className="font-semibold text-ink">Marginal cost ≈ $0 in lead fees</span>,
               ],
             ]}
           />
           <p>
             Notice the third row: cheap shared leads paired with a strong close rate{" "}
-            <span className="text-bone">can</span> beat exclusive leads. That is exactly why the
+            <span className="text-ink">can</span> beat exclusive leads. That is exactly why the
             only number that decides this is your own cost per booked job — not any vendor&rsquo;s
             table, including this one.
           </p>
@@ -240,14 +240,14 @@ export default function SharedVsExclusivePage() {
           </KeyAnswer>
           <p>
             One number in this comparison we cannot fill in for you. If you pay anyone a flat fee to
-            run that follow-up — <span className="text-bone">including us, at $750 to $2,500 a
+            run that follow-up — <span className="text-ink">including us, at $750 to $2,500 a
             month</span> — your cost per booked job is that fee divided by the jobs it produces. We
             do not guarantee that beats the per-lead channels. The{" "}
-            <a href="/free-pipeline-audit" className="text-gold-200 underline underline-offset-4">
+            <a href="/free-pipeline-audit" className="text-accent underline underline-offset-4">
               free pipeline audit
             </a>{" "}
             exists so you can judge the work before paying to find out, and{" "}
-            <a href="/pricing" className="text-gold-200 underline underline-offset-4">
+            <a href="/pricing" className="text-accent underline underline-offset-4">
               our published monthly pricing
             </a>{" "}
             shows what each fee covers.
@@ -258,7 +258,7 @@ export default function SharedVsExclusivePage() {
           <p>
             In 2023 the FTC finalized an order requiring HomeAdvisor — a company affiliated with
             Angi that operated Angi Leads — to pay{" "}
-            <span className="text-bone">up to $7.2 million</span> to settle charges it used{" "}
+            <span className="text-ink">up to $7.2 million</span> to settle charges it used{" "}
             <em>&ldquo;a wide range of deceptive and misleading tactics in selling home improvement
             project leads to service providers.&rdquo;</em>
           </p>
@@ -281,14 +281,14 @@ export default function SharedVsExclusivePage() {
           <p>HomeAdvisor settled by consent order without admitting liability.</p>
           <p>
             Worth being precise about: the FTC case was about{" "}
-            <span className="text-bone">lead quality and sourcing claims</span>. It did not charge
+            <span className="text-ink">lead quality and sourcing claims</span>. It did not charge
             HomeAdvisor with selling one lead to multiple contractors. Lead sharing is not hidden;
             it is the marketplace&rsquo;s published model, per Angi&rsquo;s own help center. The
             lesson is the same either way: verify what a lead seller claims, in writing, before you
             fund an account. The{" "}
             <a
               href="/how-to-choose-a-lead-generation-agency"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               seven questions to ask an HVAC lead generation company
             </a>{" "}
@@ -300,7 +300,7 @@ export default function SharedVsExclusivePage() {
               href="https://www.ftc.gov/news-events/news/press-releases/2023/01/ftc-order-requires-homeadvisor-pay-72-million-stop-deceptively-marketing-its-leads-home-improvement"
               rel="nofollow noopener"
               target="_blank"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               FTC press release (Jan 2023)
             </a>{" "}
@@ -309,7 +309,7 @@ export default function SharedVsExclusivePage() {
               href="https://www.ftc.gov/system/files/ftc_gov/pdf/Home%20Advisor%20Part%20III%20Complaint%20Public%20Redacted_0.pdf"
               rel="nofollow noopener"
               target="_blank"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               FTC administrative complaint (public redacted)
             </a>{" "}
@@ -318,7 +318,7 @@ export default function SharedVsExclusivePage() {
               href="https://www.ftc.gov/news-events/news/press-releases/2023/04/ftc-approves-final-order-against-homeadvisor-inc-deceptively-marketing-its-leads-home-improvement"
               rel="nofollow noopener"
               target="_blank"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               FTC final-order announcement (Apr 2023)
             </a>
@@ -342,7 +342,7 @@ export default function SharedVsExclusivePage() {
             in{" "}
             <a
               href="/hvac-lead-generation-new-jersey"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               our New Jersey HVAC lead cost breakdown
             </a>
@@ -353,10 +353,10 @@ export default function SharedVsExclusivePage() {
         <GuideSection title="Common questions">
           {/* id + scroll-mt on every answer, mirroring the fragment each Question node
               publishes as its url — so a specific answer can be cited and deep-linked. */}
-          <div className="divide-y divide-gold-500/12 border-y border-gold-500/12">
+          <div className="divide-y divide-line border-y border-line">
             {pageFaqs.map((f) => (
               <div key={f.question} id={faqSlug(f.question)} className="scroll-mt-20 py-5">
-                <h3 className="text-lg font-semibold text-bone">{f.question}</h3>
+                <h3 className="text-lg font-semibold text-ink">{f.question}</h3>
                 <p className="mt-2 leading-7">{f.answer}</p>
               </div>
             ))}

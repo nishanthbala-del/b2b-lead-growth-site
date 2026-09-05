@@ -71,7 +71,7 @@ const redFlags: { flag: string; why: ReactNode }[] = [
         lead, assume the answer is several. Run{" "}
         <a
           href="/shared-vs-exclusive-hvac-leads"
-          className="text-gold-200 underline underline-offset-4"
+          className="text-accent underline underline-offset-4"
         >
           the shared vs. exclusive cost-per-job math
         </a>{" "}
@@ -86,7 +86,7 @@ const redFlags: { flag: string; why: ReactNode }[] = [
         Opaque pricing usually adapts to your budget. Many vendors in this space do not publish
         rates, and third-party-reported ranges run from about $2,000 to well over $10,000 per month
         — the sources are cited on{" "}
-        <a href="/pricing" className="text-gold-200 underline underline-offset-4">
+        <a href="/pricing" className="text-accent underline underline-offset-4">
           our published HVAC lead generation pricing page
         </a>
         .
@@ -153,7 +153,7 @@ export default function ChooseAgencyPage() {
                 sentence with two parenthetical asides; this is the same list in 39 words, and
                 it is the paragraph an answer engine quotes. The parenthetical answers moved
                 down into the question blocks, where the reader is actually asking them. */}
-            <p className="text-bone">
+            <p className="text-ink">
               Choose an HVAC lead generation company by asking seven questions: are results
               guaranteed, is the lead resold, who owns the data, how long is the term, what happens
               each month, how is it reported, where the data comes from.
@@ -164,11 +164,11 @@ export default function ChooseAgencyPage() {
             </p>
             <p>
               We sell HVAC lead generation and we are new, so use the checklist on us. Our{" "}
-              <a href="/pricing" className="text-gold-200 underline underline-offset-4">
+              <a href="/pricing" className="text-accent underline underline-offset-4">
                 published monthly pricing
               </a>{" "}
               and the{" "}
-              <a href="/free-pipeline-audit" className="text-gold-200 underline underline-offset-4">
+              <a href="/free-pipeline-audit" className="text-accent underline underline-offset-4">
                 free pipeline audit
               </a>{" "}
               are how you check the answers.
@@ -184,7 +184,7 @@ export default function ChooseAgencyPage() {
             caption="Red flags when choosing an HVAC lead generation company, and why each one matters"
             head={["Red flag", "Why it matters"]}
             rows={redFlags.map((r) => [
-              <span key={r.flag} className="font-semibold text-bone">
+              <span key={r.flag} className="font-semibold text-ink">
                 {r.flag}
               </span>,
               r.why,
@@ -198,7 +198,7 @@ export default function ChooseAgencyPage() {
             to the same standard. For what the channels they resell actually cost, see{" "}
             <a
               href="/hvac-lead-generation-new-jersey"
-              className="text-gold-200 underline underline-offset-4"
+              className="text-accent underline underline-offset-4"
             >
               what HVAC leads cost in New Jersey, by channel
             </a>
@@ -206,10 +206,10 @@ export default function ChooseAgencyPage() {
           </p>
           {/* id + scroll-mt on every answer, mirroring the fragment each Question node
               publishes as its url — so one answer can be cited and linked to directly. */}
-          <div className="divide-y divide-gold-500/12 border-y border-gold-500/12">
+          <div className="divide-y divide-line border-y border-line">
             {hardQuestions.map((q) => (
               <div key={q.question} id={faqSlug(q.question)} className="scroll-mt-20 py-5">
-                <h3 className="text-lg font-semibold text-bone">{q.question}</h3>
+                <h3 className="text-lg font-semibold text-ink">{q.question}</h3>
                 <p className="mt-2 leading-7">{q.ourAnswer}</p>
               </div>
             ))}
@@ -227,7 +227,7 @@ export default function ChooseAgencyPage() {
             An honest vendor tells you this in the first conversation. It is also the first thing a
             good audit reveals: sometimes the targeting is fine and the bottleneck is elsewhere. You
             deserve to know that before you spend anything, which is why{" "}
-            <a href="/free-pipeline-audit" className="text-gold-200 underline underline-offset-4">
+            <a href="/free-pipeline-audit" className="text-accent underline underline-offset-4">
               the free pipeline audit
             </a>{" "}
             is delivered in writing, before any money changes hands.

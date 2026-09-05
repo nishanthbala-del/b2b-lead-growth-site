@@ -82,10 +82,10 @@ export default function PricingPage() {
           <>
             <p>
               B2B Lead Growth charges established HVAC companies a flat monthly fee:{" "}
-              <span className="text-bone">$750</span> for Lead Engine (we build and rank your list,
-              you do the outreach), <span className="text-bone">$1,500</span> for Outreach Engine
+              <span className="text-ink">$750</span> for Lead Engine (we build and rank your list,
+              you do the outreach), <span className="text-ink">$1,500</span> for Outreach Engine
               (we run the outreach, you answer the interested replies), or{" "}
-              <span className="text-bone">$2,500</span> for Appointment Engine (we book qualified
+              <span className="text-ink">$2,500</span> for Appointment Engine (we book qualified
               appointments on your calendar). Published, flat, and never priced per lead.
             </p>
             <p>
@@ -114,37 +114,37 @@ export default function PricingPage() {
               ours were the only pricing on the site with no semantics at all. */}
           <div className="space-y-4">
             {plans.map((p) => (
-              <div key={p.name} className="rounded-lg border border-gold-500/16 bg-ink-900/60 p-5">
+              <div key={p.name} className="rounded-lg border border-line bg-surface p-5">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className="font-display text-2xl text-bone">{p.name}</h3>
-                  <p className="text-xl font-semibold text-gold-200">
+                  <h3 className="font-display text-2xl text-ink">{p.name}</h3>
+                  <p className="text-xl font-semibold text-accent">
                     ${p.price.toLocaleString()}
-                    <span className="text-sm font-normal text-muted">/mo</span>
+                    <span className="text-sm font-normal text-subtle">/mo</span>
                   </p>
                 </div>
-                <p className="mt-2 font-semibold text-bone/90">{p.oneLiner}</p>
+                <p className="mt-2 font-semibold text-ink/90">{p.oneLiner}</p>
                 <dl className="mt-4 space-y-3">
                   <div>
-                    <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-gold-200/85">
+                    <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
                       Monthly ceiling
                     </dt>
                     <dd className="mt-1 leading-7">{p.capacity}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-gold-200/85">
+                    <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
                       Best for
                     </dt>
                     <dd className="mt-1 leading-7">{p.bestFor}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-gold-200/85">
+                    <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
                       Included
                     </dt>
                     <dd className="mt-1">
                       <ul className="space-y-1.5">
                         {p.includes.map((line) => (
                           <li key={line} className="flex gap-2 leading-7">
-                            <span aria-hidden="true" className="mt-0.5 shrink-0 text-gold-200">✓</span>
+                            <span aria-hidden="true" className="mt-0.5 shrink-0 text-accent">✓</span>
                             <span>{line}</span>
                           </li>
                         ))}
@@ -152,7 +152,7 @@ export default function PricingPage() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-gold-200/85">
+                    <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
                       Your side
                     </dt>
                     <dd className="mt-1 leading-7">{p.youKeep}</dd>
@@ -166,14 +166,14 @@ export default function PricingPage() {
                     tier before anyone has looked at their list. */}
                 <Link
                   href="/start"
-                  className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+                  className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-accent transition-colors hover:text-accent"
                 >
                   See if {p.name} fits your office →
                 </Link>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-sm leading-6 text-muted/80">
+          <p className="mt-4 text-sm leading-6 text-subtle">
             No tier can be bought from this page, deliberately. The {intakeMinutes}-minute fit
             check comes first, because which tier fits depends on what your export contains and
             who in your office has time to work it.
@@ -195,7 +195,7 @@ export default function PricingPage() {
                   href="https://belkins.io/blog/appointment-setting-costs-pricing-models"
                   rel="nofollow noopener"
                   target="_blank"
-                  className="text-gold-200 underline underline-offset-4"
+                  className="text-accent underline underline-offset-4"
                 >
                   Belkins pricing guide
                 </a>,
@@ -208,7 +208,7 @@ export default function PricingPage() {
                   href="https://salesbread.com/appointment-setting-services-cost/"
                   rel="nofollow noopener"
                   target="_blank"
-                  className="text-gold-200 underline underline-offset-4"
+                  className="text-accent underline underline-offset-4"
                 >
                   SalesBread cost guide
                 </a>,
@@ -221,7 +221,7 @@ export default function PricingPage() {
                   href="https://www.cleverly.co/blog/linkedin-lead-generation-cost"
                   rel="nofollow noopener"
                   target="_blank"
-                  className="text-gold-200 underline underline-offset-4"
+                  className="text-accent underline underline-offset-4"
                 >
                   Cleverly
                 </a>,
@@ -234,7 +234,7 @@ export default function PricingPage() {
                   href="https://www.cience.com/pricing"
                   rel="nofollow noopener"
                   target="_blank"
-                  className="text-gold-200 underline underline-offset-4"
+                  className="text-accent underline underline-offset-4"
                 >
                   CIENCE pricing page
                 </a>,
@@ -247,7 +247,7 @@ export default function PricingPage() {
                   href="https://www.miniloop.ai/blog/callbox-pricing"
                   rel="nofollow noopener"
                   target="_blank"
-                  className="text-gold-200 underline underline-offset-4"
+                  className="text-accent underline underline-offset-4"
                 >
                   Callbox (third-party reported)
                 </a>,
@@ -295,7 +295,7 @@ export default function PricingPage() {
             begins before it. From there:
           </p>
           <p className="mt-3">
-            <span className="text-bone">Which phases apply depends on your tier.</span> Lead Engine
+            <span className="text-ink">Which phases apply depends on your tier.</span> Lead Engine
             ends at handover: you get the agreed job profile, your own history cleaned and ranked,
             the researched and cited partner list, and the scripts, and you run the sending
             yourself. So the mailbox, approval, warm-up, sequence and reply-triage phases below are
@@ -309,10 +309,10 @@ export default function PricingPage() {
               on, so all three are now labelled. */}
           <ol className="mt-4 space-y-3">
             {serviceTimeline.map((p) => (
-              <li key={p.label} className="border-l-2 border-gold-200/30 pl-4">
-                <span className="block text-bone">
+              <li key={p.label} className="border-l-2 border-line pl-4">
+                <span className="block text-ink">
                   {p.band} — {p.label}
-                  <span className="ml-2 align-middle text-[11px] font-semibold uppercase tracking-[0.14em] text-gold-200/85">
+                  <span className="ml-2 align-middle text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">
                     {p.owner === "you" ? "Yours" : p.owner === "we" ? "Ours" : "Both"}
                   </span>
                 </span>
@@ -326,16 +326,16 @@ export default function PricingPage() {
         <GuideSection title="Where your prospects come from: your own records, and partners we research">
           <p>
             Two lanes, kept strictly separate.{" "}
-            <span className="text-bone">Homeowners come from you, never from us.</span> We do not,
+            <span className="text-ink">Homeowners come from you, never from us.</span> We do not,
             and will not, cold-source your buyers. The campaign runs on{" "}
-            <span className="text-bone">demand you already own</span>: past customers, open and
+            <span className="text-ink">demand you already own</span>: past customers, open and
             expired estimates, lapsed maintenance agreements, missed calls and prior enquiries,
             exported from your own system. We cannot research, buy or infer those records. Only you
             can send them, and nothing is contacted until they are imported and you have approved
             the list.
           </p>
           <p>
-            <span className="text-bone">Referral partners we do research.</span> Builders, general
+            <span className="text-ink">Referral partners we do research.</span> Builders, general
             contractors, property managers, realtors, plumbers, electricians and home inspectors
             are businesses, not private individuals, so we source those from free public sources.
             Every record carries the public source it came from, a fit reason and a confidence
@@ -355,7 +355,7 @@ export default function PricingPage() {
             side can cancel for any reason on 14 days&rsquo; written notice by email.
           </p>
           <p>
-            <span className="text-bone">The current month is non-refundable and is not prorated</span>,
+            <span className="text-ink">The current month is non-refundable and is not prorated</span>,
             because the fee is earned as that month&rsquo;s research, writing, sending, and
             reporting is performed. If we have not begun work on a period, we refund it in full.
             We do not refund on the basis that a result did not happen, because we never promise
@@ -366,7 +366,7 @@ export default function PricingPage() {
             When an engagement ends you keep the work from every period you paid for — the prospect
             research, the scripts, the drafted messages, and the trackers — plus the current
             suppression and opt-out list, handed over within five business days.{" "}
-            <a href="/terms#billing" className="text-gold-200 underline underline-offset-4">
+            <a href="/terms#billing" className="text-accent underline underline-offset-4">
               Read the full billing, cancellation, and refund terms
             </a>
             .
@@ -378,7 +378,7 @@ export default function PricingPage() {
             If you have no clear offer, no capacity for new work, or nobody to answer interested
             replies within a business day, fix that before buying pipeline help from any vendor —
             including us. The{" "}
-            <a href="/free-pipeline-audit" className="text-gold-200 underline underline-offset-4">
+            <a href="/free-pipeline-audit" className="text-accent underline underline-offset-4">
               free pipeline audit
             </a>{" "}
             exists partly for this: sometimes it shows the bottleneck isn&rsquo;t your targeting,
@@ -391,10 +391,10 @@ export default function PricingPage() {
               above cites the same fragment — so a specific answer is linkable and quotable on
               its own. Rewording a question changes its anchor, which is a URL change: check
               nothing external deep-links to the old one first. */}
-          <div className="divide-y divide-gold-500/12 border-y border-gold-500/12">
+          <div className="divide-y divide-line border-y border-line">
             {pageFaqs.map((f) => (
               <div key={f.question} id={faqSlug(f.question)} className="scroll-mt-20 py-5">
-                <h3 className="text-lg font-semibold text-bone">{f.question}</h3>
+                <h3 className="text-lg font-semibold text-ink">{f.question}</h3>
                 <p className="mt-2 leading-7">{f.answer}</p>
               </div>
             ))}

@@ -249,7 +249,7 @@ export default function QualificationFlow() {
             <div className="grid gap-6 py-6">
               {step === 1 ? (
                 <>
-                  <p className="text-sm leading-6 text-muted">
+                  <p className="text-sm leading-6 text-subtle">
                     Four short steps, about {intakeMinutes} minutes. At the end you&rsquo;ll get a
                     straight answer on whether this is a fit &mdash; including if it isn&rsquo;t.
                   </p>
@@ -436,14 +436,14 @@ export default function QualificationFlow() {
                       rows={2}
                     />
                   </Field>
-                  <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-muted">
+                  <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-subtle">
                     <input
                       type="checkbox"
                       checked={contact.consent}
                       onChange={(e) => setContactField("consent", e.target.checked)}
                       aria-invalid={errors.consent ? true : undefined}
                       aria-describedby={errors.consent ? "q-consent-error" : undefined}
-                      className="mt-1 h-4 w-4 shrink-0 accent-gold-400"
+                      className="mt-1 h-4 w-4 shrink-0 accent-accent"
                     />
                     <span>
                       I&apos;m happy to be contacted about this enquiry. No spam, and you can opt
@@ -453,7 +453,7 @@ export default function QualificationFlow() {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="text-gold-200 underline underline-offset-2 hover:text-gold-400"
+                        className="text-accent underline underline-offset-2 hover:text-accent"
                       >
                         Privacy Policy
                       </a>
@@ -484,24 +484,24 @@ export default function QualificationFlow() {
               ) : null}
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-gold-500/14 pt-5">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-line pt-5">
               {step > 1 ? (
                 <button
                   type="button"
                   onClick={() => setStep(step - 1)}
-                  className="-ml-2 inline-flex min-h-11 items-center px-2 text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+                  className="-ml-2 inline-flex min-h-11 items-center px-2 text-sm font-semibold text-accent transition-colors hover:text-accent"
                 >
                   ← Back
                 </button>
               ) : (
-                <span className="text-xs text-muted">
+                <span className="text-xs text-subtle">
                   No card, no obligation. About {intakeMinutes} minutes.
                 </span>
               )}
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 text-sm font-semibold text-ink-950 shadow-gold transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex min-h-12 items-center justify-center rounded-sm border border-accent/45 bg-accent-fill px-6 text-sm font-semibold text-paper shadow-lift transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {step < LAST_QUESTION_STEP ? (
                   <>
@@ -571,10 +571,10 @@ function ResultStep({
 }) {
   const tone =
     result.outcome === "strong"
-      ? { border: "border-gold-500/45", chip: "Strong fit", chipClass: "border-gold-500/60 bg-gold-500/12 text-gold-200" }
+      ? { border: "border-accent/45", chip: "Strong fit", chipClass: "border-accent/45 bg-accent-soft text-accent" }
       : result.outcome === "explore"
-        ? { border: "border-gold-500/25", chip: "Likely fit", chipClass: "border-gold-500/35 bg-gold-500/8 text-gold-200" }
-        : { border: "border-muted/25", chip: "Not a fit today", chipClass: "border-muted/35 bg-ink-950/60 text-muted" };
+        ? { border: "border-line", chip: "Likely fit", chipClass: "border-accent/45 bg-accent-soft text-accent" }
+        : { border: "border-line-strong", chip: "Not a fit today", chipClass: "border-line-strong bg-surface text-subtle" };
 
   return (
     <div className="grid gap-6 py-6">
@@ -582,12 +582,12 @@ function ResultStep({
         <p
           ref={headingRef}
           tabIndex={-1}
-          className="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80 outline-none"
+          className="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-accent outline-none"
         >
           <span className={`rounded-sm border px-2.5 py-1 ${tone.chipClass}`}>{tone.chip}</span>
-          {stored && leadId ? <span className="text-muted/70">Ref {leadId}</span> : null}
+          {stored && leadId ? <span className="text-subtle">Ref {leadId}</span> : null}
         </p>
-        <h3 className="mt-4 font-display text-3xl leading-tight text-bone sm:text-4xl">
+        <h3 className="mt-4 font-display text-3xl leading-tight text-ink sm:text-4xl">
           {result.headline}
         </h3>
       </div>
@@ -643,14 +643,14 @@ function ResultStep({
       ) : null}
 
       {result.reasons.length > 0 ? (
-        <div className={`rounded-lg border ${tone.border} bg-ink-950/50 p-5`}>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-200/75">
+        <div className={`rounded-lg border ${tone.border} bg-surface p-5`}>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
             Why, specifically
           </p>
           <ul className="mt-4 space-y-3">
             {result.reasons.map((reason) => (
-              <li key={reason} className="flex gap-3 text-sm leading-6 text-bone/90">
-                <span aria-hidden="true" className="mt-0.5 text-gold-200">✓</span>
+              <li key={reason} className="flex gap-3 text-sm leading-6 text-ink/90">
+                <span aria-hidden="true" className="mt-0.5 text-accent">✓</span>
                 <span>{reason}</span>
               </li>
             ))}
@@ -659,14 +659,14 @@ function ResultStep({
       ) : null}
 
       {result.watchouts.length > 0 ? (
-        <div className="rounded-lg border border-gold-500/16 bg-ink-950/50 p-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+        <div className="rounded-lg border border-line bg-surface p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-subtle">
             {result.outcome === "not_yet" ? "Here's the honest reason" : "What we'd need to confirm"}
           </p>
           <ul className="mt-4 space-y-3">
             {result.watchouts.map((w) => (
-              <li key={w} className="flex gap-3 text-sm leading-6 text-muted">
-                <span aria-hidden="true" className="mt-0.5 text-muted/70">—</span>
+              <li key={w} className="flex gap-3 text-sm leading-6 text-subtle">
+                <span aria-hidden="true" className="mt-0.5 text-subtle">—</span>
                 <span>{w}</span>
               </li>
             ))}
@@ -675,19 +675,19 @@ function ResultStep({
       ) : null}
 
       {result.recommendedTier ? (
-        <p className="text-sm leading-6 text-muted">
-          <span className="font-semibold text-gold-200">Where we&rsquo;d probably start: </span>
+        <p className="text-sm leading-6 text-subtle">
+          <span className="font-semibold text-accent">Where we&rsquo;d probably start: </span>
           {result.recommendedTier}. That&rsquo;s a read from your answers, not a quote &mdash;
           nothing is agreed until you&rsquo;ve seen the audit, and you can move tiers as the
           season changes.{" "}
-          <a href="/pricing" className="text-gold-200 underline underline-offset-2 hover:text-gold-400">
+          <a href="/pricing" className="text-accent underline underline-offset-2 hover:text-accent">
             See what each tier covers
           </a>
           .
         </p>
       ) : null}
 
-      <p className="text-base leading-7 text-bone">{result.nextStep}</p>
+      <p className="text-base leading-7 text-ink">{result.nextStep}</p>
 
       {result.offerBooking && bookingUrl ? (
         <>
@@ -696,11 +696,11 @@ function ResultStep({
               as a cold ask wearing a warm label: rungs 0 and 1 are delivered in writing
               and a call is never their price. So the audit is already promised above,
               unconditionally, and this block is the optional next rung. */}
-          <div className="rounded-lg border border-gold-500/20 bg-ink-950/50 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-200/75">
+          <div className="rounded-lg border border-line bg-surface p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               Optional, and not a condition
             </p>
-            <p className="mt-3 text-sm leading-6 text-muted">
+            <p className="mt-3 text-sm leading-6 text-subtle">
               If you&rsquo;d rather go through the audit together once it lands, pick a time. It
               is a walkthrough of your own work, not a sales call &mdash; and the audit reaches
               you either way, whether or not you book anything.
@@ -710,27 +710,27 @@ function ResultStep({
               target="_blank"
               rel="noopener noreferrer"
               onClick={onOpenScheduler}
-              className="mt-4 inline-flex min-h-12 w-fit items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 text-sm font-semibold text-ink-950 shadow-gold transition-transform hover:scale-[1.02]"
+              className="mt-4 inline-flex min-h-12 w-fit items-center justify-center rounded-sm border border-accent/45 bg-accent-fill px-6 text-sm font-semibold text-paper shadow-lift transition-transform hover:scale-[1.02]"
             >
               Book the {callLengthMinutes}-minute walkthrough <span aria-hidden="true" className="ml-2">↗</span>
             </a>
           </div>
           {bookingEmbeddable ? (
-            <div className="overflow-hidden rounded-sm border border-gold-500/20 bg-ink-950/60">
+            <div className="overflow-hidden rounded-sm border border-line bg-surface">
               <iframe src={bookingUrl} title="Book a call" className="h-[520px] w-full" loading="lazy" />
             </div>
           ) : bookingConfirmed ? (
             // Shown only after the scheduler was actually opened, so it answers the
             // question the visitor now has ("did that work?") instead of pre-empting
             // one they haven't asked.
-            <p className="rounded-sm border border-gold-500/20 bg-ink-950/50 px-4 py-3 text-sm leading-6 text-muted">
+            <p className="rounded-sm border border-line bg-surface px-4 py-3 text-sm leading-6 text-subtle">
               The scheduler opened in a new tab. Once you&rsquo;ve picked a time, Google emails you
               the confirmation and the call lands on both calendars &mdash; there&rsquo;s nothing
               else to send us. If the tab didn&rsquo;t open, your browser blocked it; the button
               above will work on a second click.
             </p>
           ) : (
-            <p className="text-sm leading-6 text-muted">
+            <p className="text-sm leading-6 text-subtle">
               Opens the calendar in a new tab. Nothing to email back and forth &mdash; pick a slot
               and it&rsquo;s booked.
             </p>
@@ -739,11 +739,11 @@ function ResultStep({
       ) : null}
 
       {result.suggestedReading ? (
-        <p className="text-sm leading-6 text-muted">
-          <span className="font-semibold text-gold-200">Worth reading either way: </span>
+        <p className="text-sm leading-6 text-subtle">
+          <span className="font-semibold text-accent">Worth reading either way: </span>
           <a
             href={result.suggestedReading.href}
-            className="text-gold-200 underline underline-offset-2 hover:text-gold-400"
+            className="text-accent underline underline-offset-2 hover:text-accent"
           >
             {result.suggestedReading.label}
           </a>
@@ -752,7 +752,7 @@ function ResultStep({
 
       <Link
         href="/"
-        className="-ml-2 inline-flex min-h-11 w-fit items-center px-2 text-sm font-semibold text-gold-200 transition-colors hover:text-gold-400"
+        className="-ml-2 inline-flex min-h-11 w-fit items-center px-2 text-sm font-semibold text-accent transition-colors hover:text-accent"
       >
         ← Back to the site
       </Link>
@@ -767,7 +767,7 @@ function ResultStep({
 function StepIndicator({ step }: { step: number }) {
   const current = STEPS.find((s) => s.n === step);
   return (
-    <div className="border-b border-gold-500/12 pb-5">
+    <div className="border-b border-line pb-5">
       {/* The dots are decorative; this sentence is what a screen reader gets. */}
       <p className="sr-only">
         Step {step} of {STEPS.length}: {current?.label}.
@@ -777,12 +777,12 @@ function StepIndicator({ step }: { step: number }) {
           <span
             key={s.n}
             className={`h-1 flex-1 rounded-full transition-colors ${
-              s.n <= step ? "bg-gold-400" : "bg-gold-500/18"
+              s.n <= step ? "bg-accent" : "bg-accent-soft"
             }`}
           />
         ))}
       </div>
-      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-gold-200/75" aria-hidden="true">
+      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-accent" aria-hidden="true">
         Step {step} of {STEPS.length} · {current?.label}
       </p>
     </div>

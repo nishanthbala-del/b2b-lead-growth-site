@@ -12,8 +12,13 @@
  * deleted. Dead CSS is not free: it ships on every page and it is the thing a future
  * editor copies from when they want "the house style". */
 
+/* Light. The palette moved from a near-black ground with a gold accent to white
+   with strong dark type and one restrained bronze accent (tailwind.config.ts has the
+   contrast numbers). color-scheme drives the UA's own form controls, scrollbars and
+   focus rings, so leaving it `dark` here would have kept native widgets rendering
+   dark against a white page. */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * {
@@ -24,23 +29,25 @@ html {
   /* Native smooth scrolling for in-page anchors. Nothing intercepts the scroll
      position any more, so this is the whole implementation. */
   scroll-behavior: smooth;
-  background: #0a0a0b;
+  background: #ffffff;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(201, 162, 75, 0.08), transparent 38rem),
-    #0a0a0b;
-  color: #f5f1e8;
+  /* Flat white. The old ground carried a gold radial bloom behind the hero, which is
+     the one gesture that read most like a high-ticket coaching page rather than a
+     consulting one — and on a light ground any tint behind the headline just muddies
+     the type it sits under. Whitespace does that job here instead. */
+  background: #ffffff;
+  color: #15151a;
   font-family: var(--font-sans), Inter, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: rgba(212, 175, 55, 0.34);
-  color: #fff8df;
+  background: rgba(138, 106, 35, 0.18);
+  color: #15151a;
 }
 
 a {
@@ -66,7 +73,10 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid #e8d9a8;
+  /* The focus ring has to be visible on WHITE now, not on near-black. The old pale
+     gold (#e8d9a8) measures 1.35:1 against #ffffff — an invisible focus ring, which is
+     the keyboard user's equivalent of the invisible form fields this pass fixed. */
+  outline: 2px solid #8a6a23;
   outline-offset: 3px;
 }
 

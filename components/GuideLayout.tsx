@@ -32,7 +32,7 @@ export default function GuideLayout({
       page's title question in 40 words or fewer, before any preamble — it is the passage
       an answer engine lifts out, so it has to make sense with no page around it and must
       restate its subject rather than lean on a pronoun. Substantiation goes in the
-      paragraphs after it. Set that first <p> to `text-bone` so the lead reads as the
+      paragraphs after it. Set that first <p> to `text-ink` so the lead reads as the
       answer rather than as an introduction. */
   intro: ReactNode;
   children: ReactNode;
@@ -42,15 +42,15 @@ export default function GuideLayout({
   return (
     <PageShell>
       <main className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
-        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
           {eyebrow}
         </p>
-        <h1 className="font-display text-4xl leading-tight text-bone sm:text-5xl">{h1}</h1>
-        <p className="mt-4 text-sm text-muted">
+        <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl">{h1}</h1>
+        <p className="mt-4 text-sm text-subtle">
           Last updated: {formatDate(page.dateModified)}
         </p>
 
-        <div className="mt-8 space-y-4 text-lg leading-8 text-muted">{intro}</div>
+        <div className="mt-8 space-y-4 text-lg leading-8 text-subtle">{intro}</div>
 
         {children}
 
@@ -65,11 +65,11 @@ export default function GuideLayout({
             which every guide links to in "Keep reading" below. What must never be dropped
             is "No call is required to receive it": that clause is the offer's rule, and
             tests/offer-integrity.test.ts fails if any page gates the audit behind a call. */}
-        <section className="mt-14 rounded-lg border border-gold-500/20 bg-ink-900/72 p-6 sm:p-8">
-          <h2 className="font-display text-2xl text-bone sm:text-3xl">
+        <section className="mt-14 rounded-lg border border-line bg-surface p-6 sm:p-8">
+          <h2 className="font-display text-2xl text-ink sm:text-3xl">
             Find out whether this is a fit — and get the audit either way.
           </h2>
-          <p className="mt-4 leading-7 text-muted">
+          <p className="mt-4 leading-7 text-subtle">
             {intakeMinutes} minutes of questions, then a straight answer — including
             &ldquo;no&rdquo;. If it is a fit, your free pipeline audit follows in writing. No call
             is required to receive it, and it is yours to keep either way. It shows the quality of
@@ -78,17 +78,17 @@ export default function GuideLayout({
           <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
             <Link
               href="/start"
-              className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 font-semibold text-ink-950 shadow-gold"
+              className="inline-flex min-h-12 items-center justify-center rounded-sm border border-accent/45 bg-accent-fill px-6 font-semibold text-paper shadow-lift"
             >
               See if we&rsquo;re a fit <span className="ml-3" aria-hidden="true">→</span>
             </Link>
-            <span className="text-sm text-muted">No card. A straight answer either way.</span>
+            <span className="text-sm text-subtle">No card. A straight answer either way.</span>
           </div>
         </section>
 
         {/* Internal links: every guide links to every other guide with a descriptive anchor. */}
-        <nav aria-label="More guides" className="mt-12 border-t border-gold-500/14 pt-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
+        <nav aria-label="More guides" className="mt-12 border-t border-line pt-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
             Keep reading
           </p>
           <ul className="mt-4 space-y-3">
@@ -96,7 +96,7 @@ export default function GuideLayout({
               <li key={g.slug}>
                 <Link
                   href={`/${g.slug}`}
-                  className="inline-flex min-h-11 items-center text-gold-200 underline underline-offset-4 transition-colors hover:text-gold-400"
+                  className="inline-flex min-h-11 items-center text-accent underline underline-offset-4 transition-colors hover:text-accent"
                 >
                   {g.metaTitle}
                 </Link>
@@ -123,8 +123,8 @@ export function GuideSection({
 }) {
   return (
     <section id={id} className="mt-12 scroll-mt-20">
-      <h2 className="font-display text-3xl leading-tight text-bone">{title}</h2>
-      <div className="mt-4 space-y-4 leading-7 text-muted">{children}</div>
+      <h2 className="font-display text-3xl leading-tight text-ink">{title}</h2>
+      <div className="mt-4 space-y-4 leading-7 text-subtle">{children}</div>
     </section>
   );
 }
@@ -133,14 +133,14 @@ export function KeyAnswer({ children }: { children: ReactNode }) {
   // A visually distinct, self-contained direct answer near the top of a section —
   // the extractable passage AI search products actually quote.
   return (
-    <div className="mt-6 rounded-lg border border-gold-500/25 bg-ink-900/72 p-5 leading-7 text-bone/90">
+    <div className="mt-6 rounded-lg border border-line bg-surface p-5 leading-7 text-ink/90">
       {children}
     </div>
   );
 }
 
 export function SourceNote({ children }: { children: ReactNode }) {
-  return <p className="text-sm leading-6 text-muted/80">{children}</p>;
+  return <p className="text-sm leading-6 text-subtle">{children}</p>;
 }
 
 export function GuideTable({
@@ -154,7 +154,7 @@ export function GuideTable({
 }) {
   return (
     <div
-      className="mt-6 overflow-x-auto rounded-lg border border-gold-500/16 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold-400"
+      className="mt-6 overflow-x-auto rounded-lg border border-line focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
       tabIndex={0}
       role="region"
       aria-label={caption}
@@ -162,9 +162,9 @@ export function GuideTable({
       <table className="w-full min-w-[560px] border-collapse text-left text-sm">
         <caption className="sr-only">{caption}</caption>
         <thead>
-          <tr className="border-b border-gold-500/20 bg-ink-900/80">
+          <tr className="border-b border-line bg-surface">
             {head.map((h) => (
-              <th key={h} scope="col" className="px-4 py-3 font-semibold text-gold-200">
+              <th key={h} scope="col" className="px-4 py-3 font-semibold text-accent">
                 {h}
               </th>
             ))}
@@ -172,18 +172,18 @@ export function GuideTable({
         </thead>
         <tbody>
           {rows.map((row, i) => (
-            <tr key={i} className="border-b border-gold-500/10 last:border-0">
+            <tr key={i} className="border-b border-line last:border-0">
               {row.map((cell, j) =>
                 j === 0 ? (
                   <th
                     key={j}
                     scope="row"
-                    className="px-4 py-3 text-left align-top font-normal leading-6 text-muted"
+                    className="px-4 py-3 text-left align-top font-normal leading-6 text-subtle"
                   >
                     {cell}
                   </th>
                 ) : (
-                  <td key={j} className="px-4 py-3 align-top leading-6 text-muted">
+                  <td key={j} className="px-4 py-3 align-top leading-6 text-subtle">
                     {cell}
                   </td>
                 ),
