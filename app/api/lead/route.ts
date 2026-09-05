@@ -31,8 +31,8 @@ type LeadPayload = {
   source?: string;
   /** Campaign tag from /start?src=… , so outbound batches are attributable. */
   campaign?: string;
-  /** Referral token from /start?t=… — which CLIENT shared the link. Never derived
-   *  from `campaign`: that traces an outbound batch, not a person vouching for us. */
+  /** Referral token from /start?t=… (or /refer?t=… -> ?ref=…) — which CLIENT shared the link.
+   *  Never derived from `campaign`: that traces an outbound batch, not a person vouching for us. */
   referralToken?: string;
   // Honeypot — must stay empty for real humans.
   hp_leave_blank?: string;
@@ -111,6 +111,8 @@ const CSV_COLUMNS = [
   "recommendedTier",
   "qualificationSummary",
   "campaign",
+  // Added with the review/referral flywheel (operating-system repo's
+  // scripts/run_review_referral.py mints the token; scripts/credit_referrals.py matches it back).
   "referralToken",
 ] as const;
 

@@ -24,6 +24,7 @@ const urls = [
   "/shared-vs-exclusive-hvac-leads",
   "/how-to-choose-a-lead-generation-agency",
   "/start",
+  "/reviews",
   "/privacy",
   "/terms",
 ].map((p) => `https://${HOST}${p}`);

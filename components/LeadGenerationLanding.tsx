@@ -8,6 +8,7 @@ import {
   idealFor,
   notFor,
   plans,
+  reviews,
   riskReversal,
 } from "@/lib/content";
 import {
@@ -617,6 +618,36 @@ function CredibilitySection() {
       title="No case studies. Here is what you can check instead."
       tint
     >
+      {/* Conditional on purpose: this reads true either way. Empty today (no real client has
+          left one), and the moment lib/content.ts `reviews` gets its first real, consented entry
+          (see scripts/record_review.py in the operating-system repo) this line flips to pointing
+          at it — no second content change needed. */}
+      <p className="text-sm leading-6 text-muted">
+        {reviews.length > 0 ? (
+          <>
+            What we do have:{" "}
+            <Link
+              href="/reviews"
+              className="font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400"
+            >
+              real client reviews
+            </Link>
+            , published only with the client&rsquo;s own words and named consent.
+          </>
+        ) : (
+          <>
+            As of this page, there are no client reviews yet — this is a young company and we said
+            so above rather than inventing any.{" "}
+            <Link
+              href="/reviews"
+              className="font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400"
+            >
+              The reviews page
+            </Link>{" "}
+            will show real ones, with names and consent on file, the moment they exist.
+          </>
+        )}
+      </p>
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
         {credibility.map((item) => (
           <div key={item.title} className="rounded-lg border border-gold-500/16 bg-ink-950/60 p-5">

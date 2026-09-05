@@ -114,6 +114,7 @@ export const guidePages: GuidePage[] = [
 // their own metadata, linked from the site and from outbound email.
 export const standaloneRoutes = [
   { slug: "start", navLabel: "Fit check", dateModified: "2026-08-27", priority: 0.9 },
+  { slug: "reviews", navLabel: "Reviews", dateModified: "2026-09-05", priority: 0.5 },
 ] as const;
 
 /** Every indexable path on the site, in sitemap order. The drift test reads this. */

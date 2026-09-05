@@ -98,16 +98,16 @@ export default function QualificationFlow() {
   // because the latter forces this page out of static generation for a value that is
   // purely informational. Cookieless, first-party, and never read back to the visitor.
   const [campaign, setCampaign] = useState("");
-  // The REFERRAL token, from /start?t=… — a different question from `campaign` and
-  // deliberately a separate field. `campaign` traces which outbound batch produced a
-  // visit; `referralToken` traces which existing client shared the link. Mapping one
-  // from the other would credit every batch-tagged visitor to a referral that never
-  // happened, which is a fabricated attribution.
+  // The REFERRAL token, from /start?t=… (or /refer?t=... -> /start?ref=..., app/refer/page.tsx)
+  // — a different question from `campaign` and deliberately a separate field. `campaign` traces
+  // which outbound batch produced a visit; `referralToken` traces which existing client shared
+  // the link. Mapping one from the other would credit every batch-tagged visitor to a referral
+  // that never happened, which is a fabricated attribution.
   //
-  // The operating system's credit_referrals.py reads this token out of intake_log.csv
-  // and matches it against data/referrals/tokens.csv. Until now nothing on this side
-  // ever sent one, so that lane could not credit anybody: the flywheel was wired at the
-  // far end and open at this one.
+  // The operating system's credit_referrals.py reads this token out of intake_log.csv and
+  // matches it against data/referrals/tokens.csv (minted by scripts/run_review_referral.py, as
+  // 8 hex characters today — but this accepts the site's general closed charset, same as
+  // `campaign`, rather than hard-coding that shape here too).
   const [referralToken, setReferralToken] = useState("");
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);

@@ -109,6 +109,16 @@ const HEADERS = [
   'campaign', 'referralToken', 'bookingOpenedAt'
 ];
 
+// The 'Feedback' tab — a client's review or referral submission (/for-clients?t=<token>), a
+// SEPARATE sheet from Leads because it is a different shape and a different audience (a signed
+// client, not a cold visitor). Same syncHeader() migration discipline as the Leads tab, so a
+// future field is additive here too.
+const FEEDBACK_SHEET_NAME = 'Feedback';
+const FEEDBACK_HEADERS = [
+  'id', 'timestamp', 'type', 'token', 'quote', 'name', 'company', 'consent',
+  'businessName', 'contactName', 'contactEmail', 'notes', 'ip'
+];
+
 function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents);
@@ -124,8 +134,19 @@ function doPost(e) {
     if (!lock.tryLock(20000)) return json({ ok: false, error: 'busy' });
 
     try {
-      const sheet = getSheet();
-      const header = syncHeader(sheet);
+      // action === 'client_feedback' — a signed client's review/referral submission
+      // (/for-clients?t=<token>). Its own tab: different shape, different audience, and it
+      // must never touch the Leads sheet's row numbering that markBookingOpened relies on.
+      if (body.action === 'client_feedback') {
+        const fbSheet = getSheet(FEEDBACK_SHEET_NAME, FEEDBACK_HEADERS);
+        const fbHeader = syncHeader(fbSheet, FEEDBACK_HEADERS);
+        const fbRow = fbHeader.map(function (h) { return body[h] != null ? body[h] : ''; });
+        fbSheet.getRange(fbSheet.getLastRow() + 1, 1, 1, fbHeader.length).setValues([fbRow]);
+        return json({ ok: true });
+      }
+
+      const sheet = getSheet(SHEET_NAME, HEADERS);
+      const header = syncHeader(sheet, HEADERS);
 
       if (body.action === 'booking_opened') {
         markBookingOpened(sheet, header, body.id, body.timestamp);
@@ -161,11 +182,11 @@ function doPost(e) {
   }
 }
 
-function getSheet() {
+function getSheet(name, headers) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
+  let sheet = ss.getSheetByName(name) || ss.insertSheet(name);
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(HEADERS);
+    sheet.appendRow(headers);
     sheet.setFrozenRows(1);
   }
   return sheet;
@@ -174,22 +195,22 @@ function getSheet() {
 // Bring an existing sheet up to date WITHOUT touching the rows already in it, and
 // return the header actually in force.
 //
-// Any name in HEADERS that the sheet does not have yet is APPENDED on the right. That
-// is why the write must go by name: the old 17-column header had `ip` in column 16,
+// Any name in `headers` that the sheet does not have yet is APPENDED on the right. That
+// is why the write must go by name: the old 17-column Leads header had `ip` in column 16,
 // where HEADERS now has `consent`, so rewriting row 1 in place would silently relabel
 // every historical row's IP address as a consent flag. Appending leaves old rows
 // correct under their own labels and lets new rows fill everything.
-function syncHeader(sheet) {
+function syncHeader(sheet, headers) {
   const width = Math.max(sheet.getLastColumn(), 1);
   let header = sheet.getRange(1, 1, 1, width).getValues()[0]
     .map(function (v) { return String(v || ''); })
     .filter(function (v) { return v !== ''; });
   if (!header.length) {
-    sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
     sheet.setFrozenRows(1);
-    return HEADERS.slice();
+    return headers.slice();
   }
-  const missing = HEADERS.filter(function (h) { return header.indexOf(h) === -1; });
+  const missing = headers.filter(function (h) { return header.indexOf(h) === -1; });
   if (missing.length) {
     sheet.getRange(1, header.length + 1, 1, missing.length).setValues([missing]);
     header = header.concat(missing);
