@@ -10,6 +10,7 @@ import {
   contactEmail,
   organizationProfiles,
 } from "@/lib/site";
+import { homepageMetaTitle, homepageDescription, ogImages } from "@/lib/pages";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -23,41 +24,41 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-// Title kept under ~60 characters so Google doesn't truncate it. It leads with the
-// NICHE + the service, because "HVAC lead generation" is what the buyer searches and
-// "B2B Lead Growth" is a brand nobody is looking for yet. Description under ~155
-// characters, and it names the actual mechanism (your own list + referral partners)
-// rather than implying we sell homeowner leads, which we do not.
-const siteTitle = "HVAC Lead Generation & Appointment Setting | B2B Lead Growth";
-const siteDescription =
-  "Reactivate the unsold estimates and lapsed agreements already in your system, plus referral-partner outreach. For established HVAC companies. From $750/mo.";
-
+// The homepage's title and description now sit in lib/pages.ts alongside every other
+// route's, so one file holds the whole site's metadata and app/page.tsx can build its
+// WebPage node from the exact strings this file renders. The reasoning behind the two
+// strings — the ~60/~155 character budgets, why the niche leads, and why the price was
+// taken out of the snippet — is recorded there.
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: siteTitle, template: "%s | B2B Lead Growth" },
-  description: siteDescription,
+  // The template is a safety net for any future page that sets a bare string title.
+  // Every page today goes through `pageMetadata`, which opts out of it on purpose: the
+  // 18 characters it appends were pushing five rendered titles past what Google shows.
+  title: { default: homepageMetaTitle, template: "%s | B2B Lead Growth" },
+  description: homepageDescription,
   applicationName: brandName,
-  keywords: [
-    "HVAC lead generation",
-    "HVAC appointment setting",
-    "HVAC customer reactivation",
-    "HVAC marketing New Jersey",
-    "unsold estimate follow-up",
-    "HVAC referral partners",
-    "HVAC maintenance agreement renewals",
-  ],
+  // No `keywords` meta tag. Google has ignored it since 2009 and Bing reads a stuffed
+  // one as a spam signal, so its only real effect here was publishing our target-phrase
+  // list to competitors on all nine routes. What this company actually knows about is
+  // asserted in `knowsAbout` on the Organization node below, which engines do read.
   alternates: { canonical: "/" },
   openGraph: {
-    title: siteTitle,
-    description: siteDescription,
+    title: homepageMetaTitle,
+    description: homepageDescription,
     type: "website",
     siteName: brandName,
     url: "/",
+    // The same array every other route uses, so all nine advertise one og:image URL with
+    // a declared type. The homepage was getting the file-convention URL and the other
+    // eight a bare one — and social platforms cache og:image by URL, so a redesign would
+    // have refreshed one card and stranded the rest.
+    images: ogImages,
   },
   twitter: {
     card: "summary_large_image",
-    title: siteTitle,
-    description: siteDescription,
+    title: homepageMetaTitle,
+    description: homepageDescription,
+    images: ogImages,
   },
 };
 

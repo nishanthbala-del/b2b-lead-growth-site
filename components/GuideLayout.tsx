@@ -28,7 +28,12 @@ export default function GuideLayout({
   eyebrow: string;
   /** The visible H1 (may differ slightly from the meta title). */
   h1: string;
-  /** Answer-first opening: 2–3 sentences that directly answer the page's question. */
+  /** Answer-first opening. The FIRST paragraph must be a self-contained answer to the
+      page's title question in 40 words or fewer, before any preamble — it is the passage
+      an answer engine lifts out, so it has to make sense with no page around it and must
+      restate its subject rather than lean on a pronoun. Substantiation goes in the
+      paragraphs after it. Set that first <p> to `text-bone` so the lead reads as the
+      answer rather than as an introduction. */
   intro: ReactNode;
   children: ReactNode;
 }) {
@@ -51,17 +56,24 @@ export default function GuideLayout({
 
         {/* ONE call to action, the same one used on every page. This carried three
             competing buttons; a reader at the end of a guide needs a next step, not a
-            menu. The two secondary destinations are still linked from the homepage. */}
+            menu. The two secondary destinations are still linked from the homepage.
+
+            The paragraph is deliberately short. It used to restate the audit's full
+            contents on all five guides — 365 words site-wide — and on /free-pipeline-audit
+            it restated that page's own premise a screen below the original. A closing CTA
+            needs the action and one reason; the deliverable list belongs on the audit page,
+            which every guide links to in "Keep reading" below. What must never be dropped
+            is "No call is required to receive it": that clause is the offer's rule, and
+            tests/offer-integrity.test.ts fails if any page gates the audit behind a call. */}
         <section className="mt-14 rounded-lg border border-gold-500/20 bg-ink-900/72 p-6 sm:p-8">
           <h2 className="font-display text-2xl text-bone sm:text-3xl">
             Find out whether this is a fit — and get the audit either way.
           </h2>
           <p className="mt-4 leading-7 text-muted">
-            {intakeMinutes} minutes of questions and you get a straight answer, including
-            &ldquo;no&rdquo;. If it is a fit, we build your free pipeline audit and send it in
-            writing: a sharpened job profile, 3–5 named referral partners with cited reasons, and
-            one sample message. No call is required to receive it, and it is yours to keep whether
-            or not you hire us. It shows the quality of the work, not a promised result.
+            {intakeMinutes} minutes of questions, then a straight answer — including
+            &ldquo;no&rdquo;. If it is a fit, your free pipeline audit follows in writing. No call
+            is required to receive it, and it is yours to keep either way. It shows the quality of
+            the work, not a promised result.
           </p>
           <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
             <Link

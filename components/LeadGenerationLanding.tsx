@@ -58,15 +58,15 @@ const navItems = [
 const steps = [
   {
     title: "You send one export",
-    body: "Past customers, open and expired estimates, maintenance agreements, missed calls. Straight out of ServiceTitan, Housecall Pro, Jobber, QuickBooks or a spreadsheet. It does not need to be clean.",
+    body: "Past customers, unsold estimates, lapsed agreements, missed calls. Any format: ServiceTitan, Housecall Pro, Jobber, QuickBooks, a spreadsheet. It does not need to be clean.",
   },
   {
     title: "We draft the job profile, you correct it",
-    body: "Service area, system types, job values you want — and the work you would rather turn down. We do not proceed on a definition you have not seen.",
+    body: "Service area, system types, the jobs you want and the ones you would rather turn down. We never proceed on a definition you have not seen.",
   },
   {
     title: "We rank your list and research your partners",
-    body: "Your records cleaned of duplicates and of anyone who asked not to be contacted, then ranked by how close each one is to a real job. Referral partners near you researched from public sources, each with the source link attached.",
+    body: "Duplicates and opt-outs come out. What is left is ranked by how close each record is to a real job. Referral partners near you are researched from public sources, each with its source link.",
   },
   {
     title: "You approve the messaging and the first batch",
@@ -84,19 +84,19 @@ const steps = [
 const credibility = [
   {
     title: "The audit is the sample",
-    body: "Real work on your company, handed over before any money changes hands. Judge the service on that rather than on anything we say here.",
+    body: "Real work on your company, handed over before any money changes hands. Judge us on that, not on anything we say here.",
   },
   {
     title: "Every price is published",
-    body: "Three tiers, on this page, with the monthly ceiling each one carries. Nothing is quoted only on a call.",
+    body: "Three tiers on this page, each with its monthly ceiling. Nothing is quoted only on a call.",
   },
   {
     title: "Every researched prospect carries its source",
-    body: "A public link you can open, plus the specific reason it was picked. No citation means it cannot be contacted at all.",
+    body: "A public link you can open, plus the reason it was picked. No citation, no contact.",
   },
   {
     title: "No case studies, and we will not borrow any",
-    body: "This is a new, founder-led service. There are no client results to show, so there are none on this site.",
+    body: "This is a new, founder-led service. There are no client results to show, so this site shows none.",
   },
 ];
 
@@ -241,20 +241,42 @@ function SiteNav() {
 
 // The five-second test: what this is, who it is for, the problem, and one action.
 // The old hero opened with a 60-word paragraph and three competing buttons.
+//
+// THE H1 STAYS ON THE BUYER'S PROBLEM, NOT ON THE CATEGORY. Between 2026-08-30 and
+// 2026-09-05 this H1 read "HVAC lead generation that starts with the jobs you already
+// quoted", moved there so that some heading on the page would contain the primary
+// keyword. The SEO reasoning was sound and the wording was not: "HVAC lead generation"
+// is what Angi, Thumbtack and every per-lead seller call themselves, so opening with it
+// files this business into the one category this buyer has already been burned by,
+// before it has earned a sentence. The keyword requirement is real, so it is satisfied
+// where it costs nothing — the eyebrow, which is a heading-adjacent line an answer
+// engine reads and a skimming owner does not weigh emotionally, and the H2s below.
+// The H1 goes back to the line that starts inside the reader's own head.
+//
+// THE DECK IS D-021'S POSITIONING SENTENCE, VERBATIM. The site hero is one of exactly
+// three surfaces that decision sanctions for it (core/offer.POSITIONING["surfaces"] =
+// site hero, proposal, reply bridge), and until now it appeared on NONE of them — the
+// one sentence written to stop a prospect meeting a different company on the site than
+// in the email was live nowhere. Copy it exactly if it changes: the canonical string is
+// `core.offer.positioning_sentence()` in the operating-system repo, and the whole point
+// of D-021 is that a sixth independent phrasing never gets written. The verb stays on
+// the WORK (ours, real today, checkable); the metric is counted after the fact and is
+// never promised — that is what makes the sentence shippable at zero clients.
 function Hero() {
   return (
     <section className="border-b border-gold-500/12 bg-ink-950 px-5 py-16 sm:px-8 sm:py-24">
       <div className="mx-auto max-w-5xl">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/85">
-          HVAC lead generation &amp; appointment setting
+          HVAC lead generation for established residential contractors
         </p>
         <h1 className="mt-5 max-w-3xl font-display text-4xl leading-[1.1] text-bone sm:text-5xl lg:text-6xl">
           The jobs you already quoted are still sitting in your system.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-muted sm:text-xl">
-          We follow up the unsold estimates, lapsed maintenance agreements and past customers
-          inside your own records — and reach out to referral partners near you. For established
-          residential HVAC companies. Sent from your domain, with your sign-off.
+          {brandName} runs the outbound and the follow-up for established HVAC companies, and we
+          measure the work by one thing: qualified conversations started. That means your unsold
+          estimates, lapsed maintenance agreements and past customers — plus researched referral
+          partners near you — worked every week, from your own domain, with your sign-off.
         </p>
         <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
           <PrimaryCta />
@@ -264,7 +286,7 @@ function Hero() {
         </div>
         <p className="mt-6 max-w-2xl border-l-2 border-gold-500/40 pl-4 text-base leading-7 text-bone/85">
           Start with a {audit.name}: 3–5 referral partners near you, each with a source link you
-          can open, plus a sample message. No call required, and yours to keep either way.
+          can open, plus one sample message. No call required. Yours to keep either way.
         </p>
       </div>
     </section>
@@ -280,7 +302,10 @@ function Hero() {
 //
 // The copy is not new. `20_MARKETING_MY_SERVICES_SYSTEM/website_copy.md` has specified
 // this section, headline included, since the site was written; it was simply never
-// built. Keep the two in step.
+// built. Keep the two in step. The paragraphs below were compressed in the readability
+// pass (167 words to ~120): the headline and the argument are unchanged and every fact
+// survived, but the wording is now tighter than the source doc's — re-sync there if it
+// is ever regenerated.
 //
 // The discipline that makes it publishable: it invokes the buyer's economics WITHOUT
 // asserting a number. "You know what a replacement is worth to you" uses his arithmetic;
@@ -298,21 +323,19 @@ function PositioningSection() {
         </h2>
         <div className="mt-6 max-w-2xl space-y-5 text-lg leading-8 text-muted">
           <p>
-            You paid to create every estimate you have ever written — the ad or the call that
-            brought it in, the drive, the hour in somebody&rsquo;s attic, the quote typed up that
-            evening. Most of them did not close. They are still in your system, next to the
-            maintenance agreements that lapsed, the customers whose systems are now past their
-            expected life, and the calls that came in on a busy Tuesday and never got returned.
+            You already paid for every estimate you have written: the ad that brought it in, the
+            drive, the hour in somebody&rsquo;s attic. Most did not close. They are still in your
+            system, beside the lapsed maintenance agreements, the missed calls, and the customers
+            whose systems are now at replacement age.
           </p>
           <p>
-            Almost nobody works that list, and it is not laziness. The techs are on trucks, the
-            office is answering phones, and follow-up is the first thing that drops in season.
+            Almost nobody works that list. The techs are on trucks, the office is answering phones,
+            and follow-up is the first thing that drops in season.
           </p>
           <p className="text-bone/90">
-            We are not going to tell you what any of it is worth — you know what a replacement is
-            worth to you far better than we ever will, and we do not promise that a single one of
-            them will close. What we will do is work it, every week, and show you exactly what went
-            where.
+            We will not tell you what that is worth — you know what a replacement is worth to you
+            better than we do. We do not promise that a single one of them will close. What we do
+            is work the list every week and show you exactly what went where.
           </p>
         </div>
         <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-gold-200">
@@ -417,9 +440,14 @@ function WhoItsForSection() {
           </ul>
         </div>
       </div>
+      {/* Names the base as well as the reach. The homepage said where the work is DELIVERED
+          and never where the company IS — a fact the footer and the New Jersey guide both
+          state, and the one an answer engine needs to ground the entity. Both halves read
+          from config so they cannot drift from the legal footer. */}
       <p className="mt-6 max-w-2xl leading-7 text-muted">
-        Work is done remotely for HVAC companies across the US. Our market research is focused
-        on {currentFocusArea}, so that is where the local knowledge is sharpest today.
+        {brandName} is a {entityFormationState} company and works remotely with HVAC companies
+        across the US. Our market research is focused on {currentFocusArea}, so that is where the
+        local knowledge is sharpest today.
       </p>
     </Section>
   );
@@ -470,7 +498,13 @@ function HowItWorksSection() {
 
 /* -------------------------------------------------------------------------- */
 
-// One table, one CTA. It was three large cards with three different buttons, which
+/** "$750, $1,500, $2,500" — derived from `plans` so the headline prices can never drift
+ *  from the tier cards directly below them. The section's intro sentence carried no number
+ *  at all, which meant the line most likely to be lifted out of this page and quoted did
+ *  not contain a price. */
+const priceList = plans.map((p) => `$${p.price.toLocaleString()}`).join(", ");
+
+// One list, one CTA. It was three large cards with three different buttons, which
 // asked a visitor to commit to a tier before anyone had looked at their list.
 function PricingSection() {
   return (
@@ -478,7 +512,7 @@ function PricingSection() {
       id="pricing"
       eyebrow="Pricing"
       title="Flat monthly fee. Never priced per lead."
-      intro="The tiers differ by how much of the work stays in your office. No setup fee, month-to-month, 14 days’ notice either side, and everything built for you is yours to keep."
+      intro={`${priceList} a month, by tier. The tiers differ by how much stays in your office: list building, outreach, or appointment setting. No setup fee, month-to-month, and 14 days’ notice either side. Everything built for you is yours to keep.`}
     >
       {/* The unit every price is quoted in, defined before the first number that uses it.
           "Up to ~40 records a month" was on all three cards and the word appeared 33 times
@@ -489,11 +523,23 @@ function PricingSection() {
         to reach out to: a past customer, an unsold estimate, a lapsed agreement, or one referral
         partner.
       </p>
-      <div className="mt-10 grid gap-4 lg:grid-cols-3">
+      {/* Three tiers as a LIST of definition lists, not three styled <div>s.
+
+          The price, the monthly ceiling, what is included and what stays with you were
+          sibling paragraphs with no stated relationship between them, so the most quotable
+          facts on the site were the least machine-readable thing on the page — while other
+          companies' prices sat in a real <table> on the guide pages. dt/dd states the pair.
+
+          The visual language is unchanged: the labels a sighted reader does not need are
+          sr-only, and only "Included" and "Your side" (which already had an implicit label
+          and an inline one) render. Each tier carries a stable id so a specific tier can be
+          linked to and cited rather than the pricing block as a whole. */}
+      <ul className="mt-10 grid gap-4 lg:grid-cols-3">
         {plans.map((plan) => (
-          <div
+          <li
             key={plan.name}
-            className={`flex flex-col rounded-lg border p-6 ${
+            id={`plan-${plan.name.toLowerCase().replace(/\s+/g, "-")}`}
+            className={`flex scroll-mt-20 flex-col rounded-lg border p-6 ${
               plan.featured
                 ? "border-gold-500/60 bg-ink-900"
                 : "border-gold-500/16 bg-ink-900/50"
@@ -505,30 +551,41 @@ function PricingSection() {
               </p>
             ) : null}
             <h3 className="font-display text-2xl text-bone">{plan.name}</h3>
-            <p className="mt-3 text-3xl font-semibold text-bone">
-              ${plan.price.toLocaleString()}
-              <span className="text-base font-normal text-muted">/mo</span>
-            </p>
-            <p className="mt-3 font-semibold text-gold-200">{plan.oneLiner}</p>
-            <p className="mt-1 text-sm text-muted">{plan.capacity}</p>
-            <p className="mt-4 text-sm leading-6 text-bone/85">{plan.bestFor}</p>
-            <ul className="mt-4 space-y-2 border-t border-gold-500/14 pt-4">
-              {plan.includes.map((line) => (
-                <li key={line} className="flex gap-2 text-sm leading-6 text-muted">
-                  <span aria-hidden="true" className="mt-0.5 shrink-0 text-gold-200">
-                    ✓
-                  </span>
-                  <span>{line}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-4 border-t border-gold-500/14 pt-4 text-sm leading-6 text-muted/85">
-              <span className="font-semibold text-gold-200/90">Your side: </span>
-              {plan.youKeep}
-            </p>
-          </div>
+            <dl>
+              <dt className="sr-only">Price</dt>
+              <dd className="mt-3 text-3xl font-semibold text-bone">
+                ${plan.price.toLocaleString()}
+                <span className="text-base font-normal text-muted">/mo</span>
+              </dd>
+              <dt className="sr-only">What this tier does</dt>
+              <dd className="mt-3 font-semibold text-gold-200">{plan.oneLiner}</dd>
+              <dt className="sr-only">Monthly ceiling</dt>
+              <dd className="mt-1 text-sm text-muted">{plan.capacity}</dd>
+              <dt className="sr-only">Best for</dt>
+              <dd className="mt-4 text-sm leading-6 text-bone/85">{plan.bestFor}</dd>
+              <dt className="mt-4 border-t border-gold-500/14 pt-4 text-xs font-semibold uppercase tracking-[0.16em] text-gold-200/80">
+                Included
+              </dt>
+              <dd className="mt-3">
+                <ul className="space-y-2">
+                  {plan.includes.map((line) => (
+                    <li key={line} className="flex gap-2 text-sm leading-6 text-muted">
+                      <span aria-hidden="true" className="mt-0.5 shrink-0 text-gold-200">
+                        ✓
+                      </span>
+                      <span>{line}</span>
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+              <dt className="mt-4 border-t border-gold-500/14 pt-4 text-xs font-semibold uppercase tracking-[0.16em] text-gold-200/80">
+                Your side
+              </dt>
+              <dd className="mt-2 text-sm leading-6 text-muted/85">{plan.youKeep}</dd>
+            </dl>
+          </li>
         ))}
-      </div>
+      </ul>
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
         <PrimaryCta />
         <p className="text-sm leading-6 text-muted">
@@ -587,7 +644,7 @@ function CredibilitySection() {
       <h3 className="mt-12 font-display text-2xl text-bone">What you are actually risking</h3>
       <p className="mt-3 max-w-2xl leading-7 text-muted">
         Every line below is already in the agreement or the published Terms. None of them is a
-        promise about results — no one can honestly make you one of those, and we do not.
+        promise about results. Nobody can honestly make you one of those.
       </p>
       <dl className="mt-5 grid gap-4 sm:grid-cols-2">
         {riskReversal.map((item) => (
@@ -616,10 +673,10 @@ function CredibilitySection() {
 
       <p className="mt-10 rounded-lg border border-gold-500/18 bg-ink-950/60 p-5 leading-7 text-muted">
         <span className="font-semibold text-gold-200">Who runs it. </span>
-        The research, writing, follow-up and reply handling are run by an automated system, with{" "}
-        {founderName} accountable for it. Every draft is checked against hard gates — citations,
-        opt-out suppression, duplicates, daily sending caps — before it can send. There is no
-        account manager between you and the person responsible.
+        The research, writing, follow-up and reply handling run on an automated system, with{" "}
+        {founderName} accountable for it. Every draft clears hard gates before it can send:
+        citations, opt-out suppression, duplicates, daily sending caps. There is no account
+        manager between you and the person responsible.
       </p>
     </Section>
   );
@@ -671,19 +728,27 @@ function GuidesSection() {
       id="guides"
       eyebrow="Read first"
       title="Not ready to answer questions?"
-      intro="Written for contractors weighing up their options, including the ones that aren’t us. Cited throughout, with no form in front of any of it."
+      intro="Written for contractors weighing their options, including the ones that aren’t us. Cited throughout, and no form in front of any of it."
       tint
     >
+      {/* The anchor text is the LABEL only. The whole card sat inside the <Link>, so each
+          guide's anchor text and accessible name were the label run straight into a
+          200-character meta description — "Pricing in detailTransparent HVAC lead generation
+          and appointment setting pricing: $750…". The card stays entirely clickable via the
+          stretched pseudo-element on the link, so nothing changes for a mouse or a thumb. */}
       <ul className="mt-8 grid gap-3 sm:grid-cols-2">
         {guidePages.map((page) => (
-          <li key={page.slug}>
+          <li
+            key={page.slug}
+            className="relative flex h-full flex-col rounded-lg border border-gold-500/16 bg-ink-950/60 p-4 transition-colors hover:border-gold-500/40"
+          >
             <Link
               href={`/${page.slug}`}
-              className="flex h-full flex-col rounded-lg border border-gold-500/16 bg-ink-950/60 p-4 transition-colors hover:border-gold-500/40"
+              className="font-semibold leading-7 text-bone after:absolute after:inset-0 after:content-['']"
             >
-              <span className="font-semibold leading-7 text-bone">{page.navLabel}</span>
-              <span className="mt-1 text-sm leading-6 text-muted">{page.description}</span>
+              {page.navLabel}
             </Link>
+            <span className="mt-1 text-sm leading-6 text-muted">{page.description}</span>
           </li>
         ))}
       </ul>
@@ -704,13 +769,13 @@ function FinalCta() {
           See the work before you pay anything.
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-lg leading-8 text-muted">
-          {intakeMinutes} minutes of questions, then a straight answer. If it is a fit, we build
-          your {audit.name.toLowerCase()} and email it within {auditDeliveryWindow}.
+          {intakeMinutes} minutes of questions, then a straight answer either way. If it is a fit,
+          we build your {audit.name.toLowerCase()} and email it within {auditDeliveryWindow}.
         </p>
         <div className="mt-8 flex justify-center">
           <PrimaryCta />
         </div>
-        <p className="mt-4 text-sm text-muted">No card. No call required to get the audit.</p>
+        <p className="mt-4 text-sm text-muted">No card, and no call required to get the audit.</p>
       </div>
     </section>
   );
@@ -778,11 +843,17 @@ function SiteFooter() {
             </ul>
           </nav>
         </div>
+        {/* The no-outcome-promise line, halved. The clause explaining WHY nobody can promise a
+            result — it depends on the contractor's price, reputation, timing, and how the visit
+            goes — is stated in full in the FAQ answer "Do you guarantee jobs, appointments, or
+            revenue?", so the footer carries the commitment and the refusal and stops there.
+            The refusal itself is load-bearing and must not be trimmed further. "A set number of
+            appointments" is deliberate: the Appointment Engine tier DOES book appointments, so a
+            blunter "we do not promise appointments" would contradict the product. */}
         <p className="mt-8 border-t border-gold-500/12 pt-6 leading-6">
           © {new Date().getFullYear()} {brandName} · We commit to running the system, doing the
-          work to the stated standard, and reporting results honestly. We do not promise jobs,
-          revenue, customers, or a set number of appointments — whether a homeowner books and buys
-          depends on your pricing, your reputation, your timing, and how the visit goes.
+          work to the stated standard, and reporting honestly. We do not promise jobs, revenue,
+          customers, or a set number of appointments.
         </p>
       </div>
     </footer>

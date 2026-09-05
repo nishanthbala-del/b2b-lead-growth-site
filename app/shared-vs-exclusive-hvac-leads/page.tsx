@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import GuideLayout, { GuideSection, GuideTable, KeyAnswer, SourceNote } from "@/components/GuideLayout";
+import { faqSlug } from "@/lib/content";
 import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
 import { siteUrl } from "@/lib/site";
 
@@ -16,27 +17,27 @@ const pageFaqs = [
   {
     question: "What is a shared lead?",
     answer:
-      "A shared lead is one homeowner request sold to several competing contractors at the same time. On Angi, the company's own help documentation says each homeowner project request is matched with up to five pros. Each contractor who takes the lead is charged for it (in Angi's newer Opportunities flow, once contractor and homeowner both express interest); at most one wins the job.",
+      "A shared lead is one homeowner request sold to several competing contractors at the same time. Angi's own help documentation says each homeowner project request is matched with up to five pros. Each contractor who takes the lead is charged for it; at most one wins the job. In Angi's newer Opportunities flow, the charge lands once contractor and homeowner both express interest.",
   },
   {
     question: "What is an exclusive lead?",
     answer:
-      "An exclusive lead is sold to one contractor only. Exclusive leads cost more per lead — for example, 99Calls advertised exclusive New Jersey HVAC leads at $54.99 each when we checked in August 2026 — but you are not racing four other companies to the same homeowner's phone.",
+      "An exclusive lead is sold to one contractor only. It costs more per lead: 99Calls advertised exclusive New Jersey HVAC leads at $54.99 each when we checked in August 2026. You are not racing four other companies to the same homeowner's phone.",
   },
   {
     question: "Why do shared leads cost more than they look?",
     answer:
-      "Because the price that matters is cost per booked job, not cost per lead. If five contractors buy the same lead, at most one of them books the job — so a shared lead's real cost is the per-lead price multiplied by every lead you buy and lose. A cheap lead you close 1 time in 8 is more expensive than a pricier lead you close 1 time in 3.",
+      "Shared leads cost more than they look because the price that matters is cost per booked job, not cost per lead. If five contractors buy the same lead, at most one of them books the job. A shared lead's real cost is the per-lead price multiplied by every lead you buy and lose. A cheap lead you close 1 time in 8 is more expensive than a pricier lead you close 1 time in 3.",
   },
   {
     question: "What did the FTC's HomeAdvisor case actually involve?",
     answer:
-      "In 2023 the FTC finalized an order requiring HomeAdvisor — a company affiliated with Angi that operated Angi Leads — to pay up to $7.2 million to settle allegations that it made false, misleading, or unsubstantiated claims about the quality and source of the leads it sold to service providers, including that leads matched providers' service types and areas when many did not. HomeAdvisor settled by consent order without admitting liability.",
+      "In 2023 the FTC finalized an order requiring HomeAdvisor to pay up to $7.2 million. HomeAdvisor is a company affiliated with Angi that operated Angi Leads. The order settled allegations that it made false, misleading, or unsubstantiated claims about the quality and source of the leads it sold to service providers, including that leads matched providers' service types and areas when many did not. HomeAdvisor settled by consent order without admitting liability.",
   },
   {
     question: "Is there an option that isn't buying leads at all?",
     answer:
-      "Yes — and it's usually the cheapest demand you have: the customers and estimates you already generated. Past customers due for replacement, unclosed estimates, and lapsed maintenance plans are demand you own outright, plus referral relationships with local realtors and property managers. That owned-audience work is what we sell, which is also why we can be neutral about lead sellers: we don't sell leads at all.",
+      "Yes — the cheapest demand is the customers and estimates you already generated. Past customers due for replacement, unclosed estimates, and lapsed maintenance plans are demand you own outright, plus referral relationships with local realtors and property managers. That owned-audience work is what we sell, which is also why we can be neutral about lead sellers: we do not sell leads at all.",
   },
 ];
 
@@ -49,6 +50,10 @@ const structuredData = {
       "@id": `${siteUrl}/${page.slug}#faq`,
       mainEntity: pageFaqs.map((f) => ({
         "@type": "Question",
+        // Same fragment the visible answer is stamped with below, so an answer engine can
+        // cite one answer rather than the page.
+        "@id": `${siteUrl}/${page.slug}#${faqSlug(f.question)}`,
+        url: `${siteUrl}/${page.slug}#${faqSlug(f.question)}`,
         name: f.question,
         acceptedAnswer: { "@type": "Answer", text: f.answer },
       })),
@@ -68,51 +73,72 @@ export default function SharedVsExclusivePage() {
       <GuideLayout
         page={page}
         eyebrow="Contractor's guide"
-        h1="Shared vs. exclusive HVAC leads: do the cost-per-job math before you buy"
+        h1="Shared vs. exclusive HVAC leads: the real cost per booked job"
         intro={
           <>
-            <p>
-              A shared lead is one homeowner request sold to several contractors at once — on Angi,
-              up to five, per Angi&rsquo;s own help documentation. An exclusive lead goes to one
-              contractor. Shared leads look cheaper per lead, but the number that decides whether
-              you make money is <span className="text-bone">cost per booked job</span>, and sharing
-              is exactly what inflates it.
+            {/* Answer-first. Both terms defined and the deciding number named in under 40
+                words, because this paragraph is what an answer engine lifts out of the page.
+                The Angi "up to five" citation stays in the lead — it is the fact the whole
+                comparison rests on. */}
+            <p className="text-bone">
+              A shared HVAC lead goes to several contractors at once — up to five on Angi, per
+              Angi&rsquo;s help documentation. An exclusive lead goes to one. The cost that matters
+              is cost per booked job, not cost per lead.
             </p>
             <p>
               One disclosure before the math: <span className="text-bone">we sell neither kind of
-              lead</span>. B2B Lead Growth is a flat-fee research and outreach service, so we have
-              no per-lead margin riding on which option you pick. That&rsquo;s rare here —
-              pages on this question are usually published by companies selling one of the two.
+              lead</span>. B2B Lead Growth charges a flat monthly fee, so no per-lead margin rides
+              on which option you pick. Pages on this question are usually published by a company
+              selling one of the two.
             </p>
           </>
         }
       >
-        <GuideSection title="How the two models actually work">
-          <ul className="list-disc space-y-3 pl-5">
-            <li>
-              <span className="font-semibold text-bone">Shared (marketplace) leads.</span> Angi&rsquo;s
-              help center states each homeowner project request is matched with{" "}
-              <em>&ldquo;no more than five pros&rdquo;</em> — and that contractors are charged per
-              lead. HomeAdvisor&rsquo;s pro-facing documentation is blunter still: you are charged
-              for each lead <em>&ldquo;whether or not you ultimately win the job&rdquo;</em> — and
-              even if the homeowner ends up hiring no one at all. (In Angi&rsquo;s
-              newer &ldquo;Opportunities&rdquo; flow, the charge applies once you and the homeowner
-              both express interest; after that point it applies regardless of outcome.)
-            </li>
-            <li>
-              <span className="font-semibold text-bone">Exclusive leads.</span> Sold to one
-              contractor, priced higher. Example with published pricing: 99Calls advertised
-              exclusive New Jersey HVAC leads at a $54.99 flat rate per lead from its organic-SEO
-              program when we checked in August 2026.
-            </li>
-            <li>
-              <span className="font-semibold text-bone">Pay-per-lead ads (Google Local Services
-              Ads).</span> A middle path: Google charges per valid lead (calls or messages, not
-              clicks) for home-service categories including HVAC; businesses must pass
-              Google&rsquo;s screening and verification, and Google says lead prices vary by
-              location, job type, and lead type.
-            </li>
-          </ul>
+        <GuideSection title="How the two models work">
+          {/* A table, not three bullets: this is an X-vs-Y comparison, and how-it-works /
+              what-you-pay are the two axes a buyer and an answer engine both read it on.
+              Every quoted phrase below is the source's own wording and must stay verbatim. */}
+          <GuideTable
+            caption="Shared marketplace leads, exclusive leads and pay-per-lead ads compared, with sources, checked August 2026"
+            head={["Model", "How it works", "What you pay"]}
+            rows={[
+              [
+                <span key="shared" className="font-semibold text-bone">
+                  Shared (marketplace) leads
+                </span>,
+                <span key="shared-how">
+                  Angi&rsquo;s help center states each homeowner project request is matched with{" "}
+                  <em>&ldquo;no more than five pros&rdquo;</em>.
+                </span>,
+                <span key="shared-pay">
+                  Charged per lead. HomeAdvisor&rsquo;s pro-facing documentation is blunter still:
+                  you are charged for each lead{" "}
+                  <em>&ldquo;whether or not you ultimately win the job&rdquo;</em> — and even if the
+                  homeowner ends up hiring no one at all. (In Angi&rsquo;s newer
+                  &ldquo;Opportunities&rdquo; flow, the charge applies once you and the homeowner
+                  both express interest; after that point it applies regardless of outcome.)
+                </span>,
+              ],
+              [
+                <span key="excl" className="font-semibold text-bone">
+                  Exclusive leads
+                </span>,
+                "Sold to one contractor.",
+                "Priced higher per lead. Example with published pricing: 99Calls advertised exclusive New Jersey HVAC leads at a $54.99 flat rate per lead from its organic-SEO program when we checked in August 2026.",
+              ],
+              [
+                <span key="lsa" className="font-semibold text-bone">
+                  Pay-per-lead ads (Google Local Services Ads)
+                </span>,
+                <span key="lsa-how">
+                  A middle path. Google charges for valid leads (calls or messages, not clicks) in
+                  home-service categories including HVAC, and businesses must pass Google&rsquo;s
+                  screening and verification.
+                </span>,
+                "Per valid lead. Google says lead prices vary by location, job type, and lead type.",
+              ],
+            ]}
+          />
           <SourceNote>
             Sources:{" "}
             <a
@@ -150,14 +176,22 @@ export default function SharedVsExclusivePage() {
             >
               Google, How Local Services leads work
             </a>
-            . Prices and policies belong to their owners and change; checked August 7, 2026.
+            . Prices and policies belong to their owners and change; checked August 7, 2026. For
+            these same channels priced out for one market, see{" "}
+            <a
+              href="/hvac-lead-generation-new-jersey"
+              className="text-gold-200 underline underline-offset-4"
+            >
+              what HVAC leads cost in New Jersey, by channel
+            </a>
+            .
           </SourceNote>
         </GuideSection>
 
         <GuideSection title="The math: cost per booked job, not cost per lead">
           <p>
-            The arithmetic below is illustrative — plug in your own numbers. The structure of it is
-            the point: <span className="text-bone">divide what you spend by the jobs you actually
+            The arithmetic below is illustrative. Plug in your own numbers; the structure is the
+            point: <span className="text-bone">divide what you spend by the jobs you actually
             book</span>. Third-party estimates put typical Angi lead fees at $15–$85 per lead
             (<a href="https://www.housecallpro.com/resources/what-is-angis-list-how-angi-works/" rel="nofollow noopener" target="_blank" className="text-gold-200 underline underline-offset-4">Housecall Pro&rsquo;s guide</a> — Angi itself publishes no dollar figures and says fees vary by task, location, and demand).
           </p>
@@ -205,38 +239,60 @@ export default function SharedVsExclusivePage() {
             Exclusive leads and owned-audience follow-up don&rsquo;t carry that built-in loss rate.
           </KeyAnswer>
           <p>
-            And one number belongs in this comparison that we can&rsquo;t fill in for you: if you
-            pay anyone a flat fee — <span className="text-bone">including us, at $750 to $2,500 a
-            month</span> — to run that follow-up, your cost per booked job is the fee divided by
-            the jobs it produces. We don&rsquo;t guarantee that beats the per-lead channels; the{" "}
+            One number in this comparison we cannot fill in for you. If you pay anyone a flat fee to
+            run that follow-up — <span className="text-bone">including us, at $750 to $2,500 a
+            month</span> — your cost per booked job is that fee divided by the jobs it produces. We
+            do not guarantee that beats the per-lead channels. The{" "}
             <a href="/free-pipeline-audit" className="text-gold-200 underline underline-offset-4">
-              free audit
+              free pipeline audit
             </a>{" "}
-            exists so you can judge the work before paying to find out.
+            exists so you can judge the work before paying to find out, and{" "}
+            <a href="/pricing" className="text-gold-200 underline underline-offset-4">
+              our published monthly pricing
+            </a>{" "}
+            shows what each fee covers.
           </p>
         </GuideSection>
 
-        <GuideSection title="What the FTC's HomeAdvisor case does — and doesn't — say">
+        <GuideSection title="What the FTC's HomeAdvisor case does and does not say">
           <p>
             In 2023 the FTC finalized an order requiring HomeAdvisor — a company affiliated with
             Angi that operated Angi Leads — to pay{" "}
             <span className="text-bone">up to $7.2 million</span> to settle charges it used{" "}
             <em>&ldquo;a wide range of deceptive and misleading tactics in selling home improvement
-            project leads to service providers.&rdquo;</em> The FTC alleged, among other things,
-            that HomeAdvisor represented its leads concerned people ready to hire soon when many
-            did not; that providers would receive leads matching their service type and area when
-            many did not match; that leads came from consumers who sought HomeAdvisor directly when
-            many were bought from third-party affiliates; and that it cited job-conversion rates it
-            could not substantiate. HomeAdvisor settled by consent order without admitting
-            liability.
+            project leads to service providers.&rdquo;</em>
           </p>
+          <p>The FTC alleged, among other things:</p>
+          <ul className="list-disc space-y-2 pl-5">
+            <li>
+              that HomeAdvisor represented its leads concerned people ready to hire soon when many
+              did not;
+            </li>
+            <li>
+              that providers would receive leads matching their service type and area when many did
+              not match;
+            </li>
+            <li>
+              that leads came from consumers who sought HomeAdvisor directly when many were bought
+              from third-party affiliates;
+            </li>
+            <li>that it cited job-conversion rates it could not substantiate.</li>
+          </ul>
+          <p>HomeAdvisor settled by consent order without admitting liability.</p>
           <p>
             Worth being precise about: the FTC case was about{" "}
-            <span className="text-bone">lead quality and sourcing claims</span> — it did not charge
-            HomeAdvisor with selling one lead to multiple contractors. Lead sharing isn&rsquo;t
-            hidden; it&rsquo;s the marketplace&rsquo;s published model, per Angi&rsquo;s own help
-            center. The lesson for contractors is the same either way: verify what a lead seller
-            claims, in writing, before you fund an account.
+            <span className="text-bone">lead quality and sourcing claims</span>. It did not charge
+            HomeAdvisor with selling one lead to multiple contractors. Lead sharing is not hidden;
+            it is the marketplace&rsquo;s published model, per Angi&rsquo;s own help center. The
+            lesson is the same either way: verify what a lead seller claims, in writing, before you
+            fund an account. The{" "}
+            <a
+              href="/how-to-choose-a-lead-generation-agency"
+              className="text-gold-200 underline underline-offset-4"
+            >
+              seven questions to ask an HVAC lead generation company
+            </a>{" "}
+            are the ones that get it in writing.
           </p>
           <SourceNote>
             Sources:{" "}
@@ -273,20 +329,33 @@ export default function SharedVsExclusivePage() {
 
         <GuideSection title="The option most contractors skip: the unsold estimates you already own">
           <p>
-            Before buying anyone&rsquo;s leads — shared or exclusive — the cheapest pipeline is
-            usually sitting in your own records: past customers with aging systems, estimates that
-            never closed, maintenance plans that lapsed, and referral relationships with local
-            realtors and property managers. None of it carries a per-lead fee, and none of it is
-            being sold to four other shops at the same time. That owned-audience and referral-partner work is the lead generation
-            we actually sell to contractors — we never cold-scrape homeowners, and we never sell
-            the same prospect twice, because we don&rsquo;t sell prospects at all.
+            Before buying anyone&rsquo;s leads, the cheapest pipeline is usually sitting in your own
+            records: past customers with aging systems, estimates that never closed, maintenance
+            plans that lapsed, and referral relationships with local realtors and property managers.
+            None of it carries a per-lead fee. None of it is being sold to four other shops at the
+            same time.
+          </p>
+          <p>
+            That owned-audience and referral-partner work is the lead generation we sell to
+            contractors. We never cold-scrape homeowners, and we never sell the same prospect twice,
+            because we do not sell prospects at all. What the paid channels cost instead is itemized
+            in{" "}
+            <a
+              href="/hvac-lead-generation-new-jersey"
+              className="text-gold-200 underline underline-offset-4"
+            >
+              our New Jersey HVAC lead cost breakdown
+            </a>
+            .
           </p>
         </GuideSection>
 
         <GuideSection title="Common questions">
+          {/* id + scroll-mt on every answer, mirroring the fragment each Question node
+              publishes as its url — so a specific answer can be cited and deep-linked. */}
           <div className="divide-y divide-gold-500/12 border-y border-gold-500/12">
             {pageFaqs.map((f) => (
-              <div key={f.question} className="py-5">
+              <div key={f.question} id={faqSlug(f.question)} className="scroll-mt-20 py-5">
                 <h3 className="text-lg font-semibold text-bone">{f.question}</h3>
                 <p className="mt-2 leading-7">{f.answer}</p>
               </div>

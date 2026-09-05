@@ -27,13 +27,13 @@ export const plans: Plan[] = [
     name: "Lead Engine",
     price: 750,
     oneLiner: "We build the list. You work it.",
-    capacity: "Up to ~40 records a month",
-    bestFor: "You have someone in the office who will actually make the calls.",
+    capacity: "Up to ~40 prospects per batch — you send",
+    bestFor: "Someone in your office will make the calls.",
     includes: [
-      "Your ideal-job profile, with the work you want screened out",
-      "Your own records cleaned, deduped and ranked by how close each is to a job",
-      "Referral partners researched near you, each with a cited public source",
-      "Outreach scripts and a follow-up sequence to work from",
+      "Your ideal-job profile, plus the work you want screened out",
+      "Your own records cleaned, deduped and ranked by closeness to a job",
+      "Referral partners researched near you, each with a cited source",
+      "Outreach scripts and a follow-up sequence",
       "Delivered CRM-ready",
     ],
     youKeep: "You send everything and handle every reply. No outreach runs at this tier.",
@@ -42,14 +42,14 @@ export const plans: Plan[] = [
     name: "Outreach Engine",
     price: 1500,
     oneLiner: "We write and send the follow-up every week.",
-    capacity: "Up to ~100 records a month",
-    bestFor: "Nobody in your office has time to chase follow-up, and you don't want to hire for it.",
+    capacity: "Up to ~100 outreach messages a month, follow-ups included (about 33 prospects)",
+    bestFor: "Nobody has time to chase follow-up, and you don't want to hire for it.",
     includes: [
       "Everything in Lead Engine",
-      "Outreach written per record against its real reason — never mail-merge",
+      "Each message written to that record's own reason, never mail-merge",
       "A multi-touch follow-up cadence, tracked",
       "Replies triaged and flagged by who is ready to talk",
-      "A monthly report: contacted, replied, positive",
+      "A monthly report: qualified conversations started, against prospects contacted and messages sent",
     ],
     youKeep: "You take the sales conversation. No appointments are booked at this tier.",
     featured: true,
@@ -58,14 +58,14 @@ export const plans: Plan[] = [
     name: "Appointment Engine",
     price: 2500,
     oneLiner: "We qualify the replies and book the appointments.",
-    capacity: "Up to ~150 records a month",
-    bestFor: "You want your own list and your referral partners both worked end to end, with appointments on the calendar.",
+    capacity: "Up to ~150 outreach messages a month, follow-ups included (about 50 prospects)",
+    bestFor: "You want both lists worked end to end, with appointments on your calendar.",
     includes: [
       "Everything in Outreach Engine",
       "Every reply qualified against your criteria",
       "Appointments booked on your calendar, with confirmations and reminders",
       "Full pipeline tracking",
-      "A weekly report and one optimization experiment",
+      "A weekly report on the same measure, plus one optimization experiment",
     ],
     youKeep: "You run the visit, the quote and the close.",
   },
@@ -87,11 +87,11 @@ export const plans: Plan[] = [
 // service understands his business.
 export const idealFor: string[] = [
   "Established residential HVAC companies — multiple trucks, years of history, room for more work",
-  "You have unsold replacement estimates and expired proposals nobody has chased",
-  "You have lapsed maintenance agreements worth renewing",
-  "Your customer list is old enough that installed systems are reaching replacement age",
-  "You want referral partners — builders, property managers, realtors, plumbers, inspectors — worked deliberately",
-  "You want the follow-up done weekly without hiring for it",
+  "Unsold replacement estimates and expired proposals nobody has chased",
+  "Lapsed maintenance agreements worth renewing",
+  "Past customers whose installed systems are reaching replacement age",
+  "Referral partners worth working: builders, property managers, realtors, plumbers, inspectors",
+  "Follow-up you want done weekly, without hiring for it",
 ];
 
 // Honest disqualifiers. Two of these are load-bearing rather than cosmetic:
@@ -105,12 +105,12 @@ export const idealFor: string[] = [
 // papering over it — stating it plainly is what earns the benefit of the doubt
 // from a careful buyer.
 export const notFor: string[] = [
-  "Brand-new companies with no customer history — reactivation needs records to work",
-  "Anyone wanting to buy homeowner leads. We are not a lead seller, and we cannot cold-source homeowners",
+  "Brand-new companies with no customer history — reactivation needs records",
+  "Anyone wanting to buy homeowner leads — we are not a lead seller, and cannot cold-source homeowners",
   "Anyone wanting thousands of unverified addresses blasted overnight",
   "Anyone expecting guaranteed jobs, revenue, or a set number of appointments",
-  "Companies with no capacity, or nobody to run the in-home visit and close",
-  "Anyone who needs published case studies before starting — there are none yet",
+  "Companies with no capacity, or nobody to run the visit and close",
+  "Anyone needing published case studies before starting — there are none yet",
 ];
 
 // Differentiators / objection-reducers, written against what an HVAC owner has
@@ -124,23 +124,23 @@ export type Differentiator = { title: string; body: string };
 export const differentiators: Differentiator[] = [
   {
     title: "We are not a lead seller",
-    body: "Nobody else is being sold the same homeowner. We do not buy, sell, resell, or broker leads — shared or exclusive — and you are never bidding against three other contractors for the same form fill. There is no per-lead price here because there are no leads for sale: there is a flat monthly fee for work done on your own list and your own service area.",
+    body: "Nobody else is being sold the same homeowner. We do not buy, sell, resell, or broker leads, shared or exclusive, so you are never bidding against three other contractors for one form fill. There is no per-lead price: a flat monthly fee buys work on your own list and service area.",
   },
   {
     title: "One HVAC company per service area, while you are a client",
-    body: "A conflict check runs before we accept anyone, and we work one HVAC company per service area. We will not take on a competing shop in your territory while we are working for you. The reason is practical rather than generous: your referral partners are the same builders, property managers and realtors a competitor would want, and pitching both of you to the same builder would make both campaigns worse. If you want that as a contractual right rather than an operating practice, ask for it in the order form before you sign — after being sold as one of five, pinning exclusivity down in writing is the right instinct.",
+    body: "A conflict check runs before we accept anyone: one HVAC company per service area, and no competing shop in your territory while we work for you. The reason is practical — your referral partners are the same builders and realtors a competitor would want. If you want it in writing, ask for it in the order form before you sign.",
   },
   {
     title: "Your customer list stays yours, and we never invent one",
-    body: "Homeowner records come from your export and nowhere else — past customers, unsold estimates, lapsed agreements, missed calls. We cannot research, buy, or infer them, and the system blocks any record claiming to come from your list that isn't in the file you approved. Referral partners are businesses, so those we do research from public sources — and every one arrives with the source link attached.",
+    body: "Homeowner records come from your export and nowhere else: past customers, unsold estimates, lapsed agreements, missed calls. We cannot research, buy, or infer them, and any record claiming to be yours that isn't in the file you approved is blocked. Referral partners are businesses, so those we do research — each arrives with its source link.",
   },
   {
     title: "It goes out from your name, with your sign-off",
-    body: "Messages send from your own domain and mailbox, so your customers see the company they already know, and you can open the sent folder and read exactly what went where. You approve the targeting, the messaging, and the first batch before anything sends, and you can pause or change it at any point after that.",
+    body: "Messages send from your own domain and mailbox, so your customers see the company they already know and you can read the sent folder yourself. You approve the targeting, the messaging and the first batch before anything sends, and you can pause any time after that.",
   },
   {
     title: "One clear line of ownership",
-    body: "We own the list work, the research, the writing, and — on the outreach tiers — the sending, the follow-up, and the reply triage, and we report it honestly. You own the in-home visit, the quote, and the close. No confusion about who is responsible for what, and no account manager in between.",
+    body: "We own the list work, the research, the writing, and on the outreach tiers the sending, follow-up and reply triage. We report it honestly. You own the in-home visit, the quote and the close. No account manager in between.",
   },
 ];
 
@@ -167,35 +167,56 @@ export type RiskReversal = { title: string; body: string; clause: string };
 export const riskReversal: RiskReversal[] = [
   {
     title: "No setup fee, no contract length, no exit fee",
-    body: "A flat monthly fee, month-to-month. Either side can end it on 14 days' written notice. There is no minimum term and nothing to buy out.",
+    body: "A flat monthly fee, month-to-month. Either side can end it on 14 days' written notice. No minimum term, nothing to buy out.",
     clause: "Terms of Service §7",
   },
   {
     title: "A month we have not started is refunded in full",
-    body: "If we have not begun work on a period, we refund that period in full on request. That is a stated obligation in the agreement, not a courtesy we may extend.",
+    body: "If we have not begun work on a period, we refund that period in full on request. It is an obligation in the agreement, not a courtesy.",
     clause: "Services agreement §10.5.1",
   },
   {
     title: "A partner that fails our own citation check is replaced free",
-    body: "Every researched referral partner has to carry a real public source. If one we delivered fails that standard — meaning it should never have passed our own check — we replace it inside the same month at no charge. It is a commitment about the quality of the work, not about whether anybody buys.",
+    body: "Every researched referral partner must carry a real public source. If one we delivered fails that standard, we replace it inside the same month at no charge. That is a commitment about the quality of the work, not about whether anybody buys.",
     clause: "Services agreement §10.6.2",
   },
   {
     title: "What is published beats what is in the contract",
-    body: "We publish our fees, cancellation and refund terms before any sales conversation. Where the published terms are better for you than the signed ones, the published terms win. We will not advertise one deal and put a narrower one in front of you to sign.",
+    body: "Our fees, cancellation and refund terms are published before any sales conversation. Where the published terms are better for you than the signed ones, the published terms win.",
     clause: "Services agreement §10.5.2",
   },
   {
     title: "Everything built for you stays yours",
-    body: "The lists, the scripts, the trackers, and your suppression list. Leaving does not claw any of it back, and we hand over the opt-out list within five business days so nobody who asked you to stop gets contacted again.",
+    body: "The lists, the scripts, the trackers, and your suppression list. Leaving claws none of it back, and the opt-out list is handed over within five business days.",
     clause: "Services agreement §10.6",
   },
   {
     title: "Your data is deleted within 30 days of the end",
-    body: "We delete or de-identify your records from active systems within 30 days of the engagement ending. We keep exactly one thing permanently — the do-not-contact list — because destroying it is the only way somebody's opt-out could be forgotten.",
+    body: "We delete or de-identify your records from active systems within 30 days of the engagement ending. One thing is kept permanently: the do-not-contact list, because destroying it is how an opt-out gets forgotten.",
     clause: "Services agreement §10.6 / §10.6.1",
   },
 ];
+
+// Real client reviews, published ONE AT A TIME, by hand, after the operating-system repo's
+// scripts/record_review.py has recorded named, quoted consent (CSA §14.2 / FTC 16 CFR Part 255)
+// — see that script's own printed instructions for the exact entry to add here. This array is
+// EMPTY on purpose, the same "no case studies yet" honesty as everywhere else on this site (see
+// README.md's house rule): adding an entry here IS the publish action, and it must never happen
+// without a contentHash this site cannot itself verify — that verification lives in the other
+// repo's data/reviews/log.csv, by design, so a review can never be added here as a copy-paste
+// shortcut around the consent step.
+export type Review = {
+  quote: string;
+  /** How to credit it, e.g. "Jane D., HVAC contractor" — never a full name without explicit consent. */
+  name: string;
+  /** The client_id this came from, in the operating-system repo (not shown on the page). */
+  clientId: string;
+  /** The content hash scripts/record_review.py printed — the operating-system repo's own proof
+   *  this exact quote was consented to. Cross-checkable, never displayed. */
+  contentHash: string;
+};
+
+export const reviews: Review[] = [];
 
 // Grouping is presentational only. The FAQPage JSON-LD in app/page.tsx still maps the
 // flat array, so the structured data stays a verbatim mirror of the visible text — the
@@ -226,30 +247,39 @@ export function faqSlug(question: string): string {
   );
 }
 
+// ANSWER-FIRST, and this is not a style preference. Every answer opens with a direct,
+// self-contained sentence under 25 words that restates the subject ("No, we never
+// cold-call homeowners" — never a bare "No."), because these exact strings are lifted
+// whole into acceptedAnswer.text in app/page.tsx and get quoted in isolation, both by
+// an answer engine and by an owner skimming on a phone between jobs. Substantiation
+// follows in two to four short sentences; the working cap is about 90 words.
+//
+// Two answers here previously ran to 180 and 198 words with the actual answer buried in
+// the middle — which is precisely what stops either audience extracting it.
 export const faqs: Faq[] = [
   {
     question: "What exactly do you do for an HVAC company?",
     group: "What this is",
     answer:
-      "We work the two pipelines an established HVAC company already has and rarely gets to. First, reactivation: your own records — unsold replacement estimates, expired proposals, lapsed maintenance agreements, past customers whose systems are now at replacement age, and missed calls — cleaned, deduped, ranked, and worked with a real follow-up sequence. Second, referral partners: builders, general contractors, property managers, realtors, plumbers, electricians, and home inspectors in your service area who send work to somebody today, researched from public sources with a cited reason to reach out. Depending on the tier, we either hand you that list and the scripts, or we run the outreach and book the appointments.",
+      "We work two pipelines an established HVAC company already owns: your own records, and referral partners nearby. Reactivation covers unsold estimates, lapsed maintenance agreements, and past customers whose systems are at replacement age — cleaned, deduped, ranked, then worked with a real follow-up sequence. Partner outreach covers builders, property managers, realtors and plumbers, researched from public sources with a cited reason. Your tier decides whether we hand you the list and scripts or run the outreach ourselves.",
   },
   {
     question: "Do you cold-call or cold-email homeowners?",
     group: "Where the records come from",
     answer:
-      "No, and we could not even if you asked. Homeowner records come from your own export and nothing else — people who already called you, bought from you, or asked you for a price. We cannot research, buy, or infer homeowner records, and the system blocks any record that claims to come from your list but isn't in the file you approved. The only people we research from scratch are businesses: the referral partners in your service area.",
+      "No, we never cold-call or cold-email homeowners, and we could not even if you asked. Homeowner records come from your own export: people who already called you, bought from you, or asked you for a price. We cannot research, buy, or infer them. Any record claiming to come from your list but missing from the file you approved is blocked in code. The only people we research from scratch are businesses — the referral partners in your service area.",
   },
   {
     question: "Where do the records actually come from?",
     group: "Where the records come from",
     answer:
-      "Two places, kept strictly separate. Your homeowner records come from you — a CRM, field-service software, or spreadsheet export that you send and then approve before anything is contacted. Referral-partner prospects are researched from free public sources, and every one ships with the source link, a fit reason, and a verification note. Nothing is bought from a data broker and nothing is invented: a researched prospect with no citation cannot be contacted at all.",
+      "Homeowner records come from your own export; referral partners are researched from free public sources, each with a citation. The two lanes stay strictly separate. You send a CRM, field-service or spreadsheet export and approve it before anything is contacted. Every researched partner ships with a source link, a fit reason, and a verification note. Nothing is bought from a data broker, and a researched prospect with no citation cannot be contacted at all.",
   },
   {
     question: "How is this different from Angi, Thumbtack, or a per-lead seller?",
     group: "What this is",
     answer:
-      "Those sell you a lead, usually the same lead they sold to three other contractors, and you pay again every time. We sell no leads at all. There is a flat monthly fee for work done on your own customer list and your own service area, so nobody else is being sold the same homeowner, nothing is priced per lead, and the list, the scripts, and the trackers stay yours if you leave. The trade-off is honest: a lead marketplace can hand you a name today, and reactivation and partner outreach take weeks to build momentum.",
+      "We sell no leads at all — you pay a flat monthly fee to work your own customer list, never a per-lead price. Marketplaces sell a lead, usually the same one they sold to three other contractors, and you pay again every time. Nobody else is being sold your homeowner, and the list, scripts and trackers stay yours if you leave. The trade-off is real: a marketplace hands you a name today; reactivation takes weeks.",
   },
   {
     // The nearest and cheapest substitute, and the one an established shop reaches for
@@ -259,91 +289,93 @@ export const faqs: Faq[] = [
     question: "ServiceTitan / Housecall Pro / Jobber already emails my customer list. Why pay you?",
     group: "What this is",
     answer:
-      "If you are already running those campaigns and working the replies, you may not need us — and we would rather say so than talk you out of software you have paid for. The difference is not the sending, it is what gets sent and to whom. Those tools blast a segment: everyone who has not booked in twelve months gets the same tune-up email. We go the other way — each record is looked at individually and gets a specific reason it is being contacted now, the estimate number and date, the agreement that lapsed, the install year that puts the system past its expected life. We also do a lane your software cannot do at all: researching the builders, property managers and realtors in your towns from public sources. And in practice the honest reason most shops do not get value from the built-in tool is not that it is bad, it is that nobody in the office has time to segment the list, write the copy, and work what comes back. That is the part we take.",
+      "Those tools blast a segment; we contact each record individually with its own cited reason. That reason is the estimate number and date, the agreement that lapsed, or the install year that puts the system past its expected life. We also research the builders, property managers and realtors in your towns, which your software cannot do. If you already run those campaigns and work the replies, you may not need us; most shops don't, because nobody has time.",
   },
   {
     question: "We already have a marketing company running ads. Does this replace them?",
     group: "What this is",
     answer:
-      "No, and it usually shouldn't. Ads and local search buy attention from people who don't know you yet. This works the demand you have already paid for once — the estimate that never closed, the maintenance plan that lapsed, the customer from nine years ago whose system is now at the end of its life — plus the partners who could refer you work. The two run alongside each other, and we don't touch your ad accounts, your website, or your Google Business Profile.",
+      "No, this runs alongside your ads agency rather than replacing it, and usually it shouldn't. Ads and local search buy attention from people who don't know you yet. We work the demand you already paid for once: the estimate that never closed, the plan that lapsed, the customer whose system is now at the end of its life. We also work the partners who could refer you work. We don't touch your ad accounts, your website, or your Google Business Profile.",
   },
   {
     question: "What makes a record worth contacting?",
     group: "Where the records come from",
     answer:
-      "For a record from your list: it matches the job profile you agreed, it has a usable contact path, and it has a specific, checkable reason to reach out — the estimate number and date, the agreement that lapsed, the install year that puts the system at replacement age. For a researched referral partner: it matches the agreed profile, it connects to a real decision-maker or influence point, and it carries the public source the reason came from. No reason, no contact.",
+      "A record is worth contacting when it fits your agreed job profile, has a usable contact path, and carries a specific, checkable reason. From your list, that reason is the estimate number and date, the agreement that lapsed, or the install year that puts the system at replacement age. For a researched referral partner, it also has to connect to a real decision-maker and carry the public source the reason came from. No reason, no contact.",
   },
   {
     question: "Do you guarantee jobs, appointments, or revenue?",
     group: "What you can expect",
     answer:
-      "No. Whether a homeowner replaces a system depends on your price, your reputation, your timing, and how the visit goes — so we don't promise jobs, revenue, or a set number of appointments, and you should be wary of anyone in this industry who does. What we commit to is running the system, doing the list and research work to the stated standard, and reporting the results honestly. The Appointment Engine tier includes booking qualified appointments on your calendar; no tier promises how many.",
+      "No, we do not guarantee jobs, appointments, or revenue at any tier. You should be wary of anyone in this industry who does. Whether a homeowner replaces a system depends on your price, your reputation, your timing, and how the visit goes. What we commit to is running the system, doing the work to the stated standard, and reporting the results honestly. The Appointment Engine tier books qualified appointments on your calendar; no tier promises a number.",
   },
   {
     question: "How many records or messages do I get each month?",
     group: "What you can expect",
     answer:
-      "Each tier publishes a monthly ceiling — roughly 40, 100, or 150 records worked — and we agree the real number with you, because the honest answer depends on how much usable history your export contains and what your sending setup can safely support. We deliberately don't advertise a bigger headline number: chasing a quota is what pushes a vendor to loosen the targeting or exceed safe sending limits, which is exactly the failure this is built to avoid. You'll know the agreed volume before any work starts, and the report shows what was actually delivered against it.",
+      "On the Lead Engine, a batch of about 40 researched, cited prospects that you work yourself. On the Outreach and Appointment tiers the number is outreach messages sent — up to about 100 or 150 a month, first touches and follow-ups counted alike, which is roughly 33 or 50 prospects on a three-touch sequence — and we agree the real number with you before work starts. It is counted in messages because that is the unit our sending controls actually enforce, so the report reconciles against the agreement line for line. The honest number also depends on how much usable history your export contains and what your sending setup can safely support; chasing a bigger headline is what pushes a vendor to loosen the targeting or exceed safe sending limits. What we measure the work by is qualified conversations started: a decision-maker who replied with real interest, confirmed by a person, shown against the prospects contacted to get there. That is a measurement of what happened, never a promise.",
   },
   {
     // The arithmetic the best-fit buyer does on the spot. The fit check scores the
-    // BIGGEST lists as the strongest fit, and the tiers then cap at ~40/100/150 a
-    // month — so an owner with 3,000 records divides and gets "months to get through
-    // my own list once". Leaving that unanswered makes the cap look like a trick
+    // BIGGEST lists as the strongest fit, and the tiers then cap volume — so an owner
+    // with 3,000 records divides and gets "months to get through my own list once".
+    // The question deliberately does not repeat a bare "100", because on the sending
+    // tiers that number counts messages, not records, and the two differ by ~3x.
+    // Leaving the arithmetic unanswered makes the cap look like a trick
     // rather than what it is: a refusal to blast, and a deliberate ordering of the
     // list so the most likely jobs are worked first.
-    question: "I have thousands of records and you cap at 100 a month. Won't that take years?",
+    question: "I have thousands of records and you cap the monthly volume. Won't that take years?",
     group: "What you can expect",
     answer:
-      "You would not want all of them contacted, and this is the part worth understanding before you buy. A raw history of several thousand rows is mostly duplicates, people who already bought, people who moved, bad addresses, and jobs too small to be worth a touch. Cleaning and deduping usually removes a large share of it before anything is ranked. What is left gets ordered by how close each one looks to a real job — the recent unsold replacement estimate outranks the tune-up customer from 2015 — and the monthly ceiling is worked from the top of that order down, so the strongest records are reached first rather than last. That is also why we will not lift the cap for a bigger headline number: sending faster than a domain can safely carry is what gets a mailbox filtered, and that is not recoverable in a month. If after the ranking there is genuinely more usable volume than a tier can carry, we will tell you that plainly and you can decide whether a higher tier is worth it. We would rather say the list is thinner than it looks than stretch it to fill a quota.",
+      "No — most of that list isn't worth contacting, and what survives gets ranked so the likeliest jobs are worked first. A raw history of thousands of rows is mostly duplicates, past buyers, people who moved, and jobs too small to touch; cleaning removes a large share before ranking. We will not lift the cap: sending faster than your domain can safely carry gets the mailbox filtered, and that is not recoverable. If usable volume is left over, we say so.",
   },
   {
     question: "What do I have to send you, and how hard is it?",
     group: "Money, terms and getting started",
     answer:
-      "One export from wherever your history lives — ServiceTitan, Housecall Pro, Jobber, QuickBooks, or a spreadsheet. Ideally it includes past customers, open and expired estimates, maintenance agreements and their status, install dates or equipment age, and missed or unreturned calls. It does not have to be clean; cleaning, deduping, and ranking it is part of the work. If you can only get part of it, we start with what you have. This is the step that sets the whole schedule, because nothing can be contacted until it is imported and you have approved it.",
+      "You send one export from wherever your history lives: ServiceTitan, Housecall Pro, Jobber, QuickBooks, or a spreadsheet. Ideally it covers past customers, open and expired estimates, maintenance agreements, install dates, and missed calls. It does not have to be clean — cleaning, deduping and ranking are part of the work. If you can only pull part of it, we start with what you have. Nothing is contacted until it is imported and you have approved it, so this step sets the schedule.",
   },
   {
     question: "How are the records delivered?",
     group: "What you can expect",
     answer:
-      "As a spreadsheet, a CRM-ready file, or into a system you name — ranked highest-priority first, with contact details, notes, status, why each one was picked, and, for every researched partner, a source link you can open. On the outreach tiers you also get the sending log, so you can see exactly what went to whom and when.",
+      "Records arrive as a spreadsheet, a CRM-ready file, or into a system you name — ranked highest-priority first. Each row carries contact details, notes, status, and why it was picked. Every researched partner carries a source link you can open. On the outreach tiers you also get the sending log, so you can see exactly what went to whom and when.",
   },
   {
     question: "Whose email address does this go out from?",
     group: "How the outreach runs",
     answer:
-      "Yours. Outreach runs from your own domain and mailbox, so a past customer sees the company they already know rather than a stranger, and you can open the sent folder and read every message. You approve the targeting, the messaging pattern, and the first batch before anything sends, you set the volume, and you can pause at any time. Sender reputation and deliverability depend on your domain setup and sending history, which stay in your hands — so you should confirm the email, privacy, and platform rules that apply in your market before outreach begins.",
+      "Yours — outreach sends from your own domain and mailbox, never ours. A past customer sees the company they already know, and you can open the sent folder and read every message. You approve the targeting, the messaging and the first batch before anything sends, you set the volume, and you can pause at any time. Deliverability depends on your domain setup and history, which stay in your hands; confirm the email and privacy rules in your market before outreach begins.",
   },
   {
     question: "What happens if someone asks not to be contacted?",
     group: "How the outreach runs",
     answer:
-      "They are added to a suppression list immediately and never contacted again on your campaign. Opt-out handling, deduplication, and daily sending caps run as automated checks on every single send rather than something a person has to remember — and opt-outs are processed even while a campaign is paused.",
+      "Anyone who asks not to be contacted is suppressed immediately, in code, and never contacted again on your campaign. Opt-out handling, deduplication, and daily sending caps run as automated checks on every send rather than something a person has to remember. Opt-outs are processed even while a campaign is paused, and the suppression list goes with you if you leave.",
   },
   {
     question: "How is this different from hiring an inside-sales or office person?",
     group: "Money, terms and getting started",
     answer:
-      "A full-time hire carries salary, payroll tax, tooling, ramp time, and management — and in most shops the follow-up is the first thing that gets dropped when the phones get busy. This is a system you can start in weeks, move up or down a tier as the season changes, and measure against clear reporting, without adding fixed headcount before you know the approach works for your market. Every tier costs less than a full-time hire.",
+      "Every tier costs less than a full-time hire, with no salary, payroll tax, tooling, ramp time, or management attached. In most shops the follow-up is the first thing dropped when the phones get busy. This starts in weeks, moves up or down a tier as the season changes, and is measured against clear reporting. No fixed headcount before you know the approach works in your market.",
   },
   {
     question: "Do you have case studies or client results I can see?",
     group: "What you can expect",
     answer:
-      "Not yet, and we won't invent any. This is an early, founder-led service, so there are no published client results to show — which is exactly why this site shows you the standards, the record format, the process, and the pricing instead. Start with the free audit or the Lead Engine tier and judge the first list on its own merits; that is the proof that actually matters before you scale spend.",
+      "No, there are no published case studies or client results yet, and we will not invent any. This is an early, founder-led service. What the site shows instead is the standard, the record format, the process, and the price. Start with the free audit or the Lead Engine tier and judge the first list on its own merits — that is the proof that matters before you scale spend.",
   },
   {
     question: "Where are you based, and who do you serve?",
     group: "What this is",
     answer:
-      "The work is done remotely and can be delivered for HVAC companies across the United States. Campaigns are currently focused on New Jersey, so that is where the sharpest local market knowledge sits today — permit patterns, seasonality, and the local referral network. Being outside New Jersey doesn't disqualify you; it just means less local context on day one.",
+      "We are based in New Jersey and work remotely with established residential HVAC companies across the United States. Campaigns are currently focused on New Jersey, so that is where the local knowledge is sharpest today: permit patterns, seasonality, and the local referral network. Being outside New Jersey does not disqualify you; it means less local context on day one.",
   },
   {
     question: "How do we start, and is there a long-term contract?",
     group: "Money, terms and getting started",
     answer:
-      `No long-term contract and no setup fee — a flat monthly fee, month-to-month on a short written services agreement, and either side can end it on 14 days' notice, so you are not locked in while you find out whether this works for your market. You can move between tiers as the season changes, and everything built for you is yours to keep. It starts with a ${intakeMinutes}-minute fit check on this site, which tells you on the spot whether this is a fit — including when it isn't. If it is, we build your free pipeline audit and send it to you in writing; a ${callLengthMinutes}-minute walkthrough is offered after that, never required.`,
+      `There is no long-term contract: a flat monthly fee, month-to-month, with no setup fee and 14 days' notice either side. You can move between tiers, and everything built for you is yours to keep. It starts with a ${intakeMinutes}-minute fit check on this site, which tells you on the spot whether this is a fit — including when it isn't. If it is, we build your free pipeline audit and send it in writing. A ${callLengthMinutes}-minute walkthrough is offered afterwards, never required.`,
   },
   {
     question: "Do I have to get on a call to get the free audit?",
@@ -366,21 +398,21 @@ export const faqs: Faq[] = [
 // hand over homeowner leads, which is exactly what this business does not do.
 export const audit = {
   name: "Free Pipeline Audit",
-  /** One sentence. It was a 55-word sentence with three em-dashed asides. */
+  /** Two short sentences. It was one 55-word sentence with three em-dashed asides. */
   tagline:
-    "Real work, done for your company, before you pay anything — and yours to keep either way.",
+    "Real work for your company, before you pay anything. Yours to keep either way.",
   includes: [
     {
       title: "A job profile worth targeting",
-      body: "What a good job looks like for you: service area, system types, replacement versus repair — and the work you would rather turn down.",
+      body: "Service area, system types, replacement versus repair — and the work you would rather turn down.",
     },
     {
       title: "3-5 referral partners, named and checked",
-      body: "Real businesses near you that could send you work. Each one has a contact path, a cited public reason to call now, and a source link you can open.",
+      body: "Real businesses near you that could send you work. Each has a contact path, a cited reason to call now, and a source link you can open.",
     },
     {
       title: "One sample outreach message",
-      body: "Written for one of those partners, tied to its real reason. You see the actual voice, not a template.",
+      body: "Written for one of those partners, tied to its real reason. The actual voice, not a template.",
     },
     {
       title: "A read on where your work comes from",
@@ -388,9 +420,9 @@ export const audit = {
     },
   ],
   whyFree:
-    "We have no case studies yet, so the audit is the proof. If it is useful, we will talk. If it is not, you keep it and owe nothing.",
+    "We have no case studies yet, so the audit is the proof. If it is useful, we talk. If not, you keep it and owe nothing.",
   guardrail:
-    "It shows you the quality of the work, not a promised result. No guaranteed leads, calls or jobs. It contains no homeowner records — those come from your own list, only after you are a client and have approved the export.",
+    "It shows the quality of the work, not a promised result. No guaranteed leads, calls or jobs. It contains no homeowner records — those come from your own list, after you are a client and have approved the export.",
 } as const;
 
 // The service timeline for the managed tiers (Outreach / Appointment), shown so a
@@ -420,56 +452,56 @@ export const serviceTimeline: TimelinePhase[] = [
     label: "Agreement signed, first payment received",
     owner: "both",
     detail:
-      "The clock starts here and not before — no work begins until the agreement is signed and the first payment has cleared.",
+      "No work begins until the agreement is signed and the first payment has cleared.",
   },
   {
     band: "Days 1-2",
     label: "You fill in the onboarding form",
     owner: "you",
     detail:
-      "About 30 minutes. What you do, where you work, what you can and cannot claim, and who your best customers actually are.",
+      "About 30 minutes: what you do, where you work, what you can and cannot claim, and who your best customers are.",
   },
   {
     band: "Days 2-4",
     label: "We draft your ideal-customer definition and send it for sign-off",
     owner: "we",
     detail:
-      "Who we should be reaching, and just as importantly the bad-fit exclusions we screen out. You correct it; we do not proceed on a definition you have not seen.",
+      "Who we should be reaching, and the bad-fit work we screen out. You correct it. We never proceed on a definition you have not seen.",
   },
   {
     band: "Your pace",
     label: "You export the demand you already own",
     owner: "you",
     detail:
-      "This is the step that sets the whole schedule. Past customers, open and expired estimates, lapsed maintenance plans, missed calls. We cannot research, buy, or infer these — they are your records and only you can send them. Nothing is contacted until they are imported and you have approved the list.",
+      "This step sets the whole schedule: past customers, open and expired estimates, lapsed maintenance plans, missed calls. We cannot research, buy, or infer these — only you can send them. Nothing is contacted until they are imported and you have approved the list.",
   },
   {
     band: "Days 3-5",
     label: "We arm the mailbox you own",
     owner: "both",
     detail:
-      "Messages go out from your sending identity, never ours, so you can open the sent folder and read exactly what went where.",
+      "Messages go out from your sending identity, never ours. You can open the sent folder and read exactly what went where.",
   },
   {
     band: "3 business days",
     label: "You approve the setup and the first batch",
     owner: "you",
     detail:
-      "Targeting, messaging pattern, and the first batch of messages, in your words before anyone reads them. If you do not respond we hold — silence is never taken as approval.",
+      "Targeting, messaging pattern, and the first batch, in your words before anyone reads them. If you do not respond, we hold. Silence is never taken as approval.",
   },
   {
     band: "About a week in, once the steps above are done",
     label: "First messages go out — deliberately slowly",
     owner: "we",
     detail:
-      "We start at 5 a day for the first three days, 10 a day for the next three, then up to full volume. Starting slow protects your domain's reputation; a mailbox that opens at full speed gets filtered, and that is not recoverable in a month.",
+      "We start at 5 a day for three days, 10 a day for the next three, then full volume. Starting slow protects your domain's reputation. A mailbox that opens at full speed gets filtered, and that is not recoverable in a month.",
   },
   {
     band: "About two weeks per prospect",
     label: "Each prospect gets a short, spaced sequence",
     owner: "we",
     detail:
-      "Up to 4 touches, at least 3 days apart, each one adding something new rather than chasing. Anyone who asks us to stop is suppressed immediately, in code, permanently.",
+      "Up to 4 touches, at least 3 days apart, each adding something new rather than chasing. Anyone who asks us to stop is suppressed immediately, in code, permanently.",
   },
   {
     band: "Ongoing, same day",
@@ -483,14 +515,14 @@ export const serviceTimeline: TimelinePhase[] = [
     label: "First full review",
     owner: "both",
     detail:
-      "What went out, what came back, what we change for the next month. This is also the honest checkpoint on whether this is working.",
+      "What went out, what came back, what we change next month. It is also the checkpoint on whether this is working.",
   },
   {
     band: "Day 30 onward",
     label: "Month-to-month from here",
     owner: "both",
     detail:
-      "It renews monthly until you stop it. Either side can end it on 14 days' written notice, and you keep everything built for you — the lists, the scripts, the trackers.",
+      "It renews monthly until you stop it. Either side can end it on 14 days' written notice. You keep everything built for you: the lists, the scripts, the trackers.",
   },
 ];
 

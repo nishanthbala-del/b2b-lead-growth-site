@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import GuideLayout, { GuideSection, KeyAnswer } from "@/components/GuideLayout";
-import { audit } from "@/lib/content";
+import { audit, faqSlug } from "@/lib/content";
 import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
-import { siteUrl, brandName, intakeMinutes } from "@/lib/site";
+import { siteUrl, brandName, intakeMinutes, auditDeliveryWindow } from "@/lib/site";
 
 const page = getGuidePage("free-pipeline-audit");
 
@@ -18,22 +18,22 @@ const pageFaqs = [
   {
     question: "Is the free pipeline audit actually free?",
     answer:
-      "Yes. There is no charge, no card on file, and no obligation. You receive the job profile, the 3–5 individually vetted referral partners with cited reasons, and the sample outreach message, and they are yours to keep whether or not you ever hire us.",
+      "Yes. The free pipeline audit costs nothing: no charge, no card on file, no obligation. Everything in it is yours to keep whether or not you ever hire us.",
   },
   {
     question: "Is it just a disguised sales pitch?",
     answer:
-      "The audit is real work product, not a teaser. You get the deliverables before any sales conversation. We do offer a short walkthrough call afterward, and yes — if the work is useful, we hope you consider the paid tiers. But the deliverable does not depend on taking the call or buying anything.",
+      "No. The audit is real work product, and you receive every deliverable before any sales conversation. We do offer a short walkthrough afterwards, and yes, if the work is useful we hope you consider the paid tiers. The deliverable does not depend on taking that walkthrough or buying anything.",
   },
   {
     question: "Does the audit guarantee leads, appointments, or jobs?",
     answer:
-      "No. The audit shows the quality of the research and writing — it does not promise replies, appointments, or revenue, and nothing we sell does either. Whether a job closes depends on your pricing, your reputation, your timing, and how the visit goes, which no honest vendor can guarantee.",
+      "No. The free pipeline audit promises no leads, appointments, or jobs, and nothing else we sell does either. It shows the quality of the research and the writing. Whether a job closes depends on your pricing, your reputation, your timing, and how the visit goes, which no honest vendor can guarantee.",
   },
   {
     question: "How long does it take to receive?",
     answer:
-      `The fit check takes about ${intakeMinutes} minutes. Every partner is individually researched, cited, and then re-checked against its own source before it can be included, so the audit arrives within a few business days, not instantly. Speed would defeat the point: the deliverable is proof of care, not a bulk export.`,
+      `The audit arrives within ${auditDeliveryWindow}, not instantly. The fit check itself takes about ${intakeMinutes} minutes. Every partner is individually researched, cited, and then re-checked against its own source before it can be included. Speed would defeat the point: the deliverable is proof of care, not a bulk export.`,
   },
   {
     question: "Why would a company give this away?",
@@ -49,9 +49,15 @@ const structuredData = {
     {
       "@type": "FAQPage",
       "@id": `${siteUrl}/${page.slug}#faq`,
+      // Each Question carries the fragment its visible answer is stamped with below, so a
+      // specific answer is citable on its own rather than only as part of the page. The
+      // anchor and the schema fragment come from the SAME faqSlug() call, so rewording a
+      // question moves both together and they cannot drift apart.
       mainEntity: pageFaqs.map((f) => ({
         "@type": "Question",
+        "@id": `${siteUrl}/${page.slug}#${faqSlug(f.question)}`,
         name: f.question,
+        url: `${siteUrl}/${page.slug}#${faqSlug(f.question)}`,
         acceptedAnswer: { "@type": "Answer", text: f.answer },
       })),
     },
@@ -91,27 +97,23 @@ export default function FreePipelineAuditPage() {
       <GuideLayout
         page={page}
         eyebrow="Start here"
-        h1="The Free Pipeline Audit for HVAC companies: what it includes and how it works"
+        h1="The Free Pipeline Audit for HVAC companies"
         intro={
           <>
             <p>
               A pipeline audit is a short, concrete review of where your next jobs are most likely
-              to come from and whether anything is currently going after them. Ours is free and
-              delivered as real work product: a sharpened profile of the jobs worth chasing, 3–5
-              real referral partners in your service area — each a named business, individually
-              vetted, with a cited reason it is worth contacting — and one sample outreach message
-              written the way we would actually send it. You keep all of it, whether or not you ever
+              to come from, and whether anything is currently going after them. Ours is free,
+              delivered in writing as real work product, and yours to keep whether or not you ever
               pay us anything.
             </p>
             <p>
-              To be explicit about what it is not: the audit does not include homeowner records. We
-              cannot research, buy, or infer those for anyone — they come from your own export, and
-              only once you are a client and have approved it.
+              The audit does not include homeowner records. We cannot research, buy, or infer
+              those for anyone. They come from your own export, only once you are a client and
+              have approved it.
             </p>
             <p>
-              This page explains exactly what arrives, how the process works, and — because
-              &ldquo;free audit&rdquo; is one of the most abused phrases in marketing — what a
-              legitimate free audit should include from anyone, not just us.
+              This page lists exactly what arrives, how the process works, and what a legitimate
+              free audit should include from any agency, not just us.
             </p>
           </>
         }
@@ -143,30 +145,30 @@ export default function FreePipelineAuditPage() {
           <p>{audit.guardrail}</p>
         </GuideSection>
 
-        <GuideSection title="How the process works">
+        <GuideSection title="How the process works, in three steps">
           <ol className="list-decimal space-y-3 pl-5">
             <li>
-              <span className="font-semibold text-bone">A {intakeMinutes}-minute fit check.</span> You tell us your
-              service area, your average job value, and how new work reaches you today. No card, no
-              commitment.
+              <span className="font-semibold text-bone">A {intakeMinutes}-minute fit check.</span> You
+              tell us your service area, your average job value, and how new work reaches you
+              today. No card, no commitment.
             </li>
             <li>
-              <span className="font-semibold text-bone">We research each partner individually.</span> The
-              business is real, it operates in your service area, the contact path is mapped, and the
-              reason to approach them is cited to a public source you can click. Nothing is
-              bulk-scraped, and every record is re-checked against its own cited
-              source before it can be included.
+              <span className="font-semibold text-bone">We research each partner individually.</span>{" "}
+              The business is real, it operates in your service area, the contact path is mapped,
+              and the reason to approach them is cited to a public source you can click. Nothing is
+              bulk-scraped, and every record is re-checked against its own cited source before it
+              can be included.
             </li>
             <li>
               <span className="font-semibold text-bone">You get the audit, then an optional
-              walkthrough.</span> The deliverable arrives in your inbox. If you want, we walk
-              through it together and you decide — with the work in hand — whether running it at
-              scale is worth paying for.
+              walkthrough.</span> The deliverable arrives in your inbox. If you want it, we go
+              through it together and you decide, with the work already in hand, whether running
+              it at scale is worth paying for.
             </li>
           </ol>
         </GuideSection>
 
-        <GuideSection title="What a legitimate free audit should include (from anyone)">
+        <GuideSection title="What a legitimate free audit includes, from any agency">
           <p>
             Use this checklist on any agency offering a &ldquo;free audit,&rdquo; including us. A
             legitimate one includes:
@@ -206,9 +208,13 @@ export default function FreePipelineAuditPage() {
         </GuideSection>
 
         <GuideSection title="Common questions">
+          {/* Each answer gets the stable anchor faqSlug() generates, and the FAQPage markup
+              above cites the same fragment — so a specific answer is linkable and quotable on
+              its own. Rewording a question changes its anchor, which is a URL change: check
+              nothing external deep-links to the old one first. */}
           <div className="divide-y divide-gold-500/12 border-y border-gold-500/12">
             {pageFaqs.map((f) => (
-              <div key={f.question} className="py-5">
+              <div key={f.question} id={faqSlug(f.question)} className="scroll-mt-20 py-5">
                 <h3 className="text-lg font-semibold text-bone">{f.question}</h3>
                 <p className="mt-2 leading-7">{f.answer}</p>
               </div>
