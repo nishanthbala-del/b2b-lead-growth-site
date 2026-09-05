@@ -43,24 +43,24 @@ export default function ReviewsPage() {
       ) : null}
       <PageShell width="prose">
         <main className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
             Reviews
           </p>
-          <h1 className="font-display text-3xl leading-tight text-bone sm:text-5xl">
+          <h1 className="font-display text-3xl leading-tight text-ink sm:text-5xl">
             {reviews.length > 0 ? "What clients say" : "No reviews yet — on purpose, not by accident"}
           </h1>
 
           {reviews.length > 0 ? (
             <ul className="mt-10 space-y-6">
               {reviews.map((r) => (
-                <li key={r.contentHash} className="rounded-lg border border-gold-500/16 bg-ink-900/60 p-6">
-                  <p className="text-lg leading-8 text-bone">&ldquo;{r.quote}&rdquo;</p>
-                  <p className="mt-4 text-sm font-semibold text-gold-200">{r.name}</p>
+                <li key={r.contentHash} className="rounded-lg border border-line bg-surface p-6">
+                  <p className="text-lg leading-8 text-ink">&ldquo;{r.quote}&rdquo;</p>
+                  <p className="mt-4 text-sm font-semibold text-accent">{r.name}</p>
                 </li>
               ))}
             </ul>
           ) : (
-            <div className="mt-8 space-y-5 leading-7 text-muted">
+            <div className="mt-8 space-y-5 leading-7 text-subtle">
               <p>
                 This is a young, founder-led company, and there is no real client review to show
                 yet. We would rather say that plainly than invent one, or borrow someone else&rsquo;s.
@@ -71,7 +71,7 @@ export default function ReviewsPage() {
               </p>
               <p>
                 In the meantime,{" "}
-                <Link href="/#why-us" className="font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400">
+                <Link href="/#why-us" className="font-semibold text-accent underline underline-offset-4 hover:text-accent">
                   here is what you can check instead
                 </Link>
                 : the published price, the contract terms, and the process itself.
@@ -79,11 +79,11 @@ export default function ReviewsPage() {
             </div>
           )}
 
-          <div className="mt-12 border-t border-gold-500/14 pt-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-200/80">
+          <div className="mt-12 border-t border-line pt-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
               Already a client?
             </p>
-            <p className="mt-3 leading-7 text-muted">
+            <p className="mt-3 leading-7 text-subtle">
               If you got a personal link from us, use it to leave a review or refer another
               business — it is the fastest way, and it credits you correctly. No link handy? Email
               us and we will send one.
@@ -93,7 +93,7 @@ export default function ReviewsPage() {
           <div className="mt-10">
             <Link
               href="/start"
-              className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 text-sm font-semibold text-ink-950 shadow-gold transition-transform hover:scale-[1.02]"
+              className="inline-flex min-h-12 items-center justify-center rounded-sm border border-accent/45 bg-accent-fill px-6 text-sm font-semibold text-paper shadow-lift transition-transform hover:scale-[1.02]"
             >
               See if we&rsquo;re a fit <span aria-hidden="true" className="ml-2">→</span>
             </Link>

@@ -60,7 +60,7 @@ export function FieldError({ id, children }: { id?: string; children: ReactNode 
   // role="alert" so the message is announced the moment validation inserts it —
   // the aria-describedby link alone only helps once focus reaches the control.
   return (
-    <p id={id} role="alert" className="mt-1.5 text-xs text-red-300">
+    <p id={id} role="alert" className="mt-1.5 text-xs text-red-700">
       {children}
     </p>
   );

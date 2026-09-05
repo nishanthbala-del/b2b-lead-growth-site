@@ -26,16 +26,16 @@ export default async function ForClientsPage({
   return (
     <PageShell width="wide">
       <main className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
-        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-gold-200/80">
+        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
           For clients
         </p>
-        <h1 className="font-display text-3xl leading-tight text-bone sm:text-5xl">
+        <h1 className="font-display text-3xl leading-tight text-ink sm:text-5xl">
           {valid ? "Leave a review, or send a referral" : "This page is for existing clients"}
         </h1>
 
         {valid ? (
           <>
-            <p className="mt-4 max-w-2xl leading-7 text-muted">
+            <p className="mt-4 max-w-2xl leading-7 text-subtle">
               Both take a couple of minutes. Neither is required, and nothing you send here goes
               on the website without us checking back with you first.
             </p>
@@ -44,10 +44,10 @@ export default async function ForClientsPage({
             </div>
           </>
         ) : (
-          <p className="mt-4 max-w-2xl leading-7 text-muted">
+          <p className="mt-4 max-w-2xl leading-7 text-subtle">
             If you&rsquo;re a current client, check your email for your personal link — it&rsquo;s
             the fastest way, and it credits you correctly. No link handy? Email{" "}
-            <a href={`mailto:${contactEmail}`} className="font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400">
+            <a href={`mailto:${contactEmail}`} className="font-semibold text-accent underline underline-offset-4 hover:text-accent">
               {contactEmail}
             </a>{" "}
             and we&rsquo;ll send one.

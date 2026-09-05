@@ -12,7 +12,7 @@ function SubmitButton({ submitting, label }: { submitting: boolean; label: strin
     <button
       type="submit"
       disabled={submitting}
-      className="inline-flex min-h-12 items-center justify-center rounded-sm border border-gold-500/70 bg-gold-sheen px-6 text-sm font-semibold text-ink-950 shadow-gold transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex min-h-12 items-center justify-center rounded-sm border border-accent/45 bg-accent-fill px-6 text-sm font-semibold text-paper shadow-lift transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {submitting ? "Sending…" : label}
     </button>
@@ -21,7 +21,7 @@ function SubmitButton({ submitting, label }: { submitting: boolean; label: strin
 
 function Done({ children }: { children: React.ReactNode }) {
   return (
-    <p className="rounded-sm border border-gold-500/25 bg-gold-500/8 px-4 py-3 text-sm leading-6 text-bone">
+    <p className="rounded-sm border border-line bg-accent-soft px-4 py-3 text-sm leading-6 text-ink">
       {children}
     </p>
   );
@@ -29,7 +29,7 @@ function Done({ children }: { children: React.ReactNode }) {
 
 function ErrorNote({ children }: { children: React.ReactNode }) {
   return (
-    <p role="alert" className="rounded-sm border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+    <p role="alert" className="rounded-sm border border-red-500/40 bg-red-50 px-4 py-3 text-sm text-red-800">
       {children}
     </p>
   );
@@ -92,12 +92,12 @@ function ReviewForm({ token, hp }: { token: string; hp: string }) {
           <Input id="rv-company" value={company} onChange={setCompany} placeholder="Company name" />
         </Field>
       </div>
-      <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-muted">
+      <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-subtle">
         <input
           type="checkbox"
           checked={consent}
           onChange={(e) => setConsent(e.target.checked)}
-          className="mt-1 h-4 w-4 shrink-0 accent-gold-400"
+          className="mt-1 h-4 w-4 shrink-0 accent-accent"
         />
         <span>
           I&rsquo;m OK with B2B Lead Growth possibly using this quote on their website, credited the
@@ -177,9 +177,9 @@ export default function ClientFeedbackForms({ token }: { token: string }) {
         <input id="cf-hp" type="text" tabIndex={-1} autoComplete="off" value={hp} onChange={(e) => setHp(e.target.value)} />
       </div>
 
-      <section className="rounded-lg border border-gold-500/20 bg-ink-900/60 p-6">
-        <h2 className="font-display text-xl text-bone">Leave a review</h2>
-        <p className="mt-2 text-sm leading-6 text-muted">
+      <section className="rounded-lg border border-line bg-surface p-6">
+        <h2 className="font-display text-xl text-ink">Leave a review</h2>
+        <p className="mt-2 text-sm leading-6 text-subtle">
           Two minutes, in your own words. We&rsquo;ll only use it with your OK, credited the way you
           name below.
         </p>
@@ -188,9 +188,9 @@ export default function ClientFeedbackForms({ token }: { token: string }) {
         </div>
       </section>
 
-      <section className="rounded-lg border border-gold-500/20 bg-ink-900/60 p-6">
-        <h2 className="font-display text-xl text-bone">Refer a business</h2>
-        <p className="mt-2 text-sm leading-6 text-muted">
+      <section className="rounded-lg border border-line bg-surface p-6">
+        <h2 className="font-display text-xl text-ink">Refer a business</h2>
+        <p className="mt-2 text-sm leading-6 text-subtle">
           Know another company that could use more qualified conversations? We&rsquo;ll reach out
           directly, and it&rsquo;s credited to you.
         </p>

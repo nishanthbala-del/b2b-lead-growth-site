@@ -622,13 +622,13 @@ function CredibilitySection() {
           left one), and the moment lib/content.ts `reviews` gets its first real, consented entry
           (see scripts/record_review.py in the operating-system repo) this line flips to pointing
           at it — no second content change needed. */}
-      <p className="text-sm leading-6 text-muted">
+      <p className="text-sm leading-6 text-subtle">
         {reviews.length > 0 ? (
           <>
             What we do have:{" "}
             <Link
               href="/reviews"
-              className="font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400"
+              className="font-semibold text-accent underline underline-offset-4 hover:text-accent"
             >
               real client reviews
             </Link>
@@ -640,7 +640,7 @@ function CredibilitySection() {
             so above rather than inventing any.{" "}
             <Link
               href="/reviews"
-              className="font-semibold text-gold-200 underline underline-offset-4 hover:text-gold-400"
+              className="font-semibold text-accent underline underline-offset-4 hover:text-accent"
             >
               The reviews page
             </Link>{" "}
