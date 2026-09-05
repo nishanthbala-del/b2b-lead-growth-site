@@ -98,10 +98,24 @@ export default function QualificationFlow() {
   // because the latter forces this page out of static generation for a value that is
   // purely informational. Cookieless, first-party, and never read back to the visitor.
   const [campaign, setCampaign] = useState("");
+  // The REFERRAL token, from /start?t=… — a different question from `campaign` and
+  // deliberately a separate field. `campaign` traces which outbound batch produced a
+  // visit; `referralToken` traces which existing client shared the link. Mapping one
+  // from the other would credit every batch-tagged visitor to a referral that never
+  // happened, which is a fabricated attribution.
+  //
+  // The operating system's credit_referrals.py reads this token out of intake_log.csv
+  // and matches it against data/referrals/tokens.csv. Until now nothing on this side
+  // ever sent one, so that lane could not credit anybody: the flywheel was wired at the
+  // far end and open at this one.
+  const [referralToken, setReferralToken] = useState("");
   useEffect(() => {
-    const raw = new URLSearchParams(window.location.search).get("src") ?? "";
+    const q = new URLSearchParams(window.location.search);
+    const raw = q.get("src") ?? "";
     // Closed character set: this string ends up in the owner's spreadsheet.
     if (/^[A-Za-z0-9_-]{1,40}$/.test(raw)) setCampaign(raw);
+    const ref = q.get("t") ?? q.get("ref") ?? "";
+    if (/^[A-Za-z0-9_-]{1,40}$/.test(ref)) setReferralToken(ref);
   }, []);
 
   const rootRef = useRef<HTMLDivElement>(null);
@@ -178,7 +192,7 @@ export default function QualificationFlow() {
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "submit", ...contact, ...answers, source: "page", campaign }),
+        body: JSON.stringify({ action: "submit", ...contact, ...answers, source: "page", campaign, referralToken }),
       });
       const data = (await res.json()) as {
         ok: boolean;

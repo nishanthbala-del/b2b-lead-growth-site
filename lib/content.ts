@@ -482,7 +482,7 @@ export const serviceTimeline: TimelinePhase[] = [
     label: "You export the demand you already own",
     owner: "you",
     detail:
-      "This step sets the whole schedule: past customers, open and expired estimates, lapsed maintenance plans, missed calls. We cannot research, buy, or infer these — only you can send them. Nothing is contacted until they are imported and you have approved the list.",
+      "This step sets the whole schedule: past customers, open and expired estimates, lapsed maintenance plans, missed calls. We cannot research, buy, or infer these — only you can send them. Nothing is contacted until they are imported and you have approved the list. We send you the export steps for your own system, whichever one it is.",
   },
   {
     band: "Days 3-5",
@@ -510,7 +510,7 @@ export const serviceTimeline: TimelinePhase[] = [
     // also the better sentence for this reader: it is more obviously careful with the
     // domain his own customers will see the mail arrive from.
     detail:
-      "We start at 1 a day, 2 a day from day 1, 5 a day from day 2, 10 a day from day 4, then up to full volume from day 6. Starting slow protects your domain's reputation. A mailbox that opens at full speed gets filtered, and that is not recoverable in a month.",
+      "We start at 1 a day, 2 a day from day 1, 5 a day from day 2, 10 a day from day 4, then up to full volume from day 6. Starting slow protects your domain's reputation; a mailbox that opens at full speed gets filtered, and that is not recoverable in a month.",
   },
   {
     band: "About two weeks per prospect",
@@ -523,7 +523,7 @@ export const serviceTimeline: TimelinePhase[] = [
     // prospects" behind a 100-message cap is 100/3, and on a 4-touch cadence 100 messages
     // is 25 prospects, not 33.
     detail:
-      "Up to 3 touches, at least 4 days apart, each adding something new rather than chasing. Anyone who asks us to stop is suppressed immediately, in code, permanently.",
+      "Up to 3 touches, at least 4 days apart, each one adding something new rather than chasing. Anyone who asks us to stop is suppressed immediately, in code, permanently.",
   },
   {
     band: "Ongoing, same day",

@@ -31,6 +31,9 @@ type LeadPayload = {
   source?: string;
   /** Campaign tag from /start?src=… , so outbound batches are attributable. */
   campaign?: string;
+  /** Referral token from /start?t=… — which CLIENT shared the link. Never derived
+   *  from `campaign`: that traces an outbound batch, not a person vouching for us. */
+  referralToken?: string;
   // Honeypot — must stay empty for real humans.
   hp_leave_blank?: string;
   // The rule-bearing answers. Typed loosely here because they arrive untrusted;
@@ -108,6 +111,7 @@ const CSV_COLUMNS = [
   "recommendedTier",
   "qualificationSummary",
   "campaign",
+  "referralToken",
 ] as const;
 
 // Best-effort in-memory rate limiter (per server instance). A light deterrent,
@@ -473,6 +477,9 @@ export async function POST(req: NextRequest) {
     // Closed character set, re-validated here: the browser is not trusted with a value
     // that lands in a spreadsheet cell.
     campaign: /^[A-Za-z0-9_-]{1,40}$/.test(String(body.campaign ?? "")) ? String(body.campaign) : "",
+    referralToken: /^[A-Za-z0-9_-]{1,40}$/.test(String(body.referralToken ?? ""))
+      ? String(body.referralToken)
+      : "",
   };
 
   const localOk = await appendLocal(record);

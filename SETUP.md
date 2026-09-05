@@ -106,7 +106,7 @@ const HEADERS = [
   'icpNotes', 'source', 'consent', 'consentAt', 'ip', 'yearsInBusiness',
   'recordVolume', 'followUpOwner', 'capacity', 'exportReadiness', 'timeline',
   'budget', 'fitOutcome', 'fitScore', 'recommendedTier', 'qualificationSummary',
-  'campaign', 'bookingOpenedAt'
+  'campaign', 'referralToken', 'bookingOpenedAt'
 ];
 
 function doPost(e) {
