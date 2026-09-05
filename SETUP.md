@@ -86,10 +86,27 @@ const SECRET = '';        // REQUIRED — set this. Must match SHEETS_WEBHOOK_SE
 const NOTIFY_EMAIL = '';  // optional: your private email for new-lead alerts
 // -----------------------------------------------------------------------------
 
+// EVERY column app/api/lead/route.ts sends, in its order, plus bookingOpenedAt.
+//
+// This list was 17 names until 2026-09-05 while route.ts sent 30. The write below is
+// BY HEADER NAME, but it used to be `HEADERS.map(...)` positionally, so the 14 names
+// missing from this array were discarded with no error and no warning: consent,
+// consentAt, and every answer the fit check collects — yearsInBusiness, recordVolume,
+// followUpOwner, capacity, exportReadiness, timeline, budget, fitOutcome, fitScore,
+// recommendedTier, qualificationSummary, campaign. An owner answered ten questions so
+// the reply would be about HIS business and none of it survived the trip, and the one
+// record you want if a recipient ever disputes consent (consentAt) was dropped by the
+// only durable sink in production.
+//
+// KEEP IN LOCKSTEP with CSV_COLUMNS in app/api/lead/route.ts. New questions go on the
+// END of both — see syncHeader() for why appending is safe and reordering is not.
 const HEADERS = [
   'id', 'timestamp', 'status', 'package', 'name', 'email', 'company', 'website',
   'role', 'targetMarket', 'avgDealSize', 'salesGoals', 'currentProspecting',
-  'icpNotes', 'source', 'ip', 'bookingOpenedAt'
+  'icpNotes', 'source', 'consent', 'consentAt', 'ip', 'yearsInBusiness',
+  'recordVolume', 'followUpOwner', 'capacity', 'exportReadiness', 'timeline',
+  'budget', 'fitOutcome', 'fitScore', 'recommendedTier', 'qualificationSummary',
+  'campaign', 'bookingOpenedAt'
 ];
 
 function doPost(e) {
@@ -108,32 +125,35 @@ function doPost(e) {
 
     try {
       const sheet = getSheet();
+      const header = syncHeader(sheet);
 
       if (body.action === 'booking_opened') {
-        markBookingOpened(sheet, body.id, body.timestamp);
+        markBookingOpened(sheet, header, body.id, body.timestamp);
         return json({ ok: true });
       }
 
-      // action === 'submit'
-      const row = HEADERS.map(function (h) {
+      // action === 'export' — the operating system's intake poller. Returns every row
+      // whose timestamp sorts after `since`, so the OS can pull leads it has not seen
+      // without anyone re-typing them. Read-only, and behind the same secret as a write.
+      if (body.action === 'export') {
+        return json({ ok: true, rows: exportRows(sheet, header, body.since || '') });
+      }
+
+      // action === 'submit'. Written BY NAME against the sheet's real header row, so a
+      // sheet that predates a column still lands every value under the right label.
+      const row = header.map(function (h) {
         if (h === 'bookingOpenedAt') return '';
         return body[h] != null ? body[h] : '';
       });
       // setValues, not appendRow: appendRow re-evaluates leading '=' as a formula,
       // which would undo the site's formula-injection guard.
-      sheet.getRange(sheet.getLastRow() + 1, 1, 1, HEADERS.length).setValues([row]);
+      sheet.getRange(sheet.getLastRow() + 1, 1, 1, header.length).setValues([row]);
     } finally {
       lock.releaseLock();
     }
 
-    if (NOTIFY_EMAIL) {
-      const lines = ['package', 'name', 'email', 'company', 'website', 'role',
-        'targetMarket', 'avgDealSize', 'salesGoals', 'currentProspecting', 'icpNotes']
-        .map(function (h) { return h + ': ' + (body[h] || ''); }).join('\n');
-      MailApp.sendEmail(NOTIFY_EMAIL,
-        'New lead: ' + (body.company || 'Unknown') + ' (' + (body.package || 'n/a') + ')',
-        'A new lead came in via the website:\n\n' + lines + '\n\nRef: ' + (body.id || ''));
-    }
+    notifyOwner(body);
+    confirmToVisitor(body);
 
     return json({ ok: true });
   } catch (err) {
@@ -151,7 +171,49 @@ function getSheet() {
   return sheet;
 }
 
-function markBookingOpened(sheet, id, ts) {
+// Bring an existing sheet up to date WITHOUT touching the rows already in it, and
+// return the header actually in force.
+//
+// Any name in HEADERS that the sheet does not have yet is APPENDED on the right. That
+// is why the write must go by name: the old 17-column header had `ip` in column 16,
+// where HEADERS now has `consent`, so rewriting row 1 in place would silently relabel
+// every historical row's IP address as a consent flag. Appending leaves old rows
+// correct under their own labels and lets new rows fill everything.
+function syncHeader(sheet) {
+  const width = Math.max(sheet.getLastColumn(), 1);
+  let header = sheet.getRange(1, 1, 1, width).getValues()[0]
+    .map(function (v) { return String(v || ''); })
+    .filter(function (v) { return v !== ''; });
+  if (!header.length) {
+    sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+    sheet.setFrozenRows(1);
+    return HEADERS.slice();
+  }
+  const missing = HEADERS.filter(function (h) { return header.indexOf(h) === -1; });
+  if (missing.length) {
+    sheet.getRange(1, header.length + 1, 1, missing.length).setValues([missing]);
+    header = header.concat(missing);
+  }
+  return header;
+}
+
+function exportRows(sheet, header, since) {
+  const last = sheet.getLastRow();
+  if (last < 2) return [];
+  const values = sheet.getRange(2, 1, last - 1, header.length).getValues();
+  const out = [];
+  for (let i = 0; i < values.length; i++) {
+    const rec = {};
+    for (let c = 0; c < header.length; c++) {
+      const v = values[i][c];
+      rec[header[c]] = v instanceof Date ? v.toISOString() : String(v == null ? '' : v);
+    }
+    if (!since || String(rec.timestamp || '') > since) out.push(rec);
+  }
+  return out;
+}
+
+function markBookingOpened(sheet, header, id, ts) {
   if (!id) return;
   const last = sheet.getLastRow();
   if (last < 2) return;
@@ -159,14 +221,77 @@ function markBookingOpened(sheet, id, ts) {
   for (let i = 0; i < ids.length; i++) {
     if (ids[i][0] === id) {
       const rowNum = i + 2;
-      sheet.getRange(rowNum, HEADERS.indexOf('bookingOpenedAt') + 1)
+      sheet.getRange(rowNum, header.indexOf('bookingOpenedAt') + 1)
         .setValue(ts || new Date().toISOString());
-      const statusCell = sheet.getRange(rowNum, HEADERS.indexOf('status') + 1);
+      const statusCell = sheet.getRange(rowNum, header.indexOf('status') + 1);
       const cur = statusCell.getValue();
       if (!cur || cur === 'New') statusCell.setValue('Booking opened');
       return;
     }
   }
+}
+
+// The alert now leads with the fit verdict. It used to omit `status` and `fitOutcome`
+// entirely, so a screened-out visitor and a 14/14 strong fit produced byte-identical
+// emails and the only way to tell them apart was to open the Sheet.
+function notifyOwner(body) {
+  if (!NOTIFY_EMAIL) return;
+  const fields = ['status', 'fitOutcome', 'fitScore', 'recommendedTier', 'name', 'email',
+    'company', 'website', 'role', 'targetMarket', 'yearsInBusiness', 'recordVolume',
+    'followUpOwner', 'capacity', 'exportReadiness', 'avgDealSize', 'timeline', 'budget',
+    'salesGoals', 'currentProspecting', 'icpNotes', 'qualificationSummary', 'consentAt'];
+  const lines = fields
+    .map(function (h) { return h + ': ' + (body[h] != null ? body[h] : ''); })
+    .join('\n');
+  MailApp.sendEmail(NOTIFY_EMAIL,
+    'New lead [' + (body.fitOutcome || '?') + ']: ' + (body.company || 'Unknown'),
+    'A new lead came in via the website:\n\n' + lines + '\n\nRef: ' + (body.id || ''));
+}
+
+// The receipt. Until 2026-09-05 a visitor answered fifteen questions, read a promise on
+// screen that we would send an audit in writing, and then received NOTHING — no thread
+// to reply to, no sender to whitelist, no reference they could keep once the tab closed.
+// To an owner already burned by a lead seller that is indistinguishable from being
+// ignored. MailApp is part of Apps Script, so this needs no new service and no key.
+//
+// It promises only what is already promised on the site, and it names a real person and
+// a real inbox so an unanswered request has somewhere to go.
+function confirmToVisitor(body) {
+  const to = String(body.email || '').trim();
+  if (!to || to.indexOf('@') === -1) return;
+  if (body.action && body.action !== 'submit') return;
+  const first = String(body.name || '').trim().split(' ')[0] || 'there';
+  const ref = body.id || '';
+  const msg = [
+    'Hi ' + first + ',',
+    '',
+    'Thanks — your request for a Free Pipeline Audit came through. Reference: ' + ref + '.',
+    '',
+    'What you get, in writing, within a few business days:',
+    '  1. A job profile worth targeting — including the work you would rather turn down.',
+    '  2. 3-5 referral partners near you, each with a contact path, a cited reason, and a',
+    '     source link you can open.',
+    '  3. One sample outreach message, written for one of those partners.',
+    '  4. A read on where your work comes from, and the gap most likely costing you jobs.',
+    '',
+    'It is yours to keep either way, there is no call required, and it contains no',
+    'homeowner records — those only ever come from your own list, after you are a client',
+    'and have approved the export.',
+    '',
+    'If you have not heard from us within five business days, just reply to this email —',
+    'it reaches a person, not a queue.',
+    '',
+    'Nishanth Balaji',
+    'B2B Lead Growth LLC',
+    'nishanth@b2bleadgrowth.com'
+  ].join('\n');
+  MailApp.sendEmail({
+    to: to,
+    subject: 'Your Free Pipeline Audit request — ref ' + ref,
+    body: msg,
+    name: 'Nishanth at B2B Lead Growth',
+    replyTo: 'nishanth@b2bleadgrowth.com'
+  });
 }
 
 function json(obj) {

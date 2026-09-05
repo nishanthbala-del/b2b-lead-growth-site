@@ -578,12 +578,53 @@ function ResultStep({
         </h3>
       </div>
 
+      {/* The recovery path, and it has to be TRUE.
+        *
+        * It used to read "Booking a time below is the reliable route — the calendar
+        * entry reaches us directly, and we can pick your details up from there."
+        * Neither half held. The scheduler is a Google Calendar appointment link, which
+        * accepts no prefill parameters (see the note on bookingUrl in lib/site.ts), so
+        * nothing but a name and an email transfers; and on the operating-system side an
+        * unmatchable booking is logged as "could not be matched to a lead — no brief
+        * will be built". The visitor was steered down the one path that guaranteed he
+        * would arrive at a 15-minute call and be asked the same ten questions again —
+        * the precise experience the fit check exists to prevent.
+        *
+        * The email route is now the primary one because it is the only one that can
+        * actually recover the answers, and the reference is rendered INSIDE it. It was
+        * previously shown only when `stored` was true, i.e. hidden in exactly the case
+        * where it is the one thing worth keeping. */}
       {!stored ? (
         <p className="rounded-sm border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-sm leading-6 text-amber-100">
-          Your answers came through, but we couldn&apos;t confirm they saved on our side.
+          Your answers came through, but we couldn&apos;t confirm they saved on our side.{" "}
+          {leadId ? (
+            <>
+              The reliable fix is one email: send reference{" "}
+              <strong className="font-semibold">{leadId}</strong> to{" "}
+              <a
+                className="underline underline-offset-2"
+                href={`mailto:${contactEmail}?subject=${encodeURIComponent(
+                  `Fit check ref ${leadId}`,
+                )}&body=${encodeURIComponent(
+                  `My fit check didn't save. Reference: ${leadId}`,
+                )}`}
+              >
+                {contactEmail}
+              </a>{" "}
+              and we&apos;ll pull the full record.
+            </>
+          ) : (
+            <>
+              The reliable fix is one email to{" "}
+              <a className="underline underline-offset-2" href={`mailto:${contactEmail}`}>
+                {contactEmail}
+              </a>
+              , and we&apos;ll pick it up manually.
+            </>
+          )}
           {result.offerBooking
-            ? " Booking a time below is the reliable route — the calendar entry reaches us directly, and we can pick your details up from there."
-            : ` Email ${contactEmail} and we'll pick it up manually.`}
+            ? " Booking a time below works too, but the calendar only carries your name and email, so we would be starting from scratch on the call."
+            : ""}
         </p>
       ) : null}
 

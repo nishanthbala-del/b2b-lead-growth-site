@@ -60,11 +60,17 @@ const EVENTS_FILE = path.join(DATA_DIR, "events.jsonl");
 
 // CSV column order — also the human-readable header row.
 //
-// APPEND ONLY. The owner's Google Sheet was created against this order and its
-// header row already exists; reordering or removing a column would silently shift
-// every value in every future row into the wrong place, and nothing here would
-// error. New questions therefore go on the end, and the four legacy names below are
-// kept and fed from their nearest equivalent in the new flow rather than renamed:
+// APPEND ONLY, and the reason changed on 2026-09-05. This comment used to say the
+// owner's Google Sheet "was created against this order", which was not true: the
+// Apps Script in SETUP.md carried its own 17-name HEADERS array and wrote the row
+// positionally against THAT, so the 14 columns below that were missing from it —
+// consent, consentAt, and every fit-check answer — were dropped silently on the way
+// to the only durable sink in production. The script now writes BY NAME against the
+// sheet's real header row and appends any column it is missing, so order here no
+// longer has to match the sheet. Appending stays the rule anyway: the local CSV
+// mirror below IS positional, and a rename still orphans a column in the Sheet.
+// Keep this list in lockstep with HEADERS in SETUP.md. The four legacy names below
+// are kept and fed from their nearest equivalent in the new flow rather than renamed:
 //   targetMarket       <- serviceArea    (same question, older wording)
 //   avgDealSize        <- jobValue
 //   currentProspecting <- currentApproach
