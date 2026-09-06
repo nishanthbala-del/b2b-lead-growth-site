@@ -276,7 +276,7 @@ function Hero() {
           The jobs you already quoted are still sitting in your system.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-subtle sm:text-xl">
-          {brandName} runs the outbound and the follow-up for established HVAC companies, and we
+          We find the right companies, write and send the emails, and handle the follow-up. We
           measure the work by one thing: qualified conversations started. That means your unsold
           estimates, lapsed maintenance agreements and past customers — plus researched referral
           partners near you — worked every week, from your own domain, with your sign-off.
