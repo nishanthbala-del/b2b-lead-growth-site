@@ -19,13 +19,16 @@ export const siteUrl = "https://www.b2bleadgrowth.com";
 export const brandName = "B2B Lead Growth";
 
 // Canonical organization/service description used in JSON-LD structured data.
-// Names the ONE niche (established residential HVAC) and both lanes the service
-// actually runs — reactivating the client's own records, and researched referral
-// partners carrying a public source citation. It deliberately does NOT claim to
-// generate homeowner leads: homeowner records are the client's own export under
-// gate #0f and are never researched, bought, or inferred.
+// Names the ONE niche (established HVAC contractors with a commercial/B2B component —
+// D-025) and what the service actually does: researches the contractor's commercial
+// accounts from cited public sources, contacts the decision-makers in the contractor's
+// name, runs the follow-up, and hands off qualified conversations. The contractor's own
+// account history is named as the OPTIONAL second lane it is. It deliberately does NOT
+// claim to generate homeowner leads: homeowners are never contacted (gate #0f in the
+// operating system), and saying so in the entity description keeps an answer engine from
+// filing this business next to the per-lead sellers.
 export const orgDescription =
-  "B2B Lead Growth is an HVAC lead generation and appointment setting service for established residential HVAC companies: it reactivates the unsold estimates, lapsed maintenance agreements, and past customers already in your system, and builds referral-partner pipelines from cited public sources. Not a lead seller.";
+  "B2B Lead Growth is a managed outbound service for established HVAC contractors with commercial work: it researches the commercial accounts that fit the contractor — property and facility managers, building owners, multi-site operators — from cited public sources, contacts the right decision-makers in the contractor's name, handles the follow-up, and hands off qualified conversations. A contractor's own account history is an optional second lane. Not a lead seller, and homeowners are never contacted.";
 
 // ---------------------------------------------------------------------------
 // Booking

@@ -17,10 +17,10 @@ import { plans } from "./content.ts";
 // explicit URL list (a .mjs script and a static text file cannot import this registry).
 // tests/routes.test.ts fails if the three lists stop agreeing, so the note above is now
 // enforced rather than merely written down — it had already gone stale once.
-// 2026-09-05: the H1 went back to the buyer's problem and the deck became D-021's
-// canonical positioning sentence — a substantive change to the page's lead, so the
-// stamp moves with it.
-export const homepageDateModified = "2026-09-05";
+// 2026-09-11: the whole page was repositioned from the retired residential-reactivation
+// model to managed outbound for commercial HVAC contractors (D-025) — new H1, new
+// argument, new fit lists, new FAQ. The stamp moves with it.
+export const homepageDateModified = "2026-09-11";
 
 // The homepage's own title and description, in the registry with every other route's.
 // They lived in app/layout.tsx, which made the homepage the only page whose snippet
@@ -28,19 +28,20 @@ export const homepageDateModified = "2026-09-05";
 // order to build its JSON-LD from the same strings it renders.
 //
 // Title kept under ~60 characters so Google doesn't truncate it. It leads with the
-// NICHE + the service, because "HVAC lead generation" is what the buyer searches and
-// "B2B Lead Growth" is a brand nobody is looking for yet. Description under ~155
-// characters, and it names the actual mechanism (your own list + referral partners)
-// rather than implying we sell homeowner leads, which we do not.
+// NICHE + the service, because "commercial HVAC lead generation" is what the buyer
+// searches and "B2B Lead Growth" is a brand nobody is looking for yet. Description under
+// ~155 characters, and it names the actual mechanism (researched commercial accounts,
+// outreach and follow-up in the contractor's name) rather than implying we sell
+// homeowner leads, which we do not.
 //
 // The price came OUT of the description on purpose. It read "From $750/mo.", which put
 // the homepage in a bidding war with /pricing — the page carrying the cited market
 // comparison and the billing terms, and the one that should win a pricing query. The
 // homepage still publishes every price in its own tier table; it just stops chasing the
 // query in its snippet.
-export const homepageMetaTitle = "HVAC Lead Generation & Appointment Setting | B2B Lead Growth";
+export const homepageMetaTitle = "Commercial HVAC Lead Generation | B2B Lead Growth";
 export const homepageDescription =
-  "Reactivate the unsold estimates and lapsed agreements sitting in your own system, plus researched referral partners. For established HVAC companies.";
+  "Managed outbound for HVAC contractors with commercial work: researched commercial accounts, outreach and follow-up in your name, qualified conversations handed to your team.";
 
 export type GuidePage = {
   slug: string;
@@ -57,11 +58,11 @@ export const guidePages: GuidePage[] = [
     navLabel: "Free Pipeline Audit",
     metaTitle: "Free HVAC Pipeline Audit: What's Included and How It Works",
     description:
-      "What our free HVAC pipeline audit delivers: a sharpened job profile, 3–5 vetted referral partners with cited reasons, and a sample message. Yours to keep.",
+      "What our free HVAC pipeline audit delivers: an account profile, 3–5 vetted commercial accounts with cited reasons and source links, and a sample message. Yours to keep.",
     datePublished: "2026-08-08",
-    // 2026-08-30: answer-first lead rewritten, and every FAQ answer gained a stable
-    // anchor published as its Question @id/url. Real new visible text.
-    dateModified: "2026-08-30",
+    // 2026-09-11: the deliverable became commercial accounts (D-025) — new visible text
+    // in the lead, the key answer, the steps and the FAQ.
+    dateModified: "2026-09-11",
   },
   {
     slug: "pricing",
@@ -74,9 +75,9 @@ export const guidePages: GuidePage[] = [
     description:
       "HVAC lead generation pricing: $750, $1,500, or $2,500 a month. Month-to-month, no setup fee, never priced per lead, with cited market context.",
     datePublished: "2026-08-08",
-    // 2026-09-04: tier cards became a labelled <dl>, and the volume unit was corrected
-    // to messages-per-month on the two sending tiers.
-    dateModified: "2026-09-04",
+    // 2026-09-11: tier scope, the timeline (a new research phase; the export phase made
+    // optional) and the "where accounts come from" section all moved to D-025.
+    dateModified: "2026-09-11",
   },
   {
     slug: "hvac-lead-generation-new-jersey",
@@ -85,8 +86,9 @@ export const guidePages: GuidePage[] = [
     description:
       "What HVAC leads cost New Jersey contractors on Angi, Google Local Services Ads and per-lead sellers — with cited figures and the honest alternatives.",
     datePublished: "2026-08-08",
-    // 2026-09-02: answer-first lead, and the tier comparison became a real table.
-    dateModified: "2026-09-02",
+    // 2026-09-11: the fourth option and every self-description moved to D-025 —
+    // commercial accounts researched directly, not the contractor's own records.
+    dateModified: "2026-09-11",
   },
   {
     slug: "shared-vs-exclusive-hvac-leads",
@@ -95,8 +97,9 @@ export const guidePages: GuidePage[] = [
     description:
       "Shared leads look cheap until you do the cost-per-booked-job math. A cited comparison of shared vs. exclusive HVAC leads, from a company selling neither.",
     datePublished: "2026-08-08",
-    // 2026-08-30: answer-first lead, and the three-model comparison became a table.
-    dateModified: "2026-08-30",
+    // 2026-09-11: the "option most contractors skip" section and the self-descriptions
+    // moved to D-025.
+    dateModified: "2026-09-11",
   },
   {
     slug: "how-to-choose-a-lead-generation-agency",
@@ -105,15 +108,16 @@ export const guidePages: GuidePage[] = [
     description:
       "The seven questions that expose a bad HVAC lead-gen vendor — shared leads, data lock-in, hidden fees, long contracts — and our own answers to each.",
     datePublished: "2026-08-08",
-    // 2026-08-30: answer-first lead, and every FAQ answer gained a stable anchor.
-    dateModified: "2026-08-30",
+    // 2026-09-11: our own on-the-record answers moved to D-025 (where the contact data
+    // comes from, what is reported, who the buyer is).
+    dateModified: "2026-09-11",
   },
 ];
 
 // Indexable routes that are not guides and not legal pages: real destinations with
 // their own metadata, linked from the site and from outbound email.
 export const standaloneRoutes = [
-  { slug: "start", navLabel: "Fit check", dateModified: "2026-08-27", priority: 0.9 },
+  { slug: "start", navLabel: "Fit check", dateModified: "2026-09-11", priority: 0.9 },
   { slug: "reviews", navLabel: "Reviews", dateModified: "2026-09-05", priority: 0.5 },
 ] as const;
 
@@ -147,7 +151,7 @@ const TITLE_BUDGET = 60;
 // tests/ load this file directly under `node --test`).
 const OG_IMAGE_PATH = "/opengraph-image";
 const OG_IMAGE_ALT =
-  "B2B Lead Growth — HVAC lead generation and appointment setting: reactivate unsold estimates and lapsed agreements, work your referral partners, book appointments";
+  "B2B Lead Growth — managed outbound for commercial HVAC contractors: researched commercial accounts, outreach and follow-up in your name, qualified conversations handed to your team";
 
 export const ogImages = [
   { url: OG_IMAGE_PATH, width: 1200, height: 630, alt: OG_IMAGE_ALT, type: "image/png" },
@@ -295,23 +299,41 @@ export function serviceJsonLd() {
     name: brandName,
     url: siteUrl,
     description: orgDescription,
-    serviceType: "HVAC Lead Generation and Appointment Setting",
+    serviceType: "Commercial HVAC Lead Generation and Appointment Setting",
     areaServed,
     provider: { "@id": `${siteUrl}/#organization` },
     // Named explicitly so an answer engine can state WHO this is for without having to
     // infer it from marketing copy. The niche is the single most important fact about
-    // this business and the one most easily lost in summarisation.
+    // this business and the one most easily lost in summarisation. The wording is the
+    // operating-system repo's core/icp.ONE_SENTENCE, compressed.
     audience: {
       "@type": "BusinessAudience",
-      name: "Established residential HVAC companies",
-      audienceType: "Residential HVAC contractors with existing customer history",
+      name: "Established HVAC contractors with commercial work",
+      audienceType:
+        "HVAC contractors that already sell and complete commercial work, have someone who quotes and wins those bids, and have room for more accounts",
     },
-    // The two lanes, kept separate, because conflating them is the specific
-    // misunderstanding that would misrepresent the service: homeowner records are the
-    // client's own and are never sourced by us.
+    // What the service actually produces, in delivery order. The optional lane is named
+    // as optional, because conflating it with the researched lane is the specific
+    // misunderstanding that would misrepresent the service: the researched accounts are
+    // businesses found from public sources; a contractor's own history is theirs, sent by
+    // them, and never sourced by us. Homeowners appear in neither.
     serviceOutput: [
-      { "@type": "Thing", name: "Reactivation list built from the client's own customer records" },
-      { "@type": "Thing", name: "Researched referral-partner prospects, each with a cited public source" },
+      {
+        "@type": "Thing",
+        name: "Researched commercial account list — property and facility managers, building owners, multi-site operators — each with a named contact, a cited reason and a public source link",
+      },
+      {
+        "@type": "Thing",
+        name: "Managed outreach and follow-up sent in the contractor's name, from the contractor's own mailbox",
+      },
+      {
+        "@type": "Thing",
+        name: "Qualified conversations handed off to the contractor's team, measured as qualified conversations started",
+      },
+      {
+        "@type": "Thing",
+        name: "Optional: the contractor's own account history (past accounts, unaccepted proposals, lapsed service agreements) cleaned, ranked and worked — only when the contractor exports and approves it",
+      },
     ],
     termsOfService: `${siteUrl}/terms`,
     // ONE AggregateOffer wrapping the three tiers rather than three loose Offers.

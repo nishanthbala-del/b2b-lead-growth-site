@@ -13,7 +13,7 @@ This site is a Next.js landing page for the **B2B Lead Growth Agency** with a bu
 | Piece | Where | What it does |
 | --- | --- | --- |
 | Landing page | `components/LeadGenerationLanding.tsx` | The marketing site. CTAs point at `/start` or `/pricing`. |
-| Fit check | `components/qualification/QualificationFlow.tsx` | The standalone `/start` page: a short question flow (customer history, average job value, biggest pipeline gap, capacity, software in use) that ends in a straight fit verdict — including a real no, with a reason and a reading suggestion instead of a booking link. |
+| Fit check | `components/qualification/QualificationFlow.tsx` | The standalone `/start` page: a short question flow (how much of the work is commercial, who quotes it, typical commercial job value, the biggest gap, how commercial work arrives, capacity, whether the target accounts can be described) that ends in a straight fit verdict — including a real no, with a reason and a reading suggestion instead of a booking link. |
 | API route | `app/api/lead/route.ts` | Validates submissions, blocks bots (honeypot + rate limit), saves them. |
 | Local storage | `./data/` (gitignored) | `submissions.csv` + `.jsonl` for local dev / self-host. |
 | Cloud storage | Google Sheet (via Apps Script) | The durable source of truth in production. |
@@ -24,13 +24,17 @@ This site is a Next.js landing page for the **B2B Lead Growth Agency** with a bu
 offered) or a disqualifying result (reason + reading suggestion, no booking link).
 
 ### What the fit check captures
-Business-operations signals used to score fit — customer history and count, average job
-value, the single biggest gap in current pipeline (unsold estimates, lapsed maintenance
-agreements, thin referral flow, or wanting to buy homeowner leads — the last one is an
-automatic disqualifier), current capacity, and whether field-service software is in use.
-See `lib/qualification.ts` for the exact question set and scoring rules; it changes
-independently of this doc, so treat that file as the source of truth for the current
-questions, not this list.
+The commercial ICP (D-025 in the operating-system repo) — how much of the shop's work is
+commercial (residential-only is an automatic disqualifier), who quotes and wins commercial
+bids, typical commercial job or contract value, the single biggest gap on the commercial
+side (no way to find accounts, follow-up dropping, referral dependence, not on the right
+bid lists, or wanting to buy homeowner leads — the last one is an automatic disqualifier),
+how commercial work arrives today (an in-house outbound seat is an automatic disqualifier),
+who follows up with accounts, capacity (at capacity year-round is an automatic
+disqualifier), and whether the target accounts can be described. Nothing asks for a
+customer list or an export. See `lib/qualification.ts` for the exact question set and
+scoring rules; it changes independently of this doc, so treat that file as the source of
+truth for the current questions, not this list.
 
 ---
 
@@ -100,13 +104,17 @@ const NOTIFY_EMAIL = '';  // optional: your private email for new-lead alerts
 //
 // KEEP IN LOCKSTEP with CSV_COLUMNS in app/api/lead/route.ts. New questions go on the
 // END of both — see syncHeader() for why appending is safe and reordering is not.
+// `recordVolume` and `exportReadiness` are RETIRED (2026-09-11, D-025) and always arrive
+// blank; they stay so existing rows keep their headings. The three commercial-fit
+// questions that replaced them are appended after `referralToken`.
 const HEADERS = [
   'id', 'timestamp', 'status', 'package', 'name', 'email', 'company', 'website',
   'role', 'targetMarket', 'avgDealSize', 'salesGoals', 'currentProspecting',
   'icpNotes', 'source', 'consent', 'consentAt', 'ip', 'yearsInBusiness',
   'recordVolume', 'followUpOwner', 'capacity', 'exportReadiness', 'timeline',
   'budget', 'fitOutcome', 'fitScore', 'recommendedTier', 'qualificationSummary',
-  'campaign', 'referralToken', 'bookingOpenedAt'
+  'campaign', 'referralToken', 'commercialShare', 'commercialQuoter', 'targetAccounts',
+  'bookingOpenedAt'
 ];
 
 // The 'Feedback' tab — a client's review or referral submission (/for-clients?t=<token>), a
@@ -258,9 +266,10 @@ function markBookingOpened(sheet, header, id, ts) {
 function notifyOwner(body) {
   if (!NOTIFY_EMAIL) return;
   const fields = ['status', 'fitOutcome', 'fitScore', 'recommendedTier', 'name', 'email',
-    'company', 'website', 'role', 'targetMarket', 'yearsInBusiness', 'recordVolume',
-    'followUpOwner', 'capacity', 'exportReadiness', 'avgDealSize', 'timeline', 'budget',
-    'salesGoals', 'currentProspecting', 'icpNotes', 'qualificationSummary', 'consentAt'];
+    'company', 'website', 'role', 'targetMarket', 'yearsInBusiness', 'commercialShare',
+    'commercialQuoter', 'targetAccounts', 'followUpOwner', 'capacity', 'avgDealSize',
+    'timeline', 'budget', 'salesGoals', 'currentProspecting', 'icpNotes',
+    'qualificationSummary', 'consentAt'];
   const lines = fields
     .map(function (h) { return h + ': ' + (body[h] != null ? body[h] : ''); })
     .join('\n');
@@ -289,15 +298,16 @@ function confirmToVisitor(body) {
     'Thanks — your request for a Free Pipeline Audit came through. Reference: ' + ref + '.',
     '',
     'What you get, in writing, within a few business days:',
-    '  1. A job profile worth targeting — including the work you would rather turn down.',
-    '  2. 3-5 referral partners near you, each with a contact path, a cited reason, and a',
-    '     source link you can open.',
-    '  3. One sample outreach message, written for one of those partners.',
-    '  4. A read on where your work comes from, and the gap most likely costing you jobs.',
+    '  1. An account profile worth targeting — the account types and areas, and the work',
+    '     you would rather turn down.',
+    '  2. 3-5 commercial accounts near you — property managers, building owners, facility',
+    '     teams — each with a named contact, a cited reason, and a source link you can open.',
+    '  3. One sample outreach message, written for one of those accounts.',
+    '  4. A read on where your commercial work comes from, and the gap most likely costing',
+    '     you accounts.',
     '',
     'It is yours to keep either way, there is no call required, and it contains no',
-    'homeowner records — those only ever come from your own list, after you are a client',
-    'and have approved the export.',
+    'homeowner records — we never contact homeowners. Every account in it is a business.',
     '',
     'If you have not heard from us within five business days, just reply to this email —',
     'it reaches a person, not a queue.',

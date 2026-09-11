@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     // Was generic B2B copy predating the HVAC repositioning, and it promised "booked
     // calls" as a deliverable. Names the niche and the work instead.
     description:
-      "HVAC lead generation and appointment setting for established residential HVAC companies: reactivating your own unsold estimates and lapsed agreements, plus researched referral partners.",
+      "Managed outbound for established HVAC contractors with commercial work: researched commercial accounts, outreach and follow-up in your name, qualified conversations handed to your team.",
     start_url: "/",
     display: "standalone",
     background_color: "#0A0A0B",

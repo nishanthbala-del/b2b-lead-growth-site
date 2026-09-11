@@ -16,7 +16,7 @@ export const metadata: Metadata = pageMetadata({
   path: "/start",
   type: "website",
   title: "Fit check for HVAC companies",
-  description: `A ${intakeMinutes}-minute fit check for established HVAC companies. Answer ten questions and get a straight answer — including no. If it's a fit, we send your free pipeline audit in writing; the ${callLengthMinutes}-minute walkthrough is optional.`,
+  description: `A ${intakeMinutes}-minute fit check for established HVAC contractors with commercial work. Answer eleven questions and get a straight answer — including no. If it's a fit, we send your free pipeline audit in writing; the ${callLengthMinutes}-minute walkthrough is optional.`,
 });
 
 const breadcrumbJsonLd = {
@@ -49,7 +49,7 @@ const promises = [
   {
     short: "Free audit, no call required",
     title: "The audit is free, and no call is required",
-    body: "If it is a fit, we build your pipeline audit — a job profile, 3–5 cited referral partners, one sample message — and email it to you. You never have to get on a call to receive it.",
+    body: "If it is a fit, we build your pipeline audit — an account profile, 3–5 cited commercial accounts, one sample message — and email it to you. You never have to get on a call to receive it.",
   },
   {
     short: `A ${callLengthMinutes}-minute call only if you want one`,
@@ -77,8 +77,8 @@ export default function StartPage() {
             Let&rsquo;s find out if this is for you.
           </h1>
           <p className="mt-4 max-w-2xl leading-7 text-subtle sm:text-lg sm:leading-8">
-            For established residential HVAC companies with real customer history and room for more
-            work. Ten questions, and you get the answer on the last screen.
+            For established HVAC contractors that already do commercial work and have room for
+            more accounts. Eleven questions, and you get the answer on the last screen.
           </p>
 
           <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">

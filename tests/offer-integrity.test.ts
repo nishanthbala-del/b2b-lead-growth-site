@@ -23,12 +23,16 @@ import { test, describe } from "node:test";
 
 import {
   ANSWER_KEYS,
+  CAPACITY,
+  COMMERCIAL_SHARE,
+  CURRENT_APPROACH,
   EMPTY_ANSWERS,
+  GROWTH_PROBLEM,
   QUESTION_LABELS,
   evaluateFit,
   type QualificationAnswers,
 } from "../lib/qualification.ts";
-import { audit, faqs, plans } from "../lib/content.ts";
+import { audit, differentiators, faqs, idealFor, notFor, plans, riskReversal } from "../lib/content.ts";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -80,13 +84,14 @@ describe("the audit is never gated behind a call", () => {
   test("a qualified visitor is told the audit comes without a call", () => {
     const strong = evaluateFit({
       yearsInBusiness: "over-15",
-      recordVolume: "5k-plus",
-      jobValue: "over-40000",
-      growthProblem: "unsold-estimates",
+      commercialShare: "most",
+      commercialQuoter: "dedicated",
+      jobValue: "over-100000",
+      growthProblem: "no-way-to-find-accounts",
       currentApproach: "word-of-mouth",
       followUpOwner: "nobody",
       capacity: "room-now",
-      exportReadiness: "crm",
+      targetAccounts: "can-name",
       timeline: "now",
       budget: "unsure",
     });
@@ -152,6 +157,18 @@ describe("nothing promises an outcome", () => {
       ].join(" ");
       assert.deepEqual(outcomePromises(text), [], `${plan.name} promises an outcome`);
     }
+  });
+
+  test("the fit lists, differentiators and risk-reversal copy state activity, not results", () => {
+    // These were never scanned as structured sources — only the page-prose scan below
+    // covered them, and only via the component that renders them.
+    const text = [
+      ...idealFor,
+      ...notFor.filter((line) => !/guaranteed jobs/.test(line)), // the allowlisted mention
+      ...differentiators.map((d) => `${d.title} ${d.body}`),
+      ...riskReversal.map((r) => `${r.title} ${r.body}`),
+    ].join(" ");
+    assert.deepEqual(outcomePromises(text), []);
   });
 
   test("the audit copy promises a deliverable and its quality, never a result", () => {
@@ -236,21 +253,29 @@ describe("nothing promises an outcome", () => {
   });
 
   test("no fit outcome, for any combination of answers, promises a result", () => {
-    // Exhaustive over the two dimensions the outcome copy actually branches on, plus
-    // the blocking answers — the reachable surface of every sentence this can render.
-    const problems = ["unsold-estimates", "lapsed-customers", "thin-shoulder-season", "no-referral-pipeline", "paying-per-lead", "buy-leads", "other"] as const;
-    const capacities = ["room-now", "shoulder-thin", "at-capacity"] as const;
-    for (const growthProblem of problems) {
-      for (const capacity of capacities) {
-        for (const recordVolume of ["none", "few-hundred", "5k-plus"] as const) {
-          const answers: QualificationAnswers = { ...EMPTY_ANSWERS, growthProblem, capacity, recordVolume };
-          const r = evaluateFit(answers);
-          const text = [r.headline, r.nextStep, ...r.reasons, ...r.watchouts].join(" ");
-          assert.deepEqual(
-            outcomePromises(text),
-            [],
-            `outcome for ${growthProblem}/${capacity}/${recordVolume}`,
-          );
+    // Exhaustive over every dimension the outcome copy branches on, INCLUDING all four
+    // blocking answers — the reachable surface of every sentence this can render. The
+    // option lists are read from the module rather than restated, so a new option is
+    // covered the moment it exists.
+    for (const growthProblem of GROWTH_PROBLEM) {
+      for (const capacity of CAPACITY) {
+        for (const commercialShare of COMMERCIAL_SHARE) {
+          for (const currentApproach of CURRENT_APPROACH) {
+            const answers: QualificationAnswers = {
+              ...EMPTY_ANSWERS,
+              growthProblem: growthProblem.value,
+              capacity: capacity.value,
+              commercialShare: commercialShare.value,
+              currentApproach: currentApproach.value,
+            };
+            const r = evaluateFit(answers);
+            const text = [r.headline, r.nextStep, ...r.reasons, ...r.watchouts].join(" ");
+            assert.deepEqual(
+              outcomePromises(text),
+              [],
+              `outcome for ${growthProblem.value}/${capacity.value}/${commercialShare.value}/${currentApproach.value}`,
+            );
+          }
         }
       }
     }

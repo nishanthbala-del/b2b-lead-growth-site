@@ -19,17 +19,17 @@ const hardQuestions = [
   {
     question: "Do you guarantee a number of leads, appointments, or jobs?",
     ourAnswer:
-      "No — and you should walk away from any vendor who does. Whether a homeowner books and buys depends on your pricing, your reputation, your timing, and how the visit goes. A vendor controls the quality of the research and the outreach, not the buyer's decision. We sell defined activity: records worked, personalized outreach, appointment handling by tier. Never outcomes.",
+      "No — and you should walk away from any vendor who does. Whether an account signs depends on your pricing, your references, your timing, and how the walkthrough goes. A vendor controls the quality of the research and the outreach, not the buyer's decision. We sell defined activity: accounts researched, personalized outreach, follow-up, appointment handling by tier. Never outcomes.",
   },
   {
     question: "Is this lead sold to anyone else?",
     ourAnswer:
-      "Not with us — B2B Lead Growth sells no leads at all, shared or exclusive, so nothing we do is priced per lead. Ask every other vendor, because the answer is usually yes: shared leads are sold to three or four contractors at once, and the close rate is low enough to wreck the math. You pay us a flat monthly fee for work done on your own customer history and your own service area. Run the cost-per-booked-job math before you buy from anyone.",
+      "Not with us — B2B Lead Growth sells no leads at all, shared or exclusive, so nothing we do is priced per lead. Ask every other vendor, because the answer is usually yes: shared leads are sold to three or four contractors at once, and the close rate is low enough to wreck the math. You pay us a flat monthly fee for research and outreach on the account types and service area you approve, and we work one HVAC company per service area. Run the cost-per-booked-job math before you buy from anyone.",
   },
   {
     question: "Who owns the prospect data if we part ways?",
     ourAnswer:
-      "You do — and with us your customer list was never ours to begin with. Every list, script, and tracker we build is yours to keep when you leave, along with the current suppression and opt-out list. Vendors keeping the records when a client leaves is avoidable: get ownership in writing before you sign with anyone.",
+      "You do — every account list, script, and tracker we build is yours to keep when you leave, along with the current suppression and opt-out list, and any account history you sent us was never ours to begin with. Vendors keeping the records when a client leaves is avoidable: get ownership in writing before you sign with anyone.",
   },
   {
     question: "What is the minimum contract length?",
@@ -44,12 +44,12 @@ const hardQuestions = [
   {
     question: "Exactly what work happens each month, and how is it reported?",
     ourAnswer:
-      "Each tier publishes its scope: how many records are worked, what is delivered, and what is excluded. Reports contain verified activity numbers only — contacted, replies, interested replies flagged, appointments booked. Never projections, and never a claim about jobs closed, because we cannot observe what happened in the driveway. Ask any vendor to name the metric they will report and the metric they refuse to report. Both answers are informative.",
+      "Each tier publishes its scope: how many accounts are researched or messages sent, what is delivered, and what is excluded. Reports contain verified activity numbers only — accounts contacted, messages sent, replies, and qualified conversations started, meaning a decision-maker who replied with real interest, confirmed by a person. Never projections, and never a claim about jobs closed, because we cannot observe what happened on the walkthrough. Ask any vendor to name the metric they will report and the metric they refuse to report. Both answers are informative.",
   },
   {
     question: "Where does your contact data come from?",
     ourAnswer:
-      "Homeowner records come from your own export and nowhere else; referral partners are businesses we research from free public sources, with a citation each. We cannot research, buy, or infer a homeowner record — only you can send it. Referral partners are builders, property managers, realtors and trades, and every one carries a cited reason it was included. If a vendor cannot tell you where a contact came from or why that person was chosen, you are buying a scraped list with a markup.",
+      "Every account we contact is a business we researched from free public sources, with a citation each: property managers, building owners, facility teams, multi-site operators, general contractors. Each carries a named person, the reason it was included, and the source link. We never contact homeowners — not from research, not from a purchased list. If you choose to send your own account history, it comes from your export and nowhere else, and we cannot research, buy, or infer it. If a vendor cannot tell you where a contact came from or why that person was chosen, you are buying a scraped list with a markup.",
   },
 ];
 
@@ -60,7 +60,7 @@ const hardQuestions = [
 const redFlags: { flag: string; why: ReactNode }[] = [
   {
     flag: "Guaranteed jobs, appointments, or revenue",
-    why: "Nobody controls a homeowner's buying decision. A guarantee is either priced-in churn math or a sign the vendor counts unqualified appointments as delivered.",
+    why: "Nobody controls the buyer's decision. A guarantee is either priced-in churn math or a sign the vendor counts unqualified appointments as delivered.",
   },
   {
     flag: "The same lead is sold to three other contractors",
@@ -218,10 +218,11 @@ export default function ChooseAgencyPage() {
 
         <GuideSection title="When you should not hire any vendor yet">
           <KeyAnswer>
-            Do not hire an HVAC lead generation vendor yet if you have no capacity on the schedule,
-            nobody free to answer an interested homeowner within a business day, or no clear pricing
-            you are confident quoting. Those leaks are downstream of the leads. Fix capacity and the
-            response process first; pipeline help only multiplies what already works.
+            Do not hire an HVAC lead generation vendor yet if you have no room for another account,
+            nobody who quotes and wins commercial bids, nobody free to answer an interested reply
+            within a business day, or no clear pricing you are confident quoting. Those leaks are
+            downstream of the leads. Fix capacity and the response process first; pipeline help
+            only multiplies what already works.
           </KeyAnswer>
           <p>
             An honest vendor tells you this in the first conversation. It is also the first thing a

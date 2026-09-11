@@ -138,9 +138,11 @@ export default function TermsPage() {
             We sell a monthly service, not software, a data licence, or a list of leads. Depending on
             the tier you choose, that service consists of some or all of: defining your ideal
             customer profile; researching and individually vetting prospect companies and buyer
-            contacts from public sources, each with a cited reason for contact; where you ask us to, working
-            contact lists you supply and are entitled to use — for a home-service contractor that
-            usually means past customers, unclosed estimates, and lapsed maintenance plans; scoring and
+            contacts from public sources, each with a cited reason for contact — for an HVAC
+            contractor that means commercial accounts such as property and facility managers,
+            building owners and multi-site operators, and referral partners; where you ask us to,
+            working contact lists you supply and are entitled to use — usually past accounts,
+            proposals that were never accepted, and lapsed service agreements; scoring and
             prioritising them; writing personalised outreach and follow-up messages; running that
             outreach from a sending identity you own and approve; triaging replies; qualifying
             interested replies against your criteria; booking qualified calls onto your calendar;
@@ -172,9 +174,10 @@ export default function TermsPage() {
           </p>
           <p className="mt-4 leading-7 text-subtle">
             <strong className="text-ink/90">Who we serve.</strong> We offer these services to
-            businesses in the United States, with our active focus on established New Jersey
-            residential HVAC companies. This is a business-to-business service; it is not offered
-            to consumers.
+            businesses in the United States, with our active focus on established New Jersey HVAC
+            contractors that already sell and complete commercial work. The people we contact on a
+            client&rsquo;s behalf are businesses; we do not contact consumers on anyone&rsquo;s
+            behalf. This is a business-to-business service; it is not offered to consumers.
           </p>
         </Section>
 

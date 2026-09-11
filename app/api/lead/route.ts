@@ -40,13 +40,14 @@ type LeadPayload = {
   // `sanitizeAnswers` narrows them to the published option sets before anything
   // reads them.
   yearsInBusiness?: string;
-  recordVolume?: string;
+  commercialShare?: string;
+  commercialQuoter?: string;
   jobValue?: string;
   growthProblem?: string;
   currentApproach?: string;
   followUpOwner?: string;
   capacity?: string;
-  exportReadiness?: string;
+  targetAccounts?: string;
   timeline?: string;
   budget?: string;
 };
@@ -100,6 +101,12 @@ const CSV_COLUMNS = [
   "ip",
   // Added with the qualification flow.
   "yearsInBusiness",
+  // RETIRED 2026-09-11 (D-025), kept in place and written blank. The fit check no longer
+  // asks how much customer history a shop holds or whether it can export it — those were
+  // the residential-reactivation questions. The column names stay because this list is
+  // positional for the local CSV and by-name for the Sheet, and feeding a DIFFERENT
+  // question's answer under an old heading would mislabel every row from here on. The
+  // replacements are appended at the end, per the append-only rule above.
   "recordVolume",
   "followUpOwner",
   "capacity",
@@ -114,6 +121,12 @@ const CSV_COLUMNS = [
   // Added with the review/referral flywheel (operating-system repo's
   // scripts/run_review_referral.py mints the token; scripts/credit_referrals.py matches it back).
   "referralToken",
+  // Added 2026-09-11 with the commercial fit check (D-025): how much of the shop's work is
+  // commercial, who quotes and wins those bids, and whether the target accounts can be
+  // described. Appended, never inserted — see the note on `recordVolume`.
+  "commercialShare",
+  "commercialQuoter",
+  "targetAccounts",
 ] as const;
 
 // Best-effort in-memory rate limiter (per server instance). A light deterrent,
@@ -466,12 +479,16 @@ export async function POST(req: NextRequest) {
     // text and takes the same formula guard as every visible field.
     ip: neutralizeFormula(ip),
     yearsInBusiness: labelFor("yearsInBusiness", answers.yearsInBusiness),
-    recordVolume: labelFor("recordVolume", answers.recordVolume),
+    // Retired columns (see CSV_COLUMNS): present so the row shape is stable, always blank.
+    recordVolume: "",
     followUpOwner: labelFor("followUpOwner", answers.followUpOwner),
     capacity: labelFor("capacity", answers.capacity),
-    exportReadiness: labelFor("exportReadiness", answers.exportReadiness),
+    exportReadiness: "",
     timeline: labelFor("timeline", answers.timeline),
     budget: labelFor("budget", answers.budget),
+    commercialShare: labelFor("commercialShare", answers.commercialShare),
+    commercialQuoter: labelFor("commercialQuoter", answers.commercialQuoter),
+    targetAccounts: labelFor("targetAccounts", answers.targetAccounts),
     fitOutcome: fit.outcome,
     fitScore: `${fit.score}/${fit.maxScore}`,
     recommendedTier: fit.recommendedTier ?? "",

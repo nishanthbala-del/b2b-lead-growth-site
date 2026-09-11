@@ -37,7 +37,7 @@ const pageFaqs = [
   {
     question: "Is there an option that isn't buying leads at all?",
     answer:
-      "Yes — the cheapest demand is the customers and estimates you already generated. Past customers due for replacement, unclosed estimates, and lapsed maintenance plans are demand you own outright, plus referral relationships with local realtors and property managers. That owned-audience work is what we sell, which is also why we can be neutral about lead sellers: we do not sell leads at all.",
+      "Yes — for a contractor with a commercial side, the accounts that never appear on a marketplace: property managers, building owners, facility teams and multi-site operators, researched from public sources and written to directly. Nobody sells those, so nobody sells them to four other shops either. That research-and-outreach work is what we sell, which is also why we can be neutral about lead sellers: we do not sell leads at all.",
   },
 ];
 
@@ -220,8 +220,8 @@ export default function SharedVsExclusivePage() {
                 <span key="d" className="font-semibold text-ink">~$165</span>,
               ],
               [
-                "An unclosed estimate you already paid to generate, revived with follow-up",
-                "Your follow-up time",
+                "A commercial account you research and write to directly",
+                "Your research and follow-up time",
                 <span key="e" className="font-semibold text-ink">Marginal cost ≈ $0 in lead fees</span>,
               ],
             ]}
@@ -236,12 +236,13 @@ export default function SharedVsExclusivePage() {
             We are not claiming your close rates — nobody can know them but you. The claim is
             structural: when up to five contractors buy the same homeowner, most buyers of that
             lead lose it by definition, and their lead fees are part of your real cost of winning.
-            Exclusive leads and owned-audience follow-up don&rsquo;t carry that built-in loss rate.
+            Exclusive leads and direct outreach to commercial accounts don&rsquo;t carry that
+            built-in loss rate.
           </KeyAnswer>
           <p>
             One number in this comparison we cannot fill in for you. If you pay anyone a flat fee to
-            run that follow-up — <span className="text-ink">including us, at $750 to $2,500 a
-            month</span> — your cost per booked job is that fee divided by the jobs it produces. We
+            run that research and outreach — <span className="text-ink">including us, at $750 to
+            $2,500 a month</span> — your cost per booked job is that fee divided by the jobs it produces. We
             do not guarantee that beats the per-lead channels. The{" "}
             <a href="/free-pipeline-audit" className="text-accent underline underline-offset-4">
               free pipeline audit
@@ -327,19 +328,21 @@ export default function SharedVsExclusivePage() {
           </SourceNote>
         </GuideSection>
 
-        <GuideSection title="The option most contractors skip: the unsold estimates you already own">
+        <GuideSection title="The option most contractors skip: commercial accounts nobody is selling">
           <p>
-            Before buying anyone&rsquo;s leads, the cheapest pipeline is usually sitting in your own
-            records: past customers with aging systems, estimates that never closed, maintenance
-            plans that lapsed, and referral relationships with local realtors and property managers.
-            None of it carries a per-lead fee. None of it is being sold to four other shops at the
-            same time.
+            Every lead on a marketplace is a homeowner. The property managers, building owners,
+            facility teams and multi-site operators an HVAC contractor would most like as accounts
+            are not on any of them, because a facilities director does not fill in an Angi form —
+            they call whoever already holds the account. Reaching them means researching who they
+            are, finding the right person, and writing to them with a reason, more than once. None
+            of it carries a per-lead fee. None of it is being sold to four other shops at the same
+            time.
           </p>
           <p>
-            That owned-audience and referral-partner work is the lead generation we sell to
-            contractors. We never cold-scrape homeowners, and we never sell the same prospect twice,
-            because we do not sell prospects at all. What the paid channels cost instead is itemized
-            in{" "}
+            That research-and-outreach work is the lead generation we sell to contractors that
+            already do commercial work. We never contact homeowners, and we never sell the same
+            account twice, because we do not sell accounts at all. What the paid channels cost
+            instead is itemized in{" "}
             <a
               href="/hvac-lead-generation-new-jersey"
               className="text-accent underline underline-offset-4"

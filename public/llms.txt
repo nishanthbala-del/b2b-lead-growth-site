@@ -1,59 +1,66 @@
 # B2B Lead Growth
 
-> B2B Lead Growth is a founder-run HVAC lead generation and appointment setting service for
-> ESTABLISHED residential HVAC companies. It is a monthly service, not a lead seller: no leads
-> are sold, resold, or brokered, shared or exclusive, and nothing is priced per lead. It works
-> two lanes, kept strictly separate: reactivating demand the client already owns, and referral
-> partners researched from cited public sources. It started in 2026 and has no clients,
-> testimonials, case studies, or results to publish yet, and publishes none; it never
-> guarantees lead counts, replies, appointments, jobs, or revenue.
+> B2B Lead Growth is a founder-run managed outbound service for ESTABLISHED HVAC contractors
+> that already sell and complete commercial work. It identifies commercial accounts that fit
+> the contractor, contacts the right decision-makers, handles the follow-up, and turns
+> interested responses into qualified conversations for the contractor's team. It is a
+> monthly service, not a lead seller: no leads are sold, resold, or brokered, shared or
+> exclusive, and nothing is priced per lead. Homeowners are never contacted. It started in
+> 2026 and has no clients, testimonials, case studies, or results to publish yet, and
+> publishes none; it never guarantees lead counts, replies, appointments, jobs, or revenue.
 
-Last updated: 2026-09-04
+Last updated: 2026-09-11
 
 ## What this is
 
-- A monthly service for established residential HVAC companies. One niche.
+- A monthly service for established HVAC contractors with a commercial side: property managers, building owners, facility teams and multi-site operators are the accounts it pursues on the contractor's behalf. One niche.
 - Not a lead seller. Nothing is sold, resold, or brokered per lead.
 - Founder-run. The company started in 2026.
-- Delivered remotely for HVAC companies across the United States. Campaigns are currently focused on New Jersey.
+- Delivered remotely for HVAC contractors across the United States. Campaigns are currently focused on New Jersey.
 
-## Lane 1: reactivation of demand the client already owns
+## Who it is for, and who it is not for
 
-- The records worked are unsold replacement estimates, expired proposals, lapsed maintenance agreements, past customers whose systems are at replacement age, and missed calls.
-- These homeowner records come from the client's own export.
-- The client approves the list before anything is contacted.
-- They are NEVER researched, bought, or inferred. A record claiming to come from the client's list that is not in the approved file is blocked in code.
+- For: an established HVAC contractor that already sells and completes commercial work, has someone who quotes and wins those bids, has room to take on more accounts, and has no consistent way to find target accounts and follow up with them.
+- Not for: residential-only shops (there is no commercial account base to build from, and homeowners are never contacted); anyone wanting to buy homeowner leads; companies at capacity year-round; companies already running an in-house outbound or BDR team; solo operators; anyone expecting guaranteed jobs, revenue, or a set number of appointments.
 
-## Lane 2: referral partners
+## Lane 1: researched commercial accounts (the core service)
 
-- The prospects researched are builders, general contractors, property managers, realtors, plumbers, electricians, and home inspectors in the client's service area.
-- These are businesses, so they ARE researched from free public sources.
-- Every one carries a public source citation, a fit reason, and a confidence note.
-- A researched prospect with no citation cannot be contacted.
+- The accounts are businesses: property and facility managers, building owners, multi-site operators, offices, warehouses, schools, healthcare, restaurants, retail, and the referral partners around them such as general contractors.
+- They are researched from free public sources. Every account carries a named contact, a cited reason it was picked, and a public source link.
+- An account with no citation cannot be contacted. Indicators such as a permit filing or a posted renovation are a reason to write, never a claim about equipment condition.
+- Homeowners are NEVER researched, bought, inferred, or contacted, on anyone's behalf.
+
+## Lane 2 (optional): the contractor's own account history
+
+- Past accounts, proposals that were never accepted, lapsed service agreements, jobs that never became a contract.
+- These come only from the contractor's own export, only after the contractor is a client and has approved the list. They are never researched, bought, or inferred.
+- Optional: a contractor with nothing to export is fully served by Lane 1. A record claiming to come from the contractor's history that is not in the approved file is blocked in code.
 
 ## How the outreach runs
 
-- Outreach sends from the client's own domain and mailbox.
-- The client signs off on targeting, messaging, and the first batch.
+- Outreach sends from the contractor's own domain and mailbox, in the contractor's name.
+- The contractor signs off on the account profile, the messaging, and the first batch.
+- Sending starts deliberately slowly (1 a day, then 2, 5, 10, then full volume from about day 6). Each account gets up to 3 touches at least 4 days apart. Opt-outs are suppressed immediately, in code, permanently.
+- Replies are triaged the same day. The one measure reported is qualified conversations started: a decision-maker at an in-profile account who replied with real interest, confirmed by a person.
 
 ## Pricing
 
-- $750 per month: we build the list, the client works it.
-- $1,500 per month: we write and send the follow-up.
-- $2,500 per month: we also qualify the replies and book the appointments.
-- Month-to-month, no setup fee, 14 days' notice to cancel either side.
-- The tiers differ only by how much of the work stays in the client's office.
+- $750 per month (Lead Engine): we research and build the commercial account list, the contractor works it. Up to about 40 researched, cited accounts per batch.
+- $1,500 per month (Outreach Engine): we write and send the emails and run the follow-up; interested replies are handed over. Up to about 100 outreach messages a month, first touches and follow-ups alike.
+- $2,500 per month (Appointment Engine): we also qualify the replies and book the conversations onto the contractor's calendar. Up to about 150 outreach messages a month.
+- Month-to-month, no setup fee, 14 days' notice to cancel either side. The tiers differ only by how much of the work stays in the contractor's office.
 
 ## How someone starts
 
 - The single entry point is the fit check at https://www.b2bleadgrowth.com/start. It returns a straight yes/no on fit.
-- It screens out companies the service cannot help (no customer history, wanting to buy homeowner leads, no capacity for more work) rather than booking them a call.
-- The entry offer is the Free Pipeline Audit: a sharpened profile of the jobs worth chasing, 3-5 individually vetted and cited referral partners, and one sample outreach message.
+- It screens out companies the service cannot help (residential-only, wanting to buy homeowner leads, at capacity, already running an in-house outbound seat) rather than booking them a call.
+- The entry offer is the Free Pipeline Audit: an account profile, 3-5 individually vetted and cited commercial accounts, one sample outreach message, and a read on where the contractor's commercial work comes from today.
 - The audit is free and kept regardless of whether the recipient becomes a client. It is delivered IN WRITING; a call is never its price, though a walkthrough is offered afterwards.
-- The audit does NOT include homeowner records.
+- The audit contains no homeowner records.
 
-## What this company does not claim
+## What this company does not do
 
+- It does not walk the site, write the bid, set the price, or close the deal; those stay with the contractor at every tier.
 - It has no clients, testimonials, case studies, or results to publish yet, and publishes none.
 - It never guarantees lead counts, replies, appointments, jobs, or revenue.
 
@@ -61,7 +68,7 @@ Last updated: 2026-09-04
 
 - [Home](https://www.b2bleadgrowth.com/): what the service is, how it works, full pricing, FAQ
 - [Free Pipeline Audit](https://www.b2bleadgrowth.com/free-pipeline-audit): what the free audit includes and how it works
-- [Pricing](https://www.b2bleadgrowth.com/pricing): exact monthly pricing with cited market context, plus billing, cancellation, and refund terms
+- [Pricing](https://www.b2bleadgrowth.com/pricing): exact monthly pricing with cited market context, the service timeline, plus billing, cancellation, and refund terms
 - [HVAC Lead Generation in New Jersey](https://www.b2bleadgrowth.com/hvac-lead-generation-new-jersey): what HVAC leads cost NJ contractors and the honest options
 - [Shared vs. Exclusive HVAC Leads](https://www.b2bleadgrowth.com/shared-vs-exclusive-hvac-leads): neutral cost-per-job math, with sources
 - [How to Choose an HVAC Lead Generation Company](https://www.b2bleadgrowth.com/how-to-choose-a-lead-generation-agency): red flags, questions to ask, and our own answers

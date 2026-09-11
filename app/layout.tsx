@@ -90,9 +90,8 @@ const orgJsonLd = {
       ...(organizationProfiles.length > 0 ? { sameAs: organizationProfiles } : {}),
       // What this company is competent in, stated plainly for answer engines.
       knowsAbout: [
-        "HVAC customer reactivation",
-        "Unsold estimate follow-up",
-        "Lapsed maintenance agreement renewals",
+        "Commercial HVAC account research",
+        "Outbound email and follow-up for HVAC contractors",
         "HVAC referral partner outreach",
         "B2B appointment setting",
       ],

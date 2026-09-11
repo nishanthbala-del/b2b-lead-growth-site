@@ -23,7 +23,7 @@ const pageFaqs = [
   {
     question: "Is $750 per month enough for real lead generation?",
     answer:
-      "$750 a month buys a defined, capacity-limited slice of work, not a full-service program. You get an agreed job profile, your own history cleaned and ranked, and up to ~40 individually researched, cited prospects a batch, with scripts to work them. You make the calls and send the emails; done-for-you sending starts at the $1,500 tier. No tier at any price honestly buys guaranteed jobs."
+      "$750 a month buys a defined, capacity-limited slice of work, not a full-service program. You get an agreed account profile, up to ~40 individually researched, cited commercial accounts a batch — property managers, building owners, facility teams, each with a named contact and a source link — your own account history ranked if you choose to send it, and scripts to work all of it. You make the calls and send the emails; done-for-you sending starts at the $1,500 tier. No tier at any price honestly buys guaranteed jobs."
   },
   {
     question: "Are there hidden fees, setup costs, or long contracts?",
@@ -38,7 +38,7 @@ const pageFaqs = [
   {
     question: "What do the tiers exclude?",
     answer:
-      "Lead Engine excludes the outreach: you send. Outreach Engine excludes the sales conversation: you take it, and reply qualification against your criteria is Appointment Engine only. Appointment Engine excludes the in-home visit, the quote, and the close. No tier includes guaranteed reply volume, appointment counts, or revenue. No tier includes homeowner lead sourcing, because we do not do that at any price. No tier includes contractual territorial exclusivity — as standard we work one HVAC company per service area as an operating practice, and enforceable per-metro exclusivity is a separate priced add-on on the order form, quoted before you sign. You always own your pricing, your sending identity, and the customer relationship.",
+      "Lead Engine excludes the outreach: you send. Outreach Engine excludes the sales conversation: you take it, and reply qualification against your criteria is Appointment Engine only. Appointment Engine excludes the site walkthrough, the bid, the quote, and the close. No tier includes guaranteed reply volume, appointment counts, or revenue. No tier includes homeowner lead sourcing or contacting homeowners, because we do not do that at any price. No tier includes contractual territorial exclusivity — as standard we work one HVAC company per service area as an operating practice, and enforceable per-metro exclusivity is a separate priced add-on on the order form, quoted before you sign. You always own your pricing, your sending identity, and the account relationship.",
   },
 ];
 
@@ -81,12 +81,14 @@ export default function PricingPage() {
         intro={
           <>
             <p>
-              B2B Lead Growth charges established HVAC companies a flat monthly fee:{" "}
-              <span className="text-ink">$750</span> for Lead Engine (we build and rank your list,
-              you do the outreach), <span className="text-ink">$1,500</span> for Outreach Engine
-              (we run the outreach, you answer the interested replies), or{" "}
-              <span className="text-ink">$2,500</span> for Appointment Engine (we book qualified
-              appointments on your calendar). Published, flat, and never priced per lead.
+              B2B Lead Growth charges HVAC contractors with commercial work a flat monthly fee:{" "}
+              <span className="text-ink">$750</span> for Lead Engine (we research and build your
+              commercial account list, you do the outreach),{" "}
+              <span className="text-ink">$1,500</span> for Outreach Engine (we write and send the
+              emails and run the follow-up, you answer the interested replies), or{" "}
+              <span className="text-ink">$2,500</span> for Appointment Engine (we qualify the
+              replies and book the conversations on your calendar). Published, flat, and never
+              priced per lead.
             </p>
             <p>
               No setup fee. Month-to-month with 14 days&rsquo; notice either side. You keep
@@ -94,9 +96,9 @@ export default function PricingPage() {
               applicable tax.
             </p>
             <p>
-              Nothing is priced per lead because we do not sell leads. You pay for work done on
-              your own customer history and your own service area, not for a name three other
-              contractors also bought.
+              Nothing is priced per lead because we do not sell leads. You pay for research and
+              outreach on the account types and service area you approve, not for a name three
+              other contractors also bought.
             </p>
             <p>
               Most full-service agencies we checked quote pricing only on a sales call. This page
@@ -175,8 +177,9 @@ export default function PricingPage() {
           </div>
           <p className="mt-4 text-sm leading-6 text-subtle">
             No tier can be bought from this page, deliberately. The {intakeMinutes}-minute fit
-            check comes first, because which tier fits depends on what your export contains and
-            who in your office has time to work it.
+            check comes first, because which tier fits depends on who in your office has time to
+            work the list and take the replies, and on how many accounts you could actually
+            absorb.
           </p>
         </GuideSection>
 
@@ -259,7 +262,7 @@ export default function PricingPage() {
           <SourceNote>
             Figures belong to their sources on the dates shown and change over time; the Callbox
             range is third-party reported, not Callbox-published. We link sources so you can check
-            them — the same standard we apply to every prospect we hand you.
+            them — the same standard we apply to every account we hand you.
           </SourceNote>
           <KeyAnswer>
             Of the major agencies we checked in August 2026, full-service providers either
@@ -267,22 +270,22 @@ export default function PricingPage() {
             their managed service at $2,000/month (CIENCE). Published tiers under $1,000/month
             exist mainly at single-channel specialists, such as Cleverly&rsquo;s LinkedIn-only
             plans from $397/month. B2B Lead Growth publishes an entry tier at $750/month — a
-            researched, cited prospect list you work yourself — and its done-for-you outreach tier
-            at $1,500/month. Both prices come from capping monthly volume, not from cutting
-            research depth.
+            researched, cited commercial account list you work yourself — and its done-for-you
+            outreach tier at $1,500/month. Both prices come from capping monthly volume, not from
+            cutting research depth.
           </KeyAnswer>
         </GuideSection>
 
         <GuideSection title="Why our pricing is lower: smaller volume, not lower standards">
           <p>
             Three things hold the price down. Each tier caps volume — about 40 researched
-            prospects a batch on the entry tier, about 100 or 150 outreach messages a month on
+            accounts a batch on the entry tier, about 100 or 150 outreach messages a month on
             the two sending tiers — and we deliberately cap how many clients we take on. The process is
             email-first, with no paid-ad management and no call centre. And we are a new company
             earning a track record in public, so the pricing says so.
           </p>
           <p>
-            Every researched prospect is still cited individually: the lower price buys smaller
+            Every researched account is still cited individually: the lower price buys smaller
             volume, not a discount on quality. It never buys guaranteed replies, appointments,
             jobs, or revenue, here or anywhere. Anyone selling a guarantee is selling the churn
             math behind it.
@@ -296,10 +299,12 @@ export default function PricingPage() {
           </p>
           <p className="mt-3">
             <span className="text-ink">Which phases apply depends on your tier.</span> Lead Engine
-            ends at handover: you get the agreed job profile, your own history cleaned and ranked,
-            the researched and cited partner list, and the scripts, and you run the sending
-            yourself. So the mailbox, approval, warm-up, sequence and reply-triage phases below are
-            not part of that tier. Outreach Engine and Appointment Engine include all of them.
+            ends at handover: you get the agreed account profile, the researched and cited
+            commercial account list, your own account history ranked if you sent it, and the
+            scripts, and you run the sending yourself. So the mailbox, warm-up, sequence and
+            reply-triage phases below are not part of that tier. Outreach Engine and Appointment
+            Engine include all of them. The export phase is optional on every tier: if you have
+            nothing to send, the account research runs anyway.
           </p>
           {/* An ordered sequence, so an <ol>. Tailwind's preflight strips the numbering, so
               this renders exactly as before while reading correctly to a parser.
@@ -323,28 +328,33 @@ export default function PricingPage() {
           <p className="mt-4 text-sm opacity-80">{serviceTimelineDisclaimer}</p>
         </GuideSection>
 
-        <GuideSection title="Where your prospects come from: your own records, and partners we research">
+        <GuideSection title="Where your accounts come from: public research, and optionally your own history">
           <p>
-            Two lanes, kept strictly separate.{" "}
-            <span className="text-ink">Homeowners come from you, never from us.</span> We do not,
-            and will not, cold-source your buyers. The campaign runs on{" "}
-            <span className="text-ink">demand you already own</span>: past customers, open and
-            expired estimates, lapsed maintenance agreements, missed calls and prior enquiries,
-            exported from your own system. We cannot research, buy or infer those records. Only you
-            can send them, and nothing is contacted until they are imported and you have approved
-            the list.
+            <span className="text-ink">The accounts we contact in your name are businesses we
+            research.</span> Property and facility managers, building owners, multi-site
+            operators, offices, warehouses, schools, healthcare, restaurants, retail — and the
+            referral partners around them, such as general contractors and property managers who
+            place work. All of them are organisations, not private individuals, so we source them
+            from free public sources. Every account carries the public source it came from, a fit
+            reason, and a named person to reach. Nothing without a citation can be contacted.
           </p>
           <p>
-            <span className="text-ink">Referral partners we do research.</span> Builders, general
-            contractors, property managers, realtors, plumbers, electricians and home inspectors
-            are businesses, not private individuals, so we source those from free public sources.
-            Every record carries the public source it came from, a fit reason and a confidence
-            note. Nothing without a citation can be contacted.
+            <span className="text-ink">Homeowners are never on the list.</span> We do not, and will
+            not, contact consumers on anyone&rsquo;s behalf — not from research, not from a
+            purchased file, not at any price. That is why a residential-only shop is not a fit,
+            and why the fit check says so before you spend anything.
+          </p>
+          <p>
+            <span className="text-ink">Your own account history is an optional second lane.</span>{" "}
+            Past accounts, proposals that were never accepted, lapsed service agreements, jobs
+            that never became a contract: if you have them, you export them, you approve the list,
+            and we work them alongside the researched accounts. We cannot research, buy or infer
+            those records. If you have nothing to send, the account research runs anyway.
           </p>
           <p className="text-sm opacity-80">
             This is enforced in code, not by policy: a record claiming to come from your own
-            customer base that is not in the list you approved is blocked before it can be
-            contacted. Your export also sets your start date, so it is worth starting early.
+            account history that is not in the list you approved is blocked before it can be
+            contacted, and a researched account is never presented as one of yours.
           </p>
         </GuideSection>
 
@@ -359,11 +369,11 @@ export default function PricingPage() {
             because the fee is earned as that month&rsquo;s research, writing, sending, and
             reporting is performed. If we have not begun work on a period, we refund it in full.
             We do not refund on the basis that a result did not happen, because we never promise
-            one. The one make-good we do offer: if a prospect we delivered fails our own
+            one. The one make-good we do offer: if an account we delivered fails our own
             cited-source verification standard, we replace it at no charge within the same month.
           </p>
           <p>
-            When an engagement ends you keep the work from every period you paid for — the prospect
+            When an engagement ends you keep the work from every period you paid for — the account
             research, the scripts, the drafted messages, and the trackers — plus the current
             suppression and opt-out list, handed over within five business days.{" "}
             <a href="/terms#billing" className="text-accent underline underline-offset-4">
@@ -375,8 +385,9 @@ export default function PricingPage() {
 
         <GuideSection title="When you should not pay us, or anyone">
           <p>
-            If you have no clear offer, no capacity for new work, or nobody to answer interested
-            replies within a business day, fix that before buying pipeline help from any vendor —
+            If you have no clear offer, no room for another account, nobody who quotes and wins
+            commercial bids, or nobody to answer an interested reply within a business day, fix
+            that before buying pipeline help from any vendor —
             including us. The{" "}
             <a href="/free-pipeline-audit" className="text-accent underline underline-offset-4">
               free pipeline audit

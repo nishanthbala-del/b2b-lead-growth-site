@@ -8,7 +8,7 @@ import { ImageResponse } from "next/og";
 // crawler re-rendered the same PNG on demand. On the Node runtime it is generated
 // once at build and served from the CDN.
 export const alt =
-  "B2B Lead Growth — HVAC lead generation and appointment setting: reactivate unsold estimates and lapsed agreements, work your referral partners, book appointments";
+  "B2B Lead Growth — managed outbound for commercial HVAC contractors: researched commercial accounts, outreach and follow-up in your name, qualified conversations handed to your team";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -87,11 +87,11 @@ export default function OpengraphImage() {
               maxWidth: 980,
             }}
           >
-            HVAC lead generation, done the honest way
+            Commercial HVAC lead generation, done the honest way
           </div>
           <div style={{ fontSize: 30, color: SUBTLE, maxWidth: 920, lineHeight: 1.35 }}>
-            Reactivate the estimates and agreements already in your system. Work your referral
-            partners. Book appointments.
+            Researched commercial accounts. Outreach and follow-up in your name. Qualified
+            conversations handed to your team.
           </div>
         </div>
 

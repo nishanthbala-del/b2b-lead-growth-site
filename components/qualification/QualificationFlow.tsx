@@ -5,13 +5,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BUDGET,
   CAPACITY,
+  COMMERCIAL_QUOTER,
+  COMMERCIAL_SHARE,
   CURRENT_APPROACH,
   EMPTY_ANSWERS,
-  EXPORT_READINESS,
   FOLLOW_UP_OWNER,
   GROWTH_PROBLEM,
   JOB_VALUE,
-  RECORD_VOLUME,
+  TARGET_ACCOUNTS,
   TIMELINE,
   YEARS_IN_BUSINESS,
   evaluateFit,
@@ -29,11 +30,16 @@ import { Field, FieldError, Input, OptionCards, Textarea, focusFirstField, focus
 // possible ending was the same booking link for everyone — including the visitors
 // the site's own "not the right fit" list says we cannot help.
 //
-// The steps map onto the five things worth knowing before a call:
+// The steps map onto the five things worth knowing before a call — and, since D-025
+// (2026-09-10), they ask the COMMERCIAL ICP: does the shop already sell and complete
+// commercial work, is there someone who quotes and wins those bids, is there room for
+// more accounts, and can the target accounts be described. Nothing asks for a customer
+// list or an export: the accounts are businesses we research, and the shop's own history
+// is an optional second lane that the intake, not the fit check, asks about.
 //   1. Company     — who you are, and how to reach you
-//   2. Business    — how long, how much history, what a job is worth   (fit criteria)
-//   3. Problem     — what you're trying to fix, and how work reaches you today
-//   4. Readiness   — capacity, whether the records can be exported, when, what budget
+//   2. Business    — how long, how much is commercial, who quotes it, what a job is worth
+//   3. Problem     — what you're trying to fix, how commercial work reaches you, who follows up
+//   4. Readiness   — capacity, whether you can describe the accounts you want, when, what budget
 //
 // Step 5 is the outcome. `evaluateFit` decides it; the same function runs on the
 // server so the record the owner reads is not the one the browser asserted.
@@ -161,8 +167,9 @@ export default function QualificationFlow() {
     }
     if (forStep === 2) {
       if (!answers.yearsInBusiness) next.yearsInBusiness = "Pick one so we know what we're working with.";
-      if (!answers.recordVolume) next.recordVolume = "This decides whether reactivation can work at all.";
-      if (!answers.jobValue) next.jobValue = "Pick the band your typical job falls into.";
+      if (!answers.commercialShare) next.commercialShare = "This decides whether there's an account base for us to build from.";
+      if (!answers.commercialQuoter) next.commercialQuoter = "Pick one — a conversation we start needs somewhere to land.";
+      if (!answers.jobValue) next.jobValue = "Pick the band your typical commercial job falls into.";
       if (!contact.serviceArea.trim()) next.serviceArea = "Tell us where you work and what you want more of.";
     }
     if (forStep === 3) {
@@ -172,7 +179,7 @@ export default function QualificationFlow() {
     }
     if (forStep === 4) {
       if (!answers.capacity) next.capacity = "Pick one.";
-      if (!answers.exportReadiness) next.exportReadiness = "Pick one — 'not sure' is a real answer.";
+      if (!answers.targetAccounts) next.targetAccounts = "Pick one — 'we'd need help' is a real answer.";
       if (!answers.timeline) next.timeline = "Pick one.";
       if (!answers.budget) next.budget = "Pick one, or tell us you're not sure yet.";
       if (!contact.consent) next.consent = "Please confirm so we can reply to you.";
@@ -323,17 +330,25 @@ export default function QualificationFlow() {
                     columns={2}
                   />
                   <OptionCards
-                    name="recordVolume"
-                    legend="How much customer history do you have?"
-                    hint="past customers, estimates, agreements"
-                    options={RECORD_VOLUME}
-                    value={answers.recordVolume}
-                    onChange={(v) => setAnswer("recordVolume", v as QualificationAnswers["recordVolume"])}
-                    error={errors.recordVolume}
+                    name="commercialShare"
+                    legend="How much of your work is commercial?"
+                    hint="service, maintenance or installs for buildings and businesses, not homes"
+                    options={COMMERCIAL_SHARE}
+                    value={answers.commercialShare}
+                    onChange={(v) => setAnswer("commercialShare", v as QualificationAnswers["commercialShare"])}
+                    error={errors.commercialShare}
+                  />
+                  <OptionCards
+                    name="commercialQuoter"
+                    legend="Who quotes and wins your commercial bids?"
+                    options={COMMERCIAL_QUOTER}
+                    value={answers.commercialQuoter}
+                    onChange={(v) => setAnswer("commercialQuoter", v as QualificationAnswers["commercialQuoter"])}
+                    error={errors.commercialQuoter}
                   />
                   <OptionCards
                     name="jobValue"
-                    legend="What's a typical job worth to you?"
+                    legend="What's a typical commercial job or contract worth to you?"
                     options={JOB_VALUE}
                     value={answers.jobValue}
                     onChange={(v) => setAnswer("jobValue", v as QualificationAnswers["jobValue"])}
@@ -341,9 +356,9 @@ export default function QualificationFlow() {
                     columns={2}
                   />
                   <Field
-                    label="Service area, and the work you want more of"
+                    label="Service area, and the commercial work you want more of"
                     htmlFor="q-area"
-                    hint="counties or towns, plus job types"
+                    hint="counties or towns, plus the kind of buildings or accounts"
                     error={errors.serviceArea}
                     required
                   >
@@ -351,7 +366,7 @@ export default function QualificationFlow() {
                       id="q-area"
                       value={contact.serviceArea}
                       onChange={(v) => setContactField("serviceArea", v)}
-                      placeholder="e.g. Middlesex and Somerset County NJ — residential replacements and maintenance agreements"
+                      placeholder="e.g. Middlesex and Somerset County NJ — commercial service and maintenance agreements"
                       rows={2}
                       invalid={!!errors.serviceArea}
                     />
@@ -363,7 +378,7 @@ export default function QualificationFlow() {
                 <>
                   <OptionCards
                     name="growthProblem"
-                    legend="What bothers you most right now?"
+                    legend="What's getting in the way on the commercial side right now?"
                     options={GROWTH_PROBLEM}
                     value={answers.growthProblem}
                     onChange={(v) => setAnswer("growthProblem", v as QualificationAnswers["growthProblem"])}
@@ -371,7 +386,7 @@ export default function QualificationFlow() {
                   />
                   <OptionCards
                     name="currentApproach"
-                    legend="How does new work reach you today?"
+                    legend="How does commercial work reach you today?"
                     options={CURRENT_APPROACH}
                     value={answers.currentApproach}
                     onChange={(v) => setAnswer("currentApproach", v as QualificationAnswers["currentApproach"])}
@@ -380,7 +395,7 @@ export default function QualificationFlow() {
                   />
                   <OptionCards
                     name="followUpOwner"
-                    legend="Who chases the unsold estimates and lapsed agreements today?"
+                    legend="Who follows up with commercial accounts today?"
                     options={FOLLOW_UP_OWNER}
                     value={answers.followUpOwner}
                     onChange={(v) => setAnswer("followUpOwner", v as QualificationAnswers["followUpOwner"])}
@@ -394,20 +409,20 @@ export default function QualificationFlow() {
                 <>
                   <OptionCards
                     name="capacity"
-                    legend="Could you take on more work?"
+                    legend="Could you take on more accounts?"
                     options={CAPACITY}
                     value={answers.capacity}
                     onChange={(v) => setAnswer("capacity", v as QualificationAnswers["capacity"])}
                     error={errors.capacity}
                   />
                   <OptionCards
-                    name="exportReadiness"
-                    legend="Could you export your customer records?"
-                    hint="nothing is contacted until you've approved that export"
-                    options={EXPORT_READINESS}
-                    value={answers.exportReadiness}
-                    onChange={(v) => setAnswer("exportReadiness", v as QualificationAnswers["exportReadiness"])}
-                    error={errors.exportReadiness}
+                    name="targetAccounts"
+                    legend="Could you describe the accounts you want?"
+                    hint="the account types and the areas — it's what the list is built from"
+                    options={TARGET_ACCOUNTS}
+                    value={answers.targetAccounts}
+                    onChange={(v) => setAnswer("targetAccounts", v as QualificationAnswers["targetAccounts"])}
+                    error={errors.targetAccounts}
                   />
                   <div className="grid gap-6 sm:grid-cols-2">
                     <OptionCards
@@ -432,7 +447,7 @@ export default function QualificationFlow() {
                       id="q-notes"
                       value={contact.notes}
                       onChange={(v) => setContactField("notes", v)}
-                      placeholder="e.g. no oil-to-gas conversions, no rentals, and we'd rather not take service calls outside the county"
+                      placeholder="e.g. no schools or hospitals, nothing outside Middlesex and Somerset, and we'd rather not take one-off service calls"
                       rows={2}
                     />
                   </Field>
@@ -601,7 +616,7 @@ function ResultStep({
         * nothing but a name and an email transfers; and on the operating-system side an
         * unmatchable booking is logged as "could not be matched to a lead — no brief
         * will be built". The visitor was steered down the one path that guaranteed he
-        * would arrive at a 15-minute call and be asked the same ten questions again —
+        * would arrive at a 15-minute call and be asked the same eleven questions again —
         * the precise experience the fit check exists to prevent.
         *
         * The email route is now the primary one because it is the only one that can
