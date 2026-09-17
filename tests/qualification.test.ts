@@ -13,6 +13,13 @@
 // and "cannot export" questions are gone, and a test here proves they cannot come back
 // as a precondition: no answer about a customer list can block anyone.
 //
+// EXTENDED 2026-09-17 for D-027. The plans are three levels of responsibility, and the
+// recommendation now mirrors the operating-system repo's core/offer.recommend_from_discovery
+// rule for rule: it is decided by WHO DOES THE WORK after someone shows interest — never by
+// the budget a visitor ticked, and never by contract size. The old "a stated budget always
+// wins" and "big contracts unlock the top tier" tests are gone because those rules are gone;
+// what replaced them is below, with the OS rule table written out case by case.
+//
 // Run with `npm test` (Node's own runner; Node strips the types natively).
 
 import assert from "node:assert/strict";
@@ -31,11 +38,13 @@ import {
   GROWTH_PROBLEM,
   JOB_VALUE,
   MAX_FIT_SCORE,
+  PREPARED_OPPORTUNITIES,
   QUESTION_LABELS,
   STRONG_THRESHOLD,
   TARGET_ACCOUNTS,
   TIMELINE,
   YEARS_IN_BUSINESS,
+  discoveryFacts,
   evaluateFit,
   recommendTier,
   sanitizeAnswers,
@@ -43,11 +52,12 @@ import {
   summarizeAnswers,
   type QualificationAnswers,
 } from "../lib/qualification.ts";
-import { notFor } from "../lib/content.ts";
+import { notFor, plans } from "../lib/content.ts";
 
 /** A textbook strong-fit company, used as the baseline every case mutates: an
  *  established shop, mostly commercial, with a dedicated estimator, big contracts, room
- *  for more, a nameable target, and nobody doing the outbound today. */
+ *  for more, a nameable target, nobody doing the outbound today, and a wish to have
+ *  opportunities prepared before the estimator is involved. */
 const IDEAL: QualificationAnswers = {
   yearsInBusiness: "over-15",
   commercialShare: "most",
@@ -56,6 +66,7 @@ const IDEAL: QualificationAnswers = {
   growthProblem: "no-way-to-find-accounts",
   currentApproach: "word-of-mouth",
   followUpOwner: "nobody",
+  preparedOpportunities: "yes",
   capacity: "room-now",
   targetAccounts: "can-name",
   timeline: "now",
@@ -282,7 +293,7 @@ describe("the fits that must not be mistaken for blocks", () => {
     const result = evaluateFit(with_({ commercialQuoter: "nobody" }));
     assert.notEqual(result.outcome, "not_yet");
     assert.match(result.watchouts.join(" "), /nobody who quotes commercial bids/i);
-    assert.match(result.watchouts.join(" "), /stays yours at every tier/i);
+    assert.match(result.watchouts.join(" "), /stays yours on every plan/i);
   });
 });
 
@@ -369,59 +380,142 @@ describe("outcomes", () => {
   });
 });
 
-describe("tier recommendation", () => {
-  test("a stated budget always wins over inference", () => {
-    for (const { value } of BUDGET) {
-      if (value === "unsure") continue;
-      const tier = recommendTier(with_({ budget: value, followUpOwner: "dedicated" }));
-      assert.ok(tier, `budget ${value} should map to a tier`);
+describe("plan recommendation", () => {
+  const [PROSPECTING, MANAGED, QOE] = plans.map((p) => p.name) as [string, string, string];
+
+  test("the three names are the three published plans, verbatim", () => {
+    assert.deepEqual([PROSPECTING, MANAGED, QOE], [
+      "Prospecting",
+      "Managed Pipeline",
+      "Qualified Opportunity Engine",
+    ]);
+  });
+
+  test("it mirrors the operating system's rule, case by case", () => {
+    // core/offer.recommend_from_discovery, written out. Each row is one branch of that
+    // function; if the OS rule changes, this table is what has to change with it.
+    const cases: Array<[Partial<QualificationAnswers>, string, string]> = [
+      // 1. wants prepared opportunities AND someone quotes and wins bids -> the top plan
+      [{ preparedOpportunities: "yes", commercialQuoter: "dedicated", followUpOwner: "nobody" }, QOE, "wants + dedicated estimator"],
+      [{ preparedOpportunities: "yes", commercialQuoter: "owner-when-time", followUpOwner: "nobody" }, QOE, "wants + the owner quotes"],
+      [{ preparedOpportunities: "yes", commercialQuoter: "dedicated", followUpOwner: "dedicated" }, QOE, "wanting it outranks having a follow-up person"],
+      // 2. wants them but nobody quotes -> the honest level is a structured handoff
+      [{ preparedOpportunities: "yes", commercialQuoter: "nobody", followUpOwner: "nobody" }, MANAGED, "wants, no estimator"],
+      [{ preparedOpportunities: "yes", commercialQuoter: "nobody", followUpOwner: "dedicated" }, MANAGED, "wants, no estimator, even with a follow-up person"],
+      // 3. a dedicated in-house person works replies, no wish for prepared opportunities
+      [{ preparedOpportunities: "no", commercialQuoter: "dedicated", followUpOwner: "dedicated" }, PROSPECTING, "dedicated follow-up, says no"],
+      [{ preparedOpportunities: "unsure", commercialQuoter: "dedicated", followUpOwner: "dedicated" }, PROSPECTING, "'not sure' is not a yes"],
+      // 4. otherwise -> the recommended default
+      [{ preparedOpportunities: "no", followUpOwner: "nobody" }, MANAGED, "nobody follows up"],
+      [{ preparedOpportunities: "no", followUpOwner: "owner-sometimes" }, MANAGED, "owner, when there's time"],
+      [{ preparedOpportunities: "unsure", followUpOwner: "office-part-time" }, MANAGED, "office person, part time"],
+    ];
+    for (const [patch, expected, why] of cases) {
+      assert.equal(recommendTier(with_(patch)), expected, why);
     }
-    assert.equal(recommendTier(with_({ budget: "750", followUpOwner: "nobody" })), "Lead Engine");
-    assert.equal(
-      recommendTier(with_({ budget: "2500", followUpOwner: "dedicated" })),
-      "Appointment Engine",
-    );
   });
 
-  test("a company that already employs a follow-up person is pointed at the list tier", () => {
-    assert.equal(recommendTier(with_({ followUpOwner: "dedicated" })), "Lead Engine");
+  test("the three discovery facts are read from the right answers", () => {
+    assert.deepEqual(discoveryFacts(with_({ preparedOpportunities: "yes", commercialQuoter: "nobody", followUpOwner: "dedicated" })), {
+      followUpOwner: "dedicated",
+      wantsPreparedOpportunities: true,
+      estimatorAvailable: false,
+    });
+    // "Not sure yet" is not a yes, and the owner quoting when there's time IS someone.
+    const f = discoveryFacts(with_({ preparedOpportunities: "unsure", commercialQuoter: "owner-when-time" }));
+    assert.equal(f.wantsPreparedOpportunities, false);
+    assert.equal(f.estimatorAvailable, true);
   });
 
-  test("nobody following up, big contracts and a dedicated estimator points at Appointment Engine", () => {
-    const tier = recommendTier(
-      with_({ followUpOwner: "nobody", jobValue: "25000-100000", commercialQuoter: "dedicated" }),
-    );
-    assert.equal(tier, "Appointment Engine");
+  test("a stated budget never decides the plan", () => {
+    // It used to win outright. What a shop can spend says nothing about who on its team
+    // works an interested reply — which is the only thing the plans differ by.
+    for (const p of PREPARED_OPPORTUNITIES)
+      for (const f of FOLLOW_UP_OWNER)
+        for (const q of COMMERCIAL_QUOTER) {
+          const base = with_({ preparedOpportunities: p.value, followUpOwner: f.value, commercialQuoter: q.value });
+          const expected = recommendTier({ ...base, budget: "unsure" });
+          for (const b of BUDGET) {
+            assert.equal(recommendTier({ ...base, budget: b.value }), expected, `${p.value}/${f.value}/${q.value}/${b.value}`);
+          }
+        }
   });
 
-  test("Appointment Engine is never suggested when nobody is there to take the booked conversation", () => {
-    // Booking a qualified conversation onto a calendar only pays when someone whose job
-    // it is will take it. With the owner quoting "when there's time", the honest read
-    // is Outreach Engine: we hand over the interested replies, and the owner decides.
-    for (const commercialQuoter of ["nobody", "owner-when-time"] as const) {
-      assert.equal(
-        recommendTier(with_({ followUpOwner: "nobody", jobValue: "over-100000", commercialQuoter })),
-        "Outreach Engine",
-        commercialQuoter,
-      );
-    }
-    assert.equal(
-      recommendTier(with_({ followUpOwner: "owner-sometimes", jobValue: "under-5000" })),
-      "Outreach Engine",
-    );
+  test("a budget that names a different plan is said out loud, not silently overridden", () => {
+    const r = evaluateFit(with_({ budget: "750" })); // IDEAL points at the top plan
+    assert.equal(r.recommendedTier, QOE);
+    assert.match(r.watchouts.join(" "), /picked the Prospecting fee/);
+    assert.match(r.watchouts.join(" "), /a lower plan never includes a higher plan's work/);
+    // ...and nothing is said when they agree, or when no budget was given.
+    assert.doesNotMatch(evaluateFit(with_({ budget: "2500" })).watchouts.join(" "), /picked the/);
+    assert.doesNotMatch(evaluateFit(with_({ budget: "unsure" })).watchouts.join(" "), /picked the/);
   });
 
-  test("a recommended tier is always one of the three real ones", () => {
-    const real = new Set(["Lead Engine", "Outreach Engine", "Appointment Engine", null]);
+  test("the top plan is never suggested when nobody quotes and wins commercial bids", () => {
+    // An estimator is a PRECONDITION of the top plan: a prepared opportunity with nobody to
+    // estimate it has nowhere to go. Exhaustive over everything else that could vary.
+    for (const p of PREPARED_OPPORTUNITIES)
+      for (const f of FOLLOW_UP_OWNER)
+        for (const j of JOB_VALUE)
+          for (const b of BUDGET) {
+            const tier = recommendTier(
+              with_({ commercialQuoter: "nobody", preparedOpportunities: p.value, followUpOwner: f.value, jobValue: j.value, budget: b.value }),
+            );
+            assert.notEqual(tier, QOE, `${p.value}/${f.value}/${j.value}/${b.value}`);
+          }
+    const r = evaluateFit(with_({ commercialQuoter: "nobody", preparedOpportunities: "yes" }));
+    assert.equal(r.recommendedTier, MANAGED);
+    assert.match(r.watchouts.join(" "), /nowhere to go/);
+  });
+
+  test("the top plan is never suggested to someone who did not ask for it", () => {
+    // Contract size used to unlock it. A big contract is not a wish to have opportunities
+    // qualified, and a lower plan's buyer must never be steered up on an inference.
+    for (const p of ["no", "unsure"] as const)
+      for (const j of JOB_VALUE)
+        for (const f of FOLLOW_UP_OWNER) {
+          assert.notEqual(
+            recommendTier(with_({ preparedOpportunities: p, jobValue: j.value, followUpOwner: f.value })),
+            QOE,
+            `${p}/${j.value}/${f.value}`,
+          );
+        }
+  });
+
+  test("Prospecting is suggested only when a dedicated person already works replies", () => {
+    for (const p of PREPARED_OPPORTUNITIES)
+      for (const f of FOLLOW_UP_OWNER)
+        for (const q of COMMERCIAL_QUOTER) {
+          const tier = recommendTier(with_({ preparedOpportunities: p.value, followUpOwner: f.value, commercialQuoter: q.value }));
+          if (tier === PROSPECTING) assert.equal(f.value, "dedicated", `${p.value}/${f.value}/${q.value}`);
+        }
+  });
+
+  test("a recommended plan is always one of the three real ones", () => {
+    const real = new Set<string | null>([...plans.map((p) => p.name), null]);
     for (const g of GROWTH_PROBLEM)
       for (const f of FOLLOW_UP_OWNER)
         for (const j of JOB_VALUE)
-          for (const q of COMMERCIAL_QUOTER) {
-            const tier = recommendTier(
-              with_({ growthProblem: g.value, followUpOwner: f.value, jobValue: j.value, commercialQuoter: q.value }),
-            );
-            assert.ok(real.has(tier), `invented tier ${tier}`);
-          }
+          for (const q of COMMERCIAL_QUOTER)
+            for (const p of PREPARED_OPPORTUNITIES) {
+              const tier = recommendTier(
+                with_({ growthProblem: g.value, followUpOwner: f.value, jobValue: j.value, commercialQuoter: q.value, preparedOpportunities: p.value }),
+              );
+              assert.ok(real.has(tier), `invented plan ${tier}`);
+            }
+  });
+
+  test("with nothing that decides it answered, no plan is asserted", () => {
+    assert.equal(recommendTier(EMPTY_ANSWERS), null);
+    assert.equal(recommendTier({ ...EMPTY_ANSWERS, budget: "2500", jobValue: "over-100000" }), null);
+  });
+
+  test("the budget hints name the plan each fee actually buys", () => {
+    for (const plan of plans) {
+      const option = BUDGET.find((b) => b.value === String(plan.price));
+      assert.ok(option, `no budget option for $${plan.price}`);
+      assert.equal(option.hint, plan.name);
+    }
   });
 });
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageShell from "@/components/PageShell";
-import { pageMetadata } from "@/lib/pages";
+import { getStandaloneRoute, pageMetadata } from "@/lib/pages";
 import { reviews } from "@/lib/content";
 import { siteUrl } from "@/lib/site";
 
@@ -11,12 +11,16 @@ import { siteUrl } from "@/lib/site";
 // real reviews once scripts/record_review.py (operating-system repo) has recorded named, quoted
 // consent and someone has added the entry to lib/content.ts by hand — the deliberate publish step.
 
+// INDEXABLE WHILE EMPTY, on purpose. "B2B Lead Growth reviews" is the query a careful buyer
+// types before replying to a cold email, and the honest answer — there are none yet, and here
+// is how one would get published — is better coming from us than from a scraper directory.
+const route = getStandaloneRoute("reviews");
+
 export const metadata: Metadata = pageMetadata({
   path: "/reviews",
   type: "website",
-  title: "Client reviews",
-  description:
-    "Real reviews from B2B Lead Growth clients, published only with their own words and named consent. Honestly empty until a real one exists — we do not invent them.",
+  title: route.metaTitle,
+  description: route.description,
 });
 
 const reviewJsonLd =
@@ -42,7 +46,7 @@ export default function ReviewsPage() {
         />
       ) : null}
       <PageShell width="prose">
-        <main className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
+        <main id="main" className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
             Reviews
           </p>

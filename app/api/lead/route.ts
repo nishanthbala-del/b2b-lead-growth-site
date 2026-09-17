@@ -10,6 +10,7 @@ import {
   summarizeAnswers,
   type FitResult,
 } from "@/lib/qualification";
+import { ATTRIBUTION_KEYS, sanitizeAttribution } from "@/lib/attribution";
 
 // Use the Node.js runtime (needs fs) and never cache this handler.
 export const runtime = "nodejs";
@@ -46,10 +47,20 @@ type LeadPayload = {
   growthProblem?: string;
   currentApproach?: string;
   followUpOwner?: string;
+  preparedOpportunities?: string;
   capacity?: string;
   targetAccounts?: string;
   timeline?: string;
   budget?: string;
+  // First-party visit attribution (lib/attribution.ts). Untrusted like everything else here:
+  // `sanitizeAttribution` re-applies the closed character sets before anything is stored.
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmContent?: string;
+  utmTerm?: string;
+  landingPath?: string;
+  referrerHost?: string;
 };
 
 // On Vercel (and any serverless host) the filesystem is ephemeral: a local write
@@ -127,6 +138,21 @@ const CSV_COLUMNS = [
   "commercialShare",
   "commercialQuoter",
   "targetAccounts",
+  // Added 2026-09-17 (D-027): whether the shop wants opportunities qualified and the next
+  // step or site visit coordinated before its estimator is involved — the question that
+  // separates Qualified Opportunity Engine from Managed Pipeline. Appended, never inserted.
+  "preparedOpportunities",
+  // Added 2026-09-17: first-party visit attribution (lib/attribution.ts) — the five UTM tags,
+  // the landing PATH (never a query string) and the referring HOST (never a full URL).
+  // `campaign` (the ?src= outbound-batch tag) and `referralToken` above are unchanged and
+  // answer different questions; these say which CHANNEL a visit came from.
+  "utmSource",
+  "utmMedium",
+  "utmCampaign",
+  "utmContent",
+  "utmTerm",
+  "landingPath",
+  "referrerHost",
 ] as const;
 
 // Best-effort in-memory rate limiter (per server instance). A light deterrent,
@@ -447,6 +473,10 @@ export async function POST(req: NextRequest) {
   const field = (value: unknown, max: number): string =>
     neutralizeFormula(String(value ?? "").trim().slice(0, max));
 
+  // Attribution is re-sanitized HERE against the same closed character sets the browser
+  // used; a value that does not match is stored blank rather than cleaned up.
+  const attribution = sanitizeAttribution(body as Record<string, unknown>);
+
   // The fit verdict is recomputed HERE, from the sanitized answers, and the browser's
   // copy is never read. A forged outcome would otherwise put a company the site says
   // it cannot serve into the owner's queue marked "strong fit".
@@ -489,6 +519,7 @@ export async function POST(req: NextRequest) {
     commercialShare: labelFor("commercialShare", answers.commercialShare),
     commercialQuoter: labelFor("commercialQuoter", answers.commercialQuoter),
     targetAccounts: labelFor("targetAccounts", answers.targetAccounts),
+    preparedOpportunities: labelFor("preparedOpportunities", answers.preparedOpportunities),
     fitOutcome: fit.outcome,
     fitScore: `${fit.score}/${fit.maxScore}`,
     recommendedTier: fit.recommendedTier ?? "",
@@ -499,6 +530,9 @@ export async function POST(req: NextRequest) {
     referralToken: /^[A-Za-z0-9_-]{1,40}$/.test(String(body.referralToken ?? ""))
       ? String(body.referralToken)
       : "",
+    // Already matched against a whitelist; the formula guard still applies, because a UTM
+    // value may legitimately begin with "+" or "-" and both are formula triggers in a sheet.
+    ...Object.fromEntries(ATTRIBUTION_KEYS.map((k) => [k, neutralizeFormula(attribution[k])])),
   };
 
   const localOk = await appendLocal(record);

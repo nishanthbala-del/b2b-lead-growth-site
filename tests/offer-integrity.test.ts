@@ -90,6 +90,7 @@ describe("the audit is never gated behind a call", () => {
       growthProblem: "no-way-to-find-accounts",
       currentApproach: "word-of-mouth",
       followUpOwner: "nobody",
+      preparedOpportunities: "yes",
       capacity: "room-now",
       targetAccounts: "can-name",
       timeline: "now",
@@ -213,12 +214,12 @@ describe("nothing promises an outcome", () => {
     {
       phrase: "Guaranteed jobs",
       file: "app/how-to-choose-a-lead-generation-agency/page.tsx",
-      why: "Red-flag heading: 'Guaranteed jobs, appointments, or revenue' is listed as a warning sign to check every vendor against, us included. Naming the banned construction is the whole point of the page.",
+      why: "Red-flag heading: 'Guaranteed jobs, appointments, site visits or contracts' is listed as a warning sign to check every vendor against, us included. Naming the banned construction is the whole point of the page.",
     },
     {
       phrase: "guaranteed jobs",
       file: "lib/content.ts",
-      why: "`notFor` entry: 'Anyone expecting guaranteed jobs, revenue, or a set number of appointments' — the disqualification list, i.e. an explicit statement that this service is NOT for someone who wants that. NEGATORS misses it because the negation is the word 'Anyone', and \\bany\\b does not match inside 'Anyone'.",
+      why: "`notFor` entry: 'Anyone expecting guaranteed jobs, revenue, site visits, or a set number of appointments' — the disqualification list, i.e. an explicit statement that this service is NOT for someone who wants that. NEGATORS misses it because the negation is the word 'Anyone', and \\bany\\b does not match inside 'Anyone'.",
     },
   ];
 

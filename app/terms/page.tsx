@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { pageMetadata } from "@/lib/pages";
+import { getLegalRoute, pageMetadata } from "@/lib/pages";
 import Link from "next/link";
+import PageShell from "@/components/PageShell";
 import {
   brandName,
   legalEntityName,
@@ -12,36 +13,38 @@ import {
   legalLastUpdated,
   cancellationNoticeDays,
 } from "@/lib/site";
-import { plans } from "@/lib/content";
+import { boundarySentence, callingPolicy, contractorBoundary, plans } from "@/lib/content";
+
+// WHAT CHANGED ON 2026-09-17, AND WHAT DID NOT (D-027).
+//
+// CHANGED — the passages that DESCRIBE THE SERVICE: the short version, §2's one-line
+// description, §3 (what we sell, what we do not, delivery, who we serve), the activity lists
+// inside §4 and §8, and §11. They now name the three plans, say what each one makes us
+// responsible for (rendered from lib/content.ts `plans`, so the Terms cannot drift from the
+// pricing page), state the calling policy as it actually is, and describe a service
+// delivered across the United States rather than in one state.
+//
+// NOT CHANGED — every clause whose wording carries legal weight of its own: fees and billing
+// (§6), cancellation (§7), the refund rule itself (§8's operative sentences), termination
+// (§9), ownership and deletion (§10), disclaimers and the limitation of liability (§16),
+// governing law and dispute resolution (§18), and the liability sentence in §5. If one of
+// those needs to move to match D-027, that is a decision for counsel, not a copy edit.
+
+const terms = getLegalRoute("terms");
 
 export const metadata: Metadata = pageMetadata({
   path: "/terms",
-  title: "Terms of Service",
-  description:
-    "The terms that govern the B2B Lead Growth website, the free pipeline audit, and our paid monthly services — including fees, billing, cancellation, refunds, and termination.",
+  title: terms.metaTitle,
+  description: terms.description,
 });
 
 const priceList = plans.map((p) => `$${p.price.toLocaleString()}`).join(", ");
+const planNames = plans.map((p) => p.name).join(", ");
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-paper text-ink">
-      {/* Top bar */}
-      <header className="border-b border-line">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-5 sm:px-8">
-          <Link href="/" className="font-display text-lg text-accent">
-            {brandName}
-          </Link>
-          <Link
-            href="/"
-            className="text-sm text-subtle transition-colors hover:text-accent"
-          >
-            ← Back to site
-          </Link>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
+    <PageShell>
+      <main id="main" className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
           Legal
         </p>
@@ -65,8 +68,13 @@ export default function TermsPage() {
           <p className="font-semibold text-accent">The short version</p>
           <ul className="mt-3 space-y-2">
             <BulletItem>
-              We sell monthly B2B lead research and outreach services at {priceList} per month. No
-              setup fee.
+              We sell a monthly commercial HVAC managed outbound service at three levels of
+              responsibility — {planNames} — at {priceList} per month. No setup fee, and no
+              per-lead or per-opportunity fee.
+            </BulletItem>
+            <BulletItem>
+              On every plan, your team does the technical evaluation, the estimate, the price and
+              the close.
             </BulletItem>
             <BulletItem>
               The free pipeline audit is genuinely free — no card, no obligation, nothing to cancel.
@@ -81,8 +89,9 @@ export default function TermsPage() {
               make-good we do offer.
             </BulletItem>
             <BulletItem>
-              We never guarantee leads, replies, meetings, or revenue, and no fee is refundable on
-              the basis that a result did not occur.
+              We never guarantee leads, replies, meetings, site visits, qualified opportunities,
+              contracts, or revenue, and no fee is refundable on the basis that a result did not
+              occur.
             </BulletItem>
             <BulletItem>
               If you leave, you keep the work we produced for you in the periods you paid for.
@@ -118,7 +127,7 @@ export default function TermsPage() {
 
         <Section title="2. What this site is">
           <p className="leading-7 text-subtle">
-            This site is informational. It describes our B2B lead-generation and outreach services
+            This site is informational. It describes our commercial HVAC managed outbound service
             and lets you request a free pipeline audit and an optional walkthrough call. Nothing on
             this site is an offer capable of acceptance, a contract, or a promise of any specific
             outcome. A paid engagement begins only when a separate written services agreement and
@@ -135,47 +144,67 @@ export default function TermsPage() {
 
         <Section title="3. What we sell">
           <p className="leading-7 text-subtle">
-            We sell a monthly service, not software, a data licence, or a list of leads. Depending on
-            the tier you choose, that service consists of some or all of: defining your ideal
-            customer profile; researching and individually vetting prospect companies and buyer
-            contacts from public sources, each with a cited reason for contact — for an HVAC
-            contractor that means commercial accounts such as property and facility managers,
-            building owners and multi-site operators, and referral partners; where you ask us to,
-            working contact lists you supply and are entitled to use — usually past accounts,
-            proposals that were never accepted, and lapsed service agreements; scoring and
-            prioritising them; writing personalised outreach and follow-up messages; running that
-            outreach from a sending identity you own and approve; triaging replies; qualifying
-            interested replies against your criteria; booking qualified calls onto your calendar;
-            and reporting what was actually done. Each tier&rsquo;s exact inclusions, monthly volume
-            cap, and exclusions are published on our{" "}
+            We sell a monthly service, not software, a data licence, or a list of leads. It is a
+            commercial HVAC managed outbound service, sold at three levels of responsibility. The
+            level that applies to you is the one named in your signed order form, and a lower
+            level never includes a higher level&rsquo;s work:
+          </p>
+          <ul className="mt-4 space-y-3 leading-7 text-subtle">
+            {plans.map((p) => (
+              <BulletItem key={p.name}>
+                <strong className="text-ink/90">
+                  {p.name} (${p.price.toLocaleString()} per month).
+                </strong>{" "}
+                {p.oneLiner} We are responsible for: {p.owns.join(", ")}. {p.youKeep}
+              </BulletItem>
+            ))}
+          </ul>
+          <p className="mt-4 leading-7 text-subtle">
+            On every plan the accounts we research are businesses — for an HVAC contractor,
+            commercial accounts such as property and facility managers, building owners and
+            multi-site operators — found from public sources, each with a cited reason for contact,
+            and the outreach is sent from a sending identity you own and approve. Where your order
+            form says so, we also work contact lists you supply and are entitled to use — usually
+            past accounts, proposals that were never accepted, and lapsed service agreements; that
+            is optional and is never a precondition. Each plan&rsquo;s exact inclusions, capacity
+            limit, and exclusions are published on our{" "}
             <Link href="/pricing" className="text-accent underline-offset-4 hover:underline">
               pricing page
+            </Link>
+            , and the standard an opportunity must meet before we call it qualified is published on
+            our{" "}
+            <Link
+              href="/how-it-works#qualification-standard"
+              className="text-accent underline-offset-4 hover:underline"
+            >
+              how-it-works page
             </Link>
             .
           </p>
           <p className="mt-4 leading-7 text-subtle">
-            <strong className="text-ink/90">What we do not sell:</strong> we do not sell or resell
-            leads, shared or exclusive; we do not run paid advertising; we do not make calls on your
-            behalf; we do not attend or run your sales calls or close your deals; and we do not fix
-            your offer, pricing, or fulfilment. Those are outside scope at every tier.
+            <strong className="text-ink/90">What we do not do, on any plan.</strong>{" "}
+            {boundarySentence} We do not: {contractorBoundary.join("; ")}. We also do not sell or
+            resell leads, shared or exclusive; we do not run paid advertising; we do not attend or
+            run your sales calls or close your deals; and we do not fix your offer, pricing, or
+            fulfilment.
+          </p>
+          <p className="mt-4 leading-7 text-subtle">
+            <strong className="text-ink/90">Calls.</strong> {callingPolicy.join(" ")}
           </p>
           <p className="mt-4 leading-7 text-subtle">
             <strong className="text-ink/90">Delivery.</strong> The work is delivered continuously
-            across each monthly period rather than as a single file on a fixed date: prospect
-            research and messaging are delivered in batches during the month, up to that
-            tier&rsquo;s published volume cap. Written reporting is delivered on the tiers that
-            include it — monthly on Outreach Engine, weekly on Appointment Engine; Lead Engine is
-            delivered as a batch plus a handoff walkthrough rather than an ongoing report, because
-            you run the outreach and hold the response data. The free pipeline audit is delivered
-            by email, normally within a few
-            business days of your request. Delivery depends on you providing the inputs the tier
-            needs: at minimum an agreed ideal customer profile, and on the outreach tiers a sending
-            mailbox you control and your approval on messaging.
+            across each monthly period rather than as a single file on a fixed date, up to that
+            plan&rsquo;s published capacity limit. Written reporting is delivered monthly on
+            Prospecting and Managed Pipeline, and weekly on Qualified Opportunity Engine. The free
+            pipeline audit is delivered by email, normally within a few business days of your
+            request. Delivery depends on you providing the inputs the plan needs: an agreed account
+            profile, a sending mailbox you control, and your sign-off on the account categories,
+            service area, exclusions, permitted claims and sending identity.
           </p>
           <p className="mt-4 leading-7 text-subtle">
             <strong className="text-ink/90">Who we serve.</strong> We offer these services to
-            businesses in the United States, with our active focus on established New Jersey HVAC
-            contractors that already sell and complete commercial work. The people we contact on a
+            businesses in the United States: established HVAC contractors that already sell and
+            complete commercial work. The work is delivered remotely. The people we contact on a
             client&rsquo;s behalf are businesses; we do not contact consumers on anyone&rsquo;s
             behalf. This is a business-to-business service; it is not offered to consumers.
           </p>
@@ -183,13 +212,13 @@ export default function TermsPage() {
 
         <Section title="4. No guarantee of results">
           <p className="leading-7 text-subtle">
-            We provide a service — research, targeting, outreach preparation and sending, follow-up,
-            qualification, booking, and reporting — performed with professional, commercially
-            reasonable effort.{" "}
+            We provide a service — research, targeting, outreach and reporting, and, where your plan
+            includes them, follow-up, interest screening, qualification, and next-step or site-visit
+            coordination — performed with professional, commercially reasonable effort.{" "}
             <strong className="text-ink/90">
               We do not guarantee, and you should not rely on any promise of, any revenue, jobs,
-              customers, sales, close rate, return on investment, or number of leads, replies, or
-              appointments.
+              customers, contracts, sales, close rate, return on investment, or number of leads,
+              replies, appointments, site visits, or qualified opportunities.
             </strong>{" "}
             Lead generation improves prospect quality and pipeline inputs; sales outcomes depend on
             your offer, market demand, outreach execution, follow-up discipline, and closing
@@ -286,7 +315,8 @@ export default function TermsPage() {
         <Section title="8. Refunds">
           <p className="leading-7 text-subtle">
             Fees are billed in advance and are earned as that period&rsquo;s work is performed —
-            sourcing, research, drafting, sending, follow-up, qualification, and reporting. Once a
+            the research, writing, sending and reporting, and the follow-up, screening,
+            qualification and coordination your plan includes. Once a
             paid period has begun,{" "}
             <strong className="text-ink/90">that period&rsquo;s fee is non-refundable</strong>, and
             we do not prorate a period you cancel partway through. Because no result is ever
@@ -368,17 +398,19 @@ export default function TermsPage() {
           <ul className="space-y-2 leading-7 text-subtle">
             <BulletItem>
               <strong className="text-ink/90">We are responsible for</strong> research quality and
-              sourcing, targeting logic, message drafting, and data organisation — and, on the tiers
-              that include them, outreach execution, follow-up, reply qualification, booking, and
-              ongoing written reporting.
+              sourcing, targeting logic, contact selection, message drafting, first-touch outreach
+              sent in your name, reading replies, data organisation, and written reporting — and,
+              on the plans that include them, the follow-up sequence, interest screening,
+              conversation and pipeline organisation, qualification, context gathering, and
+              next-step or site-visit coordination.
             </BulletItem>
             <BulletItem>
               <strong className="text-ink/90">You are responsible for</strong> your offer and
               pricing, the accuracy of information and any contact data you give us, your legal
               right to contact the people on lists you provide, the sending mailbox or identity used
-              for outreach on the tiers that require one, responding to interested prospects, the
-              live sales conversations, and closing. On the entry tier you also run all sending and
-              follow-up yourself.
+              for outreach, responding to the opportunities we hand over, the technical evaluation,
+              the estimate, the price, the live sales conversations, and closing. On Prospecting you
+              also take over each conversation at interest, including any follow-up.
             </BulletItem>
           </ul>
         </Section>
@@ -512,25 +544,7 @@ export default function TermsPage() {
           </p>
         </Section>
       </main>
-
-      <footer className="border-t border-line px-5 py-8 sm:px-8">
-        <div className="mx-auto flex max-w-3xl flex-col gap-3 text-sm text-subtle sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-display text-base text-accent">{legalEntityName}</p>
-          <div className="flex items-center gap-5">
-            <Link href="/" className="transition-colors hover:text-accent">
-              Home
-            </Link>
-            <Link href="/pricing" className="transition-colors hover:text-accent">
-              Pricing
-            </Link>
-            <Link href="/privacy" className="transition-colors hover:text-accent">
-              Privacy
-            </Link>
-            <span>© {new Date().getFullYear()}</span>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </PageShell>
   );
 }
 

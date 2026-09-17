@@ -35,10 +35,43 @@ const CSP = [
   "upgrade-insecure-requests",
 ].join("; ");
 
+// RETIRED PAGES (2026-09-17, D-027). Two guides were built for the residential lead-buying
+// conversation — what homeowner leads cost in one state, and shared-versus-exclusive lead
+// math — and neither describes the service any more. Each is sent, permanently, to the live
+// page that now answers the nearest honest intent:
+//
+//   /hvac-lead-generation-new-jersey  ->  /commercial-hvac-lead-generation
+//       A one-state doorway for a service delivered nationwide. Its successor is the
+//       canonical service page, not another geography.
+//   /shared-vs-exclusive-hvac-leads   ->  /how-to-choose-a-lead-generation-agency
+//       The vendor-evaluation guide keeps the one part of that page that was cited and
+//       still useful (how marketplace leads are sold, and the FTC's HomeAdvisor order) as a
+//       clearly labelled contrast.
+//
+// `statusCode: 301` rather than `permanent: true` (which answers 308): both are permanent and
+// both pass link equity, but 301 is what every SEO tool and the owner's brief call it.
+// ONE hop each, straight to a 200 — never to another redirect. Keep this list in lockstep
+// with `retiredPaths` in lib/pages.ts; tests/pricing-model.test.ts compares the two.
+const RETIRED_PAGE_REDIRECTS = [
+  {
+    source: "/hvac-lead-generation-new-jersey",
+    destination: "/commercial-hvac-lead-generation",
+    statusCode: 301 as const,
+  },
+  {
+    source: "/shared-vs-exclusive-hvac-leads",
+    destination: "/how-to-choose-a-lead-generation-agency",
+    statusCode: 301 as const,
+  },
+];
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   // Don't advertise the framework and version to anyone scanning for known CVEs.
   poweredByHeader: false,
+  async redirects() {
+    return RETIRED_PAGE_REDIRECTS;
+  },
   async headers() {
     return [
       {

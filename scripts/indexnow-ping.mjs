@@ -16,13 +16,17 @@ const KEY = "fa2d37dcda78121e04e0e0748d3bf823";
 
 // Keep in sync with `indexablePaths` in lib/pages.ts — tests/routes.test.ts asserts it.
 // (This file is plain .mjs run outside the bundler, so it cannot import that registry.)
+// 2026-09-17: /hvac-lead-generation-new-jersey and /shared-vs-exclusive-hvac-leads were
+// retired behind 301s and are deliberately NOT here — a redirect is not a URL to announce.
+// The three new pages are. Run this once after the deploy that ships them.
 const urls = [
   "/",
-  "/free-pipeline-audit",
+  "/commercial-hvac-lead-generation",
+  "/how-it-works",
   "/pricing",
-  "/hvac-lead-generation-new-jersey",
-  "/shared-vs-exclusive-hvac-leads",
+  "/free-pipeline-audit",
   "/how-to-choose-a-lead-generation-agency",
+  "/about",
   "/start",
   "/reviews",
   "/privacy",

@@ -23,6 +23,14 @@
 // client's own account history is an optional second lane and is never asked as a
 // precondition.
 //
+// EXTENDED 2026-09-17 for D-027. The three plans are now three LEVELS OF RESPONSIBILITY
+// (Prospecting / Managed Pipeline / Qualified Opportunity Engine), so the fit check asks the
+// one thing that separates the top level from the middle one — whether the shop wants
+// opportunities qualified and the next step or site visit coordinated before its estimator
+// is involved — and `recommendTier` mirrors the operating-system repo's
+// core/offer.recommend_from_discovery rule for rule. A stated budget no longer decides the
+// plan: what a shop can spend says nothing about who on its team works an interested reply.
+//
 // Rules for changing this file:
 //   * A `not_yet` outcome must name the SPECIFIC answer that produced it and point
 //     somewhere genuinely useful. It is a redirection, not a rejection notice.
@@ -71,9 +79,10 @@ export const COMMERCIAL_SHARE = [
   { value: "most", label: "Most or all of it" },
 ] as const satisfies readonly Option[];
 
-// Whether a conversation we start has somewhere to land. We research, reach, follow up
-// and (on the top tier) book; the walkthrough, the bid and the close stay with the
-// contractor at every tier, so somebody there has to do them.
+// Whether an opportunity we hand over has somewhere to land. We prepare it to the level the
+// plan says; the technical evaluation, the estimate and the close stay with the contractor on
+// every plan, so somebody there has to do them. It is also the precondition of the top plan:
+// with nobody to estimate, a prepared opportunity has nowhere to go.
 export const COMMERCIAL_QUOTER = [
   { value: "nobody", label: "Nobody, really — we haven't bid commercial work" },
   { value: "owner-when-time", label: "The owner, when there's time" },
@@ -156,13 +165,34 @@ export const CURRENT_APPROACH = [
   { value: "other", label: "Something else" },
 ] as const satisfies readonly Option[];
 
-// Who follows up with commercial accounts today. This is the clearest read on whether
-// the work we do is already being done — and it is the question that decides the tier.
+// Who follows up with commercial accounts today. This is the clearest read on whether the
+// work we do is already being done — and, with PREPARED_OPPORTUNITIES below, it is what
+// decides the plan (core/offer.recommend_from_discovery: `follow_up_owner`).
 export const FOLLOW_UP_OWNER = [
   { value: "nobody", label: "Nobody, consistently" },
   { value: "owner-sometimes", label: "The owner, when there's time" },
   { value: "office-part-time", label: "An office person, alongside everything else" },
   { value: "dedicated", label: "Someone whose actual job it is" },
+] as const satisfies readonly Option[];
+
+// THE QUESTION THAT SEPARATES THE TOP PLAN FROM THE MIDDLE ONE (D-027). Managed Pipeline
+// hands over screened interest; Qualified Opportunity Engine qualifies it, gathers the
+// context and coordinates the next step or site visit first. Which of those a shop wants is a
+// fact only the shop can state, so it is asked rather than inferred from contract size —
+// which is how the old model guessed it. Not scored: it chooses a plan, it does not decide fit.
+// (core/offer.recommend_from_discovery: `wants_prepared_opportunities`.)
+export const PREPARED_OPPORTUNITIES = [
+  {
+    value: "yes",
+    label: "Yes — qualify it, gather the context and coordinate the next step first",
+    hint: "Your estimator gets a prepared opportunity",
+  },
+  {
+    value: "no",
+    label: "No — hand us the interest and our team takes it from there",
+    hint: "Your team does the discovery",
+  },
+  { value: "unsure", label: "Not sure yet" },
 ] as const satisfies readonly Option[];
 
 // Capacity. The middle option is the ideal customer, not a weak one: a shop booked
@@ -184,11 +214,13 @@ export const TIMELINE = [
   { value: "researching", label: "Just researching for now" },
 ] as const satisfies readonly Option[];
 
-// Budget is asked as a tier, not a number, so the answer maps to something real.
+// Budget is asked as a plan, not a number, so the answer maps to something real. It no
+// longer DECIDES the recommendation (see recommendTier); where it disagrees with what the
+// shop says it wants, the result says so plainly instead of quietly picking one.
 export const BUDGET = [
-  { value: "750", label: "$750/mo", hint: "Lead Engine" },
-  { value: "1500", label: "$1,500/mo", hint: "Outreach Engine" },
-  { value: "2500", label: "$2,500/mo", hint: "Appointment Engine" },
+  { value: "750", label: "$750/mo", hint: "Prospecting" },
+  { value: "1500", label: "$1,500/mo", hint: "Managed Pipeline" },
+  { value: "2500", label: "$2,500/mo", hint: "Qualified Opportunity Engine" },
   { value: "unsure", label: "Not sure yet", hint: "The audit comes first" },
 ] as const satisfies readonly Option[];
 
@@ -202,6 +234,7 @@ export type JobValue = ValueOf<typeof JOB_VALUE>;
 export type GrowthProblem = ValueOf<typeof GROWTH_PROBLEM>;
 export type CurrentApproach = ValueOf<typeof CURRENT_APPROACH>;
 export type FollowUpOwner = ValueOf<typeof FOLLOW_UP_OWNER>;
+export type PreparedOpportunities = ValueOf<typeof PREPARED_OPPORTUNITIES>;
 export type Capacity = ValueOf<typeof CAPACITY>;
 export type Timeline = ValueOf<typeof TIMELINE>;
 export type Budget = ValueOf<typeof BUDGET>;
@@ -223,6 +256,7 @@ export type QualificationAnswers = {
   growthProblem: GrowthProblem | "";
   currentApproach: CurrentApproach | "";
   followUpOwner: FollowUpOwner | "";
+  preparedOpportunities: PreparedOpportunities | "";
   capacity: Capacity | "";
   targetAccounts: TargetAccounts | "";
   timeline: Timeline | "";
@@ -237,6 +271,7 @@ export const EMPTY_ANSWERS: QualificationAnswers = {
   growthProblem: "",
   currentApproach: "",
   followUpOwner: "",
+  preparedOpportunities: "",
   capacity: "",
   targetAccounts: "",
   timeline: "",
@@ -280,8 +315,9 @@ export type FitResult = {
    * calendar sits next to that as a walkthrough of work they will already have.
    */
   offerBooking: boolean;
-  /** Advisory starting tier, or null when the answers don't point anywhere clearly. */
-  recommendedTier: "Lead Engine" | "Outreach Engine" | "Appointment Engine" | null;
+  /** Advisory starting plan, or null when nothing that decides it has been answered. The
+   *  three names are lib/content.ts `plans[].name`, verbatim — tests hold them together. */
+  recommendedTier: "Prospecting" | "Managed Pipeline" | "Qualified Opportunity Engine" | null;
   /** A genuinely useful page for this visitor, whatever the outcome. */
   suggestedReading: { href: string; label: string } | null;
 };
@@ -317,10 +353,10 @@ const BLOCKS: Block[] = [
     reason:
       "You're after homeowner leads to buy, and we don't sell them. We don't sell, resell or broker leads of any kind, and we never contact homeowners — the businesses we research on a client's behalf are commercial accounts: property managers, building owners, facility teams. Telling you that now is more useful than a call that ends the same way.",
     nextStep:
-      "If you are going to buy leads, the guide below is the honest math on shared versus exclusive — including the FTC's case against HomeAdvisor. It's written by someone who sells neither.",
+      "If you are going to buy leads, the section below sets out how marketplace leads are sold and what the FTC's case against HomeAdvisor was about — two things worth checking with any lead seller. It is written by someone who sells neither kind of lead.",
     reading: {
-      href: "/shared-vs-exclusive-hvac-leads",
-      label: "Shared vs. exclusive HVAC leads: the real cost per job",
+      href: "/how-to-choose-a-lead-generation-agency#residential-marketplaces",
+      label: "How residential lead marketplaces work, and what to verify before you buy",
     },
   },
   {
@@ -336,10 +372,10 @@ const BLOCKS: Block[] = [
     reason:
       "Everything we do runs on the commercial side of an HVAC business: we research the property managers, building owners and facility teams that could become accounts, and we contact them in your name. A residential-only shop has no account base for that to build from, and we never contact homeowners — not from research, not from a purchased list, not at any price. We'd rather say so than take a monthly fee for work that has nothing to run on.",
     nextStep:
-      "If commercial work is something you're moving into — a maintenance agreement for a building, a first rooftop unit — come back once you've won and completed a few of those. The guide below is what HVAC leads actually cost by channel, which is the honest map for a residential shop right now.",
+      "If commercial work is something you're moving into — a maintenance agreement for a building, a first rooftop unit — come back once you've won and completed a few of those. Until then, the guide below is the checklist we'd want any lead vendor held to, the residential marketplaces included.",
     reading: {
-      href: "/hvac-lead-generation-new-jersey",
-      label: "What HVAC leads actually cost, and your options right now",
+      href: "/how-to-choose-a-lead-generation-agency",
+      label: "How to evaluate a lead generation vendor, including how marketplaces sell leads",
     },
   },
   {
@@ -369,7 +405,7 @@ const BLOCKS: Block[] = [
       "If that seat goes away, or you open a territory it can't cover, come back then. The guide below is the checklist we'd want any outbound effort measured against, in-house or vendor.",
     reading: {
       href: "/how-to-choose-a-lead-generation-agency",
-      label: "How to choose a lead-gen company (and the questions that expose a bad one)",
+      label: "How to choose a commercial HVAC lead generation partner (and the questions that expose a bad one)",
     },
   },
 ];
@@ -417,49 +453,77 @@ export function scoreAnswers(a: QualificationAnswers): number {
 const BIG_CONTRACTS = new Set<JobValue | "">(["25000-100000", "over-100000"]);
 
 /**
- * Which tier the answers point at. Advisory only — the call sets the real one, and the
- * UI says so. The logic is the same argument the pricing section makes in prose: the
- * tier is decided by how much of the work the client's own office can absorb.
+ * The three facts the plan recommendation is made from, in the operating system's own
+ * vocabulary (core/offer.recommend_from_discovery `facts`). Exported so the tests can hold
+ * the mapping, not just the outcome.
+ *
+ *   follow_up_owner              <- FOLLOW_UP_OWNER, passed through
+ *   wants_prepared_opportunities <- PREPARED_OPPORTUNITIES === "yes" ("unsure" is not a yes)
+ *   estimator_available          <- someone quotes and wins commercial bids. The owner
+ *                                   quoting "when there's time" IS someone; "nobody" is not.
+ */
+export function discoveryFacts(a: QualificationAnswers) {
+  return {
+    followUpOwner: a.followUpOwner,
+    wantsPreparedOpportunities: a.preparedOpportunities === "yes",
+    estimatorAvailable:
+      a.commercialQuoter === "dedicated" || a.commercialQuoter === "owner-when-time",
+  };
+}
+
+/**
+ * Which plan the answers point at. Advisory only — nothing is agreed until the visitor has
+ * seen the audit, and the UI says so.
+ *
+ * MIRRORS core/offer.recommend_from_discovery IN THE OPERATING-SYSTEM REPO, RULE FOR RULE
+ * (D-027 §2 — by who does the work):
+ *   1. wants prepared opportunities AND has someone who quotes and wins bids
+ *        -> Qualified Opportunity Engine
+ *   2. wants prepared opportunities but nobody quotes and wins bids
+ *        -> Managed Pipeline. The honest level: a prepared opportunity would have nowhere to
+ *           go, so a structured handoff is the right stop until that person exists.
+ *   3. a dedicated in-house person works replies, and no wish for prepared opportunities
+ *        -> Prospecting (we find and contact; they take over at interest)
+ *   4. otherwise -> Managed Pipeline (the recommended default)
+ * An estimator is a PRECONDITION of the top plan, never a reason for it.
+ *
+ * What is deliberately NOT here any more: the stated budget (it used to win outright) and
+ * contract size (it used to unlock the top plan). Neither says who on the shop's team works
+ * an interested reply, which is the only thing the plans differ by. A budget that disagrees
+ * with the recommendation is surfaced as a watchout instead — see buildWatchouts.
  */
 export function recommendTier(a: QualificationAnswers): FitResult["recommendedTier"] {
-  // A stated budget is a fact about the buyer, not a guess, so it wins outright.
-  if (a.budget === "750") return "Lead Engine";
-  if (a.budget === "1500") return "Outreach Engine";
-  if (a.budget === "2500") return "Appointment Engine";
+  // Nothing that decides the plan has been answered: say nothing rather than assert the
+  // default from no information. (Unreachable on a real submission — the API requires every
+  // answer — but the browser previews the fit while the form is half filled.)
+  if (!a.followUpOwner && !a.preparedOpportunities && !a.commercialQuoter) return null;
 
-  // Someone whose actual job is follow-up can work a list. Hand them the list.
-  if (a.followUpOwner === "dedicated") return "Lead Engine";
-
-  // Appointment Engine books qualified conversations onto a calendar. That only pays
-  // when nobody is doing follow-up today, there is a named person to take the booked
-  // conversation, and the contracts are big enough to justify the tier.
-  if (
-    BIG_CONTRACTS.has(a.jobValue) &&
-    a.followUpOwner === "nobody" &&
-    a.commercialQuoter === "dedicated"
-  ) {
-    return "Appointment Engine";
-  }
-
-  if (a.followUpOwner === "nobody" || a.followUpOwner === "owner-sometimes") {
-    return "Outreach Engine";
-  }
-  if (a.followUpOwner === "office-part-time") return "Lead Engine";
-  return null;
+  const f = discoveryFacts(a);
+  if (f.wantsPreparedOpportunities && f.estimatorAvailable) return "Qualified Opportunity Engine";
+  if (f.wantsPreparedOpportunities && !f.estimatorAvailable) return "Managed Pipeline";
+  if (f.followUpOwner === "dedicated") return "Prospecting";
+  return "Managed Pipeline";
 }
+
+/** The monthly fee each budget answer names, as the plan it buys. */
+const BUDGET_PLAN: Record<string, NonNullable<FitResult["recommendedTier"]>> = {
+  "750": "Prospecting",
+  "1500": "Managed Pipeline",
+  "2500": "Qualified Opportunity Engine",
+};
 
 /** Reading that is actually relevant to the answers given. */
 function suggestReading(a: QualificationAnswers): FitResult["suggestedReading"] {
   if (a.currentApproach === "paid-ads") {
     return {
-      href: "/shared-vs-exclusive-hvac-leads",
-      label: "Shared vs. exclusive HVAC leads: the real cost per job",
+      href: "/commercial-hvac-lead-generation#alternatives",
+      label: "How this differs from ads, marketplaces and the other ways to buy HVAC growth",
     };
   }
   if (a.timeline === "researching") {
     return {
       href: "/how-to-choose-a-lead-generation-agency",
-      label: "How to choose a lead-gen company (and the questions that expose a bad one)",
+      label: "How to choose a commercial HVAC lead generation partner (and the questions that expose a bad one)",
     };
   }
   return { href: "/free-pipeline-audit", label: "What's in the free pipeline audit" };
@@ -482,7 +546,7 @@ function buildReasons(a: QualificationAnswers): string[] {
   }
   if (a.commercialQuoter === "dedicated") {
     out.push(
-      "Someone whose job is to quote and win commercial bids means a conversation we start has somewhere to land.",
+      "Someone whose job is to quote and win commercial bids means an opportunity we hand over has somewhere to land.",
     );
   }
   if (a.targetAccounts === "can-name") {
@@ -516,12 +580,12 @@ function buildReasons(a: QualificationAnswers): string[] {
   }
   if (a.growthProblem === "no-way-to-find-accounts") {
     out.push(
-      "No consistent way to find new commercial accounts is the exact gap this is built to fill: a researched list, a named person, a reason to write, and the follow-up.",
+      "No consistent way to find new commercial accounts is the exact gap this is built to fill: a researched account, a named person, a reason to write, and a first contact made in your name.",
     );
   }
   if (a.growthProblem === "follow-up-drops") {
     out.push(
-      "Follow-up falling through is the cheapest problem here to fix — the sequence runs whether or not the week gets busy.",
+      "Follow-up falling through is exactly what Managed Pipeline takes off your desk — the sequence runs whether or not the week gets busy.",
     );
   }
   if (a.growthProblem === "referral-dependent") {
@@ -537,6 +601,14 @@ function buildReasons(a: QualificationAnswers): string[] {
   if (a.currentApproach === "bids-rfps") {
     out.push(
       "Bids and RFPs mean you already have a commercial sales process; this feeds it rather than replacing it.",
+    );
+  }
+  if (
+    a.preparedOpportunities === "yes" &&
+    (a.commercialQuoter === "dedicated" || a.commercialQuoter === "owner-when-time")
+  ) {
+    out.push(
+      "You want each opportunity qualified and the next step coordinated before your estimator is involved, and someone on your team quotes and wins commercial bids — that is the work Qualified Opportunity Engine is for.",
     );
   }
   if (BIG_CONTRACTS.has(a.jobValue)) {
@@ -559,11 +631,11 @@ function buildWatchouts(a: QualificationAnswers): string[] {
   }
   if (a.commercialQuoter === "nobody") {
     out.push(
-      "There's nobody who quotes commercial bids today. A conversation we start needs someone to take the walkthrough and write the proposal — that stays yours at every tier — so this is the open question before anything else.",
+      "There's nobody who quotes commercial bids today. An opportunity we hand over needs someone to do the technical evaluation and write the estimate — that stays yours on every plan — so this is the open question before anything else.",
     );
   } else if (a.commercialQuoter === "owner-when-time") {
     out.push(
-      "Commercial quotes currently depend on the owner having time. Not a blocker, but the conversations we start will land on that same desk — worth deciding who takes them before the first batch.",
+      "Commercial quotes currently depend on the owner having time. Not a blocker, but the opportunities we hand over will land on that same desk — worth deciding who takes them before the first message goes out.",
     );
   }
   if (a.targetAccounts === "roughly") {
@@ -582,7 +654,7 @@ function buildWatchouts(a: QualificationAnswers): string[] {
   }
   if (a.jobValue === "under-5000") {
     out.push(
-      "At service-and-repair values the fee is a bigger share of each job won. Worth doing that arithmetic with your own numbers before you commit to a tier.",
+      "At service-and-repair values the fee is a bigger share of each job won. Worth doing that arithmetic with your own numbers before you commit to a plan.",
     );
   }
   if (a.timeline === "researching") {
@@ -590,9 +662,24 @@ function buildWatchouts(a: QualificationAnswers): string[] {
       "You're researching rather than ready. That's fine — the audit is free and yours to keep, and nothing starts until you say so.",
     );
   }
-  if (a.followUpOwner === "dedicated") {
+  if (a.followUpOwner === "dedicated" && a.preparedOpportunities !== "yes") {
     out.push(
-      "You already have someone whose job is account follow-up. That usually points at the lower tier: we build and rank the list, and your person works it.",
+      "You already have someone whose job is account follow-up. That usually points at Prospecting: we find and contact the accounts, and your person takes each conversation at interest.",
+    );
+  }
+  if (a.preparedOpportunities === "yes" && a.commercialQuoter === "nobody") {
+    out.push(
+      "You'd like opportunities prepared before your estimator is involved, but nobody quotes commercial bids yet. A prepared opportunity would have nowhere to go, so the honest level is Managed Pipeline — a structured handoff — until that person exists.",
+    );
+  }
+  // A stated budget that names a DIFFERENT plan from the one the answers point at. Said out
+  // loud, because a lower plan never includes a higher plan's work and the visitor should
+  // weigh that trade before anyone talks to him.
+  const budgetPlan = a.budget ? BUDGET_PLAN[a.budget] : undefined;
+  const pointed = recommendTier(a);
+  if (budgetPlan && pointed && budgetPlan !== pointed) {
+    out.push(
+      `You picked the ${budgetPlan} fee, and your other answers point at ${pointed}. Those are different levels of responsibility, and a lower plan never includes a higher plan's work — so that is the trade to weigh once you have seen the audit.`,
     );
   }
   return out;
@@ -681,6 +768,8 @@ export function summarizeAnswers(a: QualificationAnswers): string {
     a.growthProblem && `problem: ${label(GROWTH_PROBLEM, a.growthProblem)}`,
     a.currentApproach && `today: ${label(CURRENT_APPROACH, a.currentApproach)}`,
     a.followUpOwner && `follow-up: ${label(FOLLOW_UP_OWNER, a.followUpOwner)}`,
+    a.preparedOpportunities &&
+      `wants prepared opportunities: ${label(PREPARED_OPPORTUNITIES, a.preparedOpportunities)}`,
     a.capacity && label(CAPACITY, a.capacity),
     a.targetAccounts && `target accounts: ${label(TARGET_ACCOUNTS, a.targetAccounts)}`,
     a.timeline && label(TIMELINE, a.timeline),
@@ -708,6 +797,8 @@ export const QUESTION_LABELS: Record<keyof QualificationAnswers, string> = {
   growthProblem: "the growth problem you picked",
   currentApproach: "how commercial work reaches you today",
   followUpOwner: "who follows up with commercial accounts today",
+  preparedOpportunities:
+    "whether you want opportunities qualified and the next step or site visit coordinated before your estimator is involved",
   capacity: "whether you could take on more accounts",
   targetAccounts: "whether you can describe the commercial accounts you want",
   timeline: "when you would want to start",
@@ -723,6 +814,7 @@ export const ANSWER_OPTIONS: Record<keyof QualificationAnswers, readonly Option[
   growthProblem: GROWTH_PROBLEM,
   currentApproach: CURRENT_APPROACH,
   followUpOwner: FOLLOW_UP_OWNER,
+  preparedOpportunities: PREPARED_OPPORTUNITIES,
   capacity: CAPACITY,
   targetAccounts: TARGET_ACCOUNTS,
   timeline: TIMELINE,

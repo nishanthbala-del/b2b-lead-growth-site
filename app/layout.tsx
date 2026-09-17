@@ -1,16 +1,18 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import AttributionCapture from "@/components/AttributionCapture";
 import {
   siteUrl,
   brandName,
   orgDescription,
   areaServed,
-  founderName,
+  basedIn,
   contactEmail,
+  legalEntityName,
   organizationProfiles,
 } from "@/lib/site";
-import { homepageMetaTitle, homepageDescription, ogImages } from "@/lib/pages";
+import { founderNode, homepageMetaTitle, homepageDescription, ogImages } from "@/lib/pages";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -65,7 +67,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0A0A0B",
+  // White, matching the page. This was "#0A0A0B" — the retired near-black palette — so a
+  // phone painted a black browser bar over a white site for two weeks after the relight.
+  themeColor: "#FFFFFF",
 };
 
 // Organization + WebSite structured data (FAQPage + Offers live on the landing page,
@@ -79,23 +83,34 @@ const orgJsonLd = {
       name: brandName,
       url: siteUrl,
       logo: `${siteUrl}/icon.svg`,
+      // The registered name behind the trading name, as the footer of every page prints it.
+      legalName: legalEntityName,
       description: orgDescription,
+      // WHERE WE SERVE and WHERE WE ARE are separate facts (see lib/site.ts). The service is
+      // delivered remotely across the country; the company is based in one state. No street
+      // address is published because none is set — an invented one would be a fabrication.
       areaServed: areaServed,
+      location: { "@type": "Place", name: `${basedIn}, United States` },
       // A monitored inbox on the brand's own domain. Cheap, true, and one of the few
       // machine-checkable signals a brand-new organisation can offer that it is real.
       email: contactEmail,
-      founder: { "@type": "Person", name: founderName },
+      founder: { "@id": `${siteUrl}/#founder` },
       // Renders ONLY once real owned profiles exist (see lib/site.ts). An empty array
       // emits no sameAs at all rather than an empty one.
       ...(organizationProfiles.length > 0 ? { sameAs: organizationProfiles } : {}),
       // What this company is competent in, stated plainly for answer engines.
+      // Every entry is a subject a page on this site actually covers in its visible text.
       knowsAbout: [
-        "Commercial HVAC account research",
-        "Outbound email and follow-up for HVAC contractors",
-        "HVAC referral partner outreach",
-        "B2B appointment setting",
+        "Commercial HVAC lead generation",
+        "Commercial HVAC managed outbound",
+        "Commercial HVAC target-account research",
+        "Outreach to property managers and facility managers for HVAC contractors",
+        "Commercial HVAC opportunity qualification",
       ],
     },
+    // The founder, as a node of his own, so /about can reference the same entity. Founder
+    // attribution only — never a claim of ownership or signing authority (lib/site.ts).
+    founderNode(),
     {
       "@type": "WebSite",
       "@id": `${siteUrl}/#website`,
@@ -118,6 +133,8 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, "\\u003c") }}
         />
+        {/* First-party, cookieless visit attribution — see lib/attribution.ts. Renders nothing. */}
+        <AttributionCapture />
         {children}
       </body>
     </html>

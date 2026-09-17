@@ -1,27 +1,48 @@
 import type { MetadataRoute } from "next";
-import { siteUrl, legalLastUpdatedISO } from "@/lib/site";
-import { guidePages, homepageDateModified, standaloneRoutes } from "@/lib/pages";
+import { siteUrl } from "@/lib/site";
+import { guidePages, homepageDateModified, legalRoutes, standaloneRoutes } from "@/lib/pages";
+
+// ONLY canonical, indexable, current URLs — straight from the registry, so a page cannot be
+// in the sitemap without being registered, and a retired path cannot linger here.
+//
+// Deliberately absent: the two redirected guides (lib/pages.ts `retiredPaths`), the
+// token-gated /for-clients page and the /refer redirect (both noindex), /api/*, and the
+// image and manifest routes. tests/pricing-model.test.ts asserts every entry below is
+// registered, has a page file, and is not a redirect source.
+//
+// Priorities are relative hints, nothing more: the service page and the homepage lead, the
+// money pages follow, the fit check and the entity page sit below them, legal last.
+const GUIDE_PRIORITY: Record<string, number> = {
+  "commercial-hvac-lead-generation": 0.9,
+  "how-it-works": 0.8,
+  pricing: 0.9,
+  "free-pipeline-audit": 0.8,
+  "how-to-choose-a-lead-generation-agency": 0.6,
+  about: 0.5,
+};
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date(`${homepageDateModified}T12:00:00Z`);
-  // Legal pages carry their real last-edited date, not the build date.
-  const legalModified = new Date(`${legalLastUpdatedISO}T12:00:00Z`);
+  const at = (iso: string) => new Date(`${iso}T12:00:00Z`);
   return [
-    { url: `${siteUrl}/`, lastModified, changeFrequency: "weekly", priority: 1 },
-    // Guide pages carry their true content dates from the registry.
+    { url: `${siteUrl}/`, lastModified: at(homepageDateModified), changeFrequency: "weekly", priority: 1 },
+    // Every page carries its true content date from the registry, never the build date.
     ...guidePages.map((p) => ({
       url: `${siteUrl}/${p.slug}`,
-      lastModified: new Date(`${p.dateModified}T12:00:00Z`),
+      lastModified: at(p.dateModified),
       changeFrequency: "monthly" as const,
-      priority: 0.8,
+      priority: GUIDE_PRIORITY[p.slug] ?? 0.6,
     })),
     ...standaloneRoutes.map((r) => ({
       url: `${siteUrl}/${r.slug}`,
-      lastModified: new Date(`${r.dateModified}T12:00:00Z`),
+      lastModified: at(r.dateModified),
       changeFrequency: "monthly" as const,
       priority: r.priority,
     })),
-    { url: `${siteUrl}/privacy`, lastModified: legalModified, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${siteUrl}/terms`, lastModified: legalModified, changeFrequency: "yearly", priority: 0.3 },
+    ...legalRoutes.map((r) => ({
+      url: `${siteUrl}/${r.slug}`,
+      lastModified: at(r.dateModified),
+      changeFrequency: "yearly" as const,
+      priority: 0.3,
+    })),
   ];
 }

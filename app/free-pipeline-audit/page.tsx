@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import GuideLayout, { GuideSection, KeyAnswer } from "@/components/GuideLayout";
-import { audit, faqSlug } from "@/lib/content";
+import { audit, faqSlug, plans } from "@/lib/content";
 import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
 import { siteUrl, brandName, intakeMinutes, auditDeliveryWindow } from "@/lib/site";
 
@@ -23,7 +24,7 @@ const pageFaqs = [
   {
     question: "Is it just a disguised sales pitch?",
     answer:
-      "No. The audit is real work product, and you receive every deliverable before any sales conversation. We do offer a short walkthrough afterwards, and yes, if the work is useful we hope you consider the paid tiers. The deliverable does not depend on taking that walkthrough or buying anything.",
+      "No. The audit is real work product, and you receive every deliverable before any sales conversation. We do offer a short walkthrough afterwards, and yes, if the work is useful we hope you consider a paid plan. The deliverable does not depend on taking that walkthrough or buying anything.",
   },
   {
     question: "Does the audit guarantee leads, appointments, or jobs?",
@@ -38,7 +39,7 @@ const pageFaqs = [
   {
     question: "Why would a company give this away?",
     answer:
-      "Because we are new and say so plainly. There is no wall of client logos to point to yet, so showing the actual work is the only honest proof available. If the free slice is good, the paid engine is the same work at scale. If it is not good, you have lost nothing and kept the research.",
+      "Because we are new and say so plainly. There is no wall of client logos to point to yet, so showing the actual work is the only honest proof available. If the free slice is good, every paid plan starts from the same research standard. If it is not good, you have lost nothing and kept the research.",
   },
 ];
 
@@ -97,7 +98,6 @@ export default function FreePipelineAuditPage() {
       <GuideLayout
         page={page}
         eyebrow="Start here"
-        h1="The Free Pipeline Audit for HVAC companies"
         intro={
           <>
             <p>
@@ -163,10 +163,46 @@ export default function FreePipelineAuditPage() {
             <li>
               <span className="font-semibold text-ink">You get the audit, then an optional
               walkthrough.</span> The deliverable arrives in your inbox. If you want it, we go
-              through it together and you decide, with the work already in hand, whether running
-              it at scale is worth paying for.
+              through it together and you decide, with the work already in hand, whether a paid
+              plan is worth it.
             </li>
           </ol>
+        </GuideSection>
+
+        {/* How the free thing relates to the paid things. Without this a reader cannot tell
+            whether the audit is a sample of the $750 plan, the $2,500 plan, or a brochure. It
+            is a slice of the ACCOUNT RESEARCH that every plan begins with — and it includes
+            no outreach at all, so nothing in it can be mistaken for a plan's handoff. */}
+        <GuideSection id="audit-and-plans" title="How the audit relates to the three paid plans">
+          <p>
+            The audit is a free slice of the account research every paid plan begins with: the
+            profile, a handful of researched accounts, and one message written for one of them.
+            Nothing is sent to anyone as part of it.
+          </p>
+          <p>
+            If you go on to a paid plan, the research standard stays the same and the plan decides
+            how far we carry each opportunity before your team takes it:
+          </p>
+          <ul className="list-disc space-y-2 pl-5">
+            {plans.map((p) => (
+              <li key={p.name}>
+                <span className="text-ink">
+                  {p.name} (${p.price.toLocaleString()}/mo).
+                </span>{" "}
+                {p.oneLiner}
+              </li>
+            ))}
+          </ul>
+          <p>
+            <Link href="/pricing#who-owns-what" className="text-accent underline underline-offset-4">
+              Who owns what on each plan
+            </Link>{" "}
+            is set out line by line on the pricing page, and{" "}
+            <Link href="/how-it-works" className="text-accent underline underline-offset-4">
+              how the work runs
+            </Link>{" "}
+            is on its own page.
+          </p>
         </GuideSection>
 
         <GuideSection title="What a legitimate free audit includes, from any agency">
@@ -200,8 +236,8 @@ export default function FreePipelineAuditPage() {
 
         <GuideSection title="What we will not do">
           <ul className="list-disc space-y-2 pl-5">
-            <li>We will not guarantee lead counts, reply rates, appointments, or revenue — on the audit or on any paid tier.</li>
-            <li>We will not hand you a homeowner list, and we will not contact homeowners in your name. Not in the audit, not at any tier, not at any price.</li>
+            <li>We will not guarantee lead counts, reply rates, appointments, site visits, or revenue — on the audit or on any paid plan.</li>
+            <li>We will not hand you a homeowner list, and we will not contact homeowners in your name. Not in the audit, not on any plan, not at any price.</li>
             <li>We will not pad the audit with bulk-scraped contacts to make it look bigger.</li>
             <li>We will not invent testimonials or case studies we do not have. We are new; the audit exists precisely because of that.</li>
             <li>We will not chase you. One deliverable, one optional walkthrough, your decision.</li>

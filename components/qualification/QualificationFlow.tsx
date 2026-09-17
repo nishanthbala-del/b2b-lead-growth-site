@@ -12,6 +12,7 @@ import {
   FOLLOW_UP_OWNER,
   GROWTH_PROBLEM,
   JOB_VALUE,
+  PREPARED_OPPORTUNITIES,
   TARGET_ACCOUNTS,
   TIMELINE,
   YEARS_IN_BUSINESS,
@@ -19,6 +20,12 @@ import {
   type FitResult,
   type QualificationAnswers,
 } from "@/lib/qualification";
+import {
+  ATTRIBUTION_STORAGE_KEY,
+  EMPTY_ATTRIBUTION,
+  sanitizeAttribution,
+  type Attribution,
+} from "@/lib/attribution";
 import { bookingUrl, callLengthMinutes, contactEmail, intakeMinutes } from "@/lib/site";
 import { Field, FieldError, Input, OptionCards, Textarea, focusFirstField, focusFirstInvalid } from "./fields";
 
@@ -38,7 +45,10 @@ import { Field, FieldError, Input, OptionCards, Textarea, focusFirstField, focus
 // is an optional second lane that the intake, not the fit check, asks about.
 //   1. Company     — who you are, and how to reach you
 //   2. Business    — how long, how much is commercial, who quotes it, what a job is worth
-//   3. Problem     — what you're trying to fix, how commercial work reaches you, who follows up
+//   3. Problem     — what you're trying to fix, how commercial work reaches you, who follows
+//                    up, and (D-027) whether you want opportunities qualified and the next
+//                    step coordinated before your estimator is involved — the question that
+//                    separates the top plan from the middle one
 //   4. Readiness   — capacity, whether you can describe the accounts you want, when, what budget
 //
 // Step 5 is the outcome. `evaluateFit` decides it; the same function runs on the
@@ -175,7 +185,9 @@ export default function QualificationFlow() {
     if (forStep === 3) {
       if (!answers.growthProblem) next.growthProblem = "Pick the one that bothers you most.";
       if (!answers.currentApproach) next.currentApproach = "Pick the closest match.";
-      if (!answers.followUpOwner) next.followUpOwner = "Pick one — it's the question that decides the tier.";
+      if (!answers.followUpOwner) next.followUpOwner = "Pick one — it's half of what decides the plan.";
+      if (!answers.preparedOpportunities)
+        next.preparedOpportunities = "Pick one — 'not sure yet' is a real answer.";
     }
     if (forStep === 4) {
       if (!answers.capacity) next.capacity = "Pick one.";
@@ -186,6 +198,19 @@ export default function QualificationFlow() {
     }
     setErrors(next);
     return Object.keys(next).length === 0;
+  }
+
+  // Where this visit came from, as recorded on its FIRST page by AttributionCapture (see
+  // lib/attribution.ts). Read at submit time rather than on mount, so a visitor who landed
+  // here directly is still attributed by the capture effect that ran just before. Sanitized
+  // again here and again on the server; storage that throws simply yields no attribution.
+  function readAttribution(): Attribution {
+    try {
+      const raw = window.sessionStorage.getItem(ATTRIBUTION_STORAGE_KEY);
+      return raw ? sanitizeAttribution(JSON.parse(raw) as Record<string, unknown>) : { ...EMPTY_ATTRIBUTION };
+    } catch {
+      return { ...EMPTY_ATTRIBUTION };
+    }
   }
 
   async function submit() {
@@ -199,7 +224,15 @@ export default function QualificationFlow() {
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "submit", ...contact, ...answers, source: "page", campaign, referralToken }),
+        body: JSON.stringify({
+          action: "submit",
+          ...contact,
+          ...answers,
+          source: "page",
+          campaign,
+          referralToken,
+          ...readAttribution(),
+        }),
       });
       const data = (await res.json()) as {
         ok: boolean;
@@ -402,6 +435,17 @@ export default function QualificationFlow() {
                     error={errors.followUpOwner}
                     columns={2}
                   />
+                  <OptionCards
+                    name="preparedOpportunities"
+                    legend="Do you want opportunities qualified, and the next step or site visit coordinated, before your estimator is involved?"
+                    hint="either answer is a fit — it decides which plan, not whether"
+                    options={PREPARED_OPPORTUNITIES}
+                    value={answers.preparedOpportunities}
+                    onChange={(v) =>
+                      setAnswer("preparedOpportunities", v as QualificationAnswers["preparedOpportunities"])
+                    }
+                    error={errors.preparedOpportunities}
+                  />
                 </>
               ) : null}
 
@@ -481,7 +525,7 @@ export default function QualificationFlow() {
                   {/* Told before submitting, not after: nobody should discover on the
                       results page that the honest answer was "we can't help you". */}
                   {provisional.outcome === "not_yet" ? (
-                    <p className="rounded-sm border border-amber-400/35 bg-amber-500/10 px-4 py-3 text-sm leading-6 text-amber-100">
+                    <p className="rounded-sm border border-warn/35 bg-warn-soft px-4 py-3 text-sm leading-6 text-warn">
                       Heads up: from your answers so far this probably isn&apos;t a fit. Submit
                       anyway and we&apos;ll tell you exactly why, and where to go instead.
                     </p>
@@ -602,9 +646,11 @@ function ResultStep({
           <span className={`rounded-sm border px-2.5 py-1 ${tone.chipClass}`}>{tone.chip}</span>
           {stored && leadId ? <span className="text-subtle">Ref {leadId}</span> : null}
         </p>
-        <h3 className="mt-4 font-display text-3xl leading-tight text-ink sm:text-4xl">
+        {/* An h2: it follows the page's h1 directly, and skipping to h3 breaks the outline a
+            screen-reader user navigates the result by. */}
+        <h2 className="mt-4 font-display text-3xl leading-tight text-ink sm:text-4xl">
           {result.headline}
-        </h3>
+        </h2>
       </div>
 
       {/* The recovery path, and it has to be TRUE.
@@ -616,7 +662,7 @@ function ResultStep({
         * nothing but a name and an email transfers; and on the operating-system side an
         * unmatchable booking is logged as "could not be matched to a lead — no brief
         * will be built". The visitor was steered down the one path that guaranteed he
-        * would arrive at a 15-minute call and be asked the same eleven questions again —
+        * would arrive at a 15-minute call and be asked the same questions all over again —
         * the precise experience the fit check exists to prevent.
         *
         * The email route is now the primary one because it is the only one that can
@@ -624,7 +670,7 @@ function ResultStep({
         * previously shown only when `stored` was true, i.e. hidden in exactly the case
         * where it is the one thing worth keeping. */}
       {!stored ? (
-        <p className="rounded-sm border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-sm leading-6 text-amber-100">
+        <p className="rounded-sm border border-warn/40 bg-warn-soft px-4 py-3 text-sm leading-6 text-warn">
           Your answers came through, but we couldn&apos;t confirm they saved on our side.{" "}
           {leadId ? (
             <>
@@ -693,10 +739,13 @@ function ResultStep({
         <p className="text-sm leading-6 text-subtle">
           <span className="font-semibold text-accent">Where we&rsquo;d probably start: </span>
           {result.recommendedTier}. That&rsquo;s a read from your answers, not a quote &mdash;
-          nothing is agreed until you&rsquo;ve seen the audit, and you can move tiers as the
-          season changes.{" "}
-          <a href="/pricing" className="text-accent underline underline-offset-2 hover:text-accent">
-            See what each tier covers
+          nothing is agreed until you&rsquo;ve seen the audit, and you can move between plans as
+          your needs change.{" "}
+          <a
+            href="/pricing#who-owns-what"
+            className="text-accent underline underline-offset-2 hover:text-accent"
+          >
+            See who owns what on each plan
           </a>
           .
         </p>

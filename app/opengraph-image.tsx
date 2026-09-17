@@ -7,8 +7,9 @@ import { ImageResponse } from "next/og";
 // runtime opted the route out of static generation, so every scrape by every social
 // crawler re-rendered the same PNG on demand. On the Node runtime it is generated
 // once at build and served from the CDN.
+// Keep in step with OG_IMAGE_ALT in lib/pages.ts (that module cannot import this one).
 export const alt =
-  "B2B Lead Growth — managed outbound for commercial HVAC contractors: researched commercial accounts, outreach and follow-up in your name, qualified conversations handed to your team";
+  "B2B Lead Growth — commercial HVAC managed outbound: we find the commercial accounts, contact the right people in your name, and hand off at the level you chose";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -87,11 +88,11 @@ export default function OpengraphImage() {
               maxWidth: 980,
             }}
           >
-            Commercial HVAC lead generation, done the honest way
+            Commercial HVAC managed outbound
           </div>
           <div style={{ fontSize: 30, color: SUBTLE, maxWidth: 920, lineHeight: 1.35 }}>
-            Researched commercial accounts. Outreach and follow-up in your name. Qualified
-            conversations handed to your team.
+            We find the commercial accounts, contact the right people in your name, and hand
+            each opportunity to your team at the level you chose.
           </div>
         </div>
 
@@ -110,7 +111,7 @@ export default function OpengraphImage() {
             $750 · $1,500 · $2,500 / mo
           </div>
           <div style={{ fontSize: 22, color: SUBTLE }}>
-            No setup fee · Month-to-month · Never sold per lead
+            Three levels of responsibility · Never sold per lead
           </div>
         </div>
       </div>

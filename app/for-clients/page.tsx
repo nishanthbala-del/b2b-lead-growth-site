@@ -25,7 +25,7 @@ export default async function ForClientsPage({
 
   return (
     <PageShell width="wide">
-      <main className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
+      <main id="main" className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
           For clients
         </p>

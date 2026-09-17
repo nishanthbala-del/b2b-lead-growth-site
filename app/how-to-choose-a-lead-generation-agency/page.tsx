@@ -1,9 +1,25 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import GuideLayout, { GuideSection, GuideTable, KeyAnswer } from "@/components/GuideLayout";
+import Link from "next/link";
+import GuideLayout, { GuideSection, GuideTable, KeyAnswer, SourceNote } from "@/components/GuideLayout";
 import { faqSlug } from "@/lib/content";
 import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
 import { siteUrl } from "@/lib/site";
+
+// HOW TO EVALUATE A COMMERCIAL HVAC LEAD GENERATION / MANAGED OUTBOUND VENDOR — US INCLUDED.
+//
+// REWRITTEN 2026-09-17. Until then this guide was framed by the residential lead-buying
+// conversation: "is this lead sold to anyone else?", shared-versus-exclusive math, what Angi
+// charges. That is not the purchase this site's reader is making. He is choosing someone to
+// research commercial accounts and contact them in his name, and the questions that expose a
+// weak vendor there are different ones: what are you responsible for on each plan, what do
+// you mean by "qualified", whose mailbox sends, do you call.
+//
+// The residential-marketplace material survives in ONE place, under a heading that says it is
+// a contrast, because (a) it is the only lead-generation experience most HVAC owners have,
+// and (b) /shared-vs-exclusive-hvac-leads now 301s here, so the visitor that URL used to serve
+// should find the two cited facts it was built on. Every figure in that section is sourced,
+// dated and registered in SOURCES.md; nothing else on this page cites a number.
 
 const page = getGuidePage("how-to-choose-a-lead-generation-agency");
 
@@ -17,24 +33,39 @@ export const metadata: Metadata = pageMetadata({
 // Rendered visibly and mirrored into FAQPage markup below (verbatim match).
 const hardQuestions = [
   {
-    question: "Do you guarantee a number of leads, appointments, or jobs?",
+    question: "Do you guarantee a number of leads, appointments, site visits or contracts?",
     ourAnswer:
-      "No — and you should walk away from any vendor who does. Whether an account signs depends on your pricing, your references, your timing, and how the walkthrough goes. A vendor controls the quality of the research and the outreach, not the buyer's decision. We sell defined activity: accounts researched, personalized outreach, follow-up, appointment handling by tier. Never outcomes.",
+      "No — and you should walk away from any vendor who does. Whether an account signs depends on your pricing, your references, your timing, and how the site visit goes. A vendor controls the quality of the research and the outreach, not the buyer's decision. We sell defined work at a defined standard, never outcomes.",
   },
   {
-    question: "Is this lead sold to anyone else?",
+    question: "Who exactly do you contact, and where does the contact data come from?",
     ourAnswer:
-      "Not with us — B2B Lead Growth sells no leads at all, shared or exclusive, so nothing we do is priced per lead. Ask every other vendor, because the answer is usually yes: shared leads are sold to three or four contractors at once, and the close rate is low enough to wreck the math. You pay us a flat monthly fee for research and outreach on the account types and service area you approve, and we work one HVAC company per service area. Run the cost-per-booked-job math before you buy from anyone.",
+      "Every account we contact is a business we researched from free public sources, with a citation each: property managers, building owners, facility teams, multi-site operators. Each carries a named person, the reason it was included, and the source link. We never contact homeowners — not from research, not from a purchased list. If a vendor cannot tell you where a contact came from or why that person was chosen, you are buying a scraped list with a markup.",
   },
   {
-    question: "Who owns the prospect data if we part ways?",
+    question: "What are you responsible for on each plan, and what stays with my team?",
     ourAnswer:
-      "You do — every account list, script, and tracker we build is yours to keep when you leave, along with the current suppression and opt-out list, and any account history you sent us was never ours to begin with. Vendors keeping the records when a client leaves is avoidable: get ownership in writing before you sign with anyone.",
+      "It is printed on each plan. On Prospecting we find and contact suitable commercial accounts, and you take over at interest. On Managed Pipeline we run outreach and follow-up, screen genuine interest, and organize the handoff. On Qualified Opportunity Engine we qualify the opportunity, gather the relevant context, coordinate the next step or site visit, and prepare your team to estimate and close. On every plan the technical evaluation, the estimate, the price and the close are yours. Ask any vendor for the same line, in writing.",
   },
   {
-    question: "What is the minimum contract length?",
+    question: "What do you mean by qualified?",
     ourAnswer:
-      "Month-to-month, 14 days' notice either side, no setup fee. Long minimum terms shift the risk onto you before a vendor has proven anything. If a vendor needs six committed months to show value, ask why the first two will not.",
+      "We mean a written standard, and only one plan delivers it. A qualified opportunity has a verified account and site, a buyer with the responsibility, and a need, a timing and an agreement to hear from your team that the buyer confirmed — with the useful context gathered and unknowns marked. That is Qualified Opportunity Engine work. An interested reply is an interested prospect, and a checked one is screened interest; we do not call either of them qualified.",
+  },
+  {
+    question: "Whose name and mailbox does the outreach go out from?",
+    ourAnswer:
+      "Yours. Outreach sends from your own domain and mailbox, so the people we write to see the company they can look up, and you can open the sent folder and read every message. Before anything sends you confirm the account categories, the service area, the exclusions, the claims we may make and the sending identity. Outreach sent in your name from infrastructure you cannot inspect risks your brand and your deliverability.",
+  },
+  {
+    question: "Who owns the research and the suppression list if we part ways?",
+    ourAnswer:
+      "You do — the account research, the drafted messages and the trackers we build are yours to keep when you leave, along with the current suppression and opt-out list. Vendors keeping the records when a client leaves is avoidable: get ownership in writing before you sign with anyone.",
+  },
+  {
+    question: "What is the minimum term, and what does it cost to leave?",
+    ourAnswer:
+      "Month-to-month, 14 days' notice either side, no setup fee and no exit fee. Long minimum terms shift the risk onto you before a vendor has proven anything. If a vendor needs six committed months to show value, ask why the first two will not.",
   },
   {
     question: "Can you show case studies or references?",
@@ -42,53 +73,52 @@ const hardQuestions = [
       "No — B2B Lead Growth has no case studies or client references yet, and we will not manufacture social proof. What we offer instead is the audit: a free, keepable sample of the actual work, on your market, before any money changes hands. When we have real client results we can report with permission, we will publish them.",
   },
   {
-    question: "Exactly what work happens each month, and how is it reported?",
+    question: "What happens each month, and how is it reported?",
     ourAnswer:
-      "Each tier publishes its scope: how many accounts are researched or messages sent, what is delivered, and what is excluded. Reports contain verified activity numbers only — accounts contacted, messages sent, replies, and qualified conversations started, meaning a decision-maker who replied with real interest, confirmed by a person. Never projections, and never a claim about jobs closed, because we cannot observe what happened on the walkthrough. Ask any vendor to name the metric they will report and the metric they refuse to report. Both answers are informative.",
+      "Each plan publishes what we are responsible for, what is handed over, and what is excluded. Reports contain verified activity only — accounts contacted, messages sent, replies, and interested prospects, meaning a relevant contact who replied with genuine interest, confirmed by a person. Each plan also counts what it hands over, under its own name. Never projections, and never a claim about jobs closed, because we cannot observe what happens after the handoff unless you tell us. Ask any vendor to name the metric they will report and the metric they refuse to report. Both answers are informative.",
   },
   {
-    question: "Where does your contact data come from?",
+    question: "Do you make phone calls, and to whom?",
     ourAnswer:
-      "Every account we contact is a business we researched from free public sources, with a citation each: property managers, building owners, facility teams, multi-site operators, general contractors. Each carries a named person, the reason it was included, and the source link. We never contact homeowners — not from research, not from a purchased list. If you choose to send your own account history, it comes from your export and nowhere else, and we cannot research, buy, or infer it. If a vendor cannot tell you where a contact came from or why that person was chosen, you are buying a scraped list with a markup.",
+      "Our cold outreach is email-led, and we make no cold calls on any plan. A call becomes appropriate only after a contact has shown genuine interest, when a live conversation would add something an email cannot. On Qualified Opportunity Engine we can run an engaged call with an interested contact, under your written authorization; on the other two plans that call is yours. Ask any vendor who they call, from what list, and what they say your company name is.",
   },
 ];
 
-// `why` is a ReactNode, not a string: two of these explanations point at the page that
-// substantiates them, and an in-body link with descriptive anchor text is worth more than
-// naming a destination in prose and leaving the reader to find it. These are rendered in a
-// table below, never serialized into JSON-LD — only `hardQuestions` is.
+// `why` is a ReactNode, not a string: some of these explanations point at the page that
+// substantiates them. These are rendered in a table below, never serialized into JSON-LD —
+// only `hardQuestions` is.
 const redFlags: { flag: string; why: ReactNode }[] = [
   {
-    flag: "Guaranteed jobs, appointments, or revenue",
-    why: "Nobody controls the buyer's decision. A guarantee is either priced-in churn math or a sign the vendor counts unqualified appointments as delivered.",
+    flag: "Guaranteed jobs, appointments, site visits or contracts",
+    why: "Nobody controls the buyer's decision. A guarantee is either priced-in churn math or a sign the vendor counts anything with a pulse as delivered.",
   },
   {
-    flag: "The same lead is sold to three other contractors",
+    flag: "The word qualified, with no written definition",
     why: (
       <>
-        Shared leads are the default in this market, and the reason cost per booked job rarely
-        matches cost per lead. If a vendor will not say in writing how many contractors receive each
-        lead, assume the answer is several. Run{" "}
-        <a
-          href="/shared-vs-exclusive-hvac-leads"
-          className="text-accent underline underline-offset-4"
-        >
-          the shared vs. exclusive cost-per-job math
-        </a>{" "}
-        first.
+        If a vendor cannot show you the standard an opportunity must meet before they call it
+        qualified, the word means &ldquo;replied&rdquo;. Ask for it in writing; ours is published
+        as{" "}
+        <Link href="/how-it-works#qualification-standard" className="text-accent underline underline-offset-4">
+          the qualification standard
+        </Link>
+        .
       </>
     ),
+  },
+  {
+    flag: "Every plan described as appointment setting",
+    why: "Finding accounts, running follow-up and qualifying an opportunity are different jobs. A vendor whose cheapest plan claims all three is overpromising on each of them.",
   },
   {
     flag: "Pricing that requires three sales calls to learn",
     why: (
       <>
-        Opaque pricing usually adapts to your budget. Many vendors in this space do not publish
-        rates, and third-party-reported ranges run from about $2,000 to well over $10,000 per month
-        — the sources are cited on{" "}
-        <a href="/pricing" className="text-accent underline underline-offset-4">
-          our published HVAC lead generation pricing page
-        </a>
+        Opaque pricing usually adapts to your budget. Many outbound agencies do not publish rates;
+        the ranges we could find, with their sources, are on{" "}
+        <Link href="/pricing" className="text-accent underline underline-offset-4">
+          our published commercial HVAC lead generation pricing page
+        </Link>
         .
       </>
     ),
@@ -99,19 +129,15 @@ const redFlags: { flag: string; why: ReactNode }[] = [
   },
   {
     flag: "You can't export or keep the data",
-    why: "If the lists, scripts, and CRM records evaporate when you cancel, the vendor is renting you your own pipeline.",
+    why: "If the account research and the records evaporate when you cancel, the vendor is renting you your own pipeline.",
   },
   {
     flag: "Volume as the headline metric",
-    why: "\"10,000 emails a month\" is a spam commitment, not a service. Ask about research depth per prospect, suppression practices, and opt-out handling instead.",
+    why: "\"10,000 emails a month\" is a spam commitment, not a service. Ask about research depth per account, suppression practices, and opt-out handling instead.",
   },
   {
     flag: "Sending from domains or identities you don't control",
     why: "Outreach sent in your name from infrastructure you cannot inspect risks your brand and your deliverability. You should know what is sent, to whom, from where.",
-  },
-  {
-    flag: "Vague answers about data sourcing",
-    why: "\"Proprietary database\" often means an old scraped list resold many times. Cited, source-linked prospects are checkable; a database is not.",
   },
 ];
 
@@ -145,43 +171,40 @@ export default function ChooseAgencyPage() {
       />
       <GuideLayout
         page={page}
-        eyebrow="HVAC owner's guide"
-        h1="How to choose an HVAC lead generation company: 7 questions, 8 red flags"
+        eyebrow="Commercial HVAC owner's guide"
         intro={
           <>
-            {/* Answer-first. The seven questions used to be enumerated inside one 63-word
-                sentence with two parenthetical asides; this is the same list in 39 words, and
-                it is the paragraph an answer engine quotes. The parenthetical answers moved
-                down into the question blocks, where the reader is actually asking them. */}
             <p className="text-ink">
-              Choose an HVAC lead generation company by asking seven questions: are results
-              guaranteed, is the lead resold, who owns the data, how long is the term, what happens
-              each month, how is it reported, where the data comes from.
+              Choose a commercial HVAC lead generation partner by asking ten questions: what is
+              guaranteed, who is contacted, what each plan makes the vendor responsible for, what
+              qualified means, whose mailbox sends, who owns the data, the term, the proof, the
+              reporting, and the calling.
             </p>
             <p>
-              Vendors fail these far more often than they fail on price. Our own answers to all
-              seven are on the record below, next to eight red flags worth walking away from.
+              Vendors fail these far more often than they fail on price. Our own answers to all ten
+              are on the record below, next to eight red flags worth walking away from.
             </p>
             <p>
-              We sell HVAC lead generation and we are new, so use the checklist on us. Our{" "}
-              <a href="/pricing" className="text-accent underline underline-offset-4">
+              We sell{" "}
+              <Link href="/commercial-hvac-lead-generation" className="text-accent underline underline-offset-4">
+                commercial HVAC lead generation
+              </Link>{" "}
+              and we are new, so use the checklist on us. Our{" "}
+              <Link href="/pricing" className="text-accent underline underline-offset-4">
                 published monthly pricing
-              </a>{" "}
+              </Link>{" "}
               and the{" "}
-              <a href="/free-pipeline-audit" className="text-accent underline underline-offset-4">
+              <Link href="/free-pipeline-audit" className="text-accent underline underline-offset-4">
                 free pipeline audit
-              </a>{" "}
+              </Link>{" "}
               are how you check the answers.
             </p>
           </>
         }
       >
-        {/* A table, not cards. Each entry is a labelled pair — the flag, and why it matters —
-            and the card version rendered them as two unlabelled <p> siblings, which is exactly
-            the shape an extractor cannot read. Same eight entries, same order. */}
         <GuideSection title="Eight red flags, and why each one matters">
           <GuideTable
-            caption="Red flags when choosing an HVAC lead generation company, and why each one matters"
+            caption="Red flags when choosing a commercial HVAC lead generation or managed outbound partner, and why each one matters"
             head={["Red flag", "Why it matters"]}
             rows={redFlags.map((r) => [
               <span key={r.flag} className="font-semibold text-ink">
@@ -192,20 +215,11 @@ export default function ChooseAgencyPage() {
           />
         </GuideSection>
 
-        <GuideSection title="The seven questions, with our own answers on the record">
+        <GuideSection title="The ten questions, with our own answers on the record">
           <p>
             Ask these of any vendor you evaluate. Our answers sit below each one, so you can hold us
-            to the same standard. For what the channels they resell actually cost, see{" "}
-            <a
-              href="/hvac-lead-generation-new-jersey"
-              className="text-accent underline underline-offset-4"
-            >
-              what HVAC leads cost in New Jersey, by channel
-            </a>
-            .
+            to the same standard.
           </p>
-          {/* id + scroll-mt on every answer, mirroring the fragment each Question node
-              publishes as its url — so one answer can be cited and linked to directly. */}
           <div className="divide-y divide-line border-y border-line">
             {hardQuestions.map((q) => (
               <div key={q.question} id={faqSlug(q.question)} className="scroll-mt-20 py-5">
@@ -216,21 +230,88 @@ export default function ChooseAgencyPage() {
           </div>
         </GuideSection>
 
+        <GuideSection id="residential-marketplaces" title="A contrast: how residential lead marketplaces work">
+          <p>
+            <span className="text-ink">
+              This section is about a different product from ours, and it is here as a contrast.
+            </span>{" "}
+            Most HVAC owners&rsquo; experience of &ldquo;lead generation&rdquo; is a residential
+            marketplace that sells homeowner inquiries per lead. We sell no leads, we never contact
+            homeowners, and commercial accounts do not appear on those marketplaces at all. Two
+            cited facts about that model are still worth knowing before you evaluate anyone:
+          </p>
+          <ul className="list-disc space-y-3 pl-5">
+            <li>
+              <span className="text-ink">Marketplace leads are shared by design.</span> Angi&rsquo;s
+              help center states that each homeowner project request is matched with{" "}
+              <em>&ldquo;no more than five pros&rdquo;</em>. That is the published model, not a
+              hidden practice.
+            </li>
+            <li>
+              <span className="text-ink">
+                Lead-quality claims have been the subject of federal action.
+              </span>{" "}
+              In 2023 the FTC finalized an order requiring HomeAdvisor — a company affiliated with
+              Angi — to pay up to $7.2 million to settle charges about how it marketed its leads to
+              service providers, including claims about lead quality and where the leads came from.
+              HomeAdvisor settled by consent order without admitting liability. The case was about
+              lead quality and sourcing claims; it did not charge HomeAdvisor with selling one lead
+              to several contractors.
+            </li>
+          </ul>
+          <KeyAnswer>
+            The lesson carries over to commercial work unchanged: verify what a vendor claims about
+            who they contact and where the data came from, in writing, before you pay. It is the
+            second question on the list above, and it is the one most vendors answer worst.
+          </KeyAnswer>
+          <SourceNote>
+            Sources:{" "}
+            <a
+              href="https://intercom.help/angi/en/articles/6221483-opportunities-and-leads-frequently-asked-questions"
+              rel="nofollow noopener"
+              target="_blank"
+              className="text-accent underline underline-offset-4"
+            >
+              Angi Help Center
+            </a>{" "}
+            (updated April 2026; checked August 7, 2026) ·{" "}
+            <a
+              href="https://www.ftc.gov/news-events/news/press-releases/2023/01/ftc-order-requires-homeadvisor-pay-72-million-stop-deceptively-marketing-its-leads-home-improvement"
+              rel="nofollow noopener"
+              target="_blank"
+              className="text-accent underline underline-offset-4"
+            >
+              FTC press release (Jan 2023)
+            </a>{" "}
+            ·{" "}
+            <a
+              href="https://www.ftc.gov/news-events/news/press-releases/2023/04/ftc-approves-final-order-against-homeadvisor-inc-deceptively-marketing-its-leads-home-improvement"
+              rel="nofollow noopener"
+              target="_blank"
+              className="text-accent underline underline-offset-4"
+            >
+              FTC final-order announcement (Apr 2023)
+            </a>
+            . Policies belong to their owners and change; the order was finalized in April 2023 and
+            the allegations were settled without an admission of liability.
+          </SourceNote>
+        </GuideSection>
+
         <GuideSection title="When you should not hire any vendor yet">
           <KeyAnswer>
-            Do not hire an HVAC lead generation vendor yet if you have no room for another account,
-            nobody who quotes and wins commercial bids, nobody free to answer an interested reply
-            within a business day, or no clear pricing you are confident quoting. Those leaks are
-            downstream of the leads. Fix capacity and the response process first; pipeline help
-            only multiplies what already works.
+            Do not hire a commercial HVAC lead generation vendor yet if you have no room for another
+            account, nobody who quotes and wins commercial bids, nobody free to answer an interested
+            reply within a business day, or no clear pricing you are confident quoting. Those leaks
+            are downstream of the outreach. Fix capacity and the response process first; pipeline
+            help only multiplies what already works.
           </KeyAnswer>
           <p>
             An honest vendor tells you this in the first conversation. It is also the first thing a
             good audit reveals: sometimes the targeting is fine and the bottleneck is elsewhere. You
             deserve to know that before you spend anything, which is why{" "}
-            <a href="/free-pipeline-audit" className="text-accent underline underline-offset-4">
+            <Link href="/free-pipeline-audit" className="text-accent underline underline-offset-4">
               the free pipeline audit
-            </a>{" "}
+            </Link>{" "}
             is delivered in writing, before any money changes hands.
           </p>
         </GuideSection>

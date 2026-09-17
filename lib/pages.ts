@@ -1,157 +1,233 @@
-// Registry of the indexable guide pages. Single source of truth: the sitemap,
-// footer navigation, per-page metadata, and breadcrumb/article JSON-LD all read
-// from here, so a page can't ship half-wired. Dates are real edit dates — never
-// bump dateModified without a substantive content change (visible date and
-// structured date must always agree; a mismatch is a trust signal against us).
+// Registry of every indexable page. Single source of truth: the sitemap, the navigation,
+// per-page metadata, the visible H1, and the WebPage / Article / BreadcrumbList JSON-LD all
+// read from here, so a page can't ship half-wired. Dates are real edit dates — never bump
+// dateModified without a substantive content change (the visible date and the structured
+// date must always agree; a mismatch is a trust signal against us).
 
 // Relative, not the "@/" alias: tests/ import this module directly under `node --test`,
 // which resolves real paths and knows nothing about the bundler's tsconfig aliases.
-// Files inside lib/ therefore import their siblings relatively.
-import { siteUrl, brandName, areaServed, orgDescription } from "./site.ts";
-import { plans } from "./content.ts";
+import {
+  siteUrl,
+  brandName,
+  areaServed,
+  orgDescription,
+  founderName,
+  intakeMinutes,
+  legalLastUpdatedISO,
+} from "./site.ts";
+import { plans, planSlug, terminology } from "./content.ts";
 
-// Homepage content date for the sitemap — bump ONLY on substantive homepage edits.
-//
-// When adding ANY indexable route, add it to `guidePages` or `standaloneRoutes` below
-// and then to scripts/indexnow-ping.mjs and public/llms.txt, which each carry their own
-// explicit URL list (a .mjs script and a static text file cannot import this registry).
-// tests/routes.test.ts fails if the three lists stop agreeing, so the note above is now
-// enforced rather than merely written down — it had already gone stale once.
-// 2026-09-11: the whole page was repositioned from the retired residential-reactivation
-// model to managed outbound for commercial HVAC contractors (D-025) — new H1, new
-// argument, new fit lists, new FAQ. The stamp moves with it.
-export const homepageDateModified = "2026-09-11";
+// THE D-027 REWRITE DATE, in one place. On 2026-09-17 every page below was rewritten from
+// the retired "Lead / Outreach / Appointment Engine" model to the three levels of
+// responsibility (operating-system repo: D-027), two pages were retired behind redirects and
+// three were added. A page that was NOT substantively edited that day keeps its own date.
+const D027 = "2026-09-17";
 
-// The homepage's own title and description, in the registry with every other route's.
-// They lived in app/layout.tsx, which made the homepage the only page whose snippet
-// could not be reviewed beside the others — and the only one nothing could import in
-// order to build its JSON-LD from the same strings it renders.
+// When adding ANY indexable route, add it to `guidePages`, `standaloneRoutes` or
+// `legalRoutes` below and then to scripts/indexnow-ping.mjs and public/llms.txt, which each
+// carry their own explicit URL list (a .mjs script and a static text file cannot import this
+// registry). tests/routes.test.ts and tests/pricing-model.test.ts fail if the lists stop
+// agreeing, if a registered route has no page file, or if a redirected path is registered.
+export const homepageDateModified = D027;
+
+// The homepage's own title, description and H1, in the registry with every other route's.
 //
-// Title kept under ~60 characters so Google doesn't truncate it. It leads with the
-// NICHE + the service, because "commercial HVAC lead generation" is what the buyer
-// searches and "B2B Lead Growth" is a brand nobody is looking for yet. Description under
-// ~155 characters, and it names the actual mechanism (researched commercial accounts,
-// outreach and follow-up in the contractor's name) rather than implying we sell
-// homeowner leads, which we do not.
-//
-// The price came OUT of the description on purpose. It read "From $750/mo.", which put
-// the homepage in a bidding war with /pricing — the page carrying the cited market
-// comparison and the billing terms, and the one that should win a pricing query. The
-// homepage still publishes every price in its own tier table; it just stops chasing the
-// query in its snippet.
-export const homepageMetaTitle = "Commercial HVAC Lead Generation | B2B Lead Growth";
+// THE HOMEPAGE AND THE SERVICE PAGE DELIBERATELY DO NOT CHASE THE SAME QUERY. The homepage
+// carries the company and the category ("commercial HVAC managed outbound"); the dedicated
+// page at /commercial-hvac-lead-generation is the canonical answer to "commercial HVAC lead
+// generation". Two pages on one site bidding for one phrase split what little authority a new
+// domain has. The price stays out of this snippet for the same reason: /pricing should win a
+// pricing query.
+export const homepageMetaTitle = "Commercial HVAC Managed Outbound | B2B Lead Growth";
+export const homepageH1 = "Managed outbound for established commercial HVAC contractors";
 export const homepageDescription =
-  "Managed outbound for HVAC contractors with commercial work: researched commercial accounts, outreach and follow-up in your name, qualified conversations handed to your team.";
+  "For established commercial HVAC contractors: we find commercial accounts, contact the right people in your name, and hand off at the level you choose.";
+
+/** "service" pages describe the service itself; "guide" pages are Articles; "about" is the
+ *  entity page. The kind decides og:type and which JSON-LD graph the page publishes. */
+export type PageKind = "service" | "guide" | "about";
 
 export type GuidePage = {
   slug: string;
   navLabel: string;
+  /** Rendered <title>. At most 60 characters — see TITLE_BUDGET. */
   metaTitle: string;
+  /** The visible H1. The page passes THIS string to GuideLayout, and Article.headline reads
+   *  the same field, so the structured headline and the visible one cannot drift. */
+  h1: string;
+  /** At most 155 characters. */
   description: string;
   datePublished: string; // ISO yyyy-mm-dd
   dateModified: string; // ISO yyyy-mm-dd
+  kind: PageKind;
 };
 
+// ORDER IS THE READING ORDER: what the service is → how it runs → what it costs → the free
+// sample → how to judge any vendor (us included) → who is behind it. The footer and every
+// page's "Keep reading" list render in this order.
 export const guidePages: GuidePage[] = [
   {
-    slug: "free-pipeline-audit",
-    navLabel: "Free Pipeline Audit",
-    metaTitle: "Free HVAC Pipeline Audit: What's Included and How It Works",
+    slug: "commercial-hvac-lead-generation",
+    navLabel: "Commercial HVAC Lead Generation",
+    metaTitle: "Commercial HVAC Lead Generation Service",
+    h1: "Commercial HVAC lead generation, run as managed outbound",
     description:
-      "What our free HVAC pipeline audit delivers: an account profile, 3–5 vetted commercial accounts with cited reasons and source links, and a sample message. Yours to keep.",
-    datePublished: "2026-08-08",
-    // 2026-09-11: the deliverable became commercial accounts (D-025) — new visible text
-    // in the lead, the key answer, the steps and the FAQ.
-    dateModified: "2026-09-11",
+      "Commercial HVAC lead generation for established contractors: researched commercial accounts, outreach in your name, and a handoff at the level you choose.",
+    datePublished: D027,
+    dateModified: D027,
+    kind: "service",
+  },
+  {
+    slug: "how-it-works",
+    navLabel: "How It Works",
+    metaTitle: "How Commercial HVAC Managed Outbound Works",
+    h1: "How commercial HVAC managed outbound works",
+    description:
+      "Step by step: account research, outreach in your name, what happens at genuine interest on each plan, the qualification standard, and the handoff.",
+    datePublished: D027,
+    dateModified: D027,
+    kind: "guide",
   },
   {
     slug: "pricing",
-    // NOT plain "Pricing": the homepage nav item with that exact label scrolls to the
-    // on-page #pricing section, and this one navigates to a different document (cited
-    // market comparison, billing terms, cancellation). One word, one site, two
-    // destinations is a trust cost for no benefit.
-    navLabel: "Pricing in detail",
-    metaTitle: "HVAC Lead Generation Pricing: $750–$2,500/Mo, No Setup Fee",
+    navLabel: "Pricing",
+    metaTitle: "Commercial HVAC Lead Generation Pricing: $750–$2,500/Mo",
+    h1: "Commercial HVAC lead generation pricing: $750, $1,500 or $2,500 a month",
     description:
-      "HVAC lead generation pricing: $750, $1,500, or $2,500 a month. Month-to-month, no setup fee, never priced per lead, with cited market context.",
+      "Three levels of responsibility: Prospecting $750, Managed Pipeline $1,500, Qualified Opportunity Engine $2,500 a month. No setup fee, month-to-month.",
     datePublished: "2026-08-08",
-    // 2026-09-11: tier scope, the timeline (a new research phase; the export phase made
-    // optional) and the "where accounts come from" section all moved to D-025.
-    dateModified: "2026-09-11",
+    // The page was rebuilt around responsibility rather than volume: new plans, a
+    // who-owns-what table, the handoff definitions, the boundary and the terminology.
+    dateModified: D027,
+    kind: "service",
   },
   {
-    slug: "hvac-lead-generation-new-jersey",
-    navLabel: "HVAC Leads in NJ",
-    metaTitle: "HVAC Lead Generation in New Jersey: What Leads Cost",
+    slug: "free-pipeline-audit",
+    navLabel: "Free Pipeline Audit",
+    metaTitle: "Free Commercial HVAC Pipeline Audit: What You Get",
+    h1: "The Free Pipeline Audit for commercial HVAC contractors",
     description:
-      "What HVAC leads cost New Jersey contractors on Angi, Google Local Services Ads and per-lead sellers — with cited figures and the honest alternatives.",
+      "What the free pipeline audit delivers: an account profile, 3–5 vetted commercial accounts with cited reasons and source links, and a sample message.",
     datePublished: "2026-08-08",
-    // 2026-09-11: the fourth option and every self-description moved to D-025 —
-    // commercial accounts researched directly, not the contractor's own records.
-    dateModified: "2026-09-11",
-  },
-  {
-    slug: "shared-vs-exclusive-hvac-leads",
-    navLabel: "Shared vs. Exclusive Leads",
-    metaTitle: "Shared vs. Exclusive HVAC Leads: The Real Cost Per Job",
-    description:
-      "Shared leads look cheap until you do the cost-per-booked-job math. A cited comparison of shared vs. exclusive HVAC leads, from a company selling neither.",
-    datePublished: "2026-08-08",
-    // 2026-09-11: the "option most contractors skip" section and the self-descriptions
-    // moved to D-025.
-    dateModified: "2026-09-11",
+    // New visible text: how the audit relates to the three paid plans, and that nothing is
+    // sent to anyone as part of it.
+    dateModified: D027,
+    kind: "guide",
   },
   {
     slug: "how-to-choose-a-lead-generation-agency",
-    navLabel: "Choosing a Vendor",
-    metaTitle: "How to Choose an HVAC Lead Generation Company: Red Flags",
+    navLabel: "Choosing a Partner",
+    metaTitle: "How to Choose a Commercial HVAC Lead Generation Partner",
+    h1: "How to choose a commercial HVAC lead generation partner: 10 questions, 8 red flags",
     description:
-      "The seven questions that expose a bad HVAC lead-gen vendor — shared leads, data lock-in, hidden fees, long contracts — and our own answers to each.",
+      "Ten questions that expose a weak commercial HVAC lead generation or managed outbound vendor — guarantees, vague qualification, lock-ins — with our answers.",
     datePublished: "2026-08-08",
-    // 2026-09-11: our own on-the-record answers moved to D-025 (where the contact data
-    // comes from, what is reported, who the buyer is).
-    dateModified: "2026-09-11",
+    // Rewritten for choosing a COMMERCIAL outbound partner; the residential-marketplace
+    // material survives only as one labelled, cited contrast.
+    dateModified: D027,
+    kind: "guide",
+  },
+  {
+    slug: "about",
+    navLabel: "About",
+    metaTitle: "About B2B Lead Growth",
+    h1: "About B2B Lead Growth",
+    description:
+      "B2B Lead Growth LLC is a founder-run commercial HVAC managed outbound company based in New Jersey, serving contractors across the US. Who runs it, and how.",
+    datePublished: D027,
+    dateModified: D027,
+    kind: "about",
   },
 ];
 
-// Indexable routes that are not guides and not legal pages: real destinations with
-// their own metadata, linked from the site and from outbound email.
-export const standaloneRoutes = [
-  { slug: "start", navLabel: "Fit check", dateModified: "2026-09-11", priority: 0.9 },
-  { slug: "reviews", navLabel: "Reviews", dateModified: "2026-09-05", priority: 0.5 },
+// Indexable routes that are neither guides nor legal pages: real destinations with their own
+// metadata, linked from the site and from outbound email.
+export type StandaloneRoute = {
+  slug: string;
+  navLabel: string;
+  metaTitle: string;
+  description: string;
+  dateModified: string;
+  priority: number;
+};
+
+export const standaloneRoutes: StandaloneRoute[] = [
+  {
+    slug: "start",
+    navLabel: "Fit check",
+    metaTitle: "Commercial HVAC Fit Check",
+    description: `A ${intakeMinutes}-minute fit check for established HVAC contractors with commercial work. A straight answer, including no — and a free pipeline audit if it fits.`,
+    // One new question (whether you want opportunities qualified and the site visit
+    // coordinated first), new plan names on every result screen.
+    dateModified: D027,
+    priority: 0.7,
+  },
+  {
+    slug: "reviews",
+    navLabel: "Reviews",
+    metaTitle: "Client Reviews",
+    description:
+      "Real reviews from B2B Lead Growth clients, published only with their own words and named consent. Honestly empty until a real one exists.",
+    // Unchanged in substance by the D-027 pass, so the date does not move.
+    dateModified: "2026-09-05",
+    priority: 0.3,
+  },
+];
+
+export const legalRoutes = [
+  {
+    slug: "privacy",
+    navLabel: "Privacy Policy",
+    metaTitle: "Privacy Policy",
+    description:
+      "How B2B Lead Growth collects, uses, stores and protects the information you share through this website, including the fit check and its attribution fields.",
+    dateModified: legalLastUpdatedISO,
+  },
+  {
+    slug: "terms",
+    navLabel: "Terms of Service",
+    metaTitle: "Terms of Service",
+    description:
+      "The terms for the B2B Lead Growth website, the free pipeline audit, and the paid monthly plans — fees, billing, cancellation, refunds, and termination.",
+    dateModified: legalLastUpdatedISO,
+  },
 ] as const;
 
-/** Every indexable path on the site, in sitemap order. The drift test reads this. */
+// Paths that USED to be pages and now answer with a permanent redirect (next.config.ts).
+// Listed here so the tests can prove none of them is still registered, linked to, announced
+// to IndexNow or written into llms.txt. Keep in lockstep with `redirects()` in next.config.ts.
+export const retiredPaths: { from: string; to: string }[] = [
+  { from: "/hvac-lead-generation-new-jersey", to: "/commercial-hvac-lead-generation" },
+  { from: "/shared-vs-exclusive-hvac-leads", to: "/how-to-choose-a-lead-generation-agency" },
+];
+
+/** Every indexable path on the site, in sitemap order. The drift tests read this. */
 export const indexablePaths: string[] = [
   "/",
   ...guidePages.map((p) => `/${p.slug}`),
   ...standaloneRoutes.map((r) => `/${r.slug}`),
-  "/privacy",
-  "/terms",
+  ...legalRoutes.map((r) => `/${r.slug}`),
 ];
 
-// Google truncates a rendered <title> at roughly 60 characters. One number, applied by
-// `pageMetadata` below, so the limit is enforced rather than described — the comment
-// version of this rule had already rotted on five of the six pages that use the helper.
-const TITLE_BUDGET = 60;
+// Google truncates a rendered <title> at roughly 60 characters, and a description at roughly
+// 155. One number each, applied by `pageMetadata` and asserted by tests/pricing-model.test.ts,
+// so the limit is enforced rather than described.
+export const TITLE_BUDGET = 60;
+export const DESCRIPTION_BUDGET = 155;
 
 // The ONE social card, described once.
 //
-// The root `app/opengraph-image.tsx` route renders the 1200x630 image. Naming it
-// explicitly is what carries it onto pages that declare their own `openGraph` (see the
-// note on `pageMetadata`), and using the SAME array in app/layout.tsx keeps all nine
-// routes publishing one og:image URL with a declared type. Social platforms cache
-// og:image BY URL, so a site advertising two different URLs for one picture would, on a
-// redesign, refresh some cards and permanently strand the rest.
+// The root `app/opengraph-image.tsx` route renders the 1200x630 image. Naming it explicitly
+// is what carries it onto pages that declare their own `openGraph` (see the note on
+// `pageMetadata`), and using the SAME array in app/layout.tsx keeps every route publishing
+// one og:image URL with a declared type. Social platforms cache og:image BY URL.
 //
-// `alt` describes the PICTURE, not the page. It used to be interpolated per route
-// ("B2B Lead Growth — Privacy Policy"), which published nine different descriptions of
-// one static image. Keep this wording in step with the `alt` export in
-// app/opengraph-image.tsx: lib/ cannot import that module (it pulls in next/og, and
-// tests/ load this file directly under `node --test`).
+// `alt` describes the PICTURE, not the page. Keep this wording in step with the `alt` export
+// in app/opengraph-image.tsx: lib/ cannot import that module (it pulls in next/og, and tests/
+// load this file directly under `node --test`).
 const OG_IMAGE_PATH = "/opengraph-image";
 const OG_IMAGE_ALT =
-  "B2B Lead Growth — managed outbound for commercial HVAC contractors: researched commercial accounts, outreach and follow-up in your name, qualified conversations handed to your team";
+  "B2B Lead Growth — commercial HVAC managed outbound: we find the commercial accounts, contact the right people in your name, and hand off at the level you chose";
 
 export const ogImages = [
   { url: OG_IMAGE_PATH, width: 1200, height: 630, alt: OG_IMAGE_ALT, type: "image/png" },
@@ -170,24 +246,24 @@ export function ogImageNode() {
   };
 }
 
-/** Stable per-tier fragment, mirroring `faqSlug` in lib/content.ts. */
-function planSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+/** The founder as a graph node. Published by the root layout; referenced from /about. */
+export function founderNode() {
+  return {
+    "@type": "Person",
+    "@id": `${siteUrl}/#founder`,
+    name: founderName,
+    jobTitle: "Founder",
+    worksFor: { "@id": `${siteUrl}/#organization` },
+    url: `${siteUrl}/about`,
+  };
 }
 
 /**
  * The WebPage node the rest of a page's graph hangs off.
  *
- * Without it every page published orphans: an FAQPage, a Service, an Article — none of
- * which named the document they appeared on or the site they belong to, so an answer
- * engine got four disconnected assertions instead of one entity graph.
- *
- * `dateModified` is optional ON PURPOSE. Structured data may only assert what a reader
- * can see, and only the guide pages render a visible "Last updated" line
- * (components/GuideLayout.tsx). The homepage does not, so it does not claim one.
+ * `dateModified` is optional ON PURPOSE. Structured data may only assert what a reader can
+ * see, and only the pages rendered through GuideLayout show a visible "Last updated" line.
+ * The homepage does not, so it does not claim one.
  */
 export function webPageJsonLd({
   /** The page's @id base: `${siteUrl}/` for the homepage, `${siteUrl}/<slug>` elsewhere. */
@@ -198,10 +274,12 @@ export function webPageJsonLd({
   description,
   datePublished,
   dateModified,
-  /** @id of the node this page is primarily about (its Article, or its FAQPage). */
+  /** @id of the node this page is primarily about (its Article, its Service, its FAQPage). */
   mainEntityId,
   /** @id of the page's BreadcrumbList, where it publishes one. */
   breadcrumbId,
+  /** Extra schema.org types, e.g. "AboutPage". */
+  additionalType,
 }: {
   idBase: string;
   url: string;
@@ -211,9 +289,10 @@ export function webPageJsonLd({
   dateModified?: string;
   mainEntityId?: string;
   breadcrumbId?: string;
+  additionalType?: string;
 }) {
   return {
-    "@type": "WebPage",
+    "@type": additionalType ? ["WebPage", additionalType] : "WebPage",
     "@id": `${idBase}#webpage`,
     url,
     name,
@@ -229,31 +308,24 @@ export function webPageJsonLd({
   };
 }
 
-
 /**
  * Per-page Metadata, built once so no page can ship a half-configured social card.
  *
  * Two Next.js metadata behaviours bite here, and both bit:
- *   1. `openGraph` does NOT merge field-by-field with the parent. A page that declares
- *      its own `openGraph` REPLACES the root layout's — including its `images`. Every
- *      guide page did exactly that, so /pricing and its four siblings shipped with no
- *      og:image at all.
- *   2. `twitter` IS inherited wholesale when a page omits it. So those same pages
- *      declared `twitter:card = summary_large_image` (from the root layout), pointed it
- *      at the HOMEPAGE's title and description, and gave it no image to show — a blank
- *      large card carrying the wrong headline on every share.
- *
- * Passing both objects explicitly, with the image, is the only way to get this right,
- * so it happens here rather than in eight page files.
+ *   1. `openGraph` does NOT merge field-by-field with the parent. A page that declares its
+ *      own `openGraph` REPLACES the root layout's — including its `images`.
+ *   2. `twitter` IS inherited wholesale when a page omits it, so a page would carry the
+ *      HOMEPAGE's card title and description.
+ * Passing both objects explicitly, with the image, is the only way to get this right, so it
+ * happens here rather than in every page file.
  */
 export function pageMetadata({
   path,
   title,
   description,
-  // Guides are Articles; everything else here is a plain page. Derived from the registry
-  // rather than defaulted to "article", because /privacy and /terms pass no type and so
-  // were publishing og:type="article" on two legal documents that are not articles.
-  type = guidePages.some((p) => path === `/${p.slug}`) ? "article" : "website",
+  // Only "guide" pages are Articles. Service pages, the about page, the fit check and the
+  // legal documents are plain pages, and publishing og:type="article" on them was wrong.
+  type = guidePages.some((p) => path === `/${p.slug}` && p.kind === "guide") ? "article" : "website",
 }: {
   /** Absolute path, leading slash. */
   path: string;
@@ -261,86 +333,73 @@ export function pageMetadata({
   description: string;
   type?: "article" | "website";
 }) {
-  const socialTitle = `${title} | ${brandName}`;
-  // The root layout's "%s | B2B Lead Growth" template silently appends 18 characters to
-  // every title that inherits it, which shipped rendered titles of 72-88 characters on
-  // five of the six pages using this helper — and the half Google cut was always the
-  // differentiating half, never the brand. So the suffix is applied only while the whole
-  // thing still fits the budget. `absolute` is the only way to opt out of an inherited
-  // template; the social title keeps the brand either way, where length is not the
-  // constraint.
+  // A title that already names the brand ("About B2B Lead Growth") does not get it twice.
+  const namesBrand = title.includes(brandName);
+  const socialTitle = namesBrand ? title : `${title} | ${brandName}`;
+  // The root layout's "%s | B2B Lead Growth" template silently appends 18 characters to every
+  // title that inherits it. So the suffix is applied only while the whole thing still fits
+  // the budget. `absolute` is the only way to opt out of an inherited template.
   const renderedTitle = socialTitle.length <= TITLE_BUDGET ? socialTitle : title;
   return {
     title: { absolute: renderedTitle },
     description,
-    // Self-canonical: without this the App Router inherits the root layout's "/" and
-    // points every page at the homepage.
+    // Self-canonical: without this the App Router inherits the root layout's "/" and points
+    // every page at the homepage.
     alternates: { canonical: path },
     openGraph: { title: socialTitle, description, type, url: path, siteName: brandName, images: ogImages },
     twitter: { card: "summary_large_image" as const, title: socialTitle, description, images: ogImages },
   };
 }
 
-
 /**
  * The ONE Service entity, with its Offers.
  *
- * Both `/` and `/pricing` publish a Service node under the same `@id`. They were built
- * separately and had drifted: the pricing page's Offers carried only a nested
- * `priceSpecification` and omitted the top-level `price`, `priceCurrency`, `availability`
- * and `url` — and an Offer with no top-level price reads to Google as an Offer with no
- * price at all. Two different documents publishing different facts under one identifier
- * is worse than either version alone, so there is now one builder.
+ * `/`, `/pricing` and `/commercial-hvac-lead-generation` all publish this node under the
+ * same `@id`, from this one builder, so three documents cannot publish three different sets
+ * of facts under one identifier. Every figure and every sentence is derived from `plans`, so
+ * the markup can only ever say what the plan cards on those pages show.
  */
 export function serviceJsonLd() {
   return {
     "@type": "Service",
     "@id": `${siteUrl}/#service`,
-    name: brandName,
-    url: siteUrl,
+    name: `${brandName} — Commercial HVAC Managed Outbound`,
+    alternateName: "Commercial HVAC Lead Generation",
+    url: `${siteUrl}/commercial-hvac-lead-generation`,
     description: orgDescription,
-    serviceType: "Commercial HVAC Lead Generation and Appointment Setting",
+    serviceType: "Commercial HVAC Managed Outbound",
+    category: "Commercial HVAC Lead Generation",
     areaServed,
     provider: { "@id": `${siteUrl}/#organization` },
-    // Named explicitly so an answer engine can state WHO this is for without having to
-    // infer it from marketing copy. The niche is the single most important fact about
-    // this business and the one most easily lost in summarisation. The wording is the
-    // operating-system repo's core/icp.ONE_SENTENCE, compressed.
+    // Named explicitly so an answer engine can state WHO this is for without having to infer
+    // it from marketing copy. The wording is the operating-system repo's core/icp.ONE_SENTENCE.
     audience: {
       "@type": "BusinessAudience",
       name: "Established HVAC contractors with commercial work",
       audienceType:
-        "HVAC contractors that already sell and complete commercial work, have someone who quotes and wins those bids, and have room for more accounts",
+        "HVAC contractors that already sell and complete commercial work, have someone who quotes and wins those bids, have room to take on more accounts, and have no consistent way to find target accounts and follow up with them",
     },
-    // What the service actually produces, in delivery order. The optional lane is named
-    // as optional, because conflating it with the researched lane is the specific
-    // misunderstanding that would misrepresent the service: the researched accounts are
-    // businesses found from public sources; a contractor's own history is theirs, sent by
-    // them, and never sourced by us. Homeowners appear in neither.
+    // What the service produces, PLAN BY PLAN. The three handoffs are three different things
+    // and are named as such: a lower plan's output is never described with a higher plan's
+    // noun, here or anywhere else (D-027 §4).
     serviceOutput: [
       {
         "@type": "Thing",
-        name: "Researched commercial account list — property and facility managers, building owners, multi-site operators — each with a named contact, a cited reason and a public source link",
+        name: "Researched commercial accounts — property and facility managers, building owners, multi-site operators — each with a named contact, a cited reason and a public source link (every plan)",
       },
       {
         "@type": "Thing",
-        name: "Managed outreach and follow-up sent in the contractor's name, from the contractor's own mailbox",
+        name: "First-touch outreach written per account and sent in the contractor's name, from the contractor's own mailbox (every plan)",
       },
-      {
+      ...plans.map((p) => ({
         "@type": "Thing",
-        name: "Qualified conversations handed off to the contractor's team, measured as qualified conversations started",
-      },
-      {
-        "@type": "Thing",
-        name: "Optional: the contractor's own account history (past accounts, unaccepted proposals, lapsed service agreements) cleaned, ranked and worked — only when the contractor exports and approves it",
-      },
+        name: `${p.handoff.label} — ${p.handoff.unit} (${p.name})`,
+      })),
     ],
     termsOfService: `${siteUrl}/terms`,
-    // ONE AggregateOffer wrapping the three tiers rather than three loose Offers.
-    // "$750 to $2,500 a month across three tiers" is the sentence an answer engine wants
-    // to be able to state, and lowPrice/highPrice/offerCount is the only shape that says
-    // it — three sibling Offers leave it to be inferred. Every figure is derived from
-    // `plans`, so it can only ever say what the tier table on / and /pricing shows.
+    // ONE AggregateOffer wrapping the three plans. "$750 to $2,500 a month across three
+    // plans" is the sentence an answer engine wants to be able to state, and
+    // lowPrice/highPrice/offerCount is the only shape that says it.
     offers: {
       "@type": "AggregateOffer",
       "@id": `${siteUrl}/#offers`,
@@ -351,11 +410,8 @@ export function serviceJsonLd() {
       url: `${siteUrl}/pricing`,
       offers: plans.map((p) => ({
         "@type": "Offer",
-        // A stable identifier per tier, so a specific tier can be cited rather than the
-        // price list as a whole. It is an @id and NOT yet the `url`: the tier cards on
-        // /pricing and on the homepage carry no matching `id` attribute, and pointing a
-        // `url` at a fragment that lands nowhere is a broken link we would be publishing
-        // knowingly. Add id={planSlug(p.name)} to both card lists and `url` can follow.
+        // A stable identifier per plan, and now the `url` too: every plan card on /pricing
+        // carries id={planSlug(name)}, so the fragment lands on the card it describes.
         "@id": `${siteUrl}/pricing#${planSlug(p.name)}`,
         name: p.name,
         description: p.oneLiner,
@@ -365,7 +421,7 @@ export function serviceJsonLd() {
         price: String(p.price),
         priceCurrency: "USD",
         availability: "https://schema.org/InStock",
-        url: `${siteUrl}/pricing`,
+        url: `${siteUrl}/pricing#${planSlug(p.name)}`,
         priceSpecification: {
           "@type": "UnitPriceSpecification",
           price: String(p.price),
@@ -379,66 +435,112 @@ export function serviceJsonLd() {
   };
 }
 
+/**
+ * The five canonical terms as a DefinedTermSet. Published ONLY by /how-it-works, where each
+ * term is rendered with the matching `id="term-<key>"` anchor — markup may only mirror text
+ * a visitor can see, at the address it says it is at.
+ */
+export function definedTermSetJsonLd(pageUrl: string) {
+  return {
+    "@type": "DefinedTermSet",
+    "@id": `${pageUrl}#terminology`,
+    name: `${brandName} service terminology`,
+    url: `${pageUrl}#terminology`,
+    hasDefinedTerm: terminology.map((t) => ({
+      "@type": "DefinedTerm",
+      "@id": `${pageUrl}#term-${t.key}`,
+      name: t.term,
+      description: t.definition,
+      url: `${pageUrl}#term-${t.key}`,
+      inDefinedTermSet: { "@id": `${pageUrl}#terminology` },
+    })),
+  };
+}
+
 export function getGuidePage(slug: string): GuidePage {
   const page = guidePages.find((p) => p.slug === slug);
   if (!page) throw new Error(`Guide page not registered in lib/pages.ts: ${slug}`);
   return page;
 }
 
-// WebPage + Article + BreadcrumbList JSON-LD shared by every guide page. FAQPage markup
-// is added per-page (only where visible Q&A exists — markup must match visible text).
-export function guideJsonLd(page: GuidePage) {
-  const url = `${siteUrl}/${page.slug}`;
+export function getStandaloneRoute(slug: string): StandaloneRoute {
+  const route = standaloneRoutes.find((r) => r.slug === slug);
+  if (!route) throw new Error(`Standalone route not registered in lib/pages.ts: ${slug}`);
+  return route;
+}
+
+export function getLegalRoute(slug: "privacy" | "terms") {
+  const route = legalRoutes.find((r) => r.slug === slug);
+  if (!route) throw new Error(`Legal route not registered in lib/pages.ts: ${slug}`);
+  return route;
+}
+
+function breadcrumbNode(url: string, label: string) {
   return {
-    "@context": "https://schema.org",
-    "@graph": [
-      webPageJsonLd({
-        idBase: url,
-        url,
-        name: page.metaTitle,
-        description: page.description,
-        datePublished: page.datePublished,
-        // Safe to assert here, unlike on the homepage: GuideLayout renders
-        // "Last updated: <dateModified>" at the top of every guide, so the structured
-        // date and the visible date are the same field rendered twice.
-        dateModified: page.dateModified,
-        mainEntityId: `${url}#article`,
-        breadcrumbId: `${url}#breadcrumbs`,
-      }),
-      ogImageNode(),
-      {
-        "@type": "Article",
-        "@id": `${url}#article`,
-        // This is the rendered <title>, which is NOT the visible H1 — every guide passes
-        // its own H1 to GuideLayout as a literal. Google asks headline to match the
-        // visible headline, so the real fix is an `h1` field on GuidePage that both this
-        // and the page read from, plus a test. Copying the H1 string here instead would
-        // give the site two copies with nothing checking them, and it would go stale the
-        // first time a heading is reworded.
-        headline: page.metaTitle,
-        description: page.description,
-        url,
-        datePublished: page.datePublished,
-        dateModified: page.dateModified,
-        // Author stays the Organization deliberately: no guide renders a visible byline,
-        // and a Person author that nothing on the page attributes would be a claim the
-        // reader cannot check. Add the byline to GuideLayout first, then point this at
-        // `${siteUrl}/#founder`.
-        author: { "@id": `${siteUrl}/#organization` },
-        publisher: { "@id": `${siteUrl}/#organization` },
-        image: { "@id": `${siteUrl}/#primaryimage` },
-        inLanguage: "en",
-        isPartOf: { "@id": `${url}#webpage` },
-        mainEntityOfPage: { "@id": `${url}#webpage` },
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": `${url}#breadcrumbs`,
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: brandName, item: siteUrl },
-          { "@type": "ListItem", position: 2, name: page.navLabel, item: url },
-        ],
-      },
+    "@type": "BreadcrumbList",
+    "@id": `${url}#breadcrumbs`,
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: brandName, item: siteUrl },
+      { "@type": "ListItem", position: 2, name: label, item: url },
     ],
   };
+}
+
+// The graph every GuideLayout page shares. FAQPage, Service, Offer and DefinedTermSet nodes
+// are added per page, only where the visible content supports them.
+//
+//   guide   → WebPage + Article + BreadcrumbList   (the page IS an article)
+//   service → WebPage + BreadcrumbList             (the page is ABOUT the Service node, which
+//                                                   the page adds with serviceJsonLd())
+//   about   → WebPage/AboutPage + BreadcrumbList   (the page is about the Organization)
+export function guideJsonLd(page: GuidePage) {
+  const url = `${siteUrl}/${page.slug}`;
+  const mainEntityId =
+    page.kind === "guide"
+      ? `${url}#article`
+      : page.kind === "service"
+        ? `${siteUrl}/#service`
+        : `${siteUrl}/#organization`;
+
+  const graph: Record<string, unknown>[] = [
+    webPageJsonLd({
+      idBase: url,
+      url,
+      name: page.metaTitle,
+      description: page.description,
+      datePublished: page.datePublished,
+      // Safe to assert: GuideLayout renders "Last updated: <dateModified>" at the top of
+      // every page it wraps, so the structured date and the visible date are one field.
+      dateModified: page.dateModified,
+      mainEntityId,
+      breadcrumbId: `${url}#breadcrumbs`,
+      additionalType: page.kind === "about" ? "AboutPage" : undefined,
+    }),
+    ogImageNode(),
+  ];
+
+  if (page.kind === "guide") {
+    graph.push({
+      "@type": "Article",
+      "@id": `${url}#article`,
+      // The visible H1, from the same registry field the page renders.
+      headline: page.h1,
+      description: page.description,
+      url,
+      datePublished: page.datePublished,
+      dateModified: page.dateModified,
+      // The Organization, matching the visible "Published by B2B Lead Growth" line that
+      // GuideLayout renders. No Person byline is claimed, because no page carries one.
+      author: { "@id": `${siteUrl}/#organization` },
+      publisher: { "@id": `${siteUrl}/#organization` },
+      image: { "@id": `${siteUrl}/#primaryimage` },
+      inLanguage: "en",
+      isPartOf: { "@id": `${url}#webpage` },
+      mainEntityOfPage: { "@id": `${url}#webpage` },
+    });
+  }
+
+  graph.push(breadcrumbNode(url, page.navLabel));
+
+  return { "@context": "https://schema.org", "@graph": graph };
 }

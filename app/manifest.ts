@@ -4,14 +4,15 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "B2B Lead Growth",
     short_name: "B2B Lead Growth",
-    // Was generic B2B copy predating the HVAC repositioning, and it promised "booked
-    // calls" as a deliverable. Names the niche and the work instead.
+    // Names the category, the buyer and the work (D-027). It used to end "qualified
+    // conversations handed to your team", which promised every plan the top plan's noun.
     description:
-      "Managed outbound for established HVAC contractors with commercial work: researched commercial accounts, outreach and follow-up in your name, qualified conversations handed to your team.",
+      "Commercial HVAC managed outbound for established contractors: we find the commercial accounts, contact the right people in your name, and hand each opportunity to your team at the level you chose.",
     start_url: "/",
     display: "standalone",
-    background_color: "#0A0A0B",
-    theme_color: "#0A0A0B",
+    // White, matching the site since the 2026-09-05 relight (these were the retired #0A0A0B).
+    background_color: "#FFFFFF",
+    theme_color: "#FFFFFF",
     icons: [{ src: "/icon.svg", sizes: "any", type: "image/svg+xml" }],
   };
 }

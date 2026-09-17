@@ -19,16 +19,20 @@ export const siteUrl = "https://www.b2bleadgrowth.com";
 export const brandName = "B2B Lead Growth";
 
 // Canonical organization/service description used in JSON-LD structured data.
-// Names the ONE niche (established HVAC contractors with a commercial/B2B component —
-// D-025) and what the service actually does: researches the contractor's commercial
-// accounts from cited public sources, contacts the decision-makers in the contractor's
-// name, runs the follow-up, and hands off qualified conversations. The contractor's own
-// account history is named as the OPTIONAL second lane it is. It deliberately does NOT
-// claim to generate homeowner leads: homeowners are never contacted (gate #0f in the
-// operating system), and saying so in the entity description keeps an answer engine from
-// filing this business next to the per-lead sellers.
+//
+// REWRITTEN 2026-09-17 for D-027 (operating-system repo:
+// 00_CONTROL_CENTER/decisions/D-027_responsibility_tiers.md, machine form core/offer.py).
+// It names the category (commercial HVAC managed outbound), the ONE niche (established HVAC
+// contractors that already sell and complete commercial work — D-025), the three levels of
+// responsibility BY NAME, and the boundary that holds on every one of them: the contractor
+// estimates and closes. The previous wording said the service "handles the follow-up, and
+// hands off qualified conversations" — which described only the middle plan, and used a
+// noun ("qualified") that D-027 reserves for the $2,500 standard. It still does NOT claim to
+// generate homeowner leads: homeowners are never contacted (gate #0f in the operating
+// system), and saying so in the entity description keeps an answer engine from filing this
+// business next to the per-lead sellers.
 export const orgDescription =
-  "B2B Lead Growth is a managed outbound service for established HVAC contractors with commercial work: it researches the commercial accounts that fit the contractor — property and facility managers, building owners, multi-site operators — from cited public sources, contacts the right decision-makers in the contractor's name, handles the follow-up, and hands off qualified conversations. A contractor's own account history is an optional second lane. Not a lead seller, and homeowners are never contacted.";
+  "B2B Lead Growth is a commercial HVAC managed outbound service for established HVAC contractors that already sell and complete commercial work. It finds the commercial accounts worth pursuing — property and facility managers, building owners, multi-site operators — from cited public sources, contacts the right people in the contractor's name, and hands each opportunity to the contractor's team at one of three levels of responsibility: Prospecting, Managed Pipeline, or Qualified Opportunity Engine. The contractor always estimates and closes. Not a lead seller, and homeowners are never contacted.";
 
 // ---------------------------------------------------------------------------
 // Booking
@@ -80,12 +84,22 @@ export const intakeMinutes = 3;
 // call to make, not a side effect of fixing where the promise appears.
 export const auditDeliveryWindow = "a few business days";
 
-// The work is delivered remotely, so any US HVAC company can be served — that stays
-// the JSON-LD `areaServed`. But the campaigns actually running today are focused
-// on New Jersey, so the visible copy says so: it is both more honest and more
-// relevant to the people the outbound is currently reaching.
+// GEOGRAPHY, as two separate facts that must never be collapsed into one.
+//
+// WHERE WE SERVE: the work is research from public sources plus email sent from the client's
+// own mailbox, so it is delivered remotely for an HVAC contractor anywhere in the United
+// States. That is the JSON-LD `areaServed` and what the visible copy says.
+//
+// WHERE WE ARE: a founder-run company based in New Jersey. True, checkable, and stated as
+// exactly that.
+//
+// `currentFocusArea = "New Jersey"` used to sit here and was rendered as "currently focused
+// on New Jersey" in the footer, the fit lists, an FAQ, the Terms and a dedicated
+// /hvac-lead-generation-new-jersey page. It positioned a nationally deliverable service as a
+// one-state business (D-027 mandate §8) on the strength of where its founder happens to live.
+// Removed; tests/pricing-model.test.ts fails if New-Jersey-only positioning comes back.
 export const areaServed = "United States";
-export const currentFocusArea = "New Jersey";
+export const basedIn = "New Jersey";
 
 // ---------------------------------------------------------------------------
 // Legal identity
@@ -161,5 +175,8 @@ export const cancellationNoticeDays = 14;
 // Last-updated stamp shown on /terms and /privacy. Bump BOTH together, and only on a
 // substantive edit. The ISO form exists because app/sitemap.ts needs a machine-safe date —
 // parsing the display string relies on locale-dependent Date behaviour.
-export const legalLastUpdated = "September 5, 2026";
-export const legalLastUpdatedISO = "2026-09-05";
+// 2026-09-17: the SERVICE-DESCRIPTION passages of both documents moved to D-027 (plan names,
+// what each plan does, the calling policy, nationwide geography, and the attribution fields
+// the fit check now records). No liability, governing-law or dispute clause changed.
+export const legalLastUpdated = "September 17, 2026";
+export const legalLastUpdatedISO = "2026-09-17";

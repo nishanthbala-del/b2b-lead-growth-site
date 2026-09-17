@@ -2,11 +2,11 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import PageShell from "@/components/PageShell";
 import { guidePages, type GuidePage } from "@/lib/pages";
-import { intakeMinutes } from "@/lib/site";
+import { brandName, intakeMinutes } from "@/lib/site";
 
-// Server-rendered shell for the guide pages: same ink/gold language as the
-// landing page, none of its animation weight. Content pages must stay fast,
-// fully static, and readable without JavaScript.
+// Server-rendered shell for every registered content page — the service pages, the guides
+// and the about page. Content pages must stay fast, fully static, and readable without
+// JavaScript.
 
 function formatDate(iso: string): string {
   return new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-US", {
@@ -20,14 +20,14 @@ function formatDate(iso: string): string {
 export default function GuideLayout({
   page,
   eyebrow,
-  h1,
   intro,
   children,
 }: {
+  /** The registry entry. Its `h1` is the visible headline — a page no longer passes its own
+      literal, because Article.headline reads the same field and two copies of one heading
+      with nothing checking them is how a structured headline goes stale. */
   page: GuidePage;
   eyebrow: string;
-  /** The visible H1 (may differ slightly from the meta title). */
-  h1: string;
   /** Answer-first opening. The FIRST paragraph must be a self-contained answer to the
       page's title question in 40 words or fewer, before any preamble — it is the passage
       an answer engine lifts out, so it has to make sense with no page around it and must
@@ -41,13 +41,23 @@ export default function GuideLayout({
 
   return (
     <PageShell>
-      <main className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
+      <main id="main" className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
           {eyebrow}
         </p>
-        <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl">{h1}</h1>
+        <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl">{page.h1}</h1>
+        {/* Authorship and dates, visible. The Article node names the Organization as author
+            and publisher; this line is the text that claim mirrors, and it links to the page
+            that says who the organization is. No personal byline is claimed. */}
         <p className="mt-4 text-sm text-subtle">
-          Last updated: {formatDate(page.dateModified)}
+          Published by{" "}
+          <Link href="/about" className="text-accent underline underline-offset-4 hover:text-accent">
+            {brandName}
+          </Link>
+          {page.datePublished !== page.dateModified ? (
+            <> · First published: {formatDate(page.datePublished)}</>
+          ) : null}{" "}
+          · Last updated: {formatDate(page.dateModified)}
         </p>
 
         <div className="mt-8 space-y-4 text-lg leading-8 text-subtle">{intro}</div>

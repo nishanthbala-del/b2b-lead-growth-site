@@ -1,9 +1,35 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import GuideLayout, { GuideSection, GuideTable, KeyAnswer, SourceNote } from "@/components/GuideLayout";
-import { faqSlug, plans, serviceTimeline, serviceTimelineDisclaimer } from "@/lib/content";
+import {
+  boundarySentence,
+  callingPolicy,
+  contractorBoundary,
+  faqSlug,
+  offerTerms,
+  planSlug,
+  plans,
+  responsibilityMatrix,
+  sendingCadence,
+  serviceTimeline,
+  serviceTimelineDisclaimer,
+  stepUps,
+  terminology,
+} from "@/lib/content";
 import { getGuidePage, guideJsonLd, pageMetadata, serviceJsonLd } from "@/lib/pages";
 import { siteUrl, intakeMinutes } from "@/lib/site";
+
+// THE PRICING PAGE IS ABOUT RESPONSIBILITY, NOT VOLUME (D-027 §1, mandate §9).
+//
+// Until 2026-09-17 this page led with three tiers whose visible difference was a "monthly
+// ceiling" — ~40 accounts, ~100 messages, ~150 messages — so the honest reading of the table
+// was "the same thing, in three sizes". That is not what is sold. The three plans are three
+// different answers to one question: how far do we carry an opportunity before your team
+// takes it? So the page now opens with the three one-liners, then a who-owns-what table
+// (every row a responsibility, every cell "we do" or "you do"), then what reaches you at the
+// handoff, then the boundary that holds on all three. Capacity limits still appear — a plan
+// quoted without its limit reads as unlimited — but as the supporting facts they are, under
+// their own heading, with the sentence that says they are never the reason a plan costs more.
 
 const page = getGuidePage("pricing");
 
@@ -16,19 +42,24 @@ export const metadata: Metadata = pageMetadata({
 // Visible Q&A — mirrored verbatim into FAQPage JSON-LD below.
 const pageFaqs = [
   {
-    question: "How much does HVAC appointment setting cost in 2026?",
+    question: "How much does commercial HVAC lead generation cost with B2B Lead Growth?",
     answer:
-      "B2B Lead Growth charges a flat $750, $1,500, or $2,500 per month, with no setup fee. Published pricing guides we checked in August 2026 put typical agency retainers between roughly $2,000 and $10,000+ per month, and pay-per-appointment rates at about $50 to $500 per booked meeting. Belkins' 2024 guide cites basic retainers around $2,000/month and comprehensive programs at $5,000–$10,000; SalesBread's 2025 guide lists $2,000–$5,000 retainers.",
+      "B2B Lead Growth charges a flat $750, $1,500 or $2,500 a month, with no setup fee. $750 is Prospecting: we find and contact suitable commercial accounts, and you take over at interest. $1,500 is Managed Pipeline: we run outreach and follow-up, screen genuine interest, and organize the handoff. $2,500 is Qualified Opportunity Engine: we qualify the opportunity, gather the relevant context, coordinate the next step or site visit, and prepare your team to estimate and close.",
   },
   {
-    question: "Is $750 per month enough for real lead generation?",
+    question: "What is the difference between the three plans?",
     answer:
-      "$750 a month buys a defined, capacity-limited slice of work, not a full-service program. You get an agreed account profile, up to ~40 individually researched, cited commercial accounts a batch — property managers, building owners, facility teams, each with a named contact and a source link — your own account history ranked if you choose to send it, and scripts to work all of it. You make the calls and send the emails; done-for-you sending starts at the $1,500 tier. No tier at any price honestly buys guaranteed jobs."
+      "The three plans differ by how far we carry an opportunity before your team takes it, never by the message count. Prospecting hands you an interested prospect the moment one appears. Managed Pipeline hands you screened interest, with a structured handoff. Qualified Opportunity Engine hands you a qualified opportunity, prepared for your estimator. On all three, your team does the technical evaluation, the estimate and the close.",
   },
   {
-    question: "Are there hidden fees, setup costs, or long contracts?",
+    question: "Is $750 a month enough for real commercial prospecting?",
     answer:
-      "No. There is no setup fee, no early-termination fee, and no required tool add-ons. Every tier is month-to-month with 14 days' notice either side. Prices are in US dollars and exclude any applicable tax. If you leave, you keep everything we built: the lists, the scripts, and the trackers.",
+      "$750 a month buys a defined piece of work, not a full sales function. We build the account profile with you, research commercial accounts from public sources with a cited reason each, write a first-touch message per account, send it in your name, and read every reply. When a contact shows genuine interest, the conversation is yours. It suits a shop where someone already works replies; if nobody does, the $1,500 plan is the honest starting point.",
+  },
+  {
+    question: "Are there setup fees, per-lead fees, per-opportunity fees or long contracts?",
+    answer:
+      "No. There is no setup fee, no per-lead charge, no per-opportunity fee, no acceptance fee, no commission and no early-termination fee. There is one flat price per plan, month-to-month, with 14 days' notice either side. Prices are in US dollars and exclude any applicable tax. If you leave, you keep everything we built for you.",
   },
   {
     question: "How does billing work, and can I get a refund?",
@@ -36,9 +67,9 @@ const pageFaqs = [
       "Billing is a flat monthly fee, charged in advance, renewing until you cancel on 14 days' written notice by email. The current month is non-refundable and is not prorated, because the fee is earned as that month's work is performed. A period we have not started is refunded in full. We do not refund because a result did not occur, since we never promise one. The full policy is in our Terms of Service.",
   },
   {
-    question: "What do the tiers exclude?",
+    question: "What does no plan include?",
     answer:
-      "Lead Engine excludes the outreach: you send. Outreach Engine excludes the sales conversation: you take it, and reply qualification against your criteria is Appointment Engine only. Appointment Engine excludes the site walkthrough, the bid, the quote, and the close. No tier includes guaranteed reply volume, appointment counts, or revenue. No tier includes homeowner lead sourcing or contacting homeowners, because we do not do that at any price. No tier includes contractual territorial exclusivity — as standard we work one HVAC company per service area as an operating practice, and enforceable per-metro exclusivity is a separate priced add-on on the order form, quoted before you sign. You always own your pricing, your sending identity, and the account relationship.",
+      "No plan includes technical inspection, equipment diagnosis or specification, final scope, the estimate, the price, negotiation or the close — those are the contractor's on every plan. No plan includes cold calls, paid advertising, homeowner lead sourcing or contacting homeowners. No plan includes a guaranteed number of replies, appointments, site visits, qualified opportunities, contracts or revenue. No plan includes contractual territorial exclusivity: as standard we work one HVAC company per service area as an operating practice, and enforceable per-metro exclusivity is a separate priced add-on on the order form, quoted before you sign.",
   },
 ];
 
@@ -49,10 +80,9 @@ const structuredData = {
     {
       "@type": "FAQPage",
       "@id": `${siteUrl}/${page.slug}#faq`,
-      // Each Question carries the fragment its visible answer is stamped with below, so a
-      // specific answer is citable on its own rather than only as part of the page. The
+      // Each Question carries the fragment its visible answer is stamped with below. The
       // anchor and the schema fragment come from the SAME faqSlug() call, so rewording a
-      // question moves both together and they cannot drift apart.
+      // question moves both together.
       mainEntity: pageFaqs.map((f) => ({
         "@type": "Question",
         "@id": `${siteUrl}/${page.slug}#${faqSlug(f.question)}`,
@@ -64,6 +94,8 @@ const structuredData = {
     serviceJsonLd(),
   ],
 };
+
+const OWNER_LABEL = { we: "We do", you: "You do" } as const;
 
 export default function PricingPage() {
   return (
@@ -77,46 +109,38 @@ export default function PricingPage() {
       <GuideLayout
         page={page}
         eyebrow="Pricing"
-        h1="HVAC lead generation pricing: $750, $1,500, or $2,500 per month"
         intro={
           <>
-            <p>
-              B2B Lead Growth charges HVAC contractors with commercial work a flat monthly fee:{" "}
-              <span className="text-ink">$750</span> for Lead Engine (we research and build your
-              commercial account list, you do the outreach),{" "}
-              <span className="text-ink">$1,500</span> for Outreach Engine (we write and send the
-              emails and run the follow-up, you answer the interested replies), or{" "}
-              <span className="text-ink">$2,500</span> for Appointment Engine (we qualify the
-              replies and book the conversations on your calendar). Published, flat, and never
-              priced per lead.
+            <p className="text-ink">
+              B2B Lead Growth charges established commercial HVAC contractors a flat monthly fee at
+              one of three levels of responsibility: $750 for Prospecting, $1,500 for Managed
+              Pipeline, or $2,500 for Qualified Opportunity Engine.
             </p>
             <p>
-              No setup fee. Month-to-month with 14 days&rsquo; notice either side. You keep
-              everything we build if you leave. All prices are in US dollars and exclude any
-              applicable tax.
+              The price follows how far we carry each opportunity before your team takes it — not
+              how many messages we send. No setup fee. Month-to-month with 14 days&rsquo; notice
+              either side. All prices are in US dollars and exclude any applicable tax.
             </p>
             <p>
-              Nothing is priced per lead because we do not sell leads. You pay for research and
-              outreach on the account types and service area you approve, not for a name three
-              other contractors also bought.
-            </p>
-            <p>
-              Most full-service agencies we checked quote pricing only on a sales call. This page
-              publishes ours, with cited market context to compare it against.
+              Nothing is priced per lead or per opportunity, because we sell neither. You pay for
+              work done in your name, on the account types and service area you approve.
             </p>
           </>
         }
       >
-        <GuideSection title="The three tiers, and what each leaves you to do">
-          {/* A definition list, not a stack of sibling paragraphs. Monthly ceiling, who it
-              suits, what is included and what stays with you are label/value pairs, so a
-              reader scanning on a phone — and an answer engine asked "what does the $1,500
-              tier include" — gets a labelled value instead of four unlabelled <p> elements.
-              The competitors' prices further down this page were already in a real <table>;
-              ours were the only pricing on the site with no semantics at all. */}
+        <GuideSection title="The three plans, in one line each">
+          {/* id={planSlug(name)} on every card: the Offer nodes in serviceJsonLd() publish
+              /pricing#<slug> as each plan's url, and a fragment that lands nowhere is a broken
+              link we would be publishing knowingly. */}
           <div className="space-y-4">
             {plans.map((p) => (
-              <div key={p.name} className="rounded-lg border border-line bg-surface p-5">
+              <div
+                key={p.name}
+                id={planSlug(p.name)}
+                className={`scroll-mt-20 rounded-lg border bg-surface p-5 ${
+                  p.featured ? "border-accent/45" : "border-line"
+                }`}
+              >
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <h3 className="font-display text-2xl text-ink">{p.name}</h3>
                   <p className="text-xl font-semibold text-accent">
@@ -124,13 +148,19 @@ export default function PricingPage() {
                     <span className="text-sm font-normal text-subtle">/mo</span>
                   </p>
                 </div>
-                <p className="mt-2 font-semibold text-ink/90">{p.oneLiner}</p>
+                <p className="mt-2 text-lg font-semibold leading-7 text-ink/90">{p.oneLiner}</p>
                 <dl className="mt-4 space-y-3">
                   <div>
                     <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
-                      Monthly ceiling
+                      We own
                     </dt>
-                    <dd className="mt-1 leading-7">{p.capacity}</dd>
+                    <dd className="mt-1 leading-7">{p.owns.join(" → ")}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
+                      You keep
+                    </dt>
+                    <dd className="mt-1 leading-7">{p.youKeep}</dd>
                   </div>
                   <div>
                     <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
@@ -138,58 +168,145 @@ export default function PricingPage() {
                     </dt>
                     <dd className="mt-1 leading-7">{p.bestFor}</dd>
                   </div>
-                  <div>
-                    <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
-                      Included
-                    </dt>
-                    <dd className="mt-1">
-                      <ul className="space-y-1.5">
-                        {p.includes.map((line) => (
-                          <li key={line} className="flex gap-2 leading-7">
-                            <span aria-hidden="true" className="mt-0.5 shrink-0 text-accent">✓</span>
-                            <span>{line}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
-                      Your side
-                    </dt>
-                    <dd className="mt-1 leading-7">{p.youKeep}</dd>
-                  </div>
                 </dl>
-                {/* This page listed all three prices and offered no way to act on any of
-                    them: the only CTA was the shared one at the very bottom of the layout,
-                    below the market table and the FAQ. A price-shopper who arrived here from
-                    search read the number and had nowhere to go. The fit check is the honest
-                    next step rather than a buy button — nobody should be able to commit to a
-                    tier before anyone has looked at their list. */}
                 <Link
                   href="/start"
                   className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-accent transition-colors hover:text-accent"
                 >
-                  See if {p.name} fits your office →
+                  See if {p.name} fits your team →
                 </Link>
               </div>
             ))}
           </div>
           <p className="mt-4 text-sm leading-6 text-subtle">
-            No tier can be bought from this page, deliberately. The {intakeMinutes}-minute fit
-            check comes first, because which tier fits depends on who in your office has time to
-            work the list and take the replies, and on how many accounts you could actually
-            absorb.
+            No plan can be bought from this page, deliberately. The {intakeMinutes}-minute fit
+            check comes first, because the right plan depends on who on your team works an
+            interested reply, and on whether someone quotes and wins commercial bids.
           </p>
+        </GuideSection>
+
+        <GuideSection id="who-owns-what" title="Who owns what on each plan">
+          <p>
+            Read a row across. Every responsibility is either ours or yours on a given plan, and a
+            lower plan never quietly includes a higher plan&rsquo;s work. The last row is yours on
+            all three: that row is the boundary.
+          </p>
+          <GuideTable
+            caption="Who is responsible for each part of the work on Prospecting, Managed Pipeline and Qualified Opportunity Engine"
+            head={["Responsibility", ...plans.map((p) => `${p.name} ($${p.price.toLocaleString()})`)]}
+            rows={responsibilityMatrix.map((row) => [
+              row.responsibility,
+              ...row.owner.map((o, i) => (
+                <span key={i} className={o === "we" ? "font-semibold text-ink" : "text-subtle"}>
+                  {OWNER_LABEL[o]}
+                </span>
+              )),
+            ])}
+          />
+        </GuideSection>
+
+        <GuideSection id="handoffs" title="What reaches your team, and what it is called">
+          <p>
+            The three plans hand over three different things, and we never call one by
+            another&rsquo;s name. An interested prospect is not screened interest, and screened
+            interest is not a qualified opportunity.
+          </p>
+          <dl className="space-y-4">
+            {plans.map((p) => (
+              <div key={p.name} className="rounded-lg border border-line bg-surface p-5">
+                <dt className="font-semibold text-ink">
+                  {p.name}: {p.handoff.label}
+                </dt>
+                <dd className="mt-2 leading-7">{p.handoff.definition}</dd>
+                <dd className="mt-2 text-sm text-subtle">
+                  Counted on your report as: {p.handoff.unit}. {p.reportCadence} reporting.
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </GuideSection>
+
+        <GuideSection title="What each step up buys">
+          <div className="space-y-4">
+            {stepUps.map((s) => (
+              <div key={s.to} className="border-l-2 border-accent/45 pl-4">
+                <p className="font-semibold text-ink">
+                  {s.from} → {s.to}{" "}
+                  <span className="font-normal text-subtle">({s.delta})</span>
+                </p>
+                <p className="mt-1.5 leading-7">{s.body}</p>
+              </div>
+            ))}
+          </div>
+        </GuideSection>
+
+        <GuideSection id="boundary" title="What stays with you on every plan">
+          <KeyAnswer>{boundarySentence}</KeyAnswer>
+          <p>On no plan, at any price, do we:</p>
+          <ul className="list-disc space-y-2 pl-5">
+            {contractorBoundary.map((b) => (
+              <li key={b}>{b}</li>
+            ))}
+          </ul>
+        </GuideSection>
+
+        <GuideSection title="The words on this page, defined">
+          <p>
+            Five terms, used the same way on every page of this site and in every report. They are
+            never interchangeable.
+          </p>
+          <dl className="space-y-4">
+            {terminology.map((t) => (
+              <div key={t.key}>
+                <dt className="font-semibold text-ink">{t.term}</dt>
+                <dd className="mt-1 leading-7">{t.definition}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="text-sm text-subtle">
+            The full{" "}
+            <Link href="/how-it-works#terminology" className="text-accent underline underline-offset-4">
+              terminology and the qualification standard
+            </Link>{" "}
+            are on the how-it-works page.
+          </p>
+        </GuideSection>
+
+        <GuideSection id="capacity" title="Capacity limits, as supporting facts">
+          <p>
+            Each plan has a monthly limit, stated in outreach messages because that is the unit our
+            sending controls enforce. A limit is a supporting fact.{" "}
+            <span className="text-ink">
+              Message counts are never the reason one plan costs more than another
+            </span>{" "}
+            — the responsibility in the table above is.
+          </p>
+          <dl className="space-y-3">
+            {plans.map((p) => (
+              <div key={p.name}>
+                <dt className="font-semibold text-ink">{p.name}</dt>
+                <dd className="mt-1 leading-7">{p.capacity}</dd>
+              </div>
+            ))}
+          </dl>
+        </GuideSection>
+
+        <GuideSection title="The terms, in five lines">
+          <ul className="list-disc space-y-2 pl-5">
+            {offerTerms.map((t) => (
+              <li key={t}>{t}</li>
+            ))}
+          </ul>
         </GuideSection>
 
         <GuideSection title="What the market typically charges: $2,000 to $10,000+ a month">
           <p>
             Here is what published guides and pricing pages showed when we checked them on
-            August 7, 2026, so you can judge our pricing against the field:
+            August 7, 2026, so you can judge our pricing against the field. These are general
+            B2B outbound and appointment-setting agencies, not HVAC specialists:
           </p>
           <GuideTable
-            caption="Published lead generation and appointment setting pricing across the market"
+            caption="Published outbound and appointment setting pricing across the market"
             head={["Source", "What it publishes", "Figures"]}
             rows={[
               [
@@ -262,56 +379,27 @@ export default function PricingPage() {
           <SourceNote>
             Figures belong to their sources on the dates shown and change over time; the Callbox
             range is third-party reported, not Callbox-published. We link sources so you can check
-            them — the same standard we apply to every account we hand you.
+            them — the same standard we apply to every account we research for you.
           </SourceNote>
           <KeyAnswer>
-            Of the major agencies we checked in August 2026, full-service providers either
-            don&rsquo;t publish pricing at all (Belkins, Callbox — both quote on a call) or start
-            their managed service at $2,000/month (CIENCE). Published tiers under $1,000/month
-            exist mainly at single-channel specialists, such as Cleverly&rsquo;s LinkedIn-only
-            plans from $397/month. B2B Lead Growth publishes an entry tier at $750/month — a
-            researched, cited commercial account list you work yourself — and its done-for-you
-            outreach tier at $1,500/month. Both prices come from capping monthly volume, not from
-            cutting research depth.
+            Of the agencies we checked in August 2026, full-service providers either do not publish
+            pricing at all (Belkins, Callbox — both quote on a call) or start their managed service
+            at $2,000/month (CIENCE). B2B Lead Growth publishes all three of its prices: $750,
+            $1,500 and $2,500 a month. Ours are lower for three plain reasons: each plan has a
+            stated capacity limit, the process is email-led with no call center and no paid-ad
+            management, and we are a new, founder-run company earning a track record in public.
+            The lower price never buys a guarantee of replies, appointments, contracts or revenue,
+            here or anywhere.
           </KeyAnswer>
-        </GuideSection>
-
-        <GuideSection title="Why our pricing is lower: smaller volume, not lower standards">
-          <p>
-            Three things hold the price down. Each tier caps volume — about 40 researched
-            accounts a batch on the entry tier, about 100 or 150 outreach messages a month on
-            the two sending tiers — and we deliberately cap how many clients we take on. The process is
-            email-first, with no paid-ad management and no call centre. And we are a new company
-            earning a track record in public, so the pricing says so.
-          </p>
-          <p>
-            Every researched account is still cited individually: the lower price buys smaller
-            volume, not a discount on quality. It never buys guaranteed replies, appointments,
-            jobs, or revenue, here or anywhere. Anyone selling a guarantee is selling the churn
-            math behind it.
-          </p>
         </GuideSection>
 
         <GuideSection id="timeline" title="What happens after you sign, and when">
           <p>
-            Day 0 is the day the agreement is signed and the first payment clears — no work
-            begins before it. From there:
+            Day 0 is the day the agreement is signed and the first payment clears — no work begins
+            before it. The onboarding below is the same on every plan:
           </p>
-          <p className="mt-3">
-            <span className="text-ink">Which phases apply depends on your tier.</span> Lead Engine
-            ends at handover: you get the agreed account profile, the researched and cited
-            commercial account list, your own account history ranked if you sent it, and the
-            scripts, and you run the sending yourself. So the mailbox, warm-up, sequence and
-            reply-triage phases below are not part of that tier. Outreach Engine and Appointment
-            Engine include all of them. The export phase is optional on every tier: if you have
-            nothing to send, the account research runs anyway.
-          </p>
-          {/* An ordered sequence, so an <ol>. Tailwind's preflight strips the numbering, so
-              this renders exactly as before while reading correctly to a parser.
-              TimelinePhase.owner has three values and only "you" was rendered, which left
-              "we" and "both" indistinguishable to a reader — the you/we/both split is what
-              the paragraph above and the homepage's "you control three of them" both depend
-              on, so all three are now labelled. */}
+          {/* An ordered sequence, so an <ol>. All three owner values are labelled: the
+              you/we/both split is what "nothing is sent until you have signed off" depends on. */}
           <ol className="mt-4 space-y-3">
             {serviceTimeline.map((p) => (
               <li key={p.label} className="border-l-2 border-line pl-4">
@@ -326,35 +414,38 @@ export default function PricingPage() {
             ))}
           </ol>
           <p className="mt-4 text-sm opacity-80">{serviceTimelineDisclaimer}</p>
+          <h3 className="mt-8 font-display text-2xl text-ink">Once sending starts</h3>
+          <dl className="mt-4 space-y-4">
+            {sendingCadence.map((c) => (
+              <div key={c.title}>
+                <dt className="font-semibold text-ink">{c.title}</dt>
+                <dd className="mt-1 leading-7">{c.body}</dd>
+              </div>
+            ))}
+          </dl>
+          <h3 className="mt-8 font-display text-2xl text-ink">When a call happens</h3>
+          <ul className="mt-4 list-disc space-y-2 pl-5">
+            {callingPolicy.map((c) => (
+              <li key={c}>{c}</li>
+            ))}
+          </ul>
         </GuideSection>
 
-        <GuideSection title="Where your accounts come from: public research, and optionally your own history">
+        <GuideSection title="Where your accounts come from">
           <p>
             <span className="text-ink">The accounts we contact in your name are businesses we
-            research.</span> Property and facility managers, building owners, multi-site
-            operators, offices, warehouses, schools, healthcare, restaurants, retail — and the
-            referral partners around them, such as general contractors and property managers who
-            place work. All of them are organisations, not private individuals, so we source them
-            from free public sources. Every account carries the public source it came from, a fit
-            reason, and a named person to reach. Nothing without a citation can be contacted.
+            research.</span>{" "}
+            Property and facility managers, building owners, multi-site operators, offices,
+            warehouses, schools, healthcare, restaurants, retail. All of them are organizations,
+            not private individuals, so we find them from free public sources. Every account
+            carries the public source it came from, a fit reason, and a named person to reach.
+            Nothing without a citation can be contacted.
           </p>
           <p>
             <span className="text-ink">Homeowners are never on the list.</span> We do not, and will
             not, contact consumers on anyone&rsquo;s behalf — not from research, not from a
             purchased file, not at any price. That is why a residential-only shop is not a fit,
             and why the fit check says so before you spend anything.
-          </p>
-          <p>
-            <span className="text-ink">Your own account history is an optional second lane.</span>{" "}
-            Past accounts, proposals that were never accepted, lapsed service agreements, jobs
-            that never became a contract: if you have them, you export them, you approve the list,
-            and we work them alongside the researched accounts. We cannot research, buy or infer
-            those records. If you have nothing to send, the account research runs anyway.
-          </p>
-          <p className="text-sm opacity-80">
-            This is enforced in code, not by policy: a record claiming to come from your own
-            account history that is not in the list you approved is blocked before it can be
-            contacted, and a researched account is never presented as one of yours.
           </p>
         </GuideSection>
 
@@ -366,19 +457,19 @@ export default function PricingPage() {
           </p>
           <p>
             <span className="text-ink">The current month is non-refundable and is not prorated</span>,
-            because the fee is earned as that month&rsquo;s research, writing, sending, and
-            reporting is performed. If we have not begun work on a period, we refund it in full.
-            We do not refund on the basis that a result did not happen, because we never promise
-            one. The one make-good we do offer: if an account we delivered fails our own
-            cited-source verification standard, we replace it at no charge within the same month.
+            because the fee is earned as that month&rsquo;s work is performed. If we have not begun
+            work on a period, we refund it in full. We do not refund on the basis that a result did
+            not happen, because we never promise one. The one make-good we do offer: if an account
+            we delivered fails our own cited-source verification standard, we replace it at no
+            charge within the same month.
           </p>
           <p>
             When an engagement ends you keep the work from every period you paid for — the account
-            research, the scripts, the drafted messages, and the trackers — plus the current
-            suppression and opt-out list, handed over within five business days.{" "}
-            <a href="/terms#billing" className="text-accent underline underline-offset-4">
+            research, the drafted messages, and the trackers — plus the current suppression and
+            opt-out list, handed over within five business days.{" "}
+            <Link href="/terms#billing" className="text-accent underline underline-offset-4">
               Read the full billing, cancellation, and refund terms
-            </a>
+            </Link>
             .
           </p>
         </GuideSection>
@@ -387,21 +478,16 @@ export default function PricingPage() {
           <p>
             If you have no clear offer, no room for another account, nobody who quotes and wins
             commercial bids, or nobody to answer an interested reply within a business day, fix
-            that before buying pipeline help from any vendor —
-            including us. The{" "}
-            <a href="/free-pipeline-audit" className="text-accent underline underline-offset-4">
+            that before buying pipeline help from any vendor — including us. The{" "}
+            <Link href="/free-pipeline-audit" className="text-accent underline underline-offset-4">
               free pipeline audit
-            </a>{" "}
+            </Link>{" "}
             exists partly for this: sometimes it shows the bottleneck isn&rsquo;t your targeting,
             and you deserve to learn that for free.
           </p>
         </GuideSection>
 
         <GuideSection title="Pricing questions">
-          {/* Each answer gets the stable anchor faqSlug() generates, and the FAQPage markup
-              above cites the same fragment — so a specific answer is linkable and quotable on
-              its own. Rewording a question changes its anchor, which is a URL change: check
-              nothing external deep-links to the old one first. */}
           <div className="divide-y divide-line border-y border-line">
             {pageFaqs.map((f) => (
               <div key={f.question} id={faqSlug(f.question)} className="scroll-mt-20 py-5">

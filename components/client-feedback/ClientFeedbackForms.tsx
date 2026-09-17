@@ -191,8 +191,8 @@ export default function ClientFeedbackForms({ token }: { token: string }) {
       <section className="rounded-lg border border-line bg-surface p-6">
         <h2 className="font-display text-xl text-ink">Refer a business</h2>
         <p className="mt-2 text-sm leading-6 text-subtle">
-          Know another company that could use more qualified conversations? We&rsquo;ll reach out
-          directly, and it&rsquo;s credited to you.
+          Know another HVAC contractor with commercial work who could use this? We&rsquo;ll reach
+          out directly, and it&rsquo;s credited to you.
         </p>
         <div className="mt-6">
           <ReferralForm token={token} hp={hp} />
