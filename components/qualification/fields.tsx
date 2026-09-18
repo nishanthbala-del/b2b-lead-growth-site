@@ -230,6 +230,7 @@ export function OptionCards({
   onChange,
   error,
   columns = 1,
+  required = true,
 }: {
   name: string;
   legend: string;
@@ -239,13 +240,15 @@ export function OptionCards({
   onChange: (v: string) => void;
   error?: string;
   columns?: 1 | 2;
+  /** Every question is required unless a rule reads nothing from it (the budget). */
+  required?: boolean;
 }) {
   const errorId = error ? `${name}-error` : undefined;
   return (
     <fieldset aria-describedby={errorId} aria-invalid={error ? true : undefined}>
       <legend className="mb-3 flex flex-wrap items-center gap-x-2 text-xs font-semibold uppercase tracking-[0.18em] text-accent">
         {legend}
-        <span className="text-accent">*</span>
+        {required ? <span className="text-accent">*</span> : null}
         {hint ? (
           <span className="font-normal normal-case tracking-normal text-subtle">· {hint}</span>
         ) : null}

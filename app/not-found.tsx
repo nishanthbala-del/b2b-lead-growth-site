@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageShell from "@/components/PageShell";
+import PrimaryCta from "@/components/PrimaryCta";
 
 // Without this file Next serves its built-in error page, which emits a second <title> and
 // gives a visitor no way back. A mistyped or stale URL is a lost lead, so it gets a real page
@@ -43,12 +44,7 @@ export default function NotFound() {
         {/* Same single call to action as every other page. A 404 that only offers "go home"
             wastes the one visitor who was already looking for something. */}
         <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
-          <Link
-            href="/start"
-            className="inline-flex min-h-12 items-center justify-center rounded-sm border border-accent/45 bg-accent-fill px-6 font-semibold text-paper shadow-lift"
-          >
-            See if we&rsquo;re a fit <span className="ml-3" aria-hidden="true">→</span>
-          </Link>
+          <PrimaryCta placement="not-found" />
           <Link
             href="/"
             className="text-sm font-semibold text-accent underline underline-offset-4 hover:text-accent"

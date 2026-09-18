@@ -10,6 +10,7 @@ import {
   planSlug,
   plans,
   responsibilityMatrix,
+  riskReversal,
   sendingCadence,
   serviceTimeline,
   serviceTimelineDisclaimer,
@@ -446,6 +447,33 @@ export default function PricingPage() {
             not, contact consumers on anyone&rsquo;s behalf — not from research, not from a
             purchased file, not at any price. That is why a residential-only shop is not a fit,
             and why the fit check says so before you spend anything.
+          </p>
+        </GuideSection>
+
+        {/* WHAT A BUYER IS ACTUALLY RISKING, in one place, each line with the clause that
+            already binds us (lib/content.ts `riskReversal`). Moved here from the homepage on
+            2026-09-17, which now shows three of the seven and links to this. Every entry is a
+            delivery, terms or ownership commitment — never a result. */}
+        <GuideSection id="commitments" title="What you are actually risking">
+          <p>
+            Every line below is already in the agreement or the published Terms. None of them is
+            a promise about results; nobody can honestly make you one of those.
+          </p>
+          <dl className="grid gap-4 sm:grid-cols-2">
+            {riskReversal.map((item) => (
+              <div key={item.title} className="rounded-lg border border-line bg-surface p-5">
+                <dt className="font-semibold text-ink">{item.title}</dt>
+                <dd className="mt-1.5 leading-7">{item.body}</dd>
+                <dd className="mt-2 text-xs uppercase tracking-[0.14em] text-accent">{item.clause}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="text-sm text-subtle">
+            Read them yourself in the{" "}
+            <Link href="/terms" className="text-accent underline underline-offset-4">
+              Terms of Service
+            </Link>{" "}
+            before you talk to us, not after.
           </p>
         </GuideSection>
 

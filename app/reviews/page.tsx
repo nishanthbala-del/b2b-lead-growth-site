@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageShell from "@/components/PageShell";
+import PrimaryCta from "@/components/PrimaryCta";
 import { getStandaloneRoute, pageMetadata } from "@/lib/pages";
 import { reviews } from "@/lib/content";
 import { siteUrl } from "@/lib/site";
@@ -95,12 +96,7 @@ export default function ReviewsPage() {
           </div>
 
           <div className="mt-10">
-            <Link
-              href="/start"
-              className="inline-flex min-h-12 items-center justify-center rounded-sm border border-accent/45 bg-accent-fill px-6 text-sm font-semibold text-paper shadow-lift transition-transform hover:scale-[1.02]"
-            >
-              See if we&rsquo;re a fit <span aria-hidden="true" className="ml-2">→</span>
-            </Link>
+            <PrimaryCta placement="reviews" />
           </div>
         </main>
       </PageShell>

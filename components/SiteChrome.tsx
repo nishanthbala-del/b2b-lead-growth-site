@@ -1,4 +1,5 @@
 import Link from "next/link";
+import TrackedLink from "@/components/TrackedLink";
 import { guidePages, standaloneRoutes } from "@/lib/pages";
 import {
   basedIn,
@@ -21,8 +22,13 @@ import {
 // Zero JavaScript: the mobile menu is a <details> disclosure, which is keyboard accessible,
 // announced correctly, and works before (or without) hydration.
 
-/** The single primary action, used verbatim everywhere on the site. */
-export const CTA_LABEL = "See if we’re a fit";
+/** The single primary action, used verbatim everywhere on the site (components/PrimaryCta.tsx).
+ *  A tangible deliverable — the free audit's 3–5 commercial accounts — not an invitation to
+ *  browse. tests/conversion.test.ts holds every page to this one label. */
+export const CTA_LABEL = "Get 3 Commercial Accounts Free";
+/** The same promise in fewer letters, for the header on a phone: at 375px the full label plus
+ *  the brand and the menu button overflowed the viewport and pushed the menu off-screen. */
+export const CTA_LABEL_SHORT = "Get 3 Accounts Free";
 export const CTA_HREF = "/start";
 
 // Short labels in the header, where space is the constraint; the footer and the in-body links
@@ -57,12 +63,14 @@ export function SiteHeader({ width = "max-w-5xl" }: { width?: string }) {
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <Link
+          <TrackedLink
             href={CTA_HREF}
+            placement="header"
             className="inline-flex min-h-11 shrink-0 items-center rounded-sm border border-accent/45 bg-accent-fill px-4 text-xs font-semibold text-paper sm:text-sm"
           >
-            {CTA_LABEL}
-          </Link>
+            <span className="sm:hidden">{CTA_LABEL_SHORT}</span>
+            <span className="hidden sm:inline">{CTA_LABEL}</span>
+          </TrackedLink>
           <details className="relative lg:hidden">
             <summary
               className="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-sm border border-accent/45 text-accent [&::-webkit-details-marker]:hidden"

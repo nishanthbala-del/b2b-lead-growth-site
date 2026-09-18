@@ -718,7 +718,15 @@ export const faqGroups = [
 
 export type FaqGroup = (typeof faqGroups)[number];
 
-export type Faq = { question: string; answer: string; group: FaqGroup };
+export type Faq = {
+  question: string;
+  answer: string;
+  group: FaqGroup;
+  /** Rendered OPEN on the homepage. The rest are in the page too, each behind its own
+   *  disclosure, so nothing is removed from the site or from the FAQPage markup — the
+   *  homepage just stops reading as a FAQ archive (conversion supplement, "Compress"). */
+  featured?: boolean;
+};
 
 /** Stable anchor for one question, so a specific answer can be linked to directly. */
 export function faqSlug(question: string): string {
@@ -747,12 +755,14 @@ export function faqSlug(question: string): string {
 export const faqs: Faq[] = [
   {
     question: "What exactly do you do for a commercial HVAC contractor?",
+    featured: true,
     group: "What this is",
     answer:
       "We find the commercial accounts worth pursuing, contact the right people in your name, and hand each opportunity to your team at the level you chose. The accounts are businesses in the areas you serve — property managers, building owners, facility teams, multi-site operators — researched from public sources with a cited reason each. Your plan decides how far we carry an opportunity before your team takes it. On every plan, your team estimates and closes.",
   },
   {
     question: "How is this different from Angi, Thumbtack, or a per-lead seller?",
+    featured: true,
     group: "What this is",
     answer:
       "We sell no leads at all — you pay a flat monthly fee for a managed outbound service, never a per-lead price. Those marketplaces sell homeowner inquiries for residential work. Everyone we contact is a business, and commercial accounts do not appear on those marketplaces. The trade-off is real: a marketplace hands you a name today, and a commercial account takes weeks of research and contact to reach.",
@@ -791,6 +801,7 @@ export const faqs: Faq[] = [
   },
   {
     question: "Do you contact homeowners?",
+    featured: true,
     group: "Where the accounts come from",
     answer:
       "No, we never contact homeowners — not from research, not from a purchased list, not at any price. Everyone we write to in your name is a business: a property manager, a building owner, a facilities team, a general contractor. Each is found from public sources and carries the reason it was picked and a link to where we found it. A residential-only shop is not a fit for that reason, and we say so on the fit check rather than after you pay.",
@@ -809,12 +820,14 @@ export const faqs: Faq[] = [
   },
   {
     question: "Whose email address does this go out from?",
+    featured: true,
     group: "How the outreach runs",
     answer:
       "Yours — outreach sends from your own domain and mailbox, never ours. A property manager who looks you up finds the company that wrote to them, and you can open the sent folder and read every message. Before anything sends you confirm the account categories, the service area, the exclusions, the claims we may make and the sending identity; after that we work inside that envelope, and you can pause at any time. Deliverability depends on your domain setup and history, which stay in your hands; confirm the email and privacy rules in your market before outreach begins.",
   },
   {
     question: "What happens when someone replies with interest?",
+    featured: true,
     group: "How the outreach runs",
     answer:
       "What happens next depends on your plan, and only on your plan. On Prospecting, an interested prospect is handed to you as it arrives, with the thread and the reason we wrote, and you take the conversation. On Managed Pipeline we run the follow-up, check that the interest is genuine and relevant, and give you a structured handoff. On Qualified Opportunity Engine we qualify it against a defined standard, gather the context, and coordinate the next step or a site visit before your estimator is involved.",
@@ -833,6 +846,7 @@ export const faqs: Faq[] = [
   },
   {
     question: "Do you guarantee jobs, appointments, or revenue?",
+    featured: true,
     group: "What you can expect",
     answer:
       "No, we do not guarantee revenue, contracts, appointments, site visits or qualified opportunities on any plan. You should be wary of anyone in this industry who does. Whether an account signs depends on your price, your references, your timing, and how the site visit goes. What we commit to is running the system, doing the work to the stated standard, and reporting the results honestly.",
@@ -857,6 +871,7 @@ export const faqs: Faq[] = [
   },
   {
     question: "Which plan should I start with?",
+    featured: true,
     group: "Money, terms and getting started",
     answer:
       "Pick the plan by who on your team does the work after someone shows interest. If someone on your team already works replies and chases the follow-up, Prospecting fits. If nobody has time for that, Managed Pipeline is where we suggest starting. If you want each opportunity qualified, with the context gathered and the next step or site visit coordinated before your estimator spends time on it, that is Qualified Opportunity Engine — and it only makes sense if someone on your team quotes and wins commercial bids. The fit check gives you a read from your own answers.",
@@ -881,6 +896,7 @@ export const faqs: Faq[] = [
   },
   {
     question: "Do I have to get on a call to get the free audit?",
+    featured: true,
     group: "Money, terms and getting started",
     answer:
       `No. The call is a ${callLengthMinutes}-minute, no-obligation walkthrough of the audit we already sent you — not a pitch, and not the price of the audit. We go through the account profile and the accounts we picked, you tell us where we read your market wrong, and you decide with the work already in hand whether a paid plan is worth it. You can skip it entirely and keep the audit. No work begins until you decide to move forward.`,
@@ -927,6 +943,66 @@ export const audit = {
     "We have no case studies yet, so the audit is the proof. If it is useful, we talk. If not, you keep it and owe nothing.",
   guardrail:
     "It shows the quality of the work, not a promised result. No guaranteed leads, calls or jobs. Nothing is sent to anyone as part of it. It contains no homeowner records, because we never contact homeowners; every account in it is a business, with the public source it came from.",
+} as const;
+
+/* -------------------------------------------------------------------------- */
+/*  One real account, shown                                                     */
+/* -------------------------------------------------------------------------- */
+
+// SHOW THE PRODUCT (conversion supplement): one real, supportable account in the exact shape
+// every account in the audit arrives in — the target account, why it fits, the buyer role,
+// the source, the reason to write, and the recommended approach.
+//
+// PROVENANCE. This is entry 3 of a real prepared set (the operating-system repo's
+// data/starter_sets/hvac/L-1017_starter_set.md, prepared 2026-08-30 from public sources) for
+// an HVAC contractor based in Monroe Township, Middlesex County, NJ. Every quoted phrase is
+// verbatim from the account's own web page as read that day. NOTHING here is invented: no
+// account, no buyer, no trigger, no reply, no result. The account's name and page link and
+// the contractor's name are withheld on purpose — we do not publish the accounts we research
+// for anyone, and the disclosure line says so — and the buyer is given as a ROLE, because the
+// record names no individual and this page must not either.
+//
+// The approach is labelled as OURS. It is a recommendation about what to write, never a claim
+// about the state of anyone's equipment (D-024: an opportunity, not a diagnosis).
+export const productExample = {
+  preparedOn: "2026-08-30",
+  preparedFor: "an HVAC contractor based in Monroe Township, Middlesex County, NJ",
+  account: {
+    label: "Target account",
+    value:
+      "A property management company running condo, townhome, HOA and co-op associations, with a dedicated page for Monroe Township, NJ — the contractor's home town.",
+  },
+  fit: {
+    label: "Why it fits",
+    value:
+      "It manages large, master-planned communities there — clubhouses, common facilities and shared infrastructure — and its own page describes scheduled preventive maintenance across them. That is recurring work for an account, not a one-off service call.",
+  },
+  buyer: {
+    label: "Relevant buyer",
+    value:
+      "The association manager for those communities: the role that schedules maintenance vendors. In your audit each account carries a named contact path; this page gives the role only.",
+  },
+  source: {
+    label: "Verified source",
+    value: "The company's own website — its Monroe Township service page, read on 30 August 2026. Quoted from it:",
+    quotes: [
+      "Preventive Maintenance for Shared Infrastructure",
+      "Clear scheduling ensures consistent service throughout expansive communities",
+      "Routine On-Site Verification",
+    ],
+  },
+  reason: {
+    label: "Reason for outreach",
+    value:
+      "Its own page says the shared systems in those communities are on a scheduled preventive-maintenance program. That is a reason to write now — an opportunity, not a claim about the condition of anything on site.",
+  },
+  approach: {
+    label: "Recommended approach (ours)",
+    value:
+      "One short email from your own mailbox to the association manager, citing that page: ask whether the clubhouse and common-facility HVAC is on that preventive schedule, and offer a maintenance conversation for the communities in Monroe Township. No pitch deck, no cold call.",
+  },
+  disclosure:
+    "A real account from a real prepared set, built on 30 August 2026 from public sources for an HVAC contractor in Middlesex County, NJ. The company's name, its page link and the contractor are withheld here because we do not publish the accounts we research for anyone; your audit carries all three, for every account in it.",
 } as const;
 
 /* -------------------------------------------------------------------------- */

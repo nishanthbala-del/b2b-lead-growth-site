@@ -26,6 +26,7 @@ import {
   sanitizeAttribution,
   type Attribution,
 } from "@/lib/attribution";
+import { trackEvent } from "@/lib/track";
 import { bookingUrl, callLengthMinutes, contactEmail, intakeMinutes } from "@/lib/site";
 import { Field, FieldError, Input, OptionCards, Textarea, focusFirstField, focusFirstInvalid } from "./fields";
 
@@ -43,13 +44,17 @@ import { Field, FieldError, Input, OptionCards, Textarea, focusFirstField, focus
 // more accounts, and can the target accounts be described. Nothing asks for a customer
 // list or an export: the accounts are businesses we research, and the shop's own history
 // is an optional second lane that the intake, not the fit check, asks about.
-//   1. Company     — who you are, and how to reach you
+//   1. Company     — who you are, and how to reach you (name, work email, company; the
+//                    website is optional and the role is no longer asked — it decided nothing
+//                    and a reply needs none of it: conversion supplement, "friction audit")
 //   2. Business    — how long, how much is commercial, who quotes it, what a job is worth
 //   3. Problem     — what you're trying to fix, how commercial work reaches you, who follows
 //                    up, and (D-027) whether you want opportunities qualified and the next
 //                    step coordinated before your estimator is involved — the question that
 //                    separates the top plan from the middle one
-//   4. Readiness   — capacity, whether you can describe the accounts you want, when, what budget
+//   4. Readiness   — capacity, whether you can describe the accounts you want, when — and,
+//                    optionally, which fee is being weighed (it decides nothing; see
+//                    lib/qualification.ts OPTIONAL_ANSWER_KEYS)
 //
 // Step 5 is the outcome. `evaluateFit` decides it; the same function runs on the
 // server so the record the owner reads is not the one the browser asserted.
@@ -63,6 +68,7 @@ type ContactState = {
   email: string;
   company: string;
   website: string;
+  /** Kept in the payload for the owner's sheet (a stable column), no longer asked on the form. */
   role: string;
   serviceArea: string;
   notes: string;
@@ -108,6 +114,39 @@ export default function QualificationFlow() {
   const [stored, setStored] = useState(true);
   const [result, setResult] = useState<FitResult | null>(null);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+
+  // CONVERSION EVENTS (lib/events.ts). `form_start` once, on the first field touched;
+  // `form_step` when a step is completed; `form_complete` when the server has saved the
+  // answers; `form_abandon` at most once, if the tab is hidden or closed after a start and
+  // before completion, with the step reached. The scheduler event is recorded by the server
+  // from the booking_opened call below, so it is not fired twice. None of it can throw or
+  // block the form: trackEvent swallows everything.
+  const startedRef = useRef(false);
+  const completedRef = useRef(false);
+  const abandonedRef = useRef(false);
+  const stepRef = useRef(1);
+  stepRef.current = step;
+  function markStarted() {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    trackEvent("form_start", { step: 1 });
+  }
+  useEffect(() => {
+    const leave = () => {
+      if (!startedRef.current || completedRef.current || abandonedRef.current) return;
+      abandonedRef.current = true;
+      trackEvent("form_abandon", { step: stepRef.current });
+    };
+    const hidden = () => {
+      if (document.visibilityState === "hidden") leave();
+    };
+    document.addEventListener("visibilitychange", hidden);
+    window.addEventListener("pagehide", leave);
+    return () => {
+      document.removeEventListener("visibilitychange", hidden);
+      window.removeEventListener("pagehide", leave);
+    };
+  }, []);
 
   // Campaign tag from the URL (/start?src=hvac-batch-3), so a submission can be traced
   // back to the outreach that produced it. Read from window rather than useSearchParams
@@ -157,11 +196,13 @@ export default function QualificationFlow() {
   }, [step, isResult]);
 
   function setContactField<K extends keyof ContactState>(key: K, value: ContactState[K]) {
+    if (key !== "hp_leave_blank") markStarted();
     setContact((c) => ({ ...c, [key]: value }));
     setErrors((e) => (e[key] ? { ...e, [key]: undefined } : e));
   }
 
   function setAnswer<K extends keyof QualificationAnswers>(key: K, value: QualificationAnswers[K]) {
+    markStarted();
     setAnswers((a) => ({ ...a, [key]: value }));
     setErrors((e) => (e[key] ? { ...e, [key]: undefined } : e));
   }
@@ -193,7 +234,7 @@ export default function QualificationFlow() {
       if (!answers.capacity) next.capacity = "Pick one.";
       if (!answers.targetAccounts) next.targetAccounts = "Pick one — 'we'd need help' is a real answer.";
       if (!answers.timeline) next.timeline = "Pick one.";
-      if (!answers.budget) next.budget = "Pick one, or tell us you're not sure yet.";
+      // The budget is optional: it decides nothing (lib/qualification.ts OPTIONAL_ANSWER_KEYS).
       if (!contact.consent) next.consent = "Please confirm so we can reply to you.";
     }
     setErrors(next);
@@ -247,6 +288,8 @@ export default function QualificationFlow() {
       }
       setLeadId(data.id || "");
       setStored(data.stored !== false);
+      completedRef.current = true;
+      trackEvent("form_complete", { step: LAST_QUESTION_STEP });
       // Prefer the server's verdict: it is the one written onto the record, and a
       // result page that disagrees with the owner's copy of it is worse than useless.
       setResult(data.fit ?? evaluateFit(answers));
@@ -263,7 +306,7 @@ export default function QualificationFlow() {
     void fetch("/api/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "booking_opened", id: leadId }),
+      body: JSON.stringify({ action: "booking_opened", id: leadId, ...readAttribution() }),
       keepalive: true,
     }).catch(() => {});
   }
@@ -279,8 +322,10 @@ export default function QualificationFlow() {
               e.preventDefault();
               if (submitting) return;
               if (step < LAST_QUESTION_STEP) {
-                if (validate(step)) setStep(step + 1);
-                else focusFirstInvalid(rootRef.current);
+                if (validate(step)) {
+                  trackEvent("form_step", { step });
+                  setStep(step + 1);
+                } else focusFirstInvalid(rootRef.current);
               } else {
                 void submit();
               }
@@ -290,8 +335,10 @@ export default function QualificationFlow() {
               {step === 1 ? (
                 <>
                   <p className="text-sm leading-6 text-subtle">
-                    Four short steps, about {intakeMinutes} minutes. At the end you&rsquo;ll get a
-                    straight answer on whether this is a fit &mdash; including if it isn&rsquo;t.
+                    Four short steps, about {intakeMinutes} minutes. At the end you get a straight
+                    answer on whether this is a fit &mdash; including if it isn&rsquo;t &mdash; and
+                    if it is, your free audit follows: 3&ndash;5 commercial accounts with source
+                    links, plus one sample message.
                   </p>
                   <div className="grid gap-5 sm:grid-cols-2">
                     <Field label="Your name" htmlFor="q-name" error={errors.name} required>
@@ -339,15 +386,6 @@ export default function QualificationFlow() {
                       />
                     </Field>
                   </div>
-                  <Field label="Your role" htmlFor="q-role" hint="optional">
-                    <Input
-                      id="q-role"
-                      value={contact.role}
-                      onChange={(v) => setContactField("role", v)}
-                      placeholder="Owner, general manager, service manager"
-                      autoComplete="organization-title"
-                    />
-                  </Field>
                 </>
               ) : null}
 
@@ -480,6 +518,8 @@ export default function QualificationFlow() {
                     <OptionCards
                       name="budget"
                       legend="Which monthly fee are you weighing up?"
+                      hint="optional — it changes nothing about the answer"
+                      required={false}
                       options={BUDGET}
                       value={answers.budget}
                       onChange={(v) => setAnswer("budget", v as QualificationAnswers["budget"])}
@@ -568,8 +608,10 @@ export default function QualificationFlow() {
                   </>
                 ) : submitting ? (
                   "Checking…"
+                ) : provisional.outcome === "not_yet" ? (
+                  "Get the straight answer"
                 ) : (
-                  "See if we're a fit"
+                  "Get my 3 free accounts"
                 )}
               </button>
             </div>
@@ -751,7 +793,30 @@ function ResultStep({
         </p>
       ) : null}
 
-      <p className="text-base leading-7 text-ink">{result.nextStep}</p>
+      {/* At every stage: what just happened, and what happens next (conversion supplement,
+          "Conversion journey"). The second half is the outcome's own nextStep, so the two
+          sentences that matter most are never split across the page. */}
+      <dl className="grid gap-4 rounded-lg border border-line bg-surface p-5 sm:grid-cols-[11rem_1fr]">
+        <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-accent sm:pt-1">
+          What just happened
+        </dt>
+        <dd className="text-sm leading-6 text-ink/90">
+          {result.outcome === "not_yet"
+            ? "Your answers were checked against the fit standard published on this site, and they say this is not a fit today. The reason is above, and no audit is built for a company we cannot help."
+            : `Your answers were checked against the fit standard published on this site${
+                stored && leadId ? ` and saved under reference ${leadId}` : ""
+              }. Nothing is sent to anyone as a result of this, and no card was taken.`}
+        </dd>
+        <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-accent sm:pt-1">
+          What happens next
+        </dt>
+        <dd className="text-base leading-7 text-ink">
+          {result.nextStep}
+          {result.outcome !== "not_yet"
+            ? " It arrives by email, to the address you gave. There is nothing you need to do in the meantime, and the walkthrough call below is optional."
+            : ""}
+        </dd>
+      </dl>
 
       {result.offerBooking && bookingUrl ? (
         <>

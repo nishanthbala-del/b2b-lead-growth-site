@@ -782,6 +782,21 @@ export function summarizeAnswers(a: QualificationAnswers): string {
 export const ANSWER_KEYS = Object.keys(EMPTY_ANSWERS) as (keyof QualificationAnswers)[];
 
 /**
+ * The questions a visitor may leave blank.
+ *
+ * `budget` decides nothing (recommendTier ignores it; it only adds a watchout when it names a
+ * different plan from the one the answers point at), so requiring it was friction with no
+ * qualification behind it — the one kind of field the conversion supplement says to drop.
+ * Every other answer is read by a block or the score and stays required: a fit verdict is only
+ * honest when it was computed from a complete set. tests/qualification.test.ts holds this list
+ * to exactly the keys no rule reads.
+ */
+export const OPTIONAL_ANSWER_KEYS: readonly (keyof QualificationAnswers)[] = ["budget"];
+
+/** The answers the fit verdict is computed from — the ones a submission must carry. */
+export const REQUIRED_ANSWER_KEYS = ANSWER_KEYS.filter((k) => !OPTIONAL_ANSWER_KEYS.includes(k));
+
+/**
  * Plain-English name for each question.
  *
  * Read by app/api/lead/route.ts (so an incomplete submission names the question the

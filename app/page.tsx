@@ -23,6 +23,11 @@ import { brandName, siteUrl } from "@/lib/site";
 // part throwing that away. Re-wording a question changes its slug and therefore changes
 // a published URL — see the note on faqSlug in lib/content.ts before editing one.
 //
+// ALL of `faqs` is still mapped here, on purpose. Since 2026-09-17 the homepage renders the
+// featured questions open and the rest inside native <details> — every answer is in the
+// page as text a visitor can read with one tap, which is what this markup may mirror. If a
+// question is ever dropped from the page itself, drop it here in the same change.
+//
 // Deliberately NO dateModified on this WebPage node. Structured data may only assert
 // what a reader can see, and the homepage renders no "Last updated" line; the guide
 // pages do, so theirs carry one. To claim a date here, render `homepageDateModified`

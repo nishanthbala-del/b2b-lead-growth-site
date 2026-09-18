@@ -39,7 +39,13 @@ export const homepageDateModified = D027;
 // domain has. The price stays out of this snippet for the same reason: /pricing should win a
 // pricing query.
 export const homepageMetaTitle = "Commercial HVAC Managed Outbound | B2B Lead Growth";
-export const homepageH1 = "Managed outbound for established commercial HVAC contractors";
+// THE H1 LEADS WITH THE BUYER'S OUTCOME (conversion supplement, "Hero"); the category and the
+// buyer — "Managed outbound for commercial HVAC contractors" — are the eyebrow directly above
+// it, the first words on the page. Until 2026-09-17 the H1 was the category line itself, which
+// told a visitor what we run and nothing about what he gets. The outcome is stated as what the
+// service is FOR, not as a promise: "conversations your team can quote" is the handoff, and
+// the estimate and the close stay his.
+export const homepageH1 = "Turn the commercial accounts in your market into conversations your team can quote.";
 export const homepageDescription =
   "For established commercial HVAC contractors: we find commercial accounts, contact the right people in your name, and hand off at the level you choose.";
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import PageShell from "@/components/PageShell";
+import PrimaryCta from "@/components/PrimaryCta";
 import { guidePages, type GuidePage } from "@/lib/pages";
 import { brandName, intakeMinutes } from "@/lib/site";
 
@@ -76,22 +77,20 @@ export default function GuideLayout({
             is "No call is required to receive it": that clause is the offer's rule, and
             tests/offer-integrity.test.ts fails if any page gates the audit behind a call. */}
         <section className="mt-14 rounded-lg border border-line bg-surface p-6 sm:p-8">
+          {/* The heading used to promise the audit "either way"; a company the fit check
+              declines gets a straight answer and no audit, so it says what actually happens. */}
           <h2 className="font-display text-2xl text-ink sm:text-3xl">
-            Find out whether this is a fit — and get the audit either way.
+            Three commercial accounts, researched for your market, free.
           </h2>
           <p className="mt-4 leading-7 text-subtle">
             {intakeMinutes} minutes of questions, then a straight answer — including
-            &ldquo;no&rdquo;. If it is a fit, your free pipeline audit follows in writing. No call
-            is required to receive it, and it is yours to keep either way. It shows the quality of
-            the work, not a promised result.
+            &ldquo;no&rdquo;. If it is a fit, your free pipeline audit follows in writing: 3–5
+            commercial accounts with source links, plus one sample message. No call is required to
+            receive it, and it is yours to keep either way. It shows the quality of the work, not a
+            promised result.
           </p>
           <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
-            <Link
-              href="/start"
-              className="inline-flex min-h-12 items-center justify-center rounded-sm border border-accent/45 bg-accent-fill px-6 font-semibold text-paper shadow-lift"
-            >
-              See if we&rsquo;re a fit <span className="ml-3" aria-hidden="true">→</span>
-            </Link>
+            <PrimaryCta placement="guide" />
             <span className="text-sm text-subtle">No card. A straight answer either way.</span>
           </div>
         </section>

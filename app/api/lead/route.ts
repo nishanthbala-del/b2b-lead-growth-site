@@ -2,15 +2,16 @@ import { NextRequest } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import {
-  ANSWER_KEYS,
   ANSWER_OPTIONS,
   QUESTION_LABELS,
+  REQUIRED_ANSWER_KEYS,
   evaluateFit,
   sanitizeAnswers,
   summarizeAnswers,
   type FitResult,
 } from "@/lib/qualification";
 import { ATTRIBUTION_KEYS, sanitizeAttribution } from "@/lib/attribution";
+import { recordEvent } from "@/lib/events-server";
 
 // Use the Node.js runtime (needs fs) and never cache this handler.
 export const runtime = "nodejs";
@@ -181,7 +182,7 @@ function rateLimited(ip: string): boolean {
 // The owner reads a spreadsheet, not rule values: store "More than 15 years", not
 // "over-15". The label is looked up from the same published option set the visitor
 // clicked, so the two can never describe different things.
-function labelFor(key: (typeof ANSWER_KEYS)[number], value: string): string {
+function labelFor(key: keyof typeof ANSWER_OPTIONS, value: string): string {
   if (!value) return "";
   return ANSWER_OPTIONS[key].find((o) => o.value === value)?.label ?? value;
 }
@@ -424,6 +425,10 @@ export async function POST(req: NextRequest) {
     const timestamp = new Date().toISOString();
     await appendEvent({ type: "booking_opened", id, timestamp, ip });
     await forwardToSheets({ action: "booking_opened", id, timestamp });
+    // The same moment as a SITE event (lib/events.ts), recorded once, here, so the browser
+    // does not have to fire it twice. It carries the visit's attribution and nothing that
+    // identifies the lead: the lead id above goes to the Sheet, not into the event log.
+    await recordEvent({ name: "booking_opened", path: "/start", ...sanitizeAttribution(body as Record<string, unknown>) });
     return Response.json({ ok: true });
   }
 
@@ -439,13 +444,14 @@ export async function POST(req: NextRequest) {
     .filter(([key]) => !String(body[key] ?? "").trim())
     .map(([, label]) => label);
 
-  // Every rule-bearing answer is required, because the fit verdict is only honest if
+  // Every answer a rule reads is required, because the fit verdict is only honest if
   // it was computed from a complete set. `sanitizeAnswers` has already discarded any
   // value that isn't in the published option set, so a blank here means either "not
   // answered" or "answered with something we never offered" — and both must be
-  // rejected rather than scored as zero.
+  // rejected rather than scored as zero. The keys no rule reads (OPTIONAL_ANSWER_KEYS,
+  // today the budget) may be blank: they are recorded when given, never required.
   const answers = sanitizeAnswers(body as Record<string, unknown>);
-  for (const key of ANSWER_KEYS) {
+  for (const key of REQUIRED_ANSWER_KEYS) {
     if (!answers[key]) missing.push(QUESTION_LABELS[key]);
   }
 
@@ -537,6 +543,18 @@ export async function POST(req: NextRequest) {
 
   const localOk = await appendLocal(record);
   const sheet = await forwardToSheets({ action: "submit", ...record });
+
+  // THE FIT OUTCOME AS A SITE EVENT (lib/events.ts `fit_outcome`), recorded by the server from
+  // the verdict it just computed — the browser's copy is never read for this either. It
+  // carries the outcome, the plan the answers pointed at and the visit's attribution; no lead
+  // id, no name, no email, so the event log stays a count and never a second copy of the lead.
+  await recordEvent({
+    name: "fit_outcome",
+    path: "/start",
+    outcome: fit.outcome,
+    plan: fit.recommendedTier ?? "",
+    ...attribution,
+  });
 
   // `stored` is the honest answer to "did this lead survive the request?".
   // On Vercel the filesystem is ephemeral, so the Sheet is the only durable sink

@@ -72,18 +72,26 @@ export default function StartPage() {
       <PageShell width="wide">
         <main id="main" className="mx-auto max-w-4xl px-5 py-14 sm:px-8 sm:py-20">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
-            Fit check · about {intakeMinutes} minutes
+            Free pipeline audit · fit check first · about {intakeMinutes} minutes
           </p>
-          {/* Smaller on mobile than the rest of the site's H1s, deliberately. This page is a
+          {/* THE PAGE SAYS WHAT THE BUTTON SAID. Every primary button on the site reads "Get 3
+              Commercial Accounts Free", so the first line here is the same deliverable, and the
+              second says the one condition plainly: the audit follows a fit check whose honest
+              answer can be no. A visitor who clicked for accounts and landed on "let's find out
+              if this is for you" had been handed a different offer (conversion supplement,
+              "CTA/message mismatch").
+              Smaller on mobile than the rest of the site's H1s, deliberately. This page is a
               form, not a pitch: every vertical pixel above the first question is a pixel of
               abandonment risk on a phone. */}
           <h1 className="font-display text-3xl leading-tight text-ink sm:text-5xl">
-            Let&rsquo;s find out if this is for you.
+            Get 3 commercial accounts in your market, free.
           </h1>
           <p className="mt-4 max-w-2xl leading-7 text-subtle sm:text-lg sm:leading-8">
-            For established HVAC contractors that already do commercial work and have room for
-            more accounts. {QUESTION_COUNT} questions, and you get the answer on the last screen —
-            along with the plan your answers point at.
+            Answer {QUESTION_COUNT} short questions. If this is a fit, we research your market and
+            email you the free pipeline audit — 3&ndash;5 commercial accounts with a cited reason
+            and a source link each, plus one sample message. If it isn&rsquo;t, the last screen
+            says so and tells you why. Built for established HVAC contractors that already do
+            commercial work.
           </p>
 
           <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
@@ -114,8 +122,8 @@ export default function StartPage() {
             <h2 className="font-display text-2xl text-ink">What the fit check asks</h2>
             <p className="mt-3 max-w-2xl leading-7 text-subtle">
               Your name, work email, company and service area, then {QUESTION_COUNT} one-tap
-              questions. Nothing asks for a customer list, and nothing asks about homeowners — we
-              never contact them. We ask:
+              questions, of which the monthly fee is optional. Nothing asks for a customer list,
+              and nothing asks about homeowners — we never contact them. We ask:
             </p>
             <ul className="mt-4 grid gap-x-8 gap-y-2 text-sm leading-6 text-subtle sm:grid-cols-2">
               {ANSWER_KEYS.map((key) => (

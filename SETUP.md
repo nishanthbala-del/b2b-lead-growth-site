@@ -380,6 +380,7 @@ site at a calendar nobody watched.
    | --- | --- |
    | `SHEETS_WEBHOOK_URL` | the Apps Script `/exec` URL from Step 1 |
    | `SHEETS_WEBHOOK_SECRET` | the secret (only if you set one) |
+   | `EVENTS_WEBHOOK_URL` | optional — where the conversion events go (see "Conversion events" below); leave unset to keep them in the Vercel runtime log only |
 4. **Deploy.** Submit the live form once to confirm a row lands in your Sheet.
 
 > Prefer the CLI? `npm i -g vercel && vercel` (then `vercel --prod`). You'll still set the env
@@ -403,6 +404,31 @@ prioritize. Export anytime via **File → Download → CSV**.
 > **Why no automatic "call completed" tracking?** Free Google/Calendly scheduling doesn't send
 > webhooks, so confirming a *completed* call is a manual one-click status change in the Sheet.
 > This is the honest free-tier boundary — no fake numbers.
+
+### Conversion events (what happens BEFORE a row lands)
+
+A row in the Sheet is a completed fit check. Everything before it — did anyone click the
+button, start the form, stop at step 3, open the scheduler — used to be invisible, and a page
+view is not an answer to any of those questions. Since 2026-09-17 the site records seven
+first-party events (`lib/events.ts`: `cta_click`, `form_start`, `form_step`, `form_abandon`,
+`form_complete`, `fit_outcome`, `booking_opened`), each with the page, the placement or step,
+the visit's UTM/referrer values, and — for the browser-sent ones — a random per-tab visit id so
+one visit's steps can be read in order. No name, email, IP or user agent is ever in an event;
+no third-party script or cookie is involved; `/privacy` publishes the list, generated from the
+code.
+
+- **Where they go by default:** the deployment's runtime log, one line per event, prefixed
+  `[event]`. In Vercel → Project → Logs, filter on `[event]` (or `[event] {"name":"form_abandon"`).
+- **To keep them in a Sheet:** set `EVENTS_WEBHOOK_URL` to an Apps Script `/exec` URL. The site
+  POSTs `{ action: "event", name, path, placement, step, outcome, plan, visitId, utmSource,
+  utmMedium, utmCampaign, landingPath, referrerHost, at, secret }` — the same `secret` as
+  `SHEETS_WEBHOOK_SECRET`. Use a **separate tab (or a separate Sheet)** from the leads: the
+  events are counts, and must never be joined to a named row. A minimal handler is the leads
+  script's `doPost` with `action === "event"` appending those fields to an `Events` tab.
+- **What to read from them:** the ratio between the steps is the point — clicks → starts →
+  each step → completes → outcome → scheduler opened. `form_abandon` carries the step reached, so
+  "people stop at step 3" is measurable instead of guessed. A jump in `not_yet` outcomes from
+  one `utmCampaign` says that campaign is reaching the wrong shops.
 
 ---
 

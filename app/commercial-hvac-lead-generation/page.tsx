@@ -5,10 +5,12 @@ import {
   alternatives,
   boundarySentence,
   contractorBoundary,
+  differentiators,
   faqSlug,
   funnel,
   funnelClose,
   idealFor,
+  notFor,
   outcomeMetric,
   plans,
 } from "@/lib/content";
@@ -133,6 +135,24 @@ export default function CommercialHvacLeadGenerationPage() {
           </ul>
         </GuideSection>
 
+        {/* THE FULL LIST OF DECLINES lives here (moved from the homepage 2026-09-17, which now
+            names the four the fit check enforces in a line and links to this). Each entry maps
+            to a decline in the operating system's core/icp.DISQUALIFIERS, and the four the fit
+            check enforces in code must each appear here — tests/qualification.test.ts holds
+            `notFor` to lib/qualification.ts BLOCKS. */}
+        <GuideSection id="not-for" title="Who it is not for">
+          <KeyAnswer>
+            The fit check gives these answers on the spot, before anyone spends anything. None of
+            them is a judgement on the business; each is a reason this particular service would not
+            earn its fee there.
+          </KeyAnswer>
+          <ul className="list-disc space-y-2 pl-5">
+            {notFor.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        </GuideSection>
+
         <GuideSection id="funnel" title="The funnel: from your capacity to an opportunity your team can act on">
           <p>
             Every plan runs the same six stages. What happens at the last one is the only thing the
@@ -245,6 +265,20 @@ export default function CommercialHvacLeadGenerationPage() {
               <li key={b}>{b}</li>
             ))}
           </ul>
+        </GuideSection>
+
+        {/* Differences IN KIND, stated as facts about what we do — written against what an HVAC
+            owner has actually been burned by (lib/content.ts `differentiators`). On the homepage
+            until 2026-09-17; it belongs on the page whose job is to define the service. */}
+        <GuideSection id="different" title="What makes this different">
+          <dl className="space-y-5">
+            {differentiators.map((item) => (
+              <div key={item.title} className="border-l-2 border-accent/45 pl-4">
+                <dt className="font-semibold text-ink">{item.title}</dt>
+                <dd className="mt-1.5 leading-7">{item.body}</dd>
+              </div>
+            ))}
+          </dl>
         </GuideSection>
 
         <GuideSection id="alternatives" title="How this differs from the other ways to buy HVAC growth">

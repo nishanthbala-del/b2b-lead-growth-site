@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getLegalRoute, pageMetadata } from "@/lib/pages";
 import { ANSWER_KEYS, QUESTION_LABELS } from "@/lib/qualification";
 import { ATTRIBUTION_KEYS, ATTRIBUTION_LABELS } from "@/lib/attribution";
+import { EVENT_LABELS, EVENT_NAMES } from "@/lib/events";
 import Link from "next/link";
 import PageShell from "@/components/PageShell";
 import { brandName, contactEmail, entityFormationState, legalEntity, legalEntityName, legalLastUpdated } from "@/lib/site";
@@ -9,9 +10,11 @@ import { brandName, contactEmail, entityFormationState, legalEntity, legalEntity
 // WHAT CHANGED ON 2026-09-17: the FACTUAL descriptions of what this site records and what the
 // service does — the fit check's new question (generated, as before), the visit-attribution
 // fields (generated from lib/attribution.ts, so the list cannot drift from the code), the use
-// of session storage, and what the top plan records from a conversation with a business
-// contact. No rights, retention, legal-basis or contact clause was reworded. This policy has
-// still not been reviewed by counsel (SETUP.md); that note stands.
+// of session storage, the first-party conversion events (generated from lib/events.ts, same
+// discipline), the fields the form no longer asks (role; the fee is optional), and what the
+// top plan records from a conversation with a business contact. No rights, retention,
+// legal-basis or contact clause was reworded. This policy has still not been reviewed by
+// counsel (SETUP.md); that note stands.
 
 const route = getLegalRoute("privacy");
 
@@ -50,8 +53,9 @@ export default function PrivacyPage() {
           <p className="leading-7 text-subtle">
             <strong className="text-ink/90">Information you give us.</strong> When you complete
             the fit check, we collect the contact details you choose to provide &mdash; your name,
-            work email, company, website and role &mdash; along with your service area, anything
-            you add in the free-text notes, and your answers to these questions:
+            work email and company, and your website if you add it &mdash; along with your service
+            area, anything you add in the free-text notes, and your answers to these questions
+            (the monthly fee is optional; the rest are needed to give you an honest answer):
           </p>
           <ul className="mt-3 space-y-2 leading-7 text-subtle">
             {ANSWER_KEYS.map((key) => (
@@ -100,6 +104,29 @@ export default function PrivacyPage() {
             close the tab. If you never submit the fit check, we never receive them. This site
             does <em>not</em> use third-party advertising, analytics, or cross-site tracking
             cookies, and it sets no cookies of its own.
+          </p>
+          {/* GENERATED from lib/events.ts. The site records a handful of first-party events so
+              the owner can tell whether the pages and the form work; the published list is the
+              code's own list, for the same reason the two lists above are generated. */}
+          <p className="mt-4 leading-7 text-subtle">
+            <strong className="text-ink/90">How the site is used.</strong> To tell whether this
+            website and the fit check work, our own server records these first-party events:
+          </p>
+          <ul className="mt-3 space-y-2 leading-7 text-subtle">
+            {EVENT_NAMES.map((name) => (
+              <BulletItem key={name}>{EVENT_LABELS[name]}</BulletItem>
+            ))}
+          </ul>
+          <p className="mt-4 leading-7 text-subtle">
+            Each event carries the page it happened on and the visit-origin values listed above
+            when they exist. The events your browser sends also carry a random value it makes up
+            for the current tab, so that the steps of one visit can be read in order; the two our
+            server records itself (the fit result and the scheduling link) carry no such value
+            and no reference to your submission. That value is not a cookie; it is kept in
+            your browser&rsquo;s session storage, is never tied to your name or email, is not used
+            to recognise you on a later visit or on any other site, and is gone when you close the
+            tab. No event contains your name, email, IP address or browser details, and none of
+            this is sent to any advertising or analytics company.
           </p>
         </Section>
 
