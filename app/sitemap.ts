@@ -19,6 +19,13 @@ const GUIDE_PRIORITY: Record<string, number> = {
   "free-pipeline-audit": 0.8,
   "how-to-choose-a-lead-generation-agency": 0.6,
   about: 0.5,
+  // The commercial-search footprint (2026-09-18): the three buyers the service reaches, then
+  // the two guides that teach its method.
+  "hvac-property-manager-outreach": 0.7,
+  "hvac-facility-manager-outreach": 0.7,
+  "hvac-building-owner-outreach": 0.7,
+  "how-to-find-commercial-hvac-accounts": 0.6,
+  "commercial-hvac-cold-email": 0.6,
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {

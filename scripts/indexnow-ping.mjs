@@ -19,6 +19,7 @@ const KEY = "fa2d37dcda78121e04e0e0748d3bf823";
 // 2026-09-17: /hvac-lead-generation-new-jersey and /shared-vs-exclusive-hvac-leads were
 // retired behind 301s and are deliberately NOT here — a redirect is not a URL to announce.
 // The three new pages are. Run this once after the deploy that ships them.
+// 2026-09-18: the three audience pages and the two guides joined the list.
 const urls = [
   "/",
   "/commercial-hvac-lead-generation",
@@ -27,6 +28,11 @@ const urls = [
   "/free-pipeline-audit",
   "/how-to-choose-a-lead-generation-agency",
   "/about",
+  "/hvac-property-manager-outreach",
+  "/hvac-facility-manager-outreach",
+  "/hvac-building-owner-outreach",
+  "/how-to-find-commercial-hvac-accounts",
+  "/commercial-hvac-cold-email",
   "/start",
   "/reviews",
   "/privacy",

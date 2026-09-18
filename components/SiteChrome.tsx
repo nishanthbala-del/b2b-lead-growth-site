@@ -1,6 +1,6 @@
 import Link from "next/link";
 import TrackedLink from "@/components/TrackedLink";
-import { guidePages, standaloneRoutes } from "@/lib/pages";
+import { PAGE_SECTIONS, guidePages, pageSection, standaloneRoutes } from "@/lib/pages";
 import {
   basedIn,
   brandName,
@@ -128,20 +128,31 @@ export function SiteFooter({ width = "max-w-5xl" }: { width?: string }) {
               </a>
             </p>
           </div>
-          <nav aria-label="Site" className="md:min-w-56">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">The service</p>
-            <ul className="mt-1">
-              {guidePages.map((page) => (
-                <li key={page.slug}>
-                  <Link
-                    href={`/${page.slug}`}
-                    className="inline-flex min-h-11 items-center hover:text-accent"
-                  >
-                    {page.navLabel}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Every registered page, in its group: the service, the commercial buyers it
+              reaches, and the guides. Read from the registry, so a new page is linked from
+              every page on the site the moment it is registered. */}
+          <nav aria-label="Site" className="grid gap-6 sm:grid-cols-2 md:min-w-56 md:grid-cols-1 lg:grid-cols-2">
+            {PAGE_SECTIONS.map((section) => (
+              <div key={section.key}>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+                  {section.label}
+                </p>
+                <ul className="mt-1">
+                  {guidePages
+                    .filter((page) => pageSection(page) === section.key)
+                    .map((page) => (
+                      <li key={page.slug}>
+                        <Link
+                          href={`/${page.slug}`}
+                          className="inline-flex min-h-11 items-center hover:text-accent"
+                        >
+                          {page.navLabel}
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            ))}
           </nav>
           <nav aria-label="Start and legal" className="md:min-w-44">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Start</p>

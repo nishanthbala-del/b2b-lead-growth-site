@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import PageShell from "@/components/PageShell";
 import PrimaryCta from "@/components/PrimaryCta";
-import { guidePages, type GuidePage } from "@/lib/pages";
+import { PAGE_SECTIONS, guidePages, pageSection, type GuidePage } from "@/lib/pages";
 import { brandName, intakeMinutes } from "@/lib/site";
 
 // Server-rendered shell for every registered content page — the service pages, the guides
@@ -38,7 +38,13 @@ export default function GuideLayout({
   intro: ReactNode;
   children: ReactNode;
 }) {
-  const otherGuides = guidePages.filter((p) => p.slug !== page.slug);
+  // Every other registered page, grouped the way the footer groups them. Grouped because the
+  // list is eleven links long now, and a reader scanning for "the page about facility teams"
+  // should find it under a heading that says so.
+  const otherGuides = PAGE_SECTIONS.map((section) => ({
+    ...section,
+    pages: guidePages.filter((p) => p.slug !== page.slug && pageSection(p) === section.key),
+  })).filter((section) => section.pages.length > 0);
 
   return (
     <PageShell>
@@ -95,23 +101,29 @@ export default function GuideLayout({
           </div>
         </section>
 
-        {/* Internal links: every guide links to every other guide with a descriptive anchor. */}
+        {/* Internal links: every page links to every other page with a descriptive anchor
+            (its title), grouped by what the page is for. */}
         <nav aria-label="More guides" className="mt-12 border-t border-line pt-8">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
             Keep reading
           </p>
-          <ul className="mt-4 space-y-3">
-            {otherGuides.map((g) => (
-              <li key={g.slug}>
-                <Link
-                  href={`/${g.slug}`}
-                  className="inline-flex min-h-11 items-center text-accent underline underline-offset-4 transition-colors hover:text-accent"
-                >
-                  {g.metaTitle}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          {otherGuides.map((section) => (
+            <div key={section.key} className="mt-6">
+              <p className="text-sm font-semibold text-ink">{section.label}</p>
+              <ul className="mt-2 space-y-1">
+                {section.pages.map((g) => (
+                  <li key={g.slug}>
+                    <Link
+                      href={`/${g.slug}`}
+                      className="inline-flex min-h-11 items-center text-accent underline underline-offset-4 transition-colors hover:text-accent"
+                    >
+                      {g.metaTitle}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </nav>
       </main>
     </PageShell>

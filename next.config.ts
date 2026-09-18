@@ -65,12 +65,27 @@ const RETIRED_PAGE_REDIRECTS = [
   },
 ];
 
+// THE PLATFORM HOSTNAME (2026-09-18). The Vercel project also answers on its production alias,
+// b2b-lead-growth-site.vercel.app — the site's address before the brand domain — and served
+// every page there with a 200. The pages carried a canonical to www, so Google filed that host
+// as "alternate page with proper canonical tag"; but two hosts answering 200 with the same
+// pages is a duplicate-content signal, and a canonical is a hint where a redirect is a fact.
+// Every path on that one host now goes, in one permanent hop, to the same path on the brand
+// domain. Only the exact production alias matches: per-deployment preview hostnames are
+// different names, so previews keep working.
+const PLATFORM_HOST_REDIRECT = {
+  source: "/:path*",
+  has: [{ type: "host" as const, value: "b2b-lead-growth-site.vercel.app" }],
+  destination: "https://www.b2bleadgrowth.com/:path*",
+  statusCode: 301 as const,
+};
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   // Don't advertise the framework and version to anyone scanning for known CVEs.
   poweredByHeader: false,
   async redirects() {
-    return RETIRED_PAGE_REDIRECTS;
+    return [PLATFORM_HOST_REDIRECT, ...RETIRED_PAGE_REDIRECTS];
   },
   async headers() {
     return [

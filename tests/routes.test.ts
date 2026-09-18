@@ -1,9 +1,10 @@
 // Route-registry drift.
 //
-// The site publishes its URL list in three places that cannot import each other:
-// lib/pages.ts (the registry the sitemap renders from), public/llms.txt (a static
-// file), and scripts/indexnow-ping.mjs (a standalone script). lib/pages.ts used to
-// carry a comment asking future editors to keep all three in step. It went stale.
+// The site publishes its URL list in three places: lib/pages.ts (the registry the sitemap
+// renders from), /llms.txt (generated from that registry by lib/llms.ts since 2026-09-18;
+// until then a static file kept in step by hand), and scripts/indexnow-ping.mjs (a
+// standalone script that cannot import the registry). lib/pages.ts used to carry a comment
+// asking future editors to keep all three in step. It went stale.
 //
 // A page missing from these lists is not a visible bug: it renders fine, and simply
 // never gets discovered or announced. This turns the comment into a failing test.
@@ -14,7 +15,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { test, describe } from "node:test";
 
-import { guidePages, indexablePaths, standaloneRoutes } from "../lib/pages.ts";
+import { llmsTxt } from "../lib/llms.ts";
+import { guidePages, indexablePaths, retiredPaths, standaloneRoutes } from "../lib/pages.ts";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (rel: string) => readFileSync(path.join(repoRoot, rel), "utf8");
@@ -31,11 +33,33 @@ describe("route registry", () => {
   });
 
   test("every indexable path is listed in llms.txt", () => {
-    const llms = read("public/llms.txt");
+    const llms = llmsTxt();
     for (const p of indexablePaths) {
       const url = `https://www.b2bleadgrowth.com${p === "/" ? "/" : p}`;
-      assert.ok(llms.includes(url), `${p} is in the registry but missing from public/llms.txt`);
+      assert.ok(llms.includes(`](${url})`), `${p} is in the registry but missing from /llms.txt`);
     }
+  });
+
+  test("llms.txt lists nothing the registry doesn't know about, and no retired path", () => {
+    const llms = llmsTxt();
+    const listed = [...llms.matchAll(/\]\(https:\/\/www\.b2bleadgrowth\.com(\/[^)]*)\)/g)].map((m) => m[1]!);
+    assert.ok(listed.length >= indexablePaths.length, "could not parse the llms.txt link list");
+    for (const p of listed) assert.ok(indexablePaths.includes(p), `${p} is listed in llms.txt but not in lib/pages.ts`);
+    for (const r of retiredPaths) assert.ok(!llms.includes(r.from), `retired ${r.from} is still in llms.txt`);
+  });
+
+  test("llms.txt follows the llms.txt format: one H1, a summary blockquote, H2 link lists", () => {
+    const llms = llmsTxt();
+    const h1s = llms.split("\n").filter((l) => /^# /.test(l));
+    assert.equal(h1s.length, 1, "llms.txt must have exactly one H1");
+    assert.match(llms, /^# B2B Lead Growth\n\n> \S/, "the H1 must be followed by the summary blockquote");
+    assert.match(llms, /^## Optional$/m, "the secondary links belong under ## Optional");
+    assert.doesNotMatch(llms, /\bundefined\b|\[object Object\]|NaN/, "a field failed to render");
+  });
+
+  test("the static public/llms.txt is gone, so it cannot shadow the generated route", () => {
+    assert.throws(() => read("public/llms.txt"), "public/llms.txt came back; the route renders /llms.txt now");
+    assert.match(read("app/llms.txt/route.ts"), /force-static/);
   });
 
   test("IndexNow announces nothing the registry doesn't know about", () => {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageShell from "@/components/PageShell";
 import ClientFeedbackForms from "@/components/client-feedback/ClientFeedbackForms";
+import { pageMetadata } from "@/lib/pages";
 import { contactEmail } from "@/lib/site";
 
 // A signed client's own page — reached only via the personal link the review/referral ask sends
@@ -9,7 +10,19 @@ import { contactEmail } from "@/lib/site";
 // contact-email fallback instead of a form, so this page can never become "how a stranger submits
 // a testimonial claiming to be a client." Never indexed — not registered in lib/pages.ts's
 // indexable route list.
-export const metadata: Metadata = { robots: { index: false, follow: false } };
+//
+// ITS OWN TITLE AND CANONICAL (2026-09-18). With only `robots` set, this page inherited the
+// root layout's title, description, og:url and — the conflicting signal — a canonical naming
+// the HOMEPAGE: a noindex page asserting it was a copy of an indexable one. It now describes
+// itself and points its canonical at itself; `noindex` is what keeps it out of search.
+export const metadata: Metadata = {
+  ...pageMetadata({
+    path: "/for-clients",
+    title: "For Clients",
+    description: "The private page current B2B Lead Growth clients use to leave a review or send a referral.",
+  }),
+  robots: { index: false, follow: false },
+};
 
 // Same closed charset as app/refer/page.tsx and app/api/lead/route.ts's `referralToken`.
 const TOKEN_RE = /^[A-Za-z0-9_-]{1,40}$/;

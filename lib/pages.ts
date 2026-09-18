@@ -23,11 +23,16 @@ import { plans, planSlug, terminology } from "./content.ts";
 // three were added. A page that was NOT substantively edited that day keeps its own date.
 const D027 = "2026-09-17";
 
+// THE COMMERCIAL-SEARCH FOOTPRINT DATE: the three audience pages and the two guides first
+// published on 2026-09-18 (see the note above their registry entries).
+const SEO_FOOTPRINT = "2026-09-18";
+
 // When adding ANY indexable route, add it to `guidePages`, `standaloneRoutes` or
-// `legalRoutes` below and then to scripts/indexnow-ping.mjs and public/llms.txt, which each
-// carry their own explicit URL list (a .mjs script and a static text file cannot import this
-// registry). tests/routes.test.ts and tests/pricing-model.test.ts fail if the lists stop
-// agreeing, if a registered route has no page file, or if a redirected path is registered.
+// `legalRoutes` below and then to scripts/indexnow-ping.mjs, which carries its own explicit
+// URL list (a .mjs script run outside the bundler cannot import this registry). /llms.txt is
+// generated from this registry (lib/llms.ts) and needs no edit. tests/routes.test.ts and
+// tests/pricing-model.test.ts fail if the lists stop agreeing, if a registered route has no
+// page file, or if a redirected path is registered.
 export const homepageDateModified = D027;
 
 // The homepage's own title, description and H1, in the registry with every other route's.
@@ -49,9 +54,21 @@ export const homepageH1 = "Turn the commercial accounts in your market into conv
 export const homepageDescription =
   "For established commercial HVAC contractors: we find commercial accounts, contact the right people in your name, and hand off at the level you choose.";
 
-/** "service" pages describe the service itself; "guide" pages are Articles; "about" is the
- *  entity page. The kind decides og:type and which JSON-LD graph the page publishes. */
-export type PageKind = "service" | "guide" | "about";
+/** "service" pages describe the service itself; "solution" pages describe how it reaches ONE
+ *  kind of commercial buyer and publish a Service node of their own; "guide" pages are
+ *  Articles; "about" is the entity page. The kind decides og:type and which JSON-LD graph the
+ *  page publishes. */
+export type PageKind = "service" | "solution" | "guide" | "about";
+
+/** Which group a page is listed under in the footer and in every page's "Keep reading" list:
+ *  the service itself, the commercial buyers it reaches, or the practical guides. */
+export type PageSection = "service" | "audience" | "guide";
+
+export const PAGE_SECTIONS: { key: PageSection; label: string }[] = [
+  { key: "service", label: "The service" },
+  { key: "audience", label: "Who we reach for you" },
+  { key: "guide", label: "Guides" },
+];
 
 export type GuidePage = {
   slug: string;
@@ -66,7 +83,14 @@ export type GuidePage = {
   datePublished: string; // ISO yyyy-mm-dd
   dateModified: string; // ISO yyyy-mm-dd
   kind: PageKind;
+  /** Absent means "service". */
+  section?: PageSection;
 };
+
+/** The group a registered page is listed under. */
+export function pageSection(page: GuidePage): PageSection {
+  return page.section ?? "service";
+}
 
 // ORDER IS THE READING ORDER: what the service is → how it runs → what it costs → the free
 // sample → how to judge any vendor (us included) → who is behind it. The footer and every
@@ -132,6 +156,7 @@ export const guidePages: GuidePage[] = [
     // material survives only as one labelled, cited contrast.
     dateModified: D027,
     kind: "guide",
+    section: "guide",
   },
   {
     slug: "about",
@@ -143,6 +168,72 @@ export const guidePages: GuidePage[] = [
     datePublished: D027,
     dateModified: D027,
     kind: "about",
+  },
+  // THE COMMERCIAL-SEARCH FOOTPRINT (2026-09-18). Three pages, one per commercial buyer the
+  // service reaches for a contractor — property managers, facility teams, building owners —
+  // and two guides that teach the method the service runs on. Each audience page has to earn
+  // its URL: a different buyer, a different buying process, different public sources and a
+  // different first message. Three copies of one page with the noun swapped would be doorway
+  // pages, which is the fastest way for a new domain to lose the little trust it has.
+  {
+    slug: "hvac-property-manager-outreach",
+    navLabel: "Property managers",
+    metaTitle: "Property Manager Outreach for Commercial HVAC Contractors",
+    h1: "Property manager outreach for commercial HVAC contractors",
+    description:
+      "How commercial HVAC contractors win property management accounts: who to contact, the public sources that find them, and what a first email should say.",
+    datePublished: SEO_FOOTPRINT,
+    dateModified: SEO_FOOTPRINT,
+    kind: "solution",
+    section: "audience",
+  },
+  {
+    slug: "hvac-facility-manager-outreach",
+    navLabel: "Facility teams",
+    metaTitle: "Facility Manager Outreach for Commercial HVAC Contractors",
+    h1: "Facility manager outreach for commercial HVAC contractors",
+    description:
+      "How commercial HVAC contractors reach in-house facility teams: which facility managers buy outside HVAC help, how to find them, and when they plan work.",
+    datePublished: SEO_FOOTPRINT,
+    dateModified: SEO_FOOTPRINT,
+    kind: "solution",
+    section: "audience",
+  },
+  {
+    slug: "hvac-building-owner-outreach",
+    navLabel: "Building owners",
+    metaTitle: "Building Owner Outreach for Commercial HVAC Contractors",
+    h1: "Building owner outreach for commercial HVAC contractors",
+    description:
+      "How commercial HVAC contractors reach building owners: when to write to the owner rather than the manager, the public records that find them, what to say.",
+    datePublished: SEO_FOOTPRINT,
+    dateModified: SEO_FOOTPRINT,
+    kind: "solution",
+    section: "audience",
+  },
+  {
+    slug: "how-to-find-commercial-hvac-accounts",
+    navLabel: "Finding commercial accounts",
+    metaTitle: "How to Find Commercial HVAC Accounts in Your Service Area",
+    h1: "How to find commercial HVAC accounts in your service area",
+    description:
+      "A commercial HVAC prospecting method: define the account profile, work the public sources, choose the right person, and record why each account fits.",
+    datePublished: SEO_FOOTPRINT,
+    dateModified: SEO_FOOTPRINT,
+    kind: "guide",
+    section: "guide",
+  },
+  {
+    slug: "commercial-hvac-cold-email",
+    navLabel: "Writing the first email",
+    metaTitle: "Commercial HVAC Cold Email: What to Send a Property Manager",
+    h1: "Commercial HVAC cold email: what to send a property or facility manager",
+    description:
+      "How to write a commercial HVAC cold email a property or facility manager will read: the five parts, what to leave out, a template, follow-ups and the law.",
+    datePublished: SEO_FOOTPRINT,
+    dateModified: SEO_FOOTPRINT,
+    kind: "guide",
+    section: "guide",
   },
 ];
 
@@ -442,6 +533,34 @@ export function serviceJsonLd() {
 }
 
 /**
+ * A solution page's own Service node: the service as it reaches ONE kind of commercial buyer.
+ *
+ * It points at the site-wide Service (`/#service`) with `isRelatedTo` rather than copying it.
+ * That node carries the plans and the prices and is built from `plans`; a solution page quotes
+ * no price, so its node quotes none either — markup may only say what the page says.
+ */
+export function solutionServiceJsonLd(page: GuidePage, name: string) {
+  const url = `${siteUrl}/${page.slug}`;
+  return {
+    "@type": "Service",
+    "@id": `${url}#service`,
+    name,
+    url,
+    description: page.description,
+    serviceType: "Commercial HVAC managed outbound",
+    category: "Commercial HVAC Lead Generation",
+    areaServed,
+    provider: { "@id": `${siteUrl}/#organization` },
+    isRelatedTo: { "@id": `${siteUrl}/#service` },
+    audience: {
+      "@type": "BusinessAudience",
+      name: "Established HVAC contractors with commercial work",
+    },
+    termsOfService: `${siteUrl}/terms`,
+  };
+}
+
+/**
  * The five canonical terms as a DefinedTermSet. Published ONLY by /how-it-works, where each
  * term is rendered with the matching `id="term-<key>"` anchor — markup may only mirror text
  * a visitor can see, at the address it says it is at.
@@ -506,7 +625,9 @@ export function guideJsonLd(page: GuidePage) {
       ? `${url}#article`
       : page.kind === "service"
         ? `${siteUrl}/#service`
-        : `${siteUrl}/#organization`;
+        : page.kind === "solution"
+          ? `${url}#service`
+          : `${siteUrl}/#organization`;
 
   const graph: Record<string, unknown>[] = [
     webPageJsonLd({

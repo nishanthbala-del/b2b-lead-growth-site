@@ -63,6 +63,7 @@ import {
   serviceJsonLd,
   standaloneRoutes,
 } from "../lib/pages.ts";
+import { llmsTxt } from "../lib/llms.ts";
 import { orgDescription } from "../lib/site.ts";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -109,12 +110,14 @@ const codeFiles = [
 // Shipped or owner-facing text that states the offer. CLAUDE_CODE_SEO_AI_SEO_AUDIT_HANDOFF.md
 // and SEO_GROWTH_PLAN.md are dated historical records carrying a "superseded" banner, and
 // SOURCES.md is a citation register; none of them is copy.
-const textFiles = ["public/llms.txt", "README.md", "SETUP.md"];
+const textFiles = ["README.md", "SETUP.md"];
 
 type Doc = { rel: string; prose: string };
 const corpus: Doc[] = [
   ...codeFiles.map((f) => ({ rel: path.relative(repoRoot, f), prose: toProse(readFileSync(f, "utf8"), true) })),
   ...textFiles.map((rel) => ({ rel, prose: toProse(read(rel), false) })),
+  // /llms.txt is generated (lib/llms.ts), so the corpus reads what it RENDERS, not its source.
+  { rel: "/llms.txt (rendered)", prose: toProse(llmsTxt(), false) },
 ];
 
 // A sentence ends at . ! or ? — and, inside a TypeScript string literal, that mark is followed
@@ -672,15 +675,18 @@ describe("(f) every URL we publish is real, indexable and not a redirect", () =>
       const source = stripComments(readFileSync(f, "utf8"));
       for (const m of source.matchAll(/href(?:=|:\s*)\{?["`](\/[^"`\s]*)["`]/g)) check(rel, m[1]!);
     }
-    for (const m of read("public/llms.txt").matchAll(/https:\/\/www\.b2bleadgrowth\.com(\/[^\s)]*)?/g)) {
-      check("public/llms.txt", (m[1] ?? "/").replace(/[.,;:]+$/, "") || "/"); // a sentence's full stop is not part of the path
+    for (const m of llmsTxt().matchAll(/https:\/\/www\.b2bleadgrowth\.com(\/[^\s)]*)?/g)) {
+      check("/llms.txt", (m[1] ?? "/").replace(/[.,;:]+$/, "") || "/"); // a sentence's full stop is not part of the path
     }
     assert.deepEqual(bad, [], `internal links that do not resolve to a live page:\n  ${bad.join("\n  ")}`);
   });
 
   test("retired paths are gone from every list that announces URLs", () => {
-    for (const rel of ["public/llms.txt", "scripts/indexnow-ping.mjs"]) {
-      const text = read(rel);
+    const lists: [string, string][] = [
+      ["/llms.txt", llmsTxt()],
+      ["scripts/indexnow-ping.mjs", read("scripts/indexnow-ping.mjs")],
+    ];
+    for (const [rel, text] of lists) {
       for (const r of retiredPaths) assert.ok(!stripComments(text).includes(`${r.from}"`) && !text.includes(`b2bleadgrowth.com${r.from}`), `${rel} still lists ${r.from}`);
     }
   });
