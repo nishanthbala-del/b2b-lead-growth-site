@@ -296,6 +296,9 @@ export const legalRoutes = [
 export const retiredPaths: { from: string; to: string }[] = [
   { from: "/hvac-lead-generation-new-jersey", to: "/commercial-hvac-lead-generation" },
   { from: "/shared-vs-exclusive-hvac-leads", to: "/how-to-choose-a-lead-generation-agency" },
+  // The NJ guide's URL for part of 2026-08-30 (renamed, then reverted); Google indexed it and
+  // reported it 404 until this redirect (2026-09-18).
+  { from: "/hvac-lead-generation", to: "/commercial-hvac-lead-generation" },
 ];
 
 /** Every indexable path on the site, in sitemap order. The drift tests read this. */

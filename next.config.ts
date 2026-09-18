@@ -48,6 +48,11 @@ const CSP = [
 //       still useful (how marketplace leads are sold, and the FTC's HomeAdvisor order) as a
 //       clearly labelled contrast.
 //
+//   /hvac-lead-generation             ->  /commercial-hvac-lead-generation      (2026-09-18)
+//       The same one-state guide's URL for part of 2026-08-30: a slug rename (f4655e8) that
+//       was reverted the same day (528bfd3). Google had found it, and Search Console lists it
+//       as "Not found (404)" — an old address answering 404 wastes whatever pointed at it.
+//
 // `statusCode: 301` rather than `permanent: true` (which answers 308): both are permanent and
 // both pass link equity, but 301 is what every SEO tool and the owner's brief call it.
 // ONE hop each, straight to a 200 — never to another redirect. Keep this list in lockstep
@@ -61,6 +66,11 @@ const RETIRED_PAGE_REDIRECTS = [
   {
     source: "/shared-vs-exclusive-hvac-leads",
     destination: "/how-to-choose-a-lead-generation-agency",
+    statusCode: 301 as const,
+  },
+  {
+    source: "/hvac-lead-generation",
+    destination: "/commercial-hvac-lead-generation",
     statusCode: 301 as const,
   },
 ];
