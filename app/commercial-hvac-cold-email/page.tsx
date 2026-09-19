@@ -289,7 +289,7 @@ export default function CommercialHvacColdEmailPage() {
             </a>{" "}
             ·{" "}
             <a
-              href="https://support.google.com/a/answer/81126"
+              href="https://support.google.com/mail/answer/81126"
               rel="nofollow noopener"
               target="_blank"
               className="text-accent underline underline-offset-4"
