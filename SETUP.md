@@ -107,6 +107,14 @@ const NOTIFY_EMAIL = '';  // optional: your private email for new-lead alerts
 // `recordVolume` and `exportReadiness` are RETIRED (2026-09-11, D-025) and always arrive
 // blank; they stay so existing rows keep their headings. The three commercial-fit
 // questions that replaced them are appended after `referralToken`.
+//
+// FIXED 2026-09-18: this array had drifted one generation behind CSV_COLUMNS again —
+// missing `preparedOpportunities` (D-027, 2026-09-17) and the five attribution columns
+// (2026-09-17). That is the exact failure mode the big comment above already documents
+// once (14 columns silently dropped before 2026-09-05): syncHeader() only ever APPENDS
+// what HEADERS lists, so a name missing from this array is a name no row ever gets,
+// forever, with no error. tests/apps-script.test.ts (site repo) now asserts this array
+// is byte-for-byte CSV_COLUMNS + ['bookingOpenedAt'], so it cannot drift silently again.
 const HEADERS = [
   'id', 'timestamp', 'status', 'package', 'name', 'email', 'company', 'website',
   'role', 'targetMarket', 'avgDealSize', 'salesGoals', 'currentProspecting',
@@ -114,6 +122,8 @@ const HEADERS = [
   'recordVolume', 'followUpOwner', 'capacity', 'exportReadiness', 'timeline',
   'budget', 'fitOutcome', 'fitScore', 'recommendedTier', 'qualificationSummary',
   'campaign', 'referralToken', 'commercialShare', 'commercialQuoter', 'targetAccounts',
+  'preparedOpportunities', 'utmSource', 'utmMedium', 'utmCampaign', 'utmContent',
+  'utmTerm', 'landingPath', 'referrerHost',
   'bookingOpenedAt'
 ];
 
@@ -125,6 +135,19 @@ const FEEDBACK_SHEET_NAME = 'Feedback';
 const FEEDBACK_HEADERS = [
   'id', 'timestamp', 'type', 'token', 'quote', 'name', 'company', 'consent',
   'businessName', 'contactName', 'contactEmail', 'notes', 'ip'
+];
+
+// The 'Events' tab — first-party conversion events (lib/events.ts / lib/events-server.ts),
+// posted here only when EVENTS_WEBHOOK_URL is set. ADDED 2026-09-18: this branch did not
+// exist even though the prose below ("Conversion events") already promised it — an event
+// POST had no `action` this script recognised, so it fell through to the 'submit' branch
+// and appended a near-empty row to the LEADS sheet (an event has no name/email/company) on
+// every single event, exactly what the "must never be joined to a named row" rule below
+// forbids. Its own tab, and it never reads or writes the Leads sheet's row numbering.
+const EVENTS_SHEET_NAME = 'Events';
+const EVENT_HEADERS = [
+  'at', 'name', 'path', 'placement', 'step', 'outcome', 'plan', 'visitId',
+  'utmSource', 'utmMedium', 'utmCampaign', 'landingPath', 'referrerHost'
 ];
 
 function doPost(e) {
@@ -150,6 +173,18 @@ function doPost(e) {
         const fbHeader = syncHeader(fbSheet, FEEDBACK_HEADERS);
         const fbRow = fbHeader.map(function (h) { return body[h] != null ? body[h] : ''; });
         fbSheet.getRange(fbSheet.getLastRow() + 1, 1, 1, fbHeader.length).setValues([fbRow]);
+        return json({ ok: true });
+      }
+
+      // action === 'event' — a first-party conversion event (lib/events-server.ts). Its own
+      // tab too, and checked BEFORE the Leads sheet is even opened, for the same reason as
+      // client_feedback above: an event carries no name/email/company, so falling through to
+      // the 'submit' branch below would silently append a near-empty row to Leads instead.
+      if (body.action === 'event') {
+        const evSheet = getSheet(EVENTS_SHEET_NAME, EVENT_HEADERS);
+        const evHeader = syncHeader(evSheet, EVENT_HEADERS);
+        const evRow = evHeader.map(function (h) { return body[h] != null ? body[h] : ''; });
+        evSheet.getRange(evSheet.getLastRow() + 1, 1, 1, evHeader.length).setValues([evRow]);
         return json({ ok: true });
       }
 
@@ -380,7 +415,7 @@ site at a calendar nobody watched.
    | --- | --- |
    | `SHEETS_WEBHOOK_URL` | the Apps Script `/exec` URL from Step 1 |
    | `SHEETS_WEBHOOK_SECRET` | the secret (only if you set one) |
-   | `EVENTS_WEBHOOK_URL` | optional — where the conversion events go (see "Conversion events" below); leave unset to keep them in the Vercel runtime log only |
+   | `EVENTS_WEBHOOK_URL` | optional — normally the same URL as `SHEETS_WEBHOOK_URL` (see "Conversion events" below); leave unset to keep events in the Vercel runtime log only |
 4. **Deploy.** Submit the live form once to confirm a row lands in your Sheet.
 
 > Prefer the CLI? `npm i -g vercel && vercel` (then `vercel --prod`). You'll still set the env
@@ -419,12 +454,13 @@ code.
 
 - **Where they go by default:** the deployment's runtime log, one line per event, prefixed
   `[event]`. In Vercel → Project → Logs, filter on `[event]` (or `[event] {"name":"form_abandon"`).
-- **To keep them in a Sheet:** set `EVENTS_WEBHOOK_URL` to an Apps Script `/exec` URL. The site
+- **To keep them in a Sheet:** set `EVENTS_WEBHOOK_URL` to an Apps Script `/exec` URL — normally
+  the **same** URL as `SHEETS_WEBHOOK_URL` (the leads script above already handles
+  `action === "event"` by appending to its own `Events` tab, never the `Leads` tab). The site
   POSTs `{ action: "event", name, path, placement, step, outcome, plan, visitId, utmSource,
   utmMedium, utmCampaign, landingPath, referrerHost, at, secret }` — the same `secret` as
-  `SHEETS_WEBHOOK_SECRET`. Use a **separate tab (or a separate Sheet)** from the leads: the
-  events are counts, and must never be joined to a named row. A minimal handler is the leads
-  script's `doPost` with `action === "event"` appending those fields to an `Events` tab.
+  `SHEETS_WEBHOOK_SECRET`. Events are counts and must never be joined to a named row, which is
+  why they live in a separate tab with no lead id and no email.
 - **What to read from them:** the ratio between the steps is the point — clicks → starts →
   each step → completes → outcome → scheduler opened. `form_abandon` carries the step reached, so
   "people stop at step 3" is measurable instead of guessed. A jump in `not_yet` outcomes from
