@@ -3,7 +3,7 @@
 // scripts/check_cross_repo.py fails when this file and a fresh export differ.
 export const vocabulary = {
   "source": "lead_gen_claude_os core/vocabulary.py",
-  "asOf": "2026-09-18",
+  "asOf": "2026-09-19",
   "groups": [
     {
       "key": "who",
@@ -780,5 +780,5 @@ export const vocabulary = {
       "pattern": ""
     }
   ],
-  "version": "565bb7a978ad2ffd"
+  "version": "d8bf1d8099f9d79d"
 } as const;

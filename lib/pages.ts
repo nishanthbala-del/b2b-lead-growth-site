@@ -23,9 +23,9 @@ import { plans, planSlug, terminology } from "./content.ts";
 // retired behind redirects and three were added. A page not substantively edited keeps its date.
 const D027 = "2026-09-17";
 
-// THE CANON DATE (2026-09-18): /definitions and /sample-deliverables first published, both
+// THE CANON DATE (2026-09-19): /definitions and /sample-deliverables first published, both
 // generated from the operating system's own modules.
-const CANON = "2026-09-18";
+const CANON = "2026-09-19";
 
 // THE COMMERCIAL-SEO PASS DATE (2026-09-18): five pages first published (see the note above
 // their registry entries), and every page whose visible copy the residential-language sweep

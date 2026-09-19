@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import GuideLayout, { GuideSection, KeyAnswer } from "@/components/GuideLayout";
 import SpecimenDocument from "@/components/SpecimenDocument";
-import { canonTerm, specimenDisclosure, specimenList, termAnchor } from "@/lib/canon";
+import { canonTerm, specimenList, termAnchor } from "@/lib/canon";
 import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
 import { brandName } from "@/lib/site";
 
@@ -54,7 +54,8 @@ export default function SampleDeliverablesPage() {
               real account we researched from public sources. Every other document was produced by
               the same code that produces a client&rsquo;s, with a{" "}
               <span className="rounded bg-accent/10 px-1 font-medium text-accent">[bracketed placeholder]</span>{" "}
-              wherever a real buyer&rsquo;s details or a real count would go. {specimenDisclosure}
+              wherever a real buyer&rsquo;s details or a real count would go. None of it is a
+              client&rsquo;s document, and no number on this page is a result.
             </p>
             <p>
               Every term in them is defined once, on{" "}
