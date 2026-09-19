@@ -45,6 +45,7 @@ export const vocabulary = {
       "terms": [
         "managed_outbound",
         "opportunity_engine",
+        "account_coverage",
         "message_cap",
         "billable_opportunity",
         "responsibility"
@@ -374,7 +375,7 @@ export const vocabulary = {
       "aka": [
         "meeting",
         "booked call",
-        "Meeting Booked"
+        "Meeting Scheduled"
       ],
       "notSameAs": [
         {
@@ -407,7 +408,7 @@ export const vocabulary = {
     {
       "key": "downstream_outcome",
       "label": "Downstream outcome",
-      "definition": "What happened after the handoff, as the client reports it: meeting held, site visit / estimate requested, proposal or bid sent, won, lost or stalled. Each carries the client's own words and one attribution: \"introduced by this outreach\", \"known to you before; moved by this outreach\", \"already in progress before this outreach (no credit taken)\" or \"attribution not established\". An outcome nobody has reported is unknown, never a loss.",
+      "definition": "What happened after the handoff, as the client reports it: meeting held, the buyer did not attend the scheduled meeting, site visit / estimate requested, proposal or bid sent, won, lost or stalled. Each carries the client's own words and one attribution: \"introduced by this outreach\", \"known to you before; moved by this outreach\", \"already in progress before this outreach (no credit taken)\" or \"attribution not established\". An outcome nobody has reported is unknown, never a loss.",
       "group": "handoff",
       "plans": [
         "Managed Outbound",
@@ -453,9 +454,27 @@ export const vocabulary = {
       "notSameAs": []
     },
     {
+      "key": "account_coverage",
+      "label": "Monthly account coverage",
+      "definition": "How many new commercial accounts a plan enters into outreach in a calendar month: 35 on Managed Outbound and 50 on the Opportunity Engine. Each account is then worked through its whole follow-up sequence, so following up never costs a new account. It is a capacity limit — not a target, and not the reason one plan costs more.",
+      "group": "terms",
+      "plans": [
+        "Managed Outbound",
+        "Opportunity Engine"
+      ],
+      "decidedBy": "The send gate, in code, at send time: a new account beyond the month's coverage waits; a touch to an account already opened this month does not.",
+      "evidence": "The send ledger, counted by account.",
+      "measure": "",
+      "steps": [],
+      "aka": [
+        "new accounts per month"
+      ],
+      "notSameAs": []
+    },
+    {
       "key": "message_cap",
       "label": "Message cap",
-      "definition": "The most outreach messages a plan sends in a calendar month, first touches and follow-ups alike: 100 on Managed Outbound and 150 on the Opportunity Engine. It is a capacity limit — not a target, and not the reason one plan costs more.",
+      "definition": "The most outreach messages a plan sends in a calendar month, first touches and follow-ups alike: 140 on Managed Outbound and 200 on the Opportunity Engine. It is derived from the monthly account coverage, sized so the full follow-up sequence fits inside every account — a guard on sending volume, not a target, and not the reason one plan costs more.",
       "group": "terms",
       "plans": [
         "Managed Outbound",
@@ -780,5 +799,5 @@ export const vocabulary = {
       "pattern": ""
     }
   ],
-  "version": "fb4e8157fee292e5"
+  "version": "9047714541aacf8f"
 } as const;

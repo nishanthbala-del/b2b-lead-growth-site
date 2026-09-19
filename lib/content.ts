@@ -719,6 +719,15 @@ export const faqs: Faq[] = [
       "Those tools email the people already in your system; we find and contact the commercial accounts that are not in it yet. Your software cannot research the property managers and building owners in your towns, name the right person at each, or write to them with a cited reason. If someone on your team already does that every week, you may not need us; most shops don't have one, because nobody has time.",
   },
   {
+    // The other substitute a commercial shop is sold: prospecting software and data — commercial
+    // property records, contact finders, intent signals. It is a tool; this is the work done with
+    // one. No superiority claim: if the client's team already works the tool every week, say so.
+    question: "We already pay for prospecting software or a contact database. Isn't this the same thing?",
+    group: "What this is",
+    answer:
+      "No. That software gives your team data: companies, properties, contacts, sometimes a buying signal. Someone still has to choose which accounts are worth your time, write to the right person with a reason that is true, follow up, read every reply, screen the interest and hand you the buyers who want to talk. On the Opportunity Engine, we also check each one against your criteria and set the next step before your estimator's time goes into it. That is the part we do. If your team already keeps a target-account list in a tool like that, tell us at onboarding. We start from your list instead of duplicating it, we still verify every account ourselves, and the tool stays yours.",
+  },
+  {
     question: "We already have a marketing company running ads. Does this replace them?",
     group: "What this is",
     answer:
