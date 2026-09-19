@@ -200,7 +200,7 @@ export const vocabulary = {
         "Opportunity Engine"
       ],
       "decidedBy": "Code moves an opportunity to Qualified Interest only when every required fact is on record; a person confirms the interest.",
-      "evidence": "The client's agreement is signed and paid, so the work may run, the account is inside the approved area and work types, clear of the client's exclusions, and on no do-not-contact list, who decides is on record, the interest is confirmed by a person, the reply is screened and the buyer agreed, in their own words, to speak with the contractor.",
+      "evidence": "The client's agreement is signed and paid, so the work may run; the account is inside the approved area and work types, clear of the client's exclusions, and on no do-not-contact list; who decides is on record; the interest is confirmed by a person; the reply is screened; and the buyer agreed, in their own words, to speak with the contractor.",
       "measure": "We measure the work by qualified conversations — a decision-maker at a commercial account that fits your profile who showed genuine interest and agreed to talk with your team, confirmed by a person — always shown against the accounts contacted and the messages sent to get there. It is a count of what happened, not a commitment to a number.",
       "steps": [],
       "aka": [
@@ -269,7 +269,7 @@ export const vocabulary = {
         "Opportunity Engine"
       ],
       "decidedBy": "A named person on our side checks every agreed criterion with evidence. Code refuses the stage unless the need, the timing and the next step are confirmed by the buyer and the brief is complete.",
-      "evidence": "The client's agreement is signed and paid, so the work may run, the account is inside the approved area and work types, clear of the client's exclusions, and on no do-not-contact list, who decides is on record, the interest is confirmed by a person, the reply is screened, the buyer agreed, in their own words, to speak with the contractor, the need, in the buyer's words, the timing, in the buyer's words, the property, account and buyer information (unknowns marked unknown), every agreed criterion checked, with evidence, by a named person, a dated next sales step the buyer confirmed and the opportunity brief, open questions included.",
+      "evidence": "The client's agreement is signed and paid, so the work may run; the account is inside the approved area and work types, clear of the client's exclusions, and on no do-not-contact list; who decides is on record; the interest is confirmed by a person; the reply is screened; the buyer agreed, in their own words, to speak with the contractor; the need, in the buyer's words; the timing, in the buyer's words; the property, account and buyer information (unknowns marked unknown); every agreed criterion checked, with evidence, by a named person; a dated next sales step the buyer confirmed; and the opportunity brief, open questions included.",
       "measure": "",
       "steps": [],
       "aka": [],
@@ -780,5 +780,5 @@ export const vocabulary = {
       "pattern": ""
     }
   ],
-  "version": "d8bf1d8099f9d79d"
+  "version": "fb4e8157fee292e5"
 } as const;
