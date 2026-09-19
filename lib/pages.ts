@@ -28,6 +28,11 @@ const D027 = "2026-09-17";
 // changed carries it as dateModified. A page the sweep did not touch keeps its own date.
 const SEO_FOOTPRINT = "2026-09-18";
 
+// THE TWO-OFFER DATE (D-028, deployed 2026-09-19): every page whose visible offer copy moved from
+// three levels of responsibility to the two plans carries it as dateModified — the homepage, the
+// service page, how-it-works, pricing, the agency guide, the free audit and the fit check.
+const D028 = "2026-09-19";
+
 // When adding ANY indexable route, add it to `guidePages`, `standaloneRoutes` or
 // `legalRoutes` below and then to scripts/indexnow-ping.mjs, which carries its own explicit
 // URL list (a .mjs script run outside the bundler cannot import this registry). /llms.txt is
@@ -35,7 +40,7 @@ const SEO_FOOTPRINT = "2026-09-18";
 // tests/pricing-model.test.ts fail if the lists stop agreeing, if a registered route has no
 // page file, or if a redirected path is registered.
 // The homepage's example account was replaced and its hero line rewritten on 2026-09-18.
-export const homepageDateModified = SEO_FOOTPRINT;
+export const homepageDateModified = D028;
 
 // The homepage's own title, description and H1, in the registry with every other route's.
 //
@@ -106,7 +111,7 @@ export const guidePages: GuidePage[] = [
     description:
       "Commercial HVAC lead generation for established contractors: researched accounts, outreach in your name, and a warm handoff of qualified conversations.",
     datePublished: D027,
-    dateModified: SEO_FOOTPRINT,
+    dateModified: D028,
     kind: "service",
   },
   {
@@ -117,7 +122,7 @@ export const guidePages: GuidePage[] = [
     description:
       "Commercial HVAC managed outbound, step by step: account research, outreach in your name, what happens at genuine interest on each plan, and the handoff.",
     datePublished: D027,
-    dateModified: SEO_FOOTPRINT,
+    dateModified: D028,
     kind: "guide",
   },
   {
@@ -130,7 +135,7 @@ export const guidePages: GuidePage[] = [
     datePublished: "2026-08-08",
     // Rebuilt around responsibility on 2026-09-17; on 2026-09-18 its account-sourcing lines
     // and the terminology stopped naming the retired residential model.
-    dateModified: SEO_FOOTPRINT,
+    dateModified: D028,
     kind: "service",
   },
   {
@@ -144,7 +149,7 @@ export const guidePages: GuidePage[] = [
       "What the free commercial HVAC pipeline audit delivers: an account profile, 3–5 vetted commercial accounts with source links, and a sample message.",
     datePublished: "2026-08-08",
     // 2026-09-18: an answer-first opening, an exact-match H1, and no residential wording.
-    dateModified: SEO_FOOTPRINT,
+    dateModified: D028,
     kind: "guide",
   },
   {
@@ -157,7 +162,7 @@ export const guidePages: GuidePage[] = [
     datePublished: "2026-08-08",
     // Rewritten for choosing a COMMERCIAL outbound partner on 2026-09-17; on 2026-09-18 its
     // residential-marketplace contrast was replaced by a section on checking a vendor's data.
-    dateModified: SEO_FOOTPRINT,
+    dateModified: D028,
     kind: "guide",
     section: "guide",
   },
@@ -260,7 +265,7 @@ export const standaloneRoutes: StandaloneRoute[] = [
     metaTitle: "Commercial HVAC Fit Check",
     description: `A ${intakeMinutes}-minute fit check for established HVAC contractors with commercial work. A straight answer, including no — and a free pipeline audit if it fits.`,
     // 2026-09-18: the answer options and the declines describe commercial work only.
-    dateModified: SEO_FOOTPRINT,
+    dateModified: D028,
     priority: 0.7,
   },
   {

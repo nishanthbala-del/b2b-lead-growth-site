@@ -190,10 +190,10 @@ export const cancellationNoticeDays = 14;
 // 2026-09-18: /terms §2's example of the optional client-supplied lists now reads "your own
 // past commercial accounts" (it listed the retired residential model's record types). No
 // liability, governing-law or dispute clause changed.
-// 2026-09-18 (D-028): the SERVICE-DESCRIPTION passages of /terms and /privacy moved from D-027's
+// 2026-09-19 (D-028): the SERVICE-DESCRIPTION passages of /terms and /privacy moved from D-027's
 // three levels to the two plans (Managed Outbound, Opportunity Engine), the warm handoff, and the
 // retirement of the $750 plan. The §4 no-guarantee list gained "qualified conversations" and
 // "accepted sales opportunities" (it only widens what we never promise). No liability,
 // governing-law or dispute clause changed.
-export const legalLastUpdated = "September 18, 2026";
-export const legalLastUpdatedISO = "2026-09-18";
+export const legalLastUpdated = "September 19, 2026";
+export const legalLastUpdatedISO = "2026-09-19";
