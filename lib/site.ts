@@ -20,7 +20,13 @@ export const brandName = "B2B Lead Growth";
 
 // Canonical organization/service description used in JSON-LD structured data.
 //
-// REWRITTEN 2026-09-17 for D-027 (operating-system repo:
+// REWRITTEN 2026-09-18 for D-028 (operating-system repo:
+// 00_CONTROL_CENTER/decisions/D-028_two_offer_model.md, machine form core/offer.py): the two
+// plans BY NAME, the handoff point of each (qualified conversations / accepted sales
+// opportunities), and the boundary that holds on both. D-027's three levels, and its $750 plan,
+// are retired; the note below is kept for the history of the sentence.
+//
+// (Previously) REWRITTEN 2026-09-17 for D-027 (operating-system repo:
 // 00_CONTROL_CENTER/decisions/D-027_responsibility_tiers.md, machine form core/offer.py).
 // It names the category (commercial HVAC managed outbound), the ONE niche (established HVAC
 // contractors that already sell and complete commercial work — D-025), the three levels of
@@ -35,7 +41,7 @@ export const brandName = "B2B Lead Growth";
 // IS contacted — property managers, building owners and facility teams — and that no leads are
 // sold, which keeps it filed away from the per-lead sellers without mentioning homeowners.
 export const orgDescription =
-  "B2B Lead Growth is a commercial HVAC managed outbound service for established HVAC contractors that already sell and complete commercial work. It finds the commercial accounts worth pursuing — property managers, building owners, facility teams and multi-site operators — from cited public sources, contacts the right people in the contractor's name, and hands each opportunity to the contractor's team at one of three levels of responsibility: Prospecting, Managed Pipeline, or Qualified Opportunity Engine. The contractor always estimates and closes. Every account contacted is a business, and no leads are sold.";
+  "B2B Lead Growth is a commercial HVAC managed outbound service for established HVAC contractors that already sell and complete commercial work. It finds the commercial accounts worth pursuing — property managers, building owners, facility teams and multi-site operators — from cited public sources, contacts the right people in the contractor's name, and hands the contractor's team qualified conversations. Two plans: Managed Outbound ($1,500 a month) hands over each qualified conversation with a warm introduction; the Opportunity Engine ($2,500 a month) develops each one into an accepted sales opportunity with the next sales step already set. The contractor always does the technical discovery, estimates and closes. Every account contacted is a business, and no leads are sold.";
 
 // ---------------------------------------------------------------------------
 // Booking
@@ -184,5 +190,10 @@ export const cancellationNoticeDays = 14;
 // 2026-09-18: /terms §2's example of the optional client-supplied lists now reads "your own
 // past commercial accounts" (it listed the retired residential model's record types). No
 // liability, governing-law or dispute clause changed.
+// 2026-09-18 (D-028): the SERVICE-DESCRIPTION passages of /terms and /privacy moved from D-027's
+// three levels to the two plans (Managed Outbound, Opportunity Engine), the warm handoff, and the
+// retirement of the $750 plan. The §4 no-guarantee list gained "qualified conversations" and
+// "accepted sales opportunities" (it only widens what we never promise). No liability,
+// governing-law or dispute clause changed.
 export const legalLastUpdated = "September 18, 2026";
 export const legalLastUpdatedISO = "2026-09-18";

@@ -2,40 +2,32 @@
 // FAQPage / Service / Offer / DefinedTermSet JSON-LD — one source of truth keeps the
 // structured data verbatim-matched to the visible text (a Google rich-results requirement).
 //
-// THE MODEL THIS FILE DESCRIBES (D-027, 2026-09-16): commercial HVAC managed outbound, sold
-// as THREE LEVELS OF OPERATIONAL RESPONSIBILITY at one price ladder —
+// THE MODEL THIS FILE DESCRIBES (D-028, 2026-09-18): commercial HVAC outbound, sold as TWO
+// plans. The plan decides HOW FAR we own each prospect before the warm handoff to you —
 //
-//     $750    Prospecting                  we find and contact suitable commercial accounts;
-//                                          you take over at interest
-//     $1,500  Managed Pipeline             we run outreach and follow-up, screen genuine
-//                                          interest, and organize the handoff
-//     $2,500  Qualified Opportunity Engine we qualify the opportunity, gather the relevant
-//                                          context, coordinate the next step or site visit,
-//                                          and prepare your team to estimate and close
+//     $1,500  Managed Outbound     right accounts, decision-makers reached, outreach and
+//                                  follow-up, genuine qualified interest; warm handoff at
+//                                  Qualified Interest. Core outcome: qualified conversations.
+//     $2,500  Opportunity Engine   everything in Managed Outbound, then the need validated, the
+//                                  property/account/buyer information gathered, the fit accepted
+//                                  against your criteria, a concrete next sales step coordinated;
+//                                  handoff at an Accepted Sales Opportunity.
 //
-// — never three versions of the same outreach with different volume limits. A lower plan
-// never inherits a higher plan's responsibility, and on every plan the contractor estimates
-// and closes. The buyer is unchanged from D-025: an established HVAC contractor that already
-// sells and completes commercial work. Everyone we contact is a BUSINESS — a property manager,
-// a building owner, a facility team — found from public sources. (Since 2026-09-18 the copy says
-// that as a positive and no longer mentions the retired residential model at all.)
+// On both plans the contractor does the technical discovery, the site assessment, the
+// estimate, the proposal and the close. Everyone we contact is a BUSINESS — a property manager,
+// a building owner, a facility team — found from public sources.
 //
 // CANONICAL SOURCE: the operating-system repo's core/offer.py (TIERS, RESPONSIBILITY,
-// HANDOFF_STANDARDS, TERMINOLOGY, CONTRACTOR_BOUNDARY, TERMS, STEP_UPS, OUTCOME_METRIC,
-// POSITIONING) and 00_CONTROL_CENTER/decisions/D-027_responsibility_tiers.md. Where a string
-// there is canonical — the plan names, the one-liners, the positioning sentence, the
-// boundary sentence, the definitions, the timeline phases — it is copied rather than
-// paraphrased, and scripts/check_cross_repo.py in that repo plus tests/pricing-model.test.ts
-// in this one fail if it drifts.
+// HANDOFF_STANDARDS, WARM_HANDOFF_STEPS, TERMINOLOGY, CONTRACTOR_BOUNDARY, TERMS, STEP_UPS,
+// OUTCOME_METRIC, POSITIONING) and 00_CONTROL_CENTER/decisions/D-028_two_offer_model.md. Where a
+// string there is canonical — the plan names, the one-liners, the positioning sentence, the
+// boundary sentence, the definitions — it is copied rather than paraphrased, and
+// scripts/check_cross_repo.py in that repo plus tests/pricing-model.test.ts in this one fail if
+// it drifts.
 //
-// WHAT THIS REPLACED. Until 2026-09-16 the plans were "Lead Engine / Outreach Engine /
-// Appointment Engine": a list the client worked himself, then sending, then "qualified
-// conversations booked onto your calendar". Three things were wrong with that under D-027 and
-// are the reason the file was rewritten rather than renamed: the entry plan sent nothing (it
-// now sends every first touch in the client's name), the word "qualified" was applied to an
-// ordinary interested reply (it is now reserved for the $2,500 standard), and the top plan's
-// headline was appointment setting (it is now a prepared opportunity — and no plan promises
-// an appointment, a site visit, or a count of anything).
+// WHAT THIS REPLACED. D-027 (2026-09-16) sold three tiers ($750 / $1,500 / $2,500) under other
+// names; D-028 retired the $750 tier and renamed and re-scoped the other two. Nothing on this
+// site names the retired tiers.
 
 import { callLengthMinutes, intakeMinutes } from "./site.ts";
 
@@ -47,47 +39,46 @@ import { callLengthMinutes, intakeMinutes } from "./site.ts";
 // LITERAL JSX text (components/LeadGenerationLanding.tsx) because check_cross_repo.py reads
 // that file, not this constant; tests/pricing-model.test.ts holds the two together.
 export const positioningSentence =
-  "We find the commercial accounts worth pursuing, contact the right people in your name, and hand each opportunity to your team at the level you chose — from first interest to a prepared opportunity your estimator can act on. We measure the work by one thing: interested prospects.";
+  "We find the commercial accounts worth pursuing, reach the decision-makers in your name, and hand your team qualified conversations — or, on the Opportunity Engine, accepted sales opportunities with the next sales step already set. We measure the work by one thing: qualified conversations.";
 
-// core.offer.BOUNDARY_SENTENCE, verbatim. True on every plan.
+// core.offer.BOUNDARY_SENTENCE, verbatim. True on both plans.
 export const boundarySentence =
-  "B2B Lead Growth prepares the opportunity. The HVAC contractor estimates and closes it.";
+  "B2B Lead Growth creates the sales conversation and, on the Opportunity Engine, develops it into an accepted sales opportunity. The HVAC contractor does the technical discovery, estimates, proposes and closes.";
 
 // core.offer.CONTRACTOR_BOUNDARY, verbatim. Each entry completes the sentence "We do not …".
 export const contractorBoundary: string[] = [
-  "perform technical HVAC inspections",
-  "engineer solutions or specify equipment",
-  "diagnose equipment",
-  "determine final project scope",
-  "create binding HVAC estimates or quotes",
-  "set final pricing",
-  "negotiate technical or contract terms",
-  "guarantee contracts, appointments, site visits, qualified opportunities, revenue or sales",
-  "replace the contractor's estimator or salesperson in closing",
+  "perform technical HVAC discovery, inspections or site assessments",
+  "diagnose equipment or building systems",
+  "engineer solutions, size equipment or specify equipment",
+  "determine the final project scope",
+  "prepare estimates, quotes, bids or proposals",
+  "set pricing or negotiate price or contract terms",
+  "conduct technical field sales or close the sale",
+  "deliver the HVAC work",
+  "guarantee contracts, appointments, site visits, qualified conversations, sales opportunities, revenue or sales",
 ];
 
-// THE ONE ACTIVITY METRIC (core.offer.OUTCOME_METRIC). A measurement of what happened, never
-// a promise — which is why the sentence carries its own denominators and no number.
-// It was labelled "qualified conversations started" until D-027 reserved the word "qualified"
-// for the $2,500 standard. The definition did not change; the noun did.
+// THE ONE MEASURE (core.offer.OUTCOME_METRIC). A measurement of what happened, never a promise —
+// which is why the sentence carries its own denominators and no number. Counted from the
+// recorded milestone (the buyer agreed to talk), never from a reply label.
 export const outcomeMetric = {
-  label: "interested prospects",
+  label: "qualified conversations",
   definition:
-    "a relevant decision-maker at a commercial account that fits your profile who replied with genuine openness to continuing the conversation, with that interest confirmed by a person",
+    "a decision-maker at a commercial account that fits your profile — or the colleague they sent us to — who showed genuine interest and agreed to speak with your team, confirmed by a person",
   denominators: ["accounts contacted", "outreach messages sent"],
   oneSentence:
-    "We measure the work by interested prospects — a decision-maker at a commercial account that fits your profile who replied with genuine interest, confirmed by a person — always shown against the accounts contacted and the messages sent to get there. It is a count of what happened, not a commitment to a number.",
+    "We measure the work by qualified conversations — a decision-maker at a commercial account that fits your profile who showed genuine interest and agreed to talk with your team, confirmed by a person — always shown against the accounts contacted and the messages sent to get there. It is a count of what happened, not a commitment to a number.",
 } as const;
 
 /* -------------------------------------------------------------------------- */
-/*  Terminology — five terms, never interchangeable (D-027 §4)                 */
+/*  Terminology — never interchangeable (D-028 §6)                             */
 /* -------------------------------------------------------------------------- */
 
 export type Term = { key: string; term: string; definition: string };
 
-// core.offer.TERMINOLOGY. "the client approved" reads "you approved" here because the reader
-// of this site IS the client; nothing else is changed. Rendered on /how-it-works (with a
-// DefinedTermSet), /pricing and /commercial-hvac-lead-generation from this one array.
+// core.offer.TERMINOLOGY. "the client" reads "you" here because the reader of this site IS the
+// client; nothing else is changed. Rendered on /how-it-works (with a DefinedTermSet), /pricing
+// and /commercial-hvac-lead-generation from this one array.
 export const terminology: Term[] = [
   {
     key: "prospect",
@@ -99,33 +90,39 @@ export const terminology: Term[] = [
     key: "interested-prospect",
     term: "Interested Prospect",
     definition:
-      "A relevant contact expressing genuine openness to continuing the conversation, confirmed by a person rather than a keyword match.",
+      "A relevant contact who replied with genuine openness to continuing the conversation, confirmed by a person rather than a keyword match. The step before a qualified conversation.",
   },
   {
-    key: "screened-interest",
-    term: "Screened Interest",
+    key: "qualified-conversation",
+    term: "Qualified Conversation",
     definition:
-      "An interested prospect whose basic relevance and intent have been checked. The unit the $1,500 Managed Pipeline hands off.",
+      "Qualified Interest: a decision-maker at a commercial account that fits your profile — or the colleague they sent us to — who showed genuine interest and agreed to speak with you, confirmed by a person. What Managed Outbound hands off.",
   },
   {
-    key: "qualified-opportunity",
-    term: "Qualified Opportunity",
+    key: "accepted-sales-opportunity",
+    term: "Accepted Sales Opportunity",
     definition:
-      "A commercial opportunity meeting the defined qualification standard, with sufficient verified business, buyer, scope and next-step context to justify the contractor investing sales or estimating time. Reserved for the $2,500 Qualified Opportunity Engine.",
+      "A qualified conversation whose business need was validated, whose property, account and buyer information was gathered, that was accepted against the criteria you agreed with us, and whose concrete next sales step was coordinated. What the Opportunity Engine hands off.",
   },
   {
-    key: "structured-handoff",
-    term: "Structured Handoff",
+    key: "warm-handoff",
+    term: "Warm Handoff",
     definition:
-      "The organized transfer of the conversation, the relevant context, the history and the next action to the HVAC contractor.",
+      "The handoff record, the account, contact, context and conversation history, a warm introduction by name, your booking path where appropriate, notice to you, and ownership of the conversation passed to you.",
+  },
+  {
+    key: "opportunity-brief",
+    term: "Opportunity Brief",
+    definition:
+      "The complete written brief that travels with an accepted sales opportunity: the validated need, timing, property, account and buyer information, the check against your criteria, the coordinated next step, and the open questions.",
   },
 ];
 
 /* -------------------------------------------------------------------------- */
-/*  The three plans                                                             */
+/*  The two plans                                                               */
 /* -------------------------------------------------------------------------- */
 
-export type PlanKey = "prospecting" | "managed_pipeline" | "qualified_opportunity";
+export type PlanKey = "managed_outbound" | "opportunity_engine";
 
 export type Plan = {
   key: PlanKey;
@@ -133,14 +130,18 @@ export type Plan = {
   price: number;
   /** One sentence: what this plan makes US responsible for. Canonical — do not reword. */
   oneLiner: string;
+  /** The plan's core outcome, in the mandate's words (core/offer TIERS[*].outcome_sentence). */
+  outcome: string;
+  /** Where our ownership ends and the warm handoff happens (core/offer MILESTONES). */
+  handoffPoint: string;
   /** The responsibility chain this plan buys, in delivery order (core/offer TIERS[*].owns). */
   owns: string[];
   /** What happens once a contact shows genuine interest (core/offer TIER_FUNNEL). */
   afterInterest: string[];
   /** What is handed to the contractor, and what it is called (core/offer HANDOFF_STANDARDS).
-   *  A lower plan's handoff is never labelled with a higher plan's noun. */
+   *  Managed Outbound's handoff is never labelled with the Opportunity Engine's noun. */
   handoff: { label: string; unit: string; definition: string };
-  /** A SUPPORTING FACT, never the reason a plan costs more (D-027 §1). The unit is outreach
+  /** A SUPPORTING FACT, never the reason a plan costs more (D-028 §1). The unit is outreach
    *  messages a month because that is what the send gate enforces. */
   capacity: string;
   /** Who should pick this one, in a single sentence. */
@@ -156,136 +157,106 @@ export type Plan = {
 
 export const plans: Plan[] = [
   {
-    key: "prospecting",
-    name: "Prospecting",
-    price: 750,
-    oneLiner: "We find and contact suitable commercial accounts. You take over at interest.",
-    owns: [
-      "targeting",
-      "research",
-      "contact selection",
-      "initial outreach",
-      "identification of genuine interest",
-      "handoff at interest",
-    ],
-    afterInterest: ["interest", "contractor takeover"],
-    handoff: {
-      label: "Interest handoff",
-      unit: "interested prospects handed off",
-      definition:
-        "An interested prospect — a relevant contact at a commercial account that fits your profile who replied with genuine openness to continuing the conversation, confirmed by a person — handed to you as it arrives. Nothing has been screened or qualified: you take the conversation.",
-    },
-    capacity:
-      "Up to 40 first-touch outreach messages a month — one per commercial account. There is no follow-up sequence at this level.",
-    bestFor:
-      "Someone on your team already works interested replies and chases the follow-up. The work you lack is finding the accounts and making the first contact.",
-    includes: [
-      "Ideal-account profile built with you, including the work and property types to screen out",
-      "Commercial accounts in your area researched from public sources — property and facility managers, building owners, multi-site operators, offices, warehouses, schools, healthcare, restaurants, retail — each with a named contact, a cited reason and a source link",
-      "A first-touch message written for each account and sent in your name, from your own domain and mailbox",
-      "Every reply read the same day; opt-outs suppressed in code, immediately",
-      "An interested prospect handed to you as it arrives, with the thread and the reason we contacted them — you take the conversation from there",
-      "Monthly report of verified activity: accounts contacted, messages sent, interested prospects handed off",
-    ],
-    youKeep:
-      "Follow-up, interest screening, qualification, scheduling, the site visit, the estimate and the close stay with you.",
-    reportCadence: "Monthly",
-  },
-  {
-    key: "managed_pipeline",
-    name: "Managed Pipeline",
+    key: "managed_outbound",
+    name: "Managed Outbound",
     price: 1500,
-    oneLiner: "We run outreach and follow-up, screen genuine interest, and organize the handoff.",
+    oneLiner:
+      "We find the right commercial accounts, reach the decision-makers, run the outreach and follow-up, and hand you each prospect who wants to talk — with a warm introduction.",
+    outcome: "Create qualified conversations.",
+    handoffPoint: "Qualified Interest",
     owns: [
       "targeting",
+      "account research",
+      "decision-maker contact",
       "outreach",
       "follow-up",
       "interest screening",
-      "conversation organization",
-      "pipeline organization",
-      "structured handoff",
+      "qualified interest",
+      "warm handoff",
     ],
-    afterInterest: [
-      "interest",
-      "screening and follow-up",
-      "organized handoff",
-      "contractor sales process",
-    ],
+    afterInterest: ["qualified interest", "warm handoff", "contractor qualification, discovery, estimating and closing"],
     handoff: {
-      label: "Structured handoff (screened interest)",
-      unit: "structured handoffs",
+      label: "Warm handoff — qualified interest",
+      unit: "qualified conversations handed off",
       definition:
-        "An interested prospect whose basic relevance and intent have been checked — the account fits, the reply is genuine, and the person can take a vendor decision or has routed us to who does — handed over with the conversation, the relevant context, the history and the next action. It is screened interest, not a qualified opportunity: deeper discovery, technical evaluation, estimating and closing are yours.",
+        "A qualified conversation: a decision-maker at a commercial account that fits your profile — or the colleague they sent us to — who showed genuine interest and agreed to speak with your team, confirmed by a person rather than a keyword. We introduce you by name and hand over the account, the contact, the context and the whole conversation; from that point the conversation is yours. Deeper qualification, technical discovery, the estimate, the proposal and the close stay with you.",
     },
     capacity:
       "Up to 100 outreach messages a month, first touches and follow-ups alike (about 33 accounts on a 3-touch sequence).",
     bestFor:
-      "Nobody on your team has time to chase replies every week, and you want each interested account screened and organized before it reaches you.",
+      "Your team can take a conversation from the first call: you want the right accounts found, the decision-makers reached, and every prospect who agrees to talk introduced to you warm.",
     includes: [
-      "Everything in Prospecting",
-      "A follow-up sequence run for you, each touch adding something new rather than chasing",
-      "Interest screening — we check that a reply is genuine and relevant, and that the person can actually take a vendor decision or route us to whoever does",
-      "Simple questions answered by email, so an interested prospect is never made to book a meeting to get an answer",
-      "The pipeline organized: every open conversation tracked with its status, owner and next step",
-      "A structured handoff of each screened prospect: the conversation, the relevant context, the history and the next action, delivered to the person on your team who takes it",
-      "Monthly report of verified activity, organized around structured handoffs",
+      "Ideal-account profile built with you, including the work and property types to screen out",
+      "Commercial accounts in your area researched from public sources — property and facility managers, building owners, multi-site operators, offices, warehouses, schools, healthcare, restaurants, retail — each with a named decision-maker, a cited reason and a source link",
+      "Outreach written for each account and sent in your name, from your own domain and mailbox, with a follow-up sequence where each touch adds something new",
+      "Every reply read the same day; opt-outs suppressed in code, immediately; simple questions answered by email",
+      "Interest screened: the account fits, the reply is genuine, and the person decides or has sent us to who does",
+      "A warm handoff once the prospect agrees to speak with you: the handoff record with the account, the contact, the context and the whole conversation, a warm introduction by name, your booking link or calendar where it fits, and ownership of the conversation passed to you",
+      "Downstream progress tracked when you report it, and a monthly report of verified activity organized around qualified conversations handed off",
     ],
     youKeep:
-      "Deeper discovery, technical evaluation, the site visit, the estimate and the close stay with you.",
+      "Deeper qualification, technical discovery, the site assessment, the estimate, the proposal, the close and the work itself stay with you.",
     reportCadence: "Monthly",
     featured: true,
   },
   {
-    key: "qualified_opportunity",
-    name: "Qualified Opportunity Engine",
+    key: "opportunity_engine",
+    name: "Opportunity Engine",
     price: 2500,
     oneLiner:
-      "We qualify the opportunity, gather the relevant context, coordinate the next step or site visit, and prepare your team to estimate and close.",
+      "Everything in Managed Outbound, and we keep going: we validate the business need, gather the property, account and buyer information, confirm the fit against your agreed criteria, and coordinate a concrete next sales step before we hand the opportunity over.",
+    outcome: "Turn qualified conversations into accepted sales opportunities.",
+    handoffPoint: "Accepted Sales Opportunity",
     owns: [
       "targeting",
+      "account research",
+      "decision-maker contact",
       "outreach",
       "follow-up",
-      "genuine-interest screening",
-      "qualification",
-      "useful context gathering",
-      "appropriate next-step coordination",
-      "site-visit coordination where appropriate",
-      "structured opportunity preparation",
-      "contractor handoff",
+      "interest screening",
+      "qualified interest",
+      "business-need validation",
+      "property, account and buyer information",
+      "acceptance against your criteria",
+      "next sales step coordination",
+      "opportunity brief",
+      "warm handoff",
     ],
     afterInterest: [
-      "interest",
-      "qualification",
-      "context gathering",
-      "next-step or site-visit coordination where appropriate",
-      "prepared opportunity handoff",
-      "contractor estimating and closing",
+      "qualified interest",
+      "business-need validation",
+      "property, account and buyer information",
+      "acceptance against your criteria",
+      "a coordinated next sales step",
+      "opportunity brief and warm handoff",
+      "contractor technical discovery, estimating and closing",
     ],
     handoff: {
-      label: "Qualified Opportunity handoff",
-      unit: "qualified opportunities",
+      label: "Opportunity handoff — accepted sales opportunity",
+      unit: "accepted sales opportunities handed off",
       definition:
-        "A commercial opportunity that meets the defined qualification standard — verified account and site, a reachable buyer with confirmed purchasing responsibility, a buyer-confirmed concrete need and work type, a confirmed timing or next-step window, the buyer's agreement to your team's follow-up, and the useful property, buyer and scope context gathered — prepared so your sales or estimating staff can act on it. The technical evaluation, the estimate and the close remain yours.",
+        "An accepted sales opportunity: a qualified conversation we carried further — the business need validated with the buyer, the property, account and buyer information gathered (anything unknown is marked unknown), the opportunity checked and accepted against the criteria you agreed with us, and a concrete next sales step coordinated with the buyer. Handed over with a complete opportunity brief and a warm introduction. Technical discovery, the site assessment, the estimate, the proposal and the close stay with you.",
     },
     capacity:
       "Up to 150 outreach messages a month, first touches and follow-ups alike (about 50 accounts on a 3-touch sequence).",
     bestFor:
-      "Someone on your team quotes and wins commercial bids, and you want their time spent on opportunities that arrive qualified, with the context gathered and the next step agreed.",
+      "Someone on your team quotes and wins commercial bids, and you want their time spent only on opportunities that were validated, accepted against your criteria and scheduled before they arrive.",
     includes: [
-      "Everything in Managed Pipeline",
-      "Each screened prospect qualified against a defined standard: the account and site, the buyer and their role, the stated need and work type, the timing, and an agreed next step — never a label on a reply",
-      "The useful context gathered where it can honestly be obtained: property and building context, stated scope indicators, the current-provider situation when disclosed, the decision process and who else is involved",
-      "The appropriate next step coordinated with the buyer — a call with your estimator, or a site visit where one is needed — with the scheduling handled",
-      "A prepared opportunity handoff your sales and estimating staff can act on, unknowns marked, with a pre-visit brief for every coordinated site visit",
-      "Weekly report on qualified opportunities handed off, plus one optimization change each week",
+      "Everything in Managed Outbound",
+      "After a prospect shows qualified interest, the business need validated with the buyer: the work they need, why, and the timing — in their words, never our technical assessment",
+      "The relevant property, account and buyer information gathered where it can honestly be obtained: the building and site, the account, who buys and how they decide, the current-provider situation when disclosed — unknowns marked unknown",
+      "Each opportunity checked against the acceptance criteria you agreed with us, criterion by criterion, before it is handed over",
+      "A concrete next sales step coordinated with the buyer — a call or meeting with your estimator or salesperson, or a site assessment by your team — on a date",
+      "A complete opportunity brief and a warm introduction at handoff, then downstream progress tracked when you report it",
+      "Weekly report on accepted sales opportunities handed off, plus one optimization change each week",
     ],
     youKeep:
-      "The technical evaluation, the estimate, the price and the close stay with you. We prepare the opportunity; you estimate and close it.",
+      "Technical HVAC discovery, the site assessment, the estimate, the proposal, the negotiation, the close and the work itself stay with you. We develop the opportunity; you do the technical selling and close it.",
     reportCadence: "Weekly",
   },
 ];
 
-/** Stable per-plan fragment: "prospecting", "managed-pipeline", "qualified-opportunity-engine". */
+/** Stable per-plan fragment: "managed-outbound", "opportunity-engine". */
 export function planSlug(name: string): string {
   return name
     .toLowerCase()
@@ -294,69 +265,60 @@ export function planSlug(name: string): string {
 }
 
 // WHO OWNS WHAT, as a grid (core.offer.RESPONSIBILITY). One row per responsibility, one cell
-// per plan, in plan order. The last row is the contractor's on every plan — that row is the
+// per plan, in plan order. The last row is the contractor's on both plans — that row is the
 // boundary, and it is in the table so nobody has to infer it from an absence.
 export type ResponsibilityRow = {
   responsibility: string;
-  /** [Prospecting, Managed Pipeline, Qualified Opportunity Engine] */
-  owner: ["we" | "you", "we" | "you", "we" | "you"];
+  /** [Managed Outbound, Opportunity Engine] */
+  owner: ["we" | "you", "we" | "you"];
 };
 
 export const responsibilityMatrix: ResponsibilityRow[] = [
-  { responsibility: "Targeting: the account profile, and the work and property types to screen out", owner: ["we", "we", "we"] },
-  { responsibility: "Account research from public sources, with a cited reason and a source link per account", owner: ["we", "we", "we"] },
-  { responsibility: "Contact selection: the right person at each account", owner: ["we", "we", "we"] },
-  { responsibility: "First-touch outreach, written per account and sent in your name", owner: ["we", "we", "we"] },
-  { responsibility: "Reading every reply and identifying genuine interest", owner: ["we", "we", "we"] },
-  { responsibility: "The follow-up sequence after the first touch", owner: ["you", "we", "we"] },
-  { responsibility: "Interest screening: is the reply genuine, relevant, and from someone who can take or route a vendor decision", owner: ["you", "we", "we"] },
-  { responsibility: "Conversation organization: simple questions answered by email", owner: ["you", "we", "we"] },
-  { responsibility: "Pipeline organization: every open conversation tracked with status, owner and next step", owner: ["you", "we", "we"] },
-  { responsibility: "Qualification against a defined standard", owner: ["you", "you", "we"] },
-  { responsibility: "Property, buyer and scope context, gathered where it can honestly be obtained", owner: ["you", "you", "we"] },
-  { responsibility: "Next-step coordination with the buyer", owner: ["you", "you", "we"] },
-  { responsibility: "Site-visit coordination, where a site visit is appropriate", owner: ["you", "you", "we"] },
-  { responsibility: "An engaged call with an interested contact, under your written authorization (never a cold call)", owner: ["you", "you", "we"] },
-  { responsibility: "A prepared opportunity handoff, with a pre-visit brief", owner: ["you", "you", "we"] },
-  { responsibility: "Technical evaluation, final scope, the estimate, the price, negotiation and the close", owner: ["you", "you", "you"] },
+  { responsibility: "Targeting: the account profile, and the work and property types to screen out", owner: ["we", "we"] },
+  { responsibility: "Account research from public sources, with a cited reason and a source link per account", owner: ["we", "we"] },
+  { responsibility: "Reaching the decision-maker at each account (or the colleague they send us to)", owner: ["we", "we"] },
+  { responsibility: "Outreach and the follow-up sequence, written per account and sent in your name", owner: ["we", "we"] },
+  { responsibility: "Reading every reply and screening the interest: genuine, relevant, from someone who decides", owner: ["we", "we"] },
+  { responsibility: "Simple questions answered by email, and every open conversation tracked", owner: ["we", "we"] },
+  { responsibility: "The warm handoff: the record, the whole conversation, a warm introduction, your booking path, ownership passed to you", owner: ["we", "we"] },
+  { responsibility: "Validating the business need and the timing with the buyer", owner: ["you", "we"] },
+  { responsibility: "Property, account and buyer information, gathered where it can honestly be obtained", owner: ["you", "we"] },
+  { responsibility: "Checking the opportunity against the acceptance criteria you agreed with us", owner: ["you", "we"] },
+  { responsibility: "Coordinating a concrete next sales step with the buyer, and the opportunity brief", owner: ["you", "we"] },
+  { responsibility: "An engaged call with an interested contact, under your written authorization (never a cold call)", owner: ["you", "we"] },
+  { responsibility: "Technical discovery, the site assessment, the estimate, the proposal, negotiation and the close", owner: ["you", "you"] },
 ];
 
 // What the extra money buys — the answer to the question that decides the deal
-// (core.offer.STEP_UPS, verbatim). Plans step up by the RESPONSIBILITY we take on, never by
-// inflating the same deliverable or the message count.
+// (core.offer.STEP_UPS, verbatim). The plans differ by HOW FAR we carry each opportunity,
+// never by inflating the same deliverable or the message count.
 export type StepUp = { from: string; to: string; delta: string; body: string };
 
 export const stepUps: StepUp[] = [
   {
-    from: "Prospecting",
-    to: "Managed Pipeline",
-    delta: "+$750/mo",
-    body: "Prospecting hands you every interested prospect as it arrives and you take the conversation from there. Managed Pipeline runs the follow-up sequence, screens each interested reply for relevance and genuine intent, answers simple questions by email, keeps the pipeline organized, and hands you a structured handoff with the context and the next action. You stop chasing and screening.",
-  },
-  {
-    from: "Managed Pipeline",
-    to: "Qualified Opportunity Engine",
+    from: "Managed Outbound",
+    to: "Opportunity Engine",
     delta: "+$1,000/mo",
-    body: "Managed Pipeline hands you screened interest. The Qualified Opportunity Engine qualifies each one against a defined standard, gathers the property, buyer and scope context, coordinates the next step or the site visit with the buyer, and hands your estimator a prepared opportunity with a brief. You stop qualifying and coordinating; you estimate and close.",
+    body: "Managed Outbound hands you a qualified conversation: a decision-maker who wants to talk, introduced to your team with the account, the contact and the whole conversation. The Opportunity Engine keeps going: it validates the business need, gathers the property, account and buyer information, checks the opportunity against the criteria you agreed with us, and coordinates a concrete next sales step before handing you a complete opportunity brief. You stop qualifying and scheduling; your team still does the technical discovery, the estimate, the proposal and the close.",
   },
 ];
 
 // Terms that are part of the offer (core.offer.TERMS). There is exactly ONE pricing model.
 export const offerTerms: string[] = [
   "Flat monthly price. No setup fee.",
-  "No per-lead charge, no per-opportunity fee, no acceptance fee and no commission — one price per plan.",
+  "No per-lead charge, no per-opportunity fee, no acceptance fee, no performance fee and no commission — one flat price per plan.",
   "Month-to-month. Either side can cancel on 14 days' written notice.",
   "No pilot and no free trial of a paid plan. The free audit is the sample, and it costs nothing.",
-  "No guarantee of revenue, contracts, appointments, site visits, qualified opportunities or any count of them.",
+  "No guarantee of revenue, contracts, appointments, site visits, qualified conversations, sales opportunities or any count of them.",
 ];
 
 /* -------------------------------------------------------------------------- */
-/*  The funnel (D-027 §5)                                                       */
+/*  The funnel (D-028 §5)                                                       */
 /* -------------------------------------------------------------------------- */
 
-// core.offer.FUNNEL + FUNNEL_CLOSE. Shared by every plan up to "tier-specific handling";
-// what happens there is each plan's `afterInterest` above. No account is forced through the
-// $2,500 workflow — the plan decides which handling runs.
+// core.offer.FUNNEL + FUNNEL_CLOSE. Shared by both plans up to "plan-specific handling"; what
+// happens there is each plan's `afterInterest` above. No account is forced through the $2,500
+// workflow — the plan decides how far we carry it.
 export type FunnelStage = { stage: string; detail: string };
 
 export const funnel: FunnelStage[] = [
@@ -369,27 +331,27 @@ export const funnel: FunnelStage[] = [
     detail: "Businesses in your service area that fit the profile — property and facility managers, building owners, multi-site operators, offices, warehouses, schools, healthcare, restaurants, retail — found from public sources, each with a cited reason.",
   },
   {
-    stage: "Relevant contacts",
+    stage: "Decision-makers",
     detail: "The named person at each account who can take a vendor decision for the building or the portfolio, or who routes one. A general inbox is never treated as a decision-maker.",
   },
   {
-    stage: "Outreach",
-    detail: "A message written for that account, tied to its cited reason, sent in your name from your own domain and mailbox.",
+    stage: "Outreach and follow-up",
+    detail: "A message written for that account, tied to its cited reason, sent in your name from your own domain and mailbox, with a short follow-up sequence.",
   },
   {
-    stage: "Genuine engagement",
+    stage: "Genuine interest",
     detail: "Every reply is read the same day. Genuine interest is confirmed by a person, not a keyword match, and an opt-out is suppressed in code immediately.",
   },
   {
     stage: "Plan-specific handling",
-    detail: "From here the plan you chose decides what we do: hand over at interest, screen and organize a structured handoff, or qualify and prepare the opportunity.",
+    detail: "From here the plan you chose decides how far we go: a warm handoff once the prospect agrees to talk with you, or — on the Opportunity Engine — validation, acceptance against your criteria and a coordinated next sales step first.",
   },
 ];
 
 export const funnelClose: FunnelStage[] = [
   {
-    stage: "Outcome feedback",
-    detail: "You tell us what happened after the handoff — a meeting, an estimate, a bid, won, lost or stalled — in your own words.",
+    stage: "Downstream outcome feedback",
+    detail: "You tell us what happened after the handoff — a meeting, a site assessment, an estimate, a proposal, won, lost or stalled — in your own words.",
   },
   {
     stage: "Targeting and qualification learning",
@@ -398,65 +360,77 @@ export const funnelClose: FunnelStage[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/*  The qualification standard — Qualified Opportunity Engine only             */
+/*  The warm handoff (both plans) and the acceptance standard (Opportunity Engine) */
 /* -------------------------------------------------------------------------- */
 
-// The seven evidence-backed facts a Qualified Opportunity handoff requires
-// (core.client_outcomes.HANDOFF_FACTS; three of them must be confirmed BY THE BUYER, not
-// inferred by us). "Unknown" is a recorded value: unavailable information is marked unknown
-// and never invented.
+// core.offer.WARM_HANDOFF_STEPS. The same sequence on both plans; what differs is the point it
+// runs at (Qualified Interest or an Accepted Sales Opportunity) and what travels with it.
+export const warmHandoffSteps: string[] = [
+  "create the handoff record",
+  "preserve the account, contact, context and conversation history",
+  "make the warm introduction",
+  "coordinate your booking or calendar path when appropriate",
+  "notify you",
+  "transfer ownership of the conversation to you",
+  "mark the opportunity handed off",
+  "keep tracking downstream progress where you report it",
+];
+
+// What an Accepted Sales Opportunity requires (core.offer.HANDOFF_STANDARDS
+// ["accepted_opportunity"]; four facts must be confirmed BY THE BUYER, not inferred by us).
+// "Unknown" is a recorded value: unavailable information is marked unknown and never invented.
 export type StandardFact = { fact: string; detail: string; buyerConfirmed?: boolean };
 
 export const qualificationStandard: StandardFact[] = [
   {
-    fact: "It sits inside your plan and your approved profile",
-    detail: "The account type, the service area and the work type are ones you signed off, and nothing on your exclusion list applies.",
+    fact: "It is a qualified conversation first",
+    detail: "The account fits the profile you approved, the reply is genuine, the person decides or has sent us to who does, and they agreed to speak with your team.",
+    buyerConfirmed: true,
   },
   {
-    fact: "The account and the site are verified",
-    detail: "A real business and a real property, checked against a public source you can open.",
-  },
-  {
-    fact: "The buyer has the responsibility",
-    detail: "The person in the conversation can take a vendor decision for this site — because they said so, or because a documented route leads to them.",
-  },
-  {
-    fact: "The need is confirmed by the buyer",
+    fact: "The business need is validated with the buyer",
     detail: "A concrete need and work type in the buyer's own words. A request for information, a brochure request, a polite reply or accepting a free sample is recorded honestly and never counts as a need.",
     buyerConfirmed: true,
   },
   {
     fact: "The timing is confirmed by the buyer",
-    detail: "A timing or next-step window the buyer stated. Someday, later and not now are not a timing.",
+    detail: "A timing window the buyer stated. Someday, later and not now are not a timing.",
     buyerConfirmed: true,
   },
   {
-    fact: "The buyer has agreed to hear from your team",
-    detail: "An explicit yes to the next step — a call with your estimator, or a site visit where one is needed.",
+    fact: "The property, account and buyer information is gathered",
+    detail: "The building and site, the account, who buys and how they decide — gathered where it can honestly be obtained, with anything unknown marked unknown.",
+  },
+  {
+    fact: "It is accepted against the criteria you agreed with us",
+    detail: "Every acceptance criterion you agreed at onboarding is checked, one by one, with the evidence for each. A criterion that is not met means it is not handed over.",
+  },
+  {
+    fact: "A concrete next sales step is coordinated",
+    detail: "A call or meeting with your estimator or salesperson, or a site assessment by your team, agreed by the buyer and set on a date.",
     buyerConfirmed: true,
   },
   {
-    fact: "The handoff package is complete",
-    detail: "The conversation, the gathered context with unknowns marked, the history and the next action, in one place your estimator can act on.",
+    fact: "The opportunity brief is complete",
+    detail: "The conversation, the validated need, the gathered information with unknowns marked, the criteria check, the next step and the open questions, in one place your team can act on.",
   },
 ];
 
-// Useful context, gathered WHERE GENUINELY OBTAINABLE (D-027 §2). Every entry may come back
-// "unknown" — and is recorded as unknown rather than filled in.
+// Information gathered on the Opportunity Engine WHERE GENUINELY OBTAINABLE (D-028 §2). Every
+// entry may come back "unknown" — and is recorded as unknown rather than filled in. None of it
+// is a technical assessment: that is your team's work.
 export const contextFields: string[] = [
   "business and property identity",
   "the relevant buyer or contact, and their role",
   "location, and whether it is inside your service area",
-  "commercial fit",
-  "the stated HVAC issue or need, and the stated work type",
+  "commercial fit against your agreed criteria",
+  "the stated need and the stated work type",
   "maintenance, service or replacement interest",
   "timing",
   "property and building context",
-  "stated scope indicators",
   "the current-provider situation, when the buyer discloses it",
   "the decision process, and who else is involved",
-  "the next logical step, and whether a site visit is needed",
-  "scheduling information",
+  "the next sales step, and when it is set",
   "notes useful to your sales and estimating staff",
 ];
 
@@ -464,22 +438,16 @@ export const contextFields: string[] = [
 /*  Calling policy, and how the sending is controlled                          */
 /* -------------------------------------------------------------------------- */
 
-// D-027 §7. The site used to say flatly that we "make no phone calls in your name", which
-// stopped being true the day the top plan bought engaged calls — and an absolute that is
-// false on one plan is a contradiction a careful buyer finds at the signature block. It is
-// equally not a calling service: there are no cold calls, on any plan.
+// D-028. It is not a calling service: there are no cold calls, on any plan.
 export const callingPolicy: string[] = [
   "Cold outreach is email-led. We make no cold calls, on any plan.",
   "A call becomes appropriate only after a contact has shown genuine interest, and only when a live conversation would add something an email cannot.",
-  "On Prospecting and Managed Pipeline, any call with an interested contact is yours to make.",
-  "On Qualified Opportunity Engine we can run an engaged call with an interested contact, under your written authorization.",
+  "On Managed Outbound, a prospect who wants to talk is introduced to you, and the call is yours to make.",
+  "On the Opportunity Engine we can run an engaged call with an interested contact, under your written authorization.",
 ];
 
 // How sending actually runs. These numbers are the ones the operating system's send gate
 // enforces (presend-gate.py WARMUP_RAMP; the client template's 3-touch / 4-day cadence).
-// They live HERE, in prose, and not in `serviceTimeline` below, because that array is held
-// verbatim to core/timeline.py and the module's send-phase entries are still written in the
-// retired plan vocabulary — see the note above `serviceTimeline`.
 export type CadenceFact = { title: string; body: string };
 
 export const sendingCadence: CadenceFact[] = [
@@ -488,8 +456,8 @@ export const sendingCadence: CadenceFact[] = [
     body: "We start at 1 message a day, 2 a day from day 1, 5 a day from day 2, 10 a day from day 4, then up to full volume from day 6. Starting slow protects your domain's reputation; a mailbox that opens at full speed gets filtered, and that is not recoverable in a month.",
   },
   {
-    title: "A single first touch, or a short sequence, depending on the plan",
-    body: "On Prospecting every message is a first touch — one per account. On Managed Pipeline and Qualified Opportunity Engine each account gets up to 3 touches, at least 4 days apart, each one adding something new rather than chasing.",
+    title: "A short, spaced sequence on both plans",
+    body: "Each account gets up to 3 touches, at least 4 days apart, each one adding something new rather than chasing. A reply stops the sequence.",
   },
   {
     title: "Replies are read the same day",
@@ -523,7 +491,7 @@ export const alternatives: Alternative[] = [
   {
     name: "General cold-email agencies",
     whatItIs: "Run outbound email campaigns for many industries.",
-    difference: "One niche. Every account is researched individually with a cited reason, and the price follows the level of responsibility rather than the message count.",
+    difference: "One niche. Every account is researched individually with a cited reason, and the price follows how far we carry each opportunity rather than the message count.",
     whenItFits: "You sell something other than commercial HVAC work.",
   },
   {
@@ -547,7 +515,7 @@ export const alternatives: Alternative[] = [
   {
     name: "Outsourced HVAC closers",
     whatItIs: "Take over the sales conversation, the quote or the close.",
-    difference: "We never estimate, quote, price or close. We prepare the opportunity; your team estimates and closes it.",
+    difference: "We never estimate, quote, propose, price or close. We create the conversation (and on the Opportunity Engine develop it into an accepted sales opportunity); your team does the technical selling and closes it.",
     whenItFits: "You have nobody who can quote and win commercial work — which is also a reason this service is not yet a fit.",
   },
 ];
@@ -557,7 +525,7 @@ export const alternatives: Alternative[] = [
 /* -------------------------------------------------------------------------- */
 
 // ONE niche: established HVAC contractors that already sell and complete commercial work
-// (D-025; unchanged by D-027). Every entry is a clause of the canonical ICP sentence
+// (D-025; unchanged by D-027 and D-028). Every entry is a clause of the canonical ICP sentence
 // (core/icp.ONE_SENTENCE in the operating-system repo) or one of its qualifiers, phrased so
 // an owner can check it against his own shop in a second.
 //
@@ -589,8 +557,8 @@ export const notFor: string[] = [
   "Companies at capacity year-round, or not looking to add accounts",
   "Companies already running an in-house outbound or BDR team — you already own what we sell",
   "Solo operators — a commercial account arrives with response-time expectations one truck cannot hold",
-  "Companies with nobody to quote and win commercial work — we prepare the opportunity to the level you chose; the technical evaluation, the estimate and the close stay yours",
-  "Anyone who wants us to inspect, specify, estimate, price or close — that work is the contractor's, on every plan",
+  "Companies with nobody to take a commercial sales conversation — we hand over qualified conversations and accepted sales opportunities; the technical discovery, the estimate, the proposal and the close stay yours",
+  "Anyone who wants us to inspect, size or specify equipment, estimate, write proposals, price or close — that work is the contractor's, on both plans",
   "Anyone wanting thousands of unverified addresses blasted overnight",
   "Anyone expecting guaranteed jobs, revenue, site visits, or a set number of appointments",
   "Anyone needing published case studies before starting — there are none yet",
@@ -610,11 +578,11 @@ export type Differentiator = { title: string; body: string };
 export const differentiators: Differentiator[] = [
   {
     title: "We are not a lead seller",
-    body: "Nobody else is being sold the same account. We do not buy, sell, resell, or broker leads, shared or exclusive, so you are never bidding against other contractors for one form fill. There is no per-lead price and no per-opportunity fee: a flat monthly fee buys the level of responsibility you chose, on the account types and service area you approve.",
+    body: "Nobody else is being sold the same account. We do not buy, sell, resell, or broker leads, shared or exclusive, so you are never bidding against other contractors for one form fill. There is no per-lead price and no per-opportunity fee: a flat monthly fee buys the plan you chose, on the account types and service area you approve.",
   },
   {
     title: "The line between our work and yours is printed on the plan",
-    body: "Prospecting hands over at first interest. Managed Pipeline hands over screened interest, with a structured handoff. Qualified Opportunity Engine hands over a qualified opportunity, prepared for your estimator. A lower plan never quietly includes a higher plan's work, and on every plan the technical evaluation, the estimate, the price and the close are yours.",
+    body: "Managed Outbound hands over at Qualified Interest: a decision-maker who agreed to talk, introduced to you warm. The Opportunity Engine hands over only an Accepted Sales Opportunity: the need validated, accepted against your criteria and the next sales step set. Managed Outbound never quietly includes the Opportunity Engine's work, and on both plans the technical discovery, the estimate, the proposal and the close are yours.",
   },
   {
     // SEPARATE THE PRACTICE FROM THE CONTRACTUAL RIGHT. CSA §4 makes the Services
@@ -752,15 +720,15 @@ export function faqSlug(question: string): string {
 //
 // ONE PLAN PER SENTENCE. When an answer says what a plan does, it names that plan in its own
 // sentence. tests/pricing-model.test.ts reads these answers sentence by sentence and fails if
-// a sentence about Prospecting claims follow-up, screening, qualification or site-visit
-// coordination, or if one about Managed Pipeline claims qualification or context gathering.
+// a sentence about Managed Outbound claims need validation, acceptance against criteria or
+// next-step coordination — that is the Opportunity Engine's work.
 export const faqs: Faq[] = [
   {
     question: "What exactly do you do for a commercial HVAC contractor?",
     featured: true,
     group: "What this is",
     answer:
-      "We find the commercial accounts worth pursuing, contact the right people in your name, and hand each opportunity to your team at the level you chose. The accounts are businesses in the areas you serve — property managers, building owners, facility teams, multi-site operators — researched from public sources with a cited reason each. Your plan decides how far we carry an opportunity before your team takes it. On every plan, your team estimates and closes.",
+      "We find the commercial accounts worth pursuing, reach the decision-makers in your name, and hand your team qualified conversations, with a warm introduction. The accounts are businesses in the areas you serve — property managers, building owners, facility teams, multi-site operators — researched from public sources with a cited reason each. Your plan decides how far we carry each one: Managed Outbound hands over at Qualified Interest, and the Opportunity Engine carries it on to an Accepted Sales Opportunity. On both plans, your team does the technical selling, estimates and closes.",
   },
   {
     question: "How is this different from buying leads?",
@@ -787,13 +755,13 @@ export const faqs: Faq[] = [
     question: "What do you not do?",
     group: "What this is",
     answer:
-      "We do not inspect equipment, diagnose or specify it, set the scope, write the estimate, set the price, negotiate terms, or close the deal — those stay with your team on every plan. We also do not sell or resell leads, run paid ads, make cold calls, or buy contact lists, and we do not promise that any account will sign. We prepare the opportunity to the level you chose; you estimate and close it.",
+      "We do not do technical discovery or site assessments, diagnose, size or specify equipment, set the scope, write the estimate or the proposal, set the price, negotiate terms, or close the deal — those stay with your team on both plans. We also do not sell or resell leads, run paid ads, make cold calls, or buy contact lists, and we do not promise that any account will sign. We create the sales conversation; you do the technical selling and close it.",
   },
   {
     question: "Do you make phone calls?",
     group: "How the outreach runs",
     answer:
-      "Our cold outreach is email-led, and we make no cold calls on any plan. A call becomes appropriate only after a contact has shown genuine interest, when a live conversation would add something an email cannot. On Prospecting and Managed Pipeline, that call is yours to make. On Qualified Opportunity Engine we can run an engaged call with an interested contact, under your written authorization.",
+      "Our cold outreach is email-led, and we make no cold calls on any plan. A call becomes appropriate only after a contact has shown genuine interest, when a live conversation would add something an email cannot. On Managed Outbound, a prospect who wants to talk is introduced to you, and that call is yours to make. On the Opportunity Engine we can run an engaged call with an interested contact, under your written authorization.",
   },
   {
     question: "Where are you based, and who do you serve?",
@@ -832,7 +800,7 @@ export const faqs: Faq[] = [
     featured: true,
     group: "How the outreach runs",
     answer:
-      "What happens next depends on your plan, and only on your plan. On Prospecting, an interested prospect is handed to you as it arrives, with the thread and the reason we wrote, and you take the conversation. On Managed Pipeline we run the follow-up, check that the interest is genuine and relevant, and give you a structured handoff. On Qualified Opportunity Engine we qualify it against a defined standard, gather the context, and coordinate the next step or a site visit before your estimator is involved.",
+      "What happens next depends on your plan, and only on your plan. On both plans we check that the interest is genuine and relevant and that the person decides. On Managed Outbound, once they agree to speak with you, we hand them to you with a warm introduction and the whole conversation. On the Opportunity Engine we first validate the need, gather the account information, check it against your agreed criteria and set a concrete next sales step, then hand it over with a complete brief.",
   },
   {
     question: "What happens if someone asks not to be contacted?",
@@ -841,29 +809,29 @@ export const faqs: Faq[] = [
       "Anyone who asks not to be contacted is suppressed immediately, in code, and never contacted again on your campaign. Opt-out handling, deduplication, and daily sending caps run as automated checks on every send rather than something a person has to remember. Opt-outs are processed even while a campaign is paused, and the suppression list goes with you if you leave.",
   },
   {
-    question: "What is an interested prospect?",
+    question: "What is a qualified conversation?",
     group: "What you can expect",
     answer:
-      "An interested prospect is a relevant contact at a commercial account that fits your profile who replied with genuine openness to continuing the conversation, confirmed by a person — not by a keyword match. It is the one measure every report is organized around, always shown against the accounts contacted and the messages sent to get there. It is a count of what happened, never a commitment to a number. It is not the same thing as screened interest or a qualified opportunity; those are further steps, and only the plans that include them deliver them.",
+      "A qualified conversation is a decision-maker at a commercial account that fits your profile who showed genuine interest and agreed to speak with your team, confirmed by a person — not by a keyword match. It is the one measure every report is organized around, always shown against the accounts contacted and the messages sent to get there. It is a count of what happened, never a commitment to a number. An accepted sales opportunity is a further step that only the Opportunity Engine delivers.",
   },
   {
     question: "Do you guarantee jobs, appointments, or revenue?",
     featured: true,
     group: "What you can expect",
     answer:
-      "No, we do not guarantee revenue, contracts, appointments, site visits or qualified opportunities on any plan. You should be wary of anyone in this industry who does. Whether an account signs depends on your price, your references, your timing, and how the site visit goes. What we commit to is running the system, doing the work to the stated standard, and reporting the results honestly.",
+      "No, we do not guarantee revenue, contracts, appointments, site visits, qualified conversations or sales opportunities on either plan. You should be wary of anyone in this industry who does. Whether an account signs depends on your price, your references, your timing, and how the site visit goes. What we commit to is running the system, doing the work to the stated standard, and reporting the results honestly.",
   },
   {
     question: "How many accounts or messages does each plan cover?",
     group: "What you can expect",
     answer:
-      "Each plan has a monthly capacity limit, and it is a supporting fact rather than the reason one plan costs more than another. Prospecting covers up to 40 first-touch messages a month, one per commercial account. Managed Pipeline covers up to 100 outreach messages a month, first touches and follow-ups alike, which is about 33 accounts on a three-touch sequence. Qualified Opportunity Engine covers up to 150, about 50 accounts. The count is in messages because that is the unit our sending controls enforce, so the report reconciles against the agreement line for line.",
+      "Each plan has a monthly capacity limit, and it is a supporting fact rather than the reason one plan costs more than the other. Managed Outbound covers up to 100 outreach messages a month, first touches and follow-ups alike, which is about 33 accounts on a three-touch sequence. The Opportunity Engine covers up to 150, about 50 accounts. The count is in messages because that is the unit our sending controls enforce, so the report reconciles against the agreement line for line.",
   },
   {
     question: "What does a handoff actually contain?",
     group: "What you can expect",
     answer:
-      "A handoff arrives by email, to the person on your team who takes it, and what is in it depends on your plan. On Prospecting it is the thread and the reason we wrote to that account. On Managed Pipeline it is a structured handoff: the conversation, the relevant context, the history and the next action. On Qualified Opportunity Engine it is a prepared opportunity with the gathered context, unknowns marked, and a pre-visit brief where a site visit was coordinated.",
+      "A handoff arrives by email, to the person on your team who takes it, with a warm introduction to the buyer. On Managed Outbound it carries the account, the contact, the context and the whole conversation, plus your booking link where it fits. On the Opportunity Engine it also carries the opportunity brief: the validated need and timing, the account information with unknowns marked, the check against your criteria and the next sales step already set.",
   },
   {
     question: "Do you have case studies or client results I can see?",
@@ -876,7 +844,7 @@ export const faqs: Faq[] = [
     featured: true,
     group: "Money, terms and getting started",
     answer:
-      "Pick the plan by who on your team does the work after someone shows interest. If someone on your team already works replies and chases the follow-up, Prospecting fits. If nobody has time for that, Managed Pipeline is where we suggest starting. If you want each opportunity qualified, with the context gathered and the next step or site visit coordinated before your estimator spends time on it, that is Qualified Opportunity Engine — and it only makes sense if someone on your team quotes and wins commercial bids. The fit check gives you a read from your own answers.",
+      "Pick the plan by how far you want us to carry each opportunity. Managed Outbound is where we suggest starting: we create qualified conversations and introduce each one to your team warm. If you want each one validated, accepted against your criteria and scheduled before your estimator spends time on it, that is the Opportunity Engine — and it only makes sense if someone on your team quotes and wins commercial bids. The fit check gives you a read from your own answers.",
   },
   {
     question: "What do you need from us to start?",
@@ -1021,18 +989,11 @@ export const productExample = {
 // every `band`, `label` AND `detail` below matches it exactly, and fails the OS validation
 // suite if they drift. Add or edit a phase THERE first, then mirror the string here verbatim.
 //
-// A SUBSET IS ALLOWED, AND THIS IS DELIBERATELY ONE (2026-09-17). Eight phases are published:
-// the onboarding lane every plan shares, and the renewal. The module's send-side phases —
-// the mailbox, the warm-up ramp, the touch sequence, reply handling, reporting, the day-30
-// review — are NOT published from here, for two reasons that are both the module's to fix:
-//   1. it gates them on the retired plan keys ("outreach", "appointment") while
-//      core/offer.resolve_tier now returns the D-027 keys, so `phases_for()` no longer emits
-//      them for ANY plan and check_cross_repo.py rejects them as "not in the module at all";
-//   2. their `detail` text still names "Outreach Engine" / "Appointment Engine" and
-//      "qualified conversations", which this site may not print (tests/pricing-model.test.ts).
-// The facts those phases carried that a buyer needs — the ramp, the sequence, same-day reply
-// handling — are published from `sendingCadence` above, in D-027 words. When core/timeline.py
-// is migrated, restore the phases here verbatim and delete the duplicates.
+// A SUBSET IS ALLOWED, AND THIS IS DELIBERATELY ONE. Eight phases are published: the onboarding
+// lane both plans share, and the renewal. The module's delivery phases (the sequence, reply
+// handling, screening, the warm handoff, and on the Opportunity Engine validation and
+// acceptance) differ by plan and are described on the plan cards, in `sendingCadence` and in
+// `warmHandoffSteps`, in D-028 words.
 //
 // `band:` MUST APPEAR NOWHERE ELSE IN THIS FILE: the checker counts those lines to prove its
 // own parser matched every phase.

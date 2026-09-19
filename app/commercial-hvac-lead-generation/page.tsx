@@ -20,17 +20,17 @@ import { basedIn, brandName, siteUrl } from "@/lib/site";
 // THE PRIMARY CANONICAL SERVICE PAGE.
 //
 // The one page on this site whose job is to answer "what is commercial HVAC lead generation,
-// and what exactly does B2B Lead Growth do?" — the purpose, the funnel, the three levels, the
+// and what exactly does B2B Lead Growth do?" — the purpose, the funnel, the two plans, the
 // boundary, and how this differs from the other things an HVAC owner can buy. It replaces
 // /hvac-lead-generation-new-jersey (a one-state doorway for a nationally delivered service,
 // now a 301 to here) as the service's home in search.
 //
-// KEYWORDS MAP TO PLANS, AND THE PAGE SAYS SO (mandate §11). "Prospecting", "target-account
-// research" and "decision-maker outreach" describe every plan. "Managed follow-up" and "sales
-// pipeline" describe Managed Pipeline and up. "Opportunity qualification", "next-step
-// coordination" and what some vendors call "appointment setting" describe the top plan only.
-// A page that let every phrase describe every plan would be promising the $2,500 work at
-// $750, which is exactly what tests/pricing-model.test.ts exists to stop.
+// KEYWORDS MAP TO PLANS, AND THE PAGE SAYS SO (D-028). "Prospecting", "target-account
+// research", "decision-maker outreach", "managed follow-up" and "qualified conversations"
+// describe both plans. "Opportunity validation", "next-step coordination" and what some vendors
+// call "appointment setting" describe the Opportunity Engine only. A page that let every phrase
+// describe every plan would be promising the $2,500 work at $1,500, which is exactly what
+// tests/pricing-model.test.ts exists to stop.
 
 const page = getGuidePage("commercial-hvac-lead-generation");
 
@@ -45,12 +45,12 @@ const pageFaqs = [
   {
     question: "What is commercial HVAC lead generation?",
     answer:
-      "Commercial HVAC lead generation is the work of finding the businesses that buy commercial HVAC service — property managers, building owners, facility teams, multi-site operators — contacting the right person at each, and turning genuine interest into an opportunity a contractor's team can act on. It is a business-to-business sale: the buyer is a business, the sale is an account rather than a single job, and nobody sells those accounts on a marketplace.",
+      "Commercial HVAC lead generation is the work of finding the businesses that buy commercial HVAC service — property managers, building owners, facility teams, multi-site operators — contacting the right person at each, and turning genuine interest into a qualified conversation a contractor's team can act on. It is a business-to-business sale: the buyer is a business, the sale is an account rather than a single job, and nobody sells those accounts on a marketplace.",
   },
   {
     question: "Is this commercial HVAC appointment setting?",
     answer:
-      "Only in part, and only on one plan. Qualified Opportunity Engine coordinates the appropriate next step with an interested buyer — a call with your estimator, or a site visit where one is needed. Prospecting hands over at first interest, and Managed Pipeline hands over screened interest with a structured handoff. No plan promises a number of appointments or site visits.",
+      "Only in part, and only on one plan. The Opportunity Engine coordinates a concrete next sales step with an interested buyer — a call or meeting with your estimator or salesperson, or a site assessment by your team — before it hands the opportunity over. Managed Outbound hands over a qualified conversation with a warm introduction, and can share your booking link, but the next step is yours to set. Neither plan promises a number of appointments or site visits.",
   },
   {
     question: "Who do you contact on our behalf?",
@@ -60,7 +60,7 @@ const pageFaqs = [
   {
     question: "Do you cold call?",
     answer:
-      "No, we make no cold calls on any plan; our cold outreach is email-led. A call becomes appropriate only after a contact has shown genuine interest, when a live conversation would add something an email cannot. On Qualified Opportunity Engine we can run an engaged call with an interested contact, under your written authorization.",
+      "No, we make no cold calls on any plan; our cold outreach is email-led. A call becomes appropriate only after a contact has shown genuine interest, when a live conversation would add something an email cannot. On the Opportunity Engine we can run an engaged call with an interested contact, under your written authorization.",
   },
   {
     question: "Where do you work?",
@@ -104,15 +104,16 @@ export default function CommercialHvacLeadGenerationPage() {
           <>
             <p className="text-ink">
               Commercial HVAC lead generation is finding the businesses that buy commercial HVAC
-              service, contacting the right person at each, and turning genuine interest into an
-              opportunity a contractor&rsquo;s team can act on. {brandName} runs it as a managed
-              outbound service.
+              service, contacting the right person at each, and turning genuine interest into a
+              qualified conversation a contractor&rsquo;s team can act on. {brandName} runs it as a
+              managed outbound service.
             </p>
             <p>
               It is for established HVAC contractors that already sell and complete commercial
-              work. We find the accounts, contact the right people in your name, and hand each
-              opportunity to your team at one of three levels of responsibility. Your team always
-              does the technical evaluation, the estimate and the close.
+              work. We find the accounts, contact the right people in your name, and hand your team
+              qualified conversations — or, on the Opportunity Engine, accepted sales opportunities
+              with the next sales step already set. Your team always does the technical evaluation,
+              the estimate, the proposal and the close.
             </p>
             <p>
               It is not a lead marketplace. Everyone we contact is a business — a{" "}
@@ -166,7 +167,7 @@ export default function CommercialHvacLeadGenerationPage() {
 
         <GuideSection id="funnel" title="The funnel: from your capacity to an opportunity your team can act on">
           <p>
-            Every plan runs the same six stages. What happens at the last one is the only thing the
+            Both plans run the same six stages. What happens at the last one is the only thing the
             plans change.
           </p>
           <ol className="space-y-3">
@@ -190,13 +191,13 @@ export default function CommercialHvacLeadGenerationPage() {
           </ol>
         </GuideSection>
 
-        <GuideSection id="levels" title="Three levels of responsibility">
+        <GuideSection id="levels" title="Two plans: how far we carry each opportunity">
           <p>
-            These are three different jobs, not three sizes of one job. You choose how far we carry
-            an opportunity before your team takes it.
+            These are two different handoff points, not two sizes of one job. You choose how far we
+            carry an opportunity before your team takes it.
           </p>
           <GuideTable
-            caption="The three B2B Lead Growth plans: price, what we are responsible for, what happens after genuine interest, and what reaches the contractor"
+            caption="The two B2B Lead Growth plans: price, what we are responsible for, what happens after genuine interest, and what reaches the contractor"
             head={["Plan", "What we are responsible for", "After genuine interest", "What reaches you"]}
             rows={plans.map((p) => [
               <span key={p.name}>
@@ -209,8 +210,10 @@ export default function CommercialHvacLeadGenerationPage() {
             ])}
           />
           <p>
-            No account is forced through the top plan&rsquo;s workflow. If you are on Prospecting,
-            an interested prospect is handed to you as it arrives and that is the end of our part.{" "}
+            No account is forced through the Opportunity Engine&rsquo;s workflow. If you are on
+            Managed Outbound, a qualified conversation is handed to you with a warm introduction as
+            soon as the prospect agrees to speak with your team, and the deeper qualification is
+            yours from there.{" "}
             <Link href="/pricing#who-owns-what" className="text-accent underline underline-offset-4">
               See who owns what on each plan, line by line
             </Link>
@@ -218,10 +221,10 @@ export default function CommercialHvacLeadGenerationPage() {
           </p>
         </GuideSection>
 
-        <GuideSection title="Prospecting, pipeline management and qualification are different jobs">
+        <GuideSection title="Prospecting, follow-up and opportunity validation are different jobs">
           <p>
             The phrases people search for do not all describe the same work, and they do not all
-            describe every plan.
+            describe both plans.
           </p>
           <ul className="list-disc space-y-3 pl-5">
             <li>
@@ -229,23 +232,25 @@ export default function CommercialHvacLeadGenerationPage() {
                 Commercial HVAC prospecting, target-account research, and outreach to property
                 managers, facility managers and other commercial decision-makers
               </span>{" "}
-              are part of every plan. Finding the account, choosing the contact and making the
-              first contact in your name is the base of all three.
+              are part of both plans. Finding the account, choosing the contact and making the
+              first contact in your name is the base of each.
             </li>
             <li>
               <span className="text-ink">
-                Managed follow-up and an organized commercial HVAC sales pipeline
+                Managed follow-up, qualified conversations and an organized commercial HVAC sales
+                pipeline
               </span>{" "}
-              start at Managed Pipeline. That plan runs the follow-up sequence, screens each
-              interested reply, and keeps every open conversation tracked with a status, an owner
-              and a next step.
+              are part of both plans too. Managed Outbound runs the follow-up sequence, screens
+              each interested reply, keeps every open conversation tracked, and hands you each
+              prospect who agrees to talk, with a warm introduction.
             </li>
             <li>
               <span className="text-ink">
-                Commercial HVAC opportunity qualification, and the next-step or site-visit
-                coordination that some vendors call appointment setting
+                Commercial HVAC opportunity validation, acceptance against your criteria, and the
+                next-step or site-assessment coordination that some vendors call appointment
+                setting
               </span>{" "}
-              are Qualified Opportunity Engine work, and only that plan&rsquo;s.
+              are Opportunity Engine work, and only that plan&rsquo;s.
             </li>
             <li>
               <span className="text-ink">Maintenance-agreement prospecting</span> is a targeting
@@ -258,11 +263,12 @@ export default function CommercialHvacLeadGenerationPage() {
         <GuideSection title="How the work is measured">
           <KeyAnswer>{outcomeMetric.oneSentence}</KeyAnswer>
           <p>
-            Each plan also counts what it hands over, under its own name: interested prospects
-            handed off, structured handoffs, or qualified opportunities. A lower plan&rsquo;s
-            number is never labelled with a higher plan&rsquo;s noun.{" "}
+            Each plan also counts what it hands over, under its own name: on Managed Outbound,
+            qualified conversations handed off; on the Opportunity Engine, accepted sales
+            opportunities handed off. A qualified conversation is never labelled an accepted
+            sales opportunity.{" "}
             <Link href="/how-it-works#terminology" className="text-accent underline underline-offset-4">
-              The five terms are defined on the how-it-works page
+              The six terms are defined on the how-it-works page
             </Link>
             .
           </p>
@@ -270,7 +276,7 @@ export default function CommercialHvacLeadGenerationPage() {
 
         <GuideSection id="boundary" title="Where our work stops and yours starts">
           <KeyAnswer>{boundarySentence}</KeyAnswer>
-          <p>That holds on every plan. We do not:</p>
+          <p>That holds on both plans, including the Opportunity Engine. We do not:</p>
           <ul className="list-disc space-y-2 pl-5">
             {contractorBoundary.map((b) => (
               <li key={b}>{b}</li>
@@ -340,12 +346,11 @@ export default function CommercialHvacLeadGenerationPage() {
               <Link href="/how-it-works" className="text-accent underline underline-offset-4">
                 How commercial HVAC managed outbound works
               </Link>{" "}
-              — the process, the qualification standard, the handoff definitions, and when a call
-              happens.
+              — the process, the warm handoff, the acceptance standard, and when a call happens.
             </li>
             <li>
               <Link href="/pricing" className="text-accent underline underline-offset-4">
-                Pricing: the three plans and who owns what
+                Pricing: the two plans and who owns what
               </Link>
               .
             </li>

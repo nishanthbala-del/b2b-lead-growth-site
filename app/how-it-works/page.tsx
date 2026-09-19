@@ -14,14 +14,16 @@ import {
   qualificationStandard,
   sendingCadence,
   terminology,
+  warmHandoffSteps,
 } from "@/lib/content";
 import { definedTermSetJsonLd, getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
 import { siteUrl } from "@/lib/site";
 
-// HOW THE WORK RUNS, and the four things a careful buyer needs defined before he trusts any
-// of it: what happens when someone shows interest (it differs by plan), what "qualified"
-// means (a standard, not an adjective), what a handoff contains (three different things), and
-// when anyone picks up a phone (only after genuine engagement; never cold).
+// HOW THE WORK RUNS, and the things a careful buyer needs defined before he trusts any of it
+// (D-028): what happens when someone shows interest (it differs by plan), what an accepted
+// sales opportunity is (a standard, not an adjective), what the warm handoff does (the same
+// eight steps on both plans, at a different point), and when anyone picks up a phone (only
+// after genuine engagement; never cold).
 //
 // Everything rendered here comes from lib/content.ts, which mirrors the operating-system
 // repo's core/offer.py — so the definition a prospect reads here is the one the proposal, the
@@ -44,24 +46,29 @@ const pageFaqs = [
       "Genuine interest is a relevant contact at an in-profile commercial account replying with real openness to continuing the conversation, and a person — not a keyword match — confirming it. An out-of-office reply, a bounce, a referral to a general inbox, a request to be removed, or a polite no is not interest, and is never counted as an interested prospect.",
   },
   {
-    question: "What is the difference between screened interest and a qualified opportunity?",
+    question: "What is the difference between a qualified conversation and an accepted sales opportunity?",
     answer:
-      "Screened interest means the basic relevance and intent of an interested reply have been checked: the account fits, the reply is genuine, and the person can take a vendor decision or has routed us to who does. A qualified opportunity goes further: the buyer has confirmed a concrete need, a timing and their agreement to hear from your team, and the useful property, buyer and scope context has been gathered. Screened interest is what Managed Pipeline hands over. A qualified opportunity is reserved for Qualified Opportunity Engine.",
+      "A qualified conversation is a decision-maker at an account that fits your profile who showed genuine interest and agreed to speak with your team, confirmed by a person. That is what Managed Outbound hands over, with a warm introduction. An accepted sales opportunity goes further: the buyer has confirmed a concrete need and a timing, the property, account and buyer information has been gathered, the opportunity has been checked against the acceptance criteria you agreed with us, and a concrete next sales step is set on a date. That is what the Opportunity Engine hands over, with a complete opportunity brief.",
   },
   {
-    question: "Does every account go through qualification?",
+    question: "Does every account go through opportunity validation?",
     answer:
-      "No. Qualification runs only on Qualified Opportunity Engine, and no account is forced through that workflow on another plan. Your plan decides which handling runs when a contact shows genuine interest, and a lower plan never quietly includes a higher plan's work.",
+      "No. Validation, acceptance against your criteria and next-step coordination run only on the Opportunity Engine. On Managed Outbound we hand the conversation to your team as soon as the prospect has agreed to speak with you, and your team does the deeper qualification from there. Managed Outbound never quietly includes the Opportunity Engine's work.",
+  },
+  {
+    question: "What happens at the warm handoff?",
+    answer:
+      "The same eight steps on both plans: we create the handoff record, keep the account, contact, context and whole conversation together, make the warm introduction, coordinate your booking or calendar path when appropriate, notify you, transfer ownership of the conversation to you, mark the opportunity handed off, and keep tracking what happens next where you report it. On the Opportunity Engine the handoff also carries the opportunity brief and the next sales step already set.",
   },
   {
     question: "What triggers a phone call?",
     answer:
-      "A call is triggered only by genuine engagement, never by a list. Our cold outreach is email-led and we make no cold calls on any plan. Once a contact has shown genuine interest, a call is appropriate when a live conversation would add something an email cannot — for example, agreeing a site visit. On Qualified Opportunity Engine we can run that engaged call under your written authorization; on the other two plans the call is yours to make.",
+      "A call is triggered only by genuine engagement, never by a list. Our cold outreach is email-led and we make no cold calls on any plan. Once a contact has shown genuine interest, a call is appropriate when a live conversation would add something an email cannot — for example, agreeing a site assessment by your team. On the Opportunity Engine we can run that engaged call under your written authorization; on Managed Outbound the call is yours to make.",
   },
   {
     question: "What happens when information is not available?",
     answer:
-      "Unavailable information is recorded as unknown and never invented. A qualified opportunity handoff marks each unknown plainly, so your estimator knows what was confirmed by the buyer, what was found from a public source, and what nobody has established yet.",
+      "Unavailable information is recorded as unknown and never invented. An opportunity brief marks each unknown plainly, so your estimator knows what was confirmed by the buyer, what was found from a public source, and what nobody has established yet.",
   },
 ];
 
@@ -106,8 +113,9 @@ export default function HowItWorksPage() {
             </p>
             <p>
               This page sets out each stage, what happens when a contact shows interest on each of
-              the three plans, the standard an opportunity must meet before we call it qualified,
-              what each handoff contains, and when a phone call happens.
+              the two plans, how the warm handoff works, the standard an opportunity must meet
+              before we hand it over as an accepted sales opportunity, and when a phone call
+              happens.
             </p>
           </>
         }
@@ -137,7 +145,7 @@ export default function HowItWorksPage() {
 
         <GuideSection id="after-interest" title="What happens at genuine interest, plan by plan">
           <p>
-            This is the only place the three plans differ. Each one is a different amount of the
+            This is the only place the two plans differ. Each one is a different amount of the
             work between &ldquo;someone replied with interest&rdquo; and &ldquo;your estimator is
             in the room&rdquo;.
           </p>
@@ -161,12 +169,32 @@ export default function HowItWorksPage() {
           </div>
         </GuideSection>
 
-        <GuideSection id="qualification-standard" title="The qualification standard">
+        <GuideSection id="warm-handoff" title="The warm handoff, on both plans">
+          <p>
+            Both plans end the same way: a warm handoff. What differs is the point it happens at —
+            on Managed Outbound at qualified interest, on the Opportunity Engine at an accepted
+            sales opportunity — and what travels with it. Every handoff runs the same steps:
+          </p>
+          <ol className="space-y-2">
+            {warmHandoffSteps.map((step, i) => (
+              <li key={step} className="border-l-2 border-line pl-4">
+                <span className="font-semibold text-ink">{i + 1}.</span> {step}
+              </li>
+            ))}
+          </ol>
+          <p>
+            From the handoff on, the conversation is your team&rsquo;s. We keep the record and
+            report what happens next where you tell us, but we never estimate, propose or close.
+          </p>
+        </GuideSection>
+
+        <GuideSection id="qualification-standard" title="The acceptance standard">
           <KeyAnswer>
-            On Qualified Opportunity Engine, an opportunity is called qualified only when seven
-            facts are on record with evidence, and three of them — the need, the timing, and the
-            agreement to hear from your team — were confirmed by the buyer rather than inferred by
-            us. It is a standard, never a label on a reply.
+            On the Opportunity Engine, an opportunity is handed over as an accepted sales
+            opportunity only when seven facts are on record with evidence, and four of them — the
+            buyer&rsquo;s agreement to talk, the need, the timing and the next sales step — were
+            confirmed by the buyer rather than inferred by us. It is a standard, never a label on a
+            reply.
           </KeyAnswer>
           <ol className="space-y-3">
             {qualificationStandard.map((q, i) => (
@@ -191,8 +219,8 @@ export default function HowItWorksPage() {
           </ul>
           <p>
             Any of these may come back unknown. An unknown is recorded as unknown and never filled
-            in. This standard applies to Qualified Opportunity Engine only; the other two plans
-            hand over earlier, and say so.
+            in. This standard applies to the Opportunity Engine only; Managed Outbound hands over
+            earlier, at qualified interest, and says so.
           </p>
         </GuideSection>
 
@@ -240,7 +268,7 @@ export default function HowItWorksPage() {
           <KeyAnswer>{outcomeMetric.oneSentence}</KeyAnswer>
         </GuideSection>
 
-        <GuideSection id="terminology" title="Terminology: five terms, never interchangeable">
+        <GuideSection id="terminology" title="Terminology: six terms, never interchangeable">
           <dl className="space-y-4">
             {terminology.map((t) => (
               <div key={t.key} id={`term-${t.key}`} className="scroll-mt-20">

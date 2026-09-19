@@ -168,10 +168,10 @@ export default function FreePipelineAuditPage() {
         </GuideSection>
 
         {/* How the free thing relates to the paid things. Without this a reader cannot tell
-            whether the audit is a sample of the $750 plan, the $2,500 plan, or a brochure. It
+            whether the audit is a sample of the $1,500 plan, the $2,500 plan, or a brochure. It
             is a slice of the ACCOUNT RESEARCH that every plan begins with — and it includes
             no outreach at all, so nothing in it can be mistaken for a plan's handoff. */}
-        <GuideSection id="audit-and-plans" title="How the audit relates to the three paid plans">
+        <GuideSection id="audit-and-plans" title="How the audit relates to the two paid plans">
           <p>
             The audit is a free slice of the account research every paid plan begins with: the
             profile, a handful of researched accounts, and one message written for one of them.

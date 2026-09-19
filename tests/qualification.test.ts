@@ -13,8 +13,13 @@
 // and "cannot export" questions are gone, and a test here proves they cannot come back
 // as a precondition: no answer about a customer list can block anyone.
 //
-// EXTENDED 2026-09-17 for D-027. The plans are three levels of responsibility, and the
-// recommendation now mirrors the operating-system repo's core/offer.recommend_from_discovery
+// REVISED 2026-09-18 for D-028: two plans (Managed Outbound, Opportunity Engine) and no plan
+// below $1,500. The rule is now a single question — does the shop want each opportunity
+// validated, accepted against its criteria and scheduled before its estimator is involved,
+// and does it have an estimator to take it? — and the tests below write it out case by case.
+//
+// EXTENDED 2026-09-17 for D-027. The plans were three levels of responsibility, and the
+// recommendation mirrors the operating-system repo's core/offer.recommend_from_discovery
 // rule for rule: it is decided by WHO DOES THE WORK after someone shows interest — never by
 // the budget a visitor ticked, and never by contract size. The old "a stated budget always
 // wins" and "big contracts unlock the top tier" tests are gone because those rules are gone;
@@ -384,31 +389,27 @@ describe("outcomes", () => {
 });
 
 describe("plan recommendation", () => {
-  const [PROSPECTING, MANAGED, QOE] = plans.map((p) => p.name) as [string, string, string];
+  const [MANAGED, ENGINE] = plans.map((p) => p.name) as [string, string];
 
-  test("the three names are the three published plans, verbatim", () => {
-    assert.deepEqual([PROSPECTING, MANAGED, QOE], [
-      "Prospecting",
-      "Managed Pipeline",
-      "Qualified Opportunity Engine",
-    ]);
+  test("the two names are the two published plans, verbatim", () => {
+    assert.deepEqual(plans.map((p) => p.name), ["Managed Outbound", "Opportunity Engine"]);
   });
 
   test("it mirrors the operating system's rule, case by case", () => {
-    // core/offer.recommend_from_discovery, written out. Each row is one branch of that
+    // core/offer.recommend_from_discovery (D-028), written out. Each row is one branch of that
     // function; if the OS rule changes, this table is what has to change with it.
     const cases: Array<[Partial<QualificationAnswers>, string, string]> = [
-      // 1. wants prepared opportunities AND someone quotes and wins bids -> the top plan
-      [{ preparedOpportunities: "yes", commercialQuoter: "dedicated", followUpOwner: "nobody" }, QOE, "wants + dedicated estimator"],
-      [{ preparedOpportunities: "yes", commercialQuoter: "owner-when-time", followUpOwner: "nobody" }, QOE, "wants + the owner quotes"],
-      [{ preparedOpportunities: "yes", commercialQuoter: "dedicated", followUpOwner: "dedicated" }, QOE, "wanting it outranks having a follow-up person"],
-      // 2. wants them but nobody quotes -> the honest level is a structured handoff
+      // 1. wants opportunities validated and scheduled AND someone quotes and wins bids -> the Engine
+      [{ preparedOpportunities: "yes", commercialQuoter: "dedicated", followUpOwner: "nobody" }, ENGINE, "wants + dedicated estimator"],
+      [{ preparedOpportunities: "yes", commercialQuoter: "owner-when-time", followUpOwner: "nobody" }, ENGINE, "wants + the owner quotes"],
+      [{ preparedOpportunities: "yes", commercialQuoter: "dedicated", followUpOwner: "dedicated" }, ENGINE, "wanting it outranks having a follow-up person"],
+      // 2. wants them but nobody quotes -> the honest plan is the warm handoff of a qualified conversation
       [{ preparedOpportunities: "yes", commercialQuoter: "nobody", followUpOwner: "nobody" }, MANAGED, "wants, no estimator"],
       [{ preparedOpportunities: "yes", commercialQuoter: "nobody", followUpOwner: "dedicated" }, MANAGED, "wants, no estimator, even with a follow-up person"],
-      // 3. a dedicated in-house person works replies, no wish for prepared opportunities
-      [{ preparedOpportunities: "no", commercialQuoter: "dedicated", followUpOwner: "dedicated" }, PROSPECTING, "dedicated follow-up, says no"],
-      [{ preparedOpportunities: "unsure", commercialQuoter: "dedicated", followUpOwner: "dedicated" }, PROSPECTING, "'not sure' is not a yes"],
-      // 4. otherwise -> the recommended default
+      // 3. otherwise -> the recommended default (both plans run the follow-up, so who works
+      //    replies no longer picks a cheaper plan: there is none)
+      [{ preparedOpportunities: "no", commercialQuoter: "dedicated", followUpOwner: "dedicated" }, MANAGED, "dedicated follow-up, says no"],
+      [{ preparedOpportunities: "unsure", commercialQuoter: "dedicated", followUpOwner: "dedicated" }, MANAGED, "'not sure' is not a yes"],
       [{ preparedOpportunities: "no", followUpOwner: "nobody" }, MANAGED, "nobody follows up"],
       [{ preparedOpportunities: "no", followUpOwner: "owner-sometimes" }, MANAGED, "owner, when there's time"],
       [{ preparedOpportunities: "unsure", followUpOwner: "office-part-time" }, MANAGED, "office person, part time"],
@@ -445,10 +446,10 @@ describe("plan recommendation", () => {
   });
 
   test("a budget that names a different plan is said out loud, not silently overridden", () => {
-    const r = evaluateFit(with_({ budget: "750" })); // IDEAL points at the top plan
-    assert.equal(r.recommendedTier, QOE);
-    assert.match(r.watchouts.join(" "), /picked the Prospecting fee/);
-    assert.match(r.watchouts.join(" "), /a lower plan never includes a higher plan's work/);
+    const r = evaluateFit(with_({ budget: "1500" })); // IDEAL points at the Opportunity Engine
+    assert.equal(r.recommendedTier, ENGINE);
+    assert.match(r.watchouts.join(" "), /picked the Managed Outbound fee/);
+    assert.match(r.watchouts.join(" "), /never includes the Opportunity Engine's validation and scheduling/);
     // ...and nothing is said when they agree, or when no budget was given.
     assert.doesNotMatch(evaluateFit(with_({ budget: "2500" })).watchouts.join(" "), /picked the/);
     assert.doesNotMatch(evaluateFit(with_({ budget: "unsure" })).watchouts.join(" "), /picked the/);
@@ -464,11 +465,11 @@ describe("plan recommendation", () => {
             const tier = recommendTier(
               with_({ commercialQuoter: "nobody", preparedOpportunities: p.value, followUpOwner: f.value, jobValue: j.value, budget: b.value }),
             );
-            assert.notEqual(tier, QOE, `${p.value}/${f.value}/${j.value}/${b.value}`);
+            assert.notEqual(tier, ENGINE, `${p.value}/${f.value}/${j.value}/${b.value}`);
           }
     const r = evaluateFit(with_({ commercialQuoter: "nobody", preparedOpportunities: "yes" }));
     assert.equal(r.recommendedTier, MANAGED);
-    assert.match(r.watchouts.join(" "), /nowhere to go/);
+    assert.match(r.watchouts.join(" "), /nobody to take it/);
   });
 
   test("the top plan is never suggested to someone who did not ask for it", () => {
@@ -479,22 +480,29 @@ describe("plan recommendation", () => {
         for (const f of FOLLOW_UP_OWNER) {
           assert.notEqual(
             recommendTier(with_({ preparedOpportunities: p, jobValue: j.value, followUpOwner: f.value })),
-            QOE,
+            ENGINE,
             `${p}/${j.value}/${f.value}`,
           );
         }
   });
 
-  test("Prospecting is suggested only when a dedicated person already works replies", () => {
+  test("there is no plan below Managed Outbound, and a small budget is told so", () => {
+    // D-028 retired the $750 plan. Every answer set recommends one of the two real plans, and
+    // a visitor who ticks "less than $1,500" hears that there is no cheaper plan — not a
+    // recommendation for one.
     for (const p of PREPARED_OPPORTUNITIES)
       for (const f of FOLLOW_UP_OWNER)
         for (const q of COMMERCIAL_QUOTER) {
           const tier = recommendTier(with_({ preparedOpportunities: p.value, followUpOwner: f.value, commercialQuoter: q.value }));
-          if (tier === PROSPECTING) assert.equal(f.value, "dedicated", `${p.value}/${f.value}/${q.value}`);
+          assert.ok(tier === MANAGED || tier === ENGINE, `${p.value}/${f.value}/${q.value} -> ${tier}`);
         }
+    assert.deepEqual(BUDGET.map((b) => b.value), ["1500", "2500", "under-1500", "unsure"]);
+    const small = evaluateFit(with_({ budget: "under-1500" }));
+    assert.match(small.watchouts.join(" "), /no cheaper plan/);
+    assert.doesNotMatch(JSON.stringify(small), /\$750|Prospecting/);
   });
 
-  test("a recommended plan is always one of the three real ones", () => {
+  test("a recommended plan is always one of the two real ones", () => {
     const real = new Set<string | null>([...plans.map((p) => p.name), null]);
     for (const g of GROWTH_PROBLEM)
       for (const f of FOLLOW_UP_OWNER)

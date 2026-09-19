@@ -171,11 +171,12 @@ export default function PrivacyPage() {
             sender.
           </p>
           <p className="mt-4 leading-7 text-subtle">
-            Where a business contact replies with interest, we keep the conversation and pass it to
-            the client it concerns. On our Qualified Opportunity Engine plan we also record what
-            the contact tells us in that conversation — their role, the need they describe, the
-            timing, and details of the building or the work — and hand it to that client so its
-            team can follow up. We record what a contact says; we do not invent details a contact
+            Where a business contact replies with interest and agrees to speak with the client, we
+            keep the conversation and pass it, with a warm introduction, to the client it concerns.
+            On our Opportunity Engine plan we also record what the contact tells us in that
+            conversation — their role, the need they describe, the timing, details of the building
+            or the work, and the next step they agreed to — and hand it to that client so its team
+            can follow up. We record what a contact says; we do not invent details a contact
             did not give, and we never contact consumers.
           </p>
         </Section>

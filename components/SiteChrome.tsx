@@ -107,8 +107,8 @@ export function SiteFooter({ width = "max-w-5xl" }: { width?: string }) {
             <p className="font-display text-lg text-accent">{brandName}</p>
             <p className="mt-2 leading-6">
               Commercial HVAC managed outbound for established contractors: we find the commercial
-              accounts, contact the right people in your name, and hand each opportunity to your
-              team at the level you chose. You estimate and close.
+              accounts, reach the decision-makers in your name, and hand your team qualified
+              conversations. You estimate and close.
             </p>
             {/* WHERE WE ARE and WHERE WE SERVE, as two facts. The footer used to say
                 "currently focused on New Jersey", which turned the founder's address into a
@@ -186,14 +186,15 @@ export function SiteFooter({ width = "max-w-5xl" }: { width?: string }) {
           </nav>
         </div>
         {/* The no-outcome-promise line. The refusal is load-bearing and must not be trimmed:
-            the top plan COORDINATES a next step or a site visit, so "a set number of" is
+            the Opportunity Engine COORDINATES a next sales step, so "a set number of" is
             deliberate — a blunter "we do not promise site visits" would contradict the
             product, and a vaguer line would let a reader assume a count. */}
         <p className="mt-8 border-t border-line pt-6 leading-6">
-          © {new Date().getFullYear()} {legalEntityName} · We prepare the opportunity; the HVAC
-          contractor estimates and closes it. We commit to doing the work to the stated standard
-          and reporting it honestly. We do not promise jobs, revenue, contracts, or a set number
-          of appointments, site visits or qualified opportunities.
+          © {new Date().getFullYear()} {legalEntityName} · We create the sales conversation; the
+          HVAC contractor does the technical discovery, estimates and closes. We commit to doing
+          the work to the stated standard and reporting it honestly. We do not promise jobs,
+          revenue, contracts, or a set number of appointments, site visits, qualified
+          conversations or accepted sales opportunities.
         </p>
       </div>
     </footer>

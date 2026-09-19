@@ -35,7 +35,7 @@ import { auditDeliveryWindow, brandName, founderName, intakeMinutes } from "@/li
 // what a visitor gets. The order is now the order a buyer decides in —
 //
 //   headline (the outcome) → value proposition (the one positioning sentence) → proof (a
-//   real account, in the format the audit delivers) → how it works → the three levels and
+//   real account, in the format the audit delivers) → how it works → the two plans and
 //   the price → the free audit → who it is for → what can be checked → the questions →
 //   one way to start
 //
@@ -58,7 +58,7 @@ const QUESTION_COUNT = ANSWER_KEYS.length;
 // How an account becomes an opportunity, in four moves. This merges what were two sections
 // (the mandate's four-move progression and a five-step onboarding list) into the one sequence
 // a buyer actually needs on the sales page. Deliberately plan-neutral: step 3 says the plan
-// decides and names no plan, so nothing here can be read as "every plan qualifies". The
+// decides how far we carry it, so nothing here can be read as "every plan validates". The
 // onboarding detail, the pacing of the sending and the day-by-day timeline are on
 // /how-it-works and /pricing#timeline, where someone who has decided goes to check them.
 const howItWorks = [
@@ -72,11 +72,11 @@ const howItWorks = [
   },
   {
     title: "We confirm genuine interest and carry it as far as you chose",
-    body: "Every reply is read the same day, and interest is confirmed by a person. Then your plan decides: hand over at first interest, screen it and organize a structured handoff, or qualify it and prepare it for your estimator.",
+    body: "Every reply is read the same day, and interest is confirmed by a person. Then your plan decides: a warm handoff once the prospect agrees to talk with you, or — on the Opportunity Engine — the need validated, checked against your criteria and the next sales step set first.",
   },
   {
     title: "Your team quotes and closes",
-    body: "The handoff reaches the person you named, with the conversation, the context and the reason we wrote. The technical evaluation, the estimate and the close are yours on every plan.",
+    body: "The handoff reaches the person you named, with a warm introduction, the whole conversation, the context and the reason we wrote. Technical discovery, the estimate, the proposal and the close are yours on both plans.",
   },
 ];
 
@@ -90,7 +90,7 @@ const checkable = [
   },
   {
     title: "Every price is published",
-    body: "Three plans, each with what we own and what stays with you. Nothing is quoted only on a call.",
+    body: "Two plans, each with what we own, where we hand over, and what stays with you. Nothing is quoted only on a call.",
   },
   {
     title: "Every account carries its source",
@@ -209,10 +209,10 @@ function Hero() {
           {homepageH1}
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-subtle sm:text-xl">
-          We find the commercial accounts worth pursuing, contact the right people in your name,
-          and hand each opportunity to your team at the level you chose — from first interest to
-          a prepared opportunity your estimator can act on. We measure the work by one thing:
-          interested prospects.
+          We find the commercial accounts worth pursuing, reach the decision-makers in your name,
+          and hand your team qualified conversations — or, on the Opportunity Engine, accepted
+          sales opportunities with the next sales step already set. We measure the work by one
+          thing: qualified conversations.
         </p>
         <p className="mt-4 max-w-2xl leading-7 text-subtle">
           For established HVAC contractors that already do commercial work, anywhere in the
@@ -313,7 +313,7 @@ function HowItWorksSection() {
         <Link href="/how-it-works" className={textLink}>
           How it works, step by step
         </Link>{" "}
-        — the qualification standard, what each handoff contains, when a call happens, and how
+        — what each plan hands over, what a warm handoff contains, when a call happens, and how
         the sending is paced.
       </p>
     </Section>
@@ -322,11 +322,11 @@ function HowItWorksSection() {
 
 /* -------------------------------------------------------------------------- */
 
-/** "$750, $1,500, $2,500" — derived from `plans` so the headline prices can never drift
+/** "$1,500, $2,500" — derived from `plans` so the headline prices can never drift
  *  from the plan cards directly below them. */
 const priceList = plans.map((p) => `$${p.price.toLocaleString()}`).join(", ");
 
-// THREE LEVELS OF RESPONSIBILITY, NOT THREE SIZES. Each card is the one sentence that says
+// TWO PLANS THAT STOP AT DIFFERENT POINTS, NOT TWO SIZES. Each card is the one sentence that says
 // what we become responsible for, who it is for, what reaches the contractor and under what
 // name, and what stays with him. The responsibility chain, the capacity limits and the
 // step-up explanations are on /pricing: a message count must never read as the reason a
@@ -336,11 +336,11 @@ function PlansSection() {
   return (
     <Section
       id="pricing"
-      eyebrow="Three levels of responsibility"
+      eyebrow="Two plans"
       title="Choose how far we carry each opportunity. The price follows that."
       intro={`${priceList} a month, flat. No setup fee, month-to-month, 14 days’ notice either side. Never priced per lead or per opportunity.`}
     >
-      <ul className="mt-8 grid gap-4 lg:grid-cols-3">
+      <ul className="mt-8 grid gap-4 lg:grid-cols-2">
         {plans.map((plan) => (
           <li
             key={plan.name}
@@ -363,6 +363,10 @@ function PlansSection() {
               </dd>
               <dt className="sr-only">What we are responsible for</dt>
               <dd className="mt-3 font-semibold text-accent">{plan.oneLiner}</dd>
+              <dt className="sr-only">Core outcome and handoff point</dt>
+              <dd className="mt-3 text-sm font-semibold leading-6 text-ink">
+                {plan.outcome} Handoff at {plan.handoffPoint}.
+              </dd>
               <dt className="sr-only">Best for</dt>
               <dd className="mt-3 text-sm leading-6 text-subtle">{plan.bestFor}</dd>
               <dt className="mt-4 border-t border-line pt-4 text-xs font-semibold uppercase tracking-[0.16em] text-accent">
@@ -381,8 +385,8 @@ function PlansSection() {
           it is never inferred from an absence. The full list of what we do not do is on
           /pricing#boundary. */}
       <p id="boundary" className="mt-6 max-w-3xl scroll-mt-20 leading-7 text-ink/90">
-        <span className="font-semibold">{boundarySentence}</span> That holds on every plan,
-        including the top one.
+        <span className="font-semibold">{boundarySentence}</span> That holds on both plans,
+        including the Opportunity Engine.
       </p>
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
         <PrimaryCta placement="plans" />

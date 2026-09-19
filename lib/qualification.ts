@@ -23,11 +23,11 @@
 // client's own account history is an optional second lane and is never asked as a
 // precondition.
 //
-// EXTENDED 2026-09-17 for D-027. The three plans are now three LEVELS OF RESPONSIBILITY
-// (Prospecting / Managed Pipeline / Qualified Opportunity Engine), so the fit check asks the
-// one thing that separates the top level from the middle one — whether the shop wants
-// opportunities qualified and the next step or site visit coordinated before its estimator
-// is involved — and `recommendTier` mirrors the operating-system repo's
+// REWRITTEN 2026-09-18 for D-028. There are two plans — Managed Outbound and the Opportunity
+// Engine — and they differ by how far we carry each opportunity before the warm handoff, so
+// the fit check asks the one thing that separates them — whether the shop wants each
+// opportunity validated, accepted against its criteria and the next sales step set before its
+// team is involved — and `recommendTier` mirrors the operating-system repo's
 // core/offer.recommend_from_discovery rule for rule. A stated budget no longer decides the
 // plan: what a shop can spend says nothing about who on its team works an interested reply.
 //
@@ -82,10 +82,10 @@ export const COMMERCIAL_SHARE = [
   { value: "most", label: "Most or all of it" },
 ] as const satisfies readonly Option[];
 
-// Whether an opportunity we hand over has somewhere to land. We prepare it to the level the
-// plan says; the technical evaluation, the estimate and the close stay with the contractor on
-// every plan, so somebody there has to do them. It is also the precondition of the top plan:
-// with nobody to estimate, a prepared opportunity has nowhere to go.
+// Whether an opportunity we hand over has somewhere to land. Technical discovery, the
+// estimate, the proposal and the close stay with the contractor on both plans, so somebody
+// there has to do them. It is also the precondition of the Opportunity Engine: with nobody to
+// take the coordinated next step, an accepted opportunity has nowhere to go.
 export const COMMERCIAL_QUOTER = [
   { value: "nobody", label: "Nobody, really — we haven't bid commercial work" },
   { value: "owner-when-time", label: "The owner, when there's time" },
@@ -178,22 +178,22 @@ export const FOLLOW_UP_OWNER = [
   { value: "dedicated", label: "Someone whose actual job it is" },
 ] as const satisfies readonly Option[];
 
-// THE QUESTION THAT SEPARATES THE TOP PLAN FROM THE MIDDLE ONE (D-027). Managed Pipeline
-// hands over screened interest; Qualified Opportunity Engine qualifies it, gathers the
-// context and coordinates the next step or site visit first. Which of those a shop wants is a
+// THE QUESTION THAT SEPARATES THE TWO PLANS (D-028). Managed Outbound hands over a
+// qualified conversation with a warm introduction; the Opportunity Engine first validates the
+// need, checks it against the shop's criteria and sets the next sales step. Which of those a shop wants is a
 // fact only the shop can state, so it is asked rather than inferred from contract size —
 // which is how the old model guessed it. Not scored: it chooses a plan, it does not decide fit.
 // (core/offer.recommend_from_discovery: `wants_prepared_opportunities`.)
 export const PREPARED_OPPORTUNITIES = [
   {
     value: "yes",
-    label: "Yes — qualify it, gather the context and coordinate the next step first",
-    hint: "Your estimator gets a prepared opportunity",
+    label: "Yes — validate it, check it against our criteria and set the next sales step first",
+    hint: "Your team gets an accepted sales opportunity",
   },
   {
     value: "no",
-    label: "No — hand us the interest and our team takes it from there",
-    hint: "Your team does the discovery",
+    label: "No — introduce us once they want to talk, and our team takes it from there",
+    hint: "Your team takes the qualified conversation",
   },
   { value: "unsure", label: "Not sure yet" },
 ] as const satisfies readonly Option[];
@@ -221,9 +221,9 @@ export const TIMELINE = [
 // longer DECIDES the recommendation (see recommendTier); where it disagrees with what the
 // shop says it wants, the result says so plainly instead of quietly picking one.
 export const BUDGET = [
-  { value: "750", label: "$750/mo", hint: "Prospecting" },
-  { value: "1500", label: "$1,500/mo", hint: "Managed Pipeline" },
-  { value: "2500", label: "$2,500/mo", hint: "Qualified Opportunity Engine" },
+  { value: "1500", label: "$1,500/mo", hint: "Managed Outbound" },
+  { value: "2500", label: "$2,500/mo", hint: "Opportunity Engine" },
+  { value: "under-1500", label: "Less than $1,500/mo", hint: "Below our entry plan" },
   { value: "unsure", label: "Not sure yet", hint: "The audit comes first" },
 ] as const satisfies readonly Option[];
 
@@ -319,8 +319,8 @@ export type FitResult = {
    */
   offerBooking: boolean;
   /** Advisory starting plan, or null when nothing that decides it has been answered. The
-   *  three names are lib/content.ts `plans[].name`, verbatim — tests hold them together. */
-  recommendedTier: "Prospecting" | "Managed Pipeline" | "Qualified Opportunity Engine" | null;
+   *  two names are lib/content.ts `plans[].name`, verbatim — tests hold them together. */
+  recommendedTier: "Managed Outbound" | "Opportunity Engine" | null;
   /** A genuinely useful page for this visitor, whatever the outcome. */
   suggestedReading: { href: string; label: string } | null;
 };
@@ -479,16 +479,13 @@ export function discoveryFacts(a: QualificationAnswers) {
  * seen the audit, and the UI says so.
  *
  * MIRRORS core/offer.recommend_from_discovery IN THE OPERATING-SYSTEM REPO, RULE FOR RULE
- * (D-027 §2 — by who does the work):
- *   1. wants prepared opportunities AND has someone who quotes and wins bids
- *        -> Qualified Opportunity Engine
- *   2. wants prepared opportunities but nobody quotes and wins bids
- *        -> Managed Pipeline. The honest level: a prepared opportunity would have nowhere to
- *           go, so a structured handoff is the right stop until that person exists.
- *   3. a dedicated in-house person works replies, and no wish for prepared opportunities
- *        -> Prospecting (we find and contact; they take over at interest)
- *   4. otherwise -> Managed Pipeline (the recommended default)
- * An estimator is a PRECONDITION of the top plan, never a reason for it.
+ * (D-028 §2 — by how far the shop wants each opportunity carried):
+ *   1. wants validated, accepted opportunities AND has someone who quotes and wins bids
+ *        -> Opportunity Engine
+ *   2. otherwise -> Managed Outbound (the recommended default). That includes a shop that
+ *        wants accepted opportunities but has nobody to quote and win bids: a coordinated
+ *        next step would have nobody to take it, so a warm handoff is the honest stop.
+ * An estimator is a PRECONDITION of the Opportunity Engine, never a reason for it.
  *
  * What is deliberately NOT here any more: the stated budget (it used to win outright) and
  * contract size (it used to unlock the top plan). Neither says who on the shop's team works
@@ -502,17 +499,14 @@ export function recommendTier(a: QualificationAnswers): FitResult["recommendedTi
   if (!a.followUpOwner && !a.preparedOpportunities && !a.commercialQuoter) return null;
 
   const f = discoveryFacts(a);
-  if (f.wantsPreparedOpportunities && f.estimatorAvailable) return "Qualified Opportunity Engine";
-  if (f.wantsPreparedOpportunities && !f.estimatorAvailable) return "Managed Pipeline";
-  if (f.followUpOwner === "dedicated") return "Prospecting";
-  return "Managed Pipeline";
+  if (f.wantsPreparedOpportunities && f.estimatorAvailable) return "Opportunity Engine";
+  return "Managed Outbound";
 }
 
 /** The monthly fee each budget answer names, as the plan it buys. */
 const BUDGET_PLAN: Record<string, NonNullable<FitResult["recommendedTier"]>> = {
-  "750": "Prospecting",
-  "1500": "Managed Pipeline",
-  "2500": "Qualified Opportunity Engine",
+  "1500": "Managed Outbound",
+  "2500": "Opportunity Engine",
 };
 
 /** Reading that is actually relevant to the answers given. */
@@ -588,7 +582,7 @@ function buildReasons(a: QualificationAnswers): string[] {
   }
   if (a.growthProblem === "follow-up-drops") {
     out.push(
-      "Follow-up falling through is exactly what Managed Pipeline takes off your desk — the sequence runs whether or not the week gets busy.",
+      "Follow-up falling through is exactly what we take off your desk on both plans — the sequence runs whether or not the week gets busy.",
     );
   }
   if (a.growthProblem === "referral-dependent") {
@@ -611,7 +605,7 @@ function buildReasons(a: QualificationAnswers): string[] {
     (a.commercialQuoter === "dedicated" || a.commercialQuoter === "owner-when-time")
   ) {
     out.push(
-      "You want each opportunity qualified and the next step coordinated before your estimator is involved, and someone on your team quotes and wins commercial bids — that is the work Qualified Opportunity Engine is for.",
+      "You want each opportunity validated, checked against your criteria and the next sales step set before your estimator is involved, and someone on your team quotes and wins commercial bids — that is the work the Opportunity Engine is for.",
     );
   }
   if (BIG_CONTRACTS.has(a.jobValue)) {
@@ -667,22 +661,27 @@ function buildWatchouts(a: QualificationAnswers): string[] {
   }
   if (a.followUpOwner === "dedicated" && a.preparedOpportunities !== "yes") {
     out.push(
-      "You already have someone whose job is account follow-up. That usually points at Prospecting: we find and contact the accounts, and your person takes each conversation at interest.",
+      "You already have someone whose job is account follow-up. Managed Outbound fits that: we find the accounts, reach the decision-makers and introduce each one who wants to talk, and your person takes it from there.",
     );
   }
   if (a.preparedOpportunities === "yes" && a.commercialQuoter === "nobody") {
     out.push(
-      "You'd like opportunities prepared before your estimator is involved, but nobody quotes commercial bids yet. A prepared opportunity would have nowhere to go, so the honest level is Managed Pipeline — a structured handoff — until that person exists.",
+      "You'd like accepted opportunities before your estimator is involved, but nobody quotes commercial bids yet. The Opportunity Engine would set a next sales step with nobody to take it, so the honest plan is Managed Outbound — a warm handoff of each qualified conversation — until that person exists.",
     );
   }
   // A stated budget that names a DIFFERENT plan from the one the answers point at. Said out
-  // loud, because a lower plan never includes a higher plan's work and the visitor should
-  // weigh that trade before anyone talks to him.
+  // loud, because Managed Outbound never includes the Opportunity Engine's work and the
+  // visitor should weigh that trade before anyone talks to them.
   const budgetPlan = a.budget ? BUDGET_PLAN[a.budget] : undefined;
   const pointed = recommendTier(a);
   if (budgetPlan && pointed && budgetPlan !== pointed) {
     out.push(
-      `You picked the ${budgetPlan} fee, and your other answers point at ${pointed}. Those are different levels of responsibility, and a lower plan never includes a higher plan's work — so that is the trade to weigh once you have seen the audit.`,
+      `You picked the ${budgetPlan} fee, and your other answers point at ${pointed}. The two plans stop at different points — Managed Outbound hands over a qualified conversation, and never includes the Opportunity Engine's validation and scheduling — so that is the trade to weigh once you have seen the audit.`,
+    );
+  }
+  if (a.budget === "under-1500") {
+    out.push(
+      "Our entry plan is $1,500 a month and there is no cheaper plan. The free audit costs nothing either way, so you can judge the work before deciding whether it is worth that.",
     );
   }
   return out;

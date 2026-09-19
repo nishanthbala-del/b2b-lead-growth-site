@@ -9,7 +9,7 @@ import { ImageResponse } from "next/og";
 // once at build and served from the CDN.
 // Keep in step with OG_IMAGE_ALT in lib/pages.ts (that module cannot import this one).
 export const alt =
-  "B2B Lead Growth — commercial HVAC managed outbound: we find the commercial accounts, contact the right people in your name, and hand off at the level you chose";
+  "B2B Lead Growth — commercial HVAC managed outbound: we find the commercial accounts, reach the decision-makers in your name, and hand your team qualified conversations — $1,500 or $2,500 a month";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -91,8 +91,8 @@ export default function OpengraphImage() {
             Commercial HVAC managed outbound
           </div>
           <div style={{ fontSize: 30, color: SUBTLE, maxWidth: 920, lineHeight: 1.35 }}>
-            We find the commercial accounts, contact the right people in your name, and hand
-            each opportunity to your team at the level you chose.
+            We find the commercial accounts, reach the decision-makers in your name, and hand
+            your team qualified conversations.
           </div>
         </div>
 
@@ -108,10 +108,10 @@ export default function OpengraphImage() {
               borderRadius: 4,
             }}
           >
-            $750 · $1,500 · $2,500 / mo
+            $1,500 · $2,500 / mo
           </div>
           <div style={{ fontSize: 22, color: SUBTLE }}>
-            Three levels of responsibility · Never sold per lead
+            Two plans · Qualified conversations · Never sold per lead
           </div>
         </div>
       </div>

@@ -72,7 +72,7 @@ export type SiteEvent = {
 const TOKEN = /^[A-Za-z0-9_.-]{1,64}$/;
 const PATH = /^\/[A-Za-z0-9/_-]{0,120}$/;
 const OUTCOMES = new Set(["strong", "explore", "not_yet"]);
-const PLANS = new Set(["Prospecting", "Managed Pipeline", "Qualified Opportunity Engine"]);
+const PLANS = new Set(["Managed Outbound", "Opportunity Engine"]);
 
 const token = (v: unknown): string => (typeof v === "string" && TOKEN.test(v) ? v : "");
 

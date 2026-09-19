@@ -15,6 +15,12 @@ import {
 } from "@/lib/site";
 import { boundarySentence, callingPolicy, contractorBoundary, plans } from "@/lib/content";
 
+// WHAT CHANGED ON 2026-09-18 (D-028): the same service-description passages now name the TWO
+// plans (Managed Outbound, Opportunity Engine), the warm handoff each ends in, and who takes the
+// conversation from there; the $750 plan is retired. §4's list of things we never guarantee now
+// names qualified conversations and accepted sales opportunities. The not-changed list below
+// still holds.
+//
 // WHAT CHANGED ON 2026-09-17, AND WHAT DID NOT (D-027).
 //
 // CHANGED — the passages that DESCRIBE THE SERVICE: the short version, §2's one-line
@@ -39,7 +45,7 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const priceList = plans.map((p) => `$${p.price.toLocaleString()}`).join(", ");
-const planNames = plans.map((p) => p.name).join(", ");
+const planNames = plans.map((p) => p.name).join(" and ");
 
 export default function TermsPage() {
   return (
@@ -68,13 +74,13 @@ export default function TermsPage() {
           <p className="font-semibold text-accent">The short version</p>
           <ul className="mt-3 space-y-2">
             <BulletItem>
-              We sell a monthly commercial HVAC managed outbound service at three levels of
-              responsibility — {planNames} — at {priceList} per month. No setup fee, and no
-              per-lead or per-opportunity fee.
+              We sell a monthly commercial HVAC managed outbound service as two plans —{" "}
+              {planNames} — at {priceList} per month. No setup fee, and no per-lead,
+              per-opportunity or performance fee.
             </BulletItem>
             <BulletItem>
-              On every plan, your team does the technical evaluation, the estimate, the price and
-              the close.
+              On both plans, your team does the technical evaluation, the estimate, the proposal,
+              the price and the close.
             </BulletItem>
             <BulletItem>
               The free pipeline audit is genuinely free — no card, no obligation, nothing to cancel.
@@ -89,9 +95,9 @@ export default function TermsPage() {
               make-good we do offer.
             </BulletItem>
             <BulletItem>
-              We never guarantee leads, replies, meetings, site visits, qualified opportunities,
-              contracts, or revenue, and no fee is refundable on the basis that a result did not
-              occur.
+              We never guarantee leads, replies, meetings, site visits, qualified conversations,
+              accepted sales opportunities, contracts, or revenue, and no fee is refundable on the
+              basis that a result did not occur.
             </BulletItem>
             <BulletItem>
               If you leave, you keep the work we produced for you in the periods you paid for.
@@ -145,9 +151,9 @@ export default function TermsPage() {
         <Section title="3. What we sell">
           <p className="leading-7 text-subtle">
             We sell a monthly service, not software, a data licence, or a list of leads. It is a
-            commercial HVAC managed outbound service, sold at three levels of responsibility. The
-            level that applies to you is the one named in your signed order form, and a lower
-            level never includes a higher level&rsquo;s work:
+            commercial HVAC managed outbound service, sold as two plans. The plan that applies to
+            you is the one named in your signed order form, and Managed Outbound never includes the
+            Opportunity Engine&rsquo;s work:
           </p>
           <ul className="mt-4 space-y-3 leading-7 text-subtle">
             {plans.map((p) => (
@@ -155,7 +161,8 @@ export default function TermsPage() {
                 <strong className="text-ink/90">
                   {p.name} (${p.price.toLocaleString()} per month).
                 </strong>{" "}
-                {p.oneLiner} We are responsible for: {p.owns.join(", ")}. {p.youKeep}
+                {p.oneLiner} We are responsible for: {p.owns.join(", ")}. The handoff point is{" "}
+                {p.handoffPoint}. {p.youKeep}
               </BulletItem>
             ))}
           </ul>
@@ -171,8 +178,8 @@ export default function TermsPage() {
             <Link href="/pricing" className="text-accent underline-offset-4 hover:underline">
               pricing page
             </Link>
-            , and the standard an opportunity must meet before we call it qualified is published on
-            our{" "}
+            , and the standard an opportunity must meet before we hand it over as an accepted sales
+            opportunity is published on our{" "}
             <Link
               href="/how-it-works#qualification-standard"
               className="text-accent underline-offset-4 hover:underline"
@@ -195,7 +202,7 @@ export default function TermsPage() {
             <strong className="text-ink/90">Delivery.</strong> The work is delivered continuously
             across each monthly period rather than as a single file on a fixed date, up to that
             plan&rsquo;s published capacity limit. Written reporting is delivered monthly on
-            Prospecting and Managed Pipeline, and weekly on Qualified Opportunity Engine. The free
+            Managed Outbound and weekly on the Opportunity Engine. The free
             pipeline audit is delivered by email, normally within a few business days of your
             request. Delivery depends on you providing the inputs the plan needs: an agreed account
             profile, a sending mailbox you control, and your sign-off on the account categories,
@@ -212,13 +219,15 @@ export default function TermsPage() {
 
         <Section title="4. No guarantee of results">
           <p className="leading-7 text-subtle">
-            We provide a service — research, targeting, outreach and reporting, and, where your plan
-            includes them, follow-up, interest screening, qualification, and next-step or site-visit
-            coordination — performed with professional, commercially reasonable effort.{" "}
+            We provide a service — research, targeting, outreach, follow-up, interest screening,
+            the warm handoff and reporting, and, where your plan includes them, need validation,
+            acceptance against your agreed criteria, and next-step or site-visit coordination —
+            performed with professional, commercially reasonable effort.{" "}
             <strong className="text-ink/90">
               We do not guarantee, and you should not rely on any promise of, any revenue, jobs,
               customers, contracts, sales, close rate, return on investment, or number of leads,
-              replies, appointments, site visits, or qualified opportunities.
+              replies, appointments, site visits, qualified conversations, or accepted sales
+              opportunities.
             </strong>{" "}
             Lead generation improves prospect quality and pipeline inputs; sales outcomes depend on
             your offer, market demand, outreach execution, follow-up discipline, and closing
@@ -399,18 +408,21 @@ export default function TermsPage() {
             <BulletItem>
               <strong className="text-ink/90">We are responsible for</strong> research quality and
               sourcing, targeting logic, contact selection, message drafting, first-touch outreach
-              sent in your name, reading replies, data organisation, and written reporting — and,
-              on the plans that include them, the follow-up sequence, interest screening,
-              conversation and pipeline organisation, qualification, context gathering, and
-              next-step or site-visit coordination.
+              sent in your name, reading replies, the follow-up sequence, interest screening,
+              conversation and pipeline organisation, the warm handoff, data organisation, and
+              written reporting — and, on the Opportunity Engine, need validation, context
+              gathering, acceptance against the criteria you agreed with us, next-step or
+              site-visit coordination, and the opportunity brief.
             </BulletItem>
             <BulletItem>
               <strong className="text-ink/90">You are responsible for</strong> your offer and
               pricing, the accuracy of information and any contact data you give us, your legal
               right to contact the people on lists you provide, the sending mailbox or identity used
               for outreach, responding to the opportunities we hand over, the technical evaluation,
-              the estimate, the price, the live sales conversations, and closing. On Prospecting you
-              also take over each conversation at interest, including any follow-up.
+              the estimate, the proposal, the price, the live sales conversations, and closing. On
+              Managed Outbound you take over each conversation at the warm handoff, once the
+              prospect has agreed to speak with your team; on the Opportunity Engine you take over
+              each accepted sales opportunity at its coordinated next step.
             </BulletItem>
           </ul>
         </Section>

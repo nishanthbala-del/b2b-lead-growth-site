@@ -15,7 +15,15 @@
 //
 // Relative imports with extensions: tests/ load this module directly under `node --test`.
 
-import { audit, boundarySentence, contractorBoundary, offerTerms, plans } from "./content.ts";
+import {
+  audit,
+  boundarySentence,
+  contractorBoundary,
+  offerTerms,
+  outcomeMetric,
+  plans,
+  warmHandoffSteps,
+} from "./content.ts";
 import {
   PAGE_SECTIONS,
   guidePages,
@@ -75,11 +83,18 @@ export function llmsTxt(): string {
   );
 
   lines.push("## Plans", "");
-  for (const p of plans) lines.push(`- ${p.name}, ${usd(p.price)} per month: ${p.oneLiner}`);
+  lines.push(`Two plans, and the plan decides how far ${brandName} carries each opportunity before the warm handoff to the contractor's team.`, "");
+  for (const p of plans) {
+    lines.push(
+      `- ${p.name}, ${usd(p.price)} per month: ${p.oneLiner} Core outcome: ${p.outcome} Handoff point: ${p.handoffPoint}.`,
+    );
+  }
   for (const t of offerTerms) lines.push(`- ${t}`);
+  lines.push(`- The warm handoff, on both plans: ${warmHandoffSteps.join("; ")}.`);
+  lines.push(`- How the work is measured: ${outcomeMetric.oneSentence}`);
   lines.push("");
 
-  lines.push("## The boundary, on every plan", "");
+  lines.push("## The boundary, on both plans", "");
   lines.push(`- ${boundarySentence}`);
   lines.push(`- ${brandName} does not: ${contractorBoundary.join("; ")}.`);
   lines.push("");

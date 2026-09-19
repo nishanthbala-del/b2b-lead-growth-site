@@ -20,17 +20,15 @@ import {
 import { getGuidePage, guideJsonLd, pageMetadata, serviceJsonLd } from "@/lib/pages";
 import { siteUrl, intakeMinutes } from "@/lib/site";
 
-// THE PRICING PAGE IS ABOUT RESPONSIBILITY, NOT VOLUME (D-027 §1, mandate §9).
+// THE PRICING PAGE IS ABOUT HOW FAR WE CARRY EACH OPPORTUNITY, NOT VOLUME (D-028).
 //
-// Until 2026-09-17 this page led with three tiers whose visible difference was a "monthly
-// ceiling" — ~40 accounts, ~100 messages, ~150 messages — so the honest reading of the table
-// was "the same thing, in three sizes". That is not what is sold. The three plans are three
-// different answers to one question: how far do we carry an opportunity before your team
-// takes it? So the page now opens with the three one-liners, then a who-owns-what table
-// (every row a responsibility, every cell "we do" or "you do"), then what reaches you at the
-// handoff, then the boundary that holds on all three. Capacity limits still appear — a plan
-// quoted without its limit reads as unlimited — but as the supporting facts they are, under
-// their own heading, with the sentence that says they are never the reason a plan costs more.
+// There are two plans. They are two answers to one question — how far do we own each prospect
+// before the warm handoff to your team? — so the page opens with the two one-liners, then a
+// who-owns-what table (every row a responsibility, every cell "we do" or "you do"), then what
+// reaches you at the handoff, then the boundary that holds on both. Capacity limits still
+// appear — a plan quoted without its limit reads as unlimited — but as the supporting facts
+// they are, under their own heading, with the sentence that says they are never the reason a
+// plan costs more. (D-027's three tiers, including a $750 entry tier, were retired 2026-09-18.)
 
 const page = getGuidePage("pricing");
 
@@ -45,22 +43,22 @@ const pageFaqs = [
   {
     question: "How much does commercial HVAC lead generation cost with B2B Lead Growth?",
     answer:
-      "B2B Lead Growth charges a flat $750, $1,500 or $2,500 a month, with no setup fee. $750 is Prospecting: we find and contact suitable commercial accounts, and you take over at interest. $1,500 is Managed Pipeline: we run outreach and follow-up, screen genuine interest, and organize the handoff. $2,500 is Qualified Opportunity Engine: we qualify the opportunity, gather the relevant context, coordinate the next step or site visit, and prepare your team to estimate and close.",
+      "B2B Lead Growth charges a flat $1,500 or $2,500 a month, with no setup fee. $1,500 is Managed Outbound: we find the right commercial accounts, reach the decision-makers, run the outreach and follow-up, and hand you each prospect who wants to talk, with a warm introduction. $2,500 is the Opportunity Engine: everything in Managed Outbound, and we also validate the business need, gather the property, account and buyer information, check the opportunity against your agreed criteria, and set a concrete next sales step before we hand it over.",
   },
   {
-    question: "What is the difference between the three plans?",
+    question: "What is the difference between the two plans?",
     answer:
-      "The three plans differ by how far we carry an opportunity before your team takes it, never by the message count. Prospecting hands you an interested prospect the moment one appears. Managed Pipeline hands you screened interest, with a structured handoff. Qualified Opportunity Engine hands you a qualified opportunity, prepared for your estimator. On all three, your team does the technical evaluation, the estimate and the close.",
+      "The two plans differ by how far we carry an opportunity before your team takes it, never by the message count. Managed Outbound hands you a qualified conversation: a decision-maker who agreed to talk with your team, introduced to you warm with the whole conversation. The Opportunity Engine hands you an accepted sales opportunity: validated, checked against your criteria, with the next sales step already set and a complete brief. On both, your team does the technical discovery, the estimate, the proposal and the close.",
   },
   {
-    question: "Is $750 a month enough for real commercial prospecting?",
+    question: "Is there a cheaper plan than $1,500 a month?",
     answer:
-      "$750 a month buys a defined piece of work, not a full sales function. We build the account profile with you, research commercial accounts from public sources with a cited reason each, write a first-touch message per account, send it in your name, and read every reply. When a contact shows genuine interest, the conversation is yours. It suits a shop where someone already works replies; if nobody does, the $1,500 plan is the honest starting point.",
+      "No. Managed Outbound at $1,500 a month is the entry plan: the account research, the outreach and follow-up in your name, the reply handling and the warm handoff are the work, and we do not sell a smaller slice of it. The free pipeline audit costs nothing, so you can judge the work on your own market before deciding whether it is worth that.",
   },
   {
     question: "Are there setup fees, per-lead fees, per-opportunity fees or long contracts?",
     answer:
-      "No. There is no setup fee, no per-lead charge, no per-opportunity fee, no acceptance fee, no commission and no early-termination fee. There is one flat price per plan, month-to-month, with 14 days' notice either side. Prices are in US dollars and exclude any applicable tax. If you leave, you keep everything we built for you.",
+      "No. There is no setup fee, no per-lead charge, no per-opportunity fee, no acceptance fee, no performance fee, no commission and no early-termination fee. There is one flat price per plan, month-to-month, with 14 days' notice either side. Prices are in US dollars and exclude any applicable tax. If you leave, you keep everything we built for you.",
   },
   {
     question: "How does billing work, and can I get a refund?",
@@ -68,9 +66,9 @@ const pageFaqs = [
       "Billing is a flat monthly fee, charged in advance, renewing until you cancel on 14 days' written notice by email. The current month is non-refundable and is not prorated, because the fee is earned as that month's work is performed. A period we have not started is refunded in full. We do not refund because a result did not occur, since we never promise one. The full policy is in our Terms of Service.",
   },
   {
-    question: "What does no plan include?",
+    question: "What does neither plan include?",
     answer:
-      "No plan includes technical inspection, equipment diagnosis or specification, final scope, the estimate, the price, negotiation or the close — those are the contractor's on every plan. No plan includes cold calls, paid advertising, or buying or selling lead lists. No plan includes a guaranteed number of replies, appointments, site visits, qualified opportunities, contracts or revenue. No plan includes contractual territorial exclusivity: as standard we work one HVAC company per service area as an operating practice, and enforceable per-metro exclusivity is a separate priced add-on on the order form, quoted before you sign.",
+      "Neither plan includes technical HVAC discovery, site assessments, equipment diagnosis, sizing or specification, final scope, the estimate, the proposal, the price, negotiation or the close — those are the contractor's on both plans. Neither plan includes cold calls, paid advertising, or buying or selling lead lists. Neither plan includes a guaranteed number of replies, appointments, site visits, qualified conversations, sales opportunities, contracts or revenue. Neither plan includes contractual territorial exclusivity: as standard we work one HVAC company per service area as an operating practice, and enforceable per-metro exclusivity is a separate priced add-on on the order form, quoted before you sign.",
   },
 ];
 
@@ -113,9 +111,8 @@ export default function PricingPage() {
         intro={
           <>
             <p className="text-ink">
-              B2B Lead Growth charges established commercial HVAC contractors a flat monthly fee at
-              one of three levels of responsibility: $750 for Prospecting, $1,500 for Managed
-              Pipeline, or $2,500 for Qualified Opportunity Engine.
+              B2B Lead Growth charges established commercial HVAC contractors a flat monthly fee for
+              one of two plans: $1,500 for Managed Outbound, or $2,500 for the Opportunity Engine.
             </p>
             <p>
               The price follows how far we carry each opportunity before your team takes it — not
@@ -129,7 +126,7 @@ export default function PricingPage() {
           </>
         }
       >
-        <GuideSection title="The three plans, in one line each">
+        <GuideSection title="The two plans, in one line each">
           {/* id={planSlug(name)} on every card: the Offer nodes in serviceJsonLd() publish
               /pricing#<slug> as each plan's url, and a fragment that lands nowhere is a broken
               link we would be publishing knowingly. */}
@@ -151,6 +148,14 @@ export default function PricingPage() {
                 </div>
                 <p className="mt-2 text-lg font-semibold leading-7 text-ink/90">{p.oneLiner}</p>
                 <dl className="mt-4 space-y-3">
+                  <div>
+                    <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
+                      Core outcome and handoff point
+                    </dt>
+                    <dd className="mt-1 leading-7">
+                      {p.outcome} Handoff at {p.handoffPoint}.
+                    </dd>
+                  </div>
                   <div>
                     <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
                       We own
@@ -188,12 +193,12 @@ export default function PricingPage() {
 
         <GuideSection id="who-owns-what" title="Who owns what on each plan">
           <p>
-            Read a row across. Every responsibility is either ours or yours on a given plan, and a
-            lower plan never quietly includes a higher plan&rsquo;s work. The last row is yours on
-            all three: that row is the boundary.
+            Read a row across. Every responsibility is either ours or yours on a given plan, and
+            Managed Outbound never quietly includes the Opportunity Engine&rsquo;s work. The last
+            row is yours on both: that row is the boundary.
           </p>
           <GuideTable
-            caption="Who is responsible for each part of the work on Prospecting, Managed Pipeline and Qualified Opportunity Engine"
+            caption="Who is responsible for each part of the work on Managed Outbound and the Opportunity Engine"
             head={["Responsibility", ...plans.map((p) => `${p.name} ($${p.price.toLocaleString()})`)]}
             rows={responsibilityMatrix.map((row) => [
               row.responsibility,
@@ -208,9 +213,10 @@ export default function PricingPage() {
 
         <GuideSection id="handoffs" title="What reaches your team, and what it is called">
           <p>
-            The three plans hand over three different things, and we never call one by
-            another&rsquo;s name. An interested prospect is not screened interest, and screened
-            interest is not a qualified opportunity.
+            The two plans hand over two different things, and we never call one by the
+            other&rsquo;s name. A qualified conversation is not an accepted sales opportunity: the
+            second has been validated, checked against the criteria you agreed with us, and has its
+            next sales step already set. Both arrive the same way, as a warm handoff.
           </p>
           <dl className="space-y-4">
             {plans.map((p) => (
@@ -227,7 +233,7 @@ export default function PricingPage() {
           </dl>
         </GuideSection>
 
-        <GuideSection title="What each step up buys">
+        <GuideSection title="What the step up buys">
           <div className="space-y-4">
             {stepUps.map((s) => (
               <div key={s.to} className="border-l-2 border-accent/45 pl-4">
@@ -253,7 +259,7 @@ export default function PricingPage() {
 
         <GuideSection title="The words on this page, defined">
           <p>
-            Five terms, used the same way on every page of this site and in every report. They are
+            Six terms, used the same way on every page of this site and in every report. They are
             never interchangeable.
           </p>
           <dl className="space-y-4">
@@ -352,7 +358,7 @@ export default function PricingPage() {
               [
                 <a
                   key="cience"
-                  href="https://www.cience.com/pricing"
+                  href="https://www.cience.com/pricing/"
                   rel="nofollow noopener"
                   target="_blank"
                   className="text-accent underline underline-offset-4"
@@ -385,10 +391,10 @@ export default function PricingPage() {
           <KeyAnswer>
             Of the agencies we checked in August 2026, full-service providers either do not publish
             pricing at all (Belkins, Callbox — both quote on a call) or start their managed service
-            at $2,000/month (CIENCE). B2B Lead Growth publishes all three of its prices: $750,
-            $1,500 and $2,500 a month. Ours are lower for three plain reasons: each plan has a
-            stated capacity limit, the process is email-led with no call center and no paid-ad
-            management, and we are a new, founder-run company earning a track record in public.
+            at $2,000/month (CIENCE). B2B Lead Growth publishes both of its prices: $1,500 and
+            $2,500 a month. Ours are lower for three plain reasons: each plan has a stated capacity
+            limit, the process is email-led with no call center and no paid-ad management, and we
+            are a new, founder-run company earning a track record in public.
             The lower price never buys a guarantee of replies, appointments, contracts or revenue,
             here or anywhere.
           </KeyAnswer>

@@ -1,35 +1,39 @@
-// The pricing model, enforced (D-027 mandate §23).
+// The pricing model, enforced (D-028 — the two-offer model).
 //
 // Source of truth: the operating-system repo's
-// 00_CONTROL_CENTER/decisions/D-027_responsibility_tiers.md and its machine form core/offer.py.
+// 00_CONTROL_CENTER/decisions/D-028_two_offer_model.md and its machine form core/offer.py.
 //
-//     $750    Prospecting                  find and contact; the contractor takes over at interest
-//     $1,500  Managed Pipeline             outreach + follow-up, interest SCREENING, structured handoff
-//     $2,500  Qualified Opportunity Engine qualification, context, next-step / site-visit coordination
+//     $1,500  Managed Outbound    accounts, decision-makers, outreach + follow-up, screening,
+//                                 qualified interest -> the WARM HANDOFF of a qualified conversation
+//     $2,500  Opportunity Engine  all of that, then need validation, property/account/buyer
+//                                 information, acceptance against the client's agreed criteria and
+//                                 a coordinated next sales step -> an ACCEPTED SALES OPPORTUNITY,
+//                                 handed over with an opportunity brief and the warm handoff
 //
-// Three LEVELS OF RESPONSIBILITY — never three sizes of one service — and on every one of them
-// the contractor estimates and closes. A lower plan never inherits a higher plan's work.
+// Two answers to one question — how far do we carry each opportunity before the warm handoff? —
+// and on both the contractor does the technical discovery, estimates, proposes and closes. The
+// $750 plan (D-027 "Prospecting", D-015 "Starter / Lead Engine") is RETIRED, not renamed.
 //
-// These are prose rules, and prose rules drift silently: the previous model's tier names
-// survived in a Terms clause, a manifest and a fit-check hint for days after the decision that
-// retired them. So this file fails when shipped copy:
-//   (a) gives the $750 plan follow-up, screening, qualification, pipeline management, booking
-//       or site-visit coordination, or calls its output a Qualified Opportunity;
-//   (b) gives the $1,500 plan qualification, scope/context development or site-visit
-//       coordination, or calls its handoff a Qualified Opportunity;
+// These are prose rules, and prose rules drift silently: a retired model's tier names survived
+// in a Terms clause, a manifest and a fit-check hint for days after the decision that retired
+// them. So this file fails when shipped copy:
+//   (a) gives Managed Outbound need validation, context development, acceptance against the
+//       client's criteria, a coordinated next step or site assessment, an opportunity brief,
+//       or calls its handoff an accepted sales opportunity;
 //   (c) reduces the $2,500 difference to volume, implies we estimate, quote, price or
 //       technically scope, or guarantees contracts;
-//   (d) revives a retired name, "qualified conversation", a second pricing model,
-//       residential / homeowner-lead positioning, New-Jersey-only positioning, or a stale
-//       calling absolute;
-//   (e) changes the three canonical plan names, prices or one-liners;
+//   (d) revives a retired plan, price or name, a second pricing model, residential /
+//       homeowner-lead positioning, New-Jersey-only positioning, or a stale calling absolute;
+//   (e) changes the two canonical plan names, prices, one-liners or handoff points;
 //   (f) lists a sitemap URL that is unregistered, redirected, noindex or has no page file;
 //   (g) ships a registered page without an in-budget title and description and exactly one H1.
 //
 // HOW THE PROSE DETECTORS READ. Copy is split into sentences. A sentence that names ONE plan is
 // checked whole against that plan's forbidden claims; a sentence that names several is cut into
-// segments, each running from one plan's name to the next, so "Prospecting hands over at
-// interest, and Managed Pipeline screens it" blames nobody. A claim is excused when it is
+// segments, each running from one plan's name to the next, so "Managed Outbound hands over at
+// qualified interest, and the Opportunity Engine validates it" blames nobody. A mention that
+// only REFERS to a plan ("everything in Managed Outbound", "never includes the Opportunity
+// Engine's work") makes no claim about it and starts no segment. A claim is excused when it is
 // negated ("no follow-up sequence at this level") or handed to the contractor ("…stay with
 // you"). That is deliberately forgiving — this site is built out of sentences that say what a
 // plan does NOT do, and a guard that cannot read negation gets deleted for crying wolf. It is
@@ -49,6 +53,7 @@ import {
   positioningSentence,
   responsibilityMatrix,
   terminology,
+  warmHandoffSteps,
 } from "../lib/content.ts";
 import {
   DESCRIPTION_BUDGET,
@@ -155,57 +160,53 @@ function negated(text: string, index: number, length: number): boolean {
 /*  (a) (b) (c) — what each plan may not be said to do                          */
 /* -------------------------------------------------------------------------- */
 
-type TierKey = "prospecting" | "managed" | "qoe";
+type TierKey = "managed" | "engine";
 
 const FORBIDDEN: Record<TierKey, RegExp[]> = {
-  // $750: targeting → research → contact selection → initial outreach → identification of
-  // genuine interest → handoff. Nothing after interest is ours.
-  prospecting: [
-    /\bqualif(y|ies|ied|ying|ication)\b/i,
-    /\bqualified opportunit/i,
-    /\bscreen(s|ed|ing)\b/i,
-    /\bfollow[- ]?ups?\b/i,
-    /\bsequence\b/i,
-    /\b(manag(e|es|ed|ing)|organi[sz](e|es|ed|ing))\b[^.]{0,30}\bpipeline\b/i,
-    /\bpipeline (management|organi[sz]ation)\b/i,
-    /\bbook(s|ed|ing)?\b/i,
-    /\bschedul\w+/i,
-    /\bappointments?\b/i,
-    /\bsite[- ]visits?\b/i,
-    /\bcoordinat\w+/i,
-    /\bscope\b/i,
-    /\bcontext gathering\b/i,
-  ],
-  // $1,500: screening is NOT qualification, and the handoff is never a Qualified Opportunity.
+  // $1,500: everything up to and including the warm handoff of a qualified conversation.
+  // Nothing past qualified interest is ours: no validation, no acceptance against criteria,
+  // no coordinated next step or site assessment, no opportunity brief — and its handoff is
+  // never an accepted sales opportunity. Sharing the contractor's booking link or calendar
+  // path IS part of its warm handoff, so "coordinate" alone is not forbidden.
   managed: [
-    /\bqualif(y|ies|ied|ying|ication)\b/i,
-    /\bqualified opportunit/i,
-    /\b(gather|develop|collect|build)(s|ed|ing)?\b[^.]{0,40}\b(scope|context)\b/i,
+    /\baccepted (sales )?opportunit/i,
+    /\bvalidat(e|es|ed|ing|ion)\b/i,
+    /\b(gather|develop|collect|build)(s|ed|ing)?\b[^.]{0,40}\b(scope|context|property)\b/i,
     /\b(scope|context) (discovery|development|gathering)\b/i,
-    /\bsite[- ]visits?\b/i,
-    /\bcoordinat\w+/i,
+    /\bagainst (your|the|their)\b[^.]{0,25}\bcriteria\b/i,
+    /\bsite[- ](visits?|assessments?)\b/i,
+    /\bcoordinat\w+\b[^.]{0,40}\b(next (sales )?step|site|meeting|appointment|visit)\b/i,
+    /\bopportunity brief\b/i,
   ],
   // $2,500: more responsibility, never "more messages".
-  qoe: [
+  engine: [
     /\b(more|higher|extra|bigger|larger|additional)\b[^.]{0,25}\b(messages?|volume|emails?|sends?|outreach|accounts|contacts)\b/i,
   ],
 };
 
-const TIER_MENTION = /\b(Prospecting|Managed Pipeline|Qualified Opportunity Engine)\b|\$(750|1,500|2,500)(?![\d,])/g;
+// "Commercial HVAC Managed Outbound" in a title is the CATEGORY in title case, not the plan.
+const TIER_MENTION = /\b((?<!HVAC )Managed Outbound|Opportunity Engine)\b|\$(1,500|2,500)(?![\d,])/g;
 
 function tierOf(match: RegExpMatchArray): TierKey {
   const token = match[1] ?? match[2];
-  if (token === "Prospecting" || token === "750") return "prospecting";
-  if (token === "Managed Pipeline" || token === "1,500") return "managed";
-  return "qoe";
+  return token === "Managed Outbound" || token === "1,500" ? "managed" : "engine";
 }
+
+// "Everything in Managed Outbound, and we keep going: we validate…" is the Opportunity
+// Engine's claim, not Managed Outbound's; "Managed Outbound never includes the Opportunity
+// Engine's work" is Managed Outbound's. A mention preceded by one of these words refers to a
+// plan without making a claim about it.
+const REFERENCE_BEFORE = /\b((everything|all|the work) (in|of)|includ(e|es|ing)|than|beyond|plus)\s+(the\s+)?$/i;
+const isReference = (sentence: string, at: number) => REFERENCE_BEFORE.test(sentence.slice(Math.max(0, at - 30), at));
 
 /** Plan claims in `prose` that give a plan work it does not include. */
 function tierViolations(prose: string): string[] {
   const out: string[] = [];
   for (const sentence of sentencesOf(prose)) {
     if (isQuestion(sentence)) continue;
-    const mentions = [...sentence.matchAll(TIER_MENTION)].map((m) => ({ tier: tierOf(m), at: m.index }));
+    const mentions = [...sentence.matchAll(TIER_MENTION)]
+      .filter((m) => !isReference(sentence, m.index ?? 0))
+      .map((m) => ({ tier: tierOf(m), at: m.index ?? 0 }));
     if (mentions.length === 0) continue;
     const named = new Set(mentions.map((m) => m.tier));
     const segments =
@@ -251,33 +252,29 @@ function boundaryBreaches(prose: string): string[] {
 describe("(a)(b)(c) no plan is given another plan's work", () => {
   test("the detectors fire on the contradictions the mandate names", () => {
     const fires = (text: string) => tierViolations(text).length > 0;
-    // (a) $750
-    assert.ok(fires("Prospecting qualifies every opportunity before it reaches you."));
-    assert.ok(fires("On the $750 plan we coordinate the site visit."));
-    assert.ok(fires("Prospecting manages your pipeline after interest."));
-    assert.ok(fires("Prospecting delivers Qualified Opportunities every month."));
-    assert.ok(fires("Prospecting books appointments onto your calendar."));
-    assert.ok(fires("Prospecting includes a three-touch follow-up sequence."));
-    assert.ok(fires("Prospecting screens each reply for relevance."));
-    // (b) $1,500
-    assert.ok(fires("Managed Pipeline fully qualifies every interested reply."));
-    assert.ok(fires("Managed Pipeline gathers the property and scope context."));
-    assert.ok(fires("On the $1,500 plan we coordinate the site visit for you."));
-    assert.ok(fires("Managed Pipeline hands you Qualified Opportunities."));
+    // (a) $1,500
+    assert.ok(fires("Managed Outbound validates the business need before the handoff."));
+    assert.ok(fires("On the $1,500 plan we coordinate the site assessment."));
+    assert.ok(fires("Managed Outbound hands you accepted sales opportunities."));
+    assert.ok(fires("Managed Outbound gathers the property and scope context."));
+    assert.ok(fires("Managed Outbound checks each opportunity against your criteria."));
+    assert.ok(fires("Managed Outbound delivers an opportunity brief with every handoff."));
+    assert.ok(fires("Managed Outbound coordinates the next sales step with the buyer."));
     // (c) $2,500 reduced to volume
-    assert.ok(fires("Qualified Opportunity Engine costs more because it sends more messages."));
+    assert.ok(fires("The Opportunity Engine costs more because it sends more messages."));
     assert.ok(fires("The $2,500 plan is the same service with higher volume."));
   });
 
   test("the detectors stay quiet on the honest sentences", () => {
     const quiet = (text: string) => assert.deepEqual(tierViolations(text), [], text);
-    quiet("On Prospecting there is no follow-up sequence, and no screening or qualification.");
-    quiet("Follow-up, interest screening, qualification and the site visit stay with you on Prospecting.");
-    quiet("If someone on your team already chases the follow-up, Prospecting fits.");
-    quiet("Prospecting hands over at first interest, and Managed Pipeline hands over screened interest.");
-    quiet("Managed Pipeline hands you screened interest; the Qualified Opportunity Engine qualifies each one.");
-    quiet("Screened interest is not a qualified opportunity, and Managed Pipeline never calls it one.");
-    quiet("Qualified Opportunity Engine covers up to 150 outreach messages a month.");
+    quiet("Managed Outbound hands you qualified conversations with a warm introduction.");
+    quiet("On Managed Outbound, need validation and the next sales step stay with you.");
+    quiet("Managed Outbound never includes validation, criteria acceptance or a coordinated next step.");
+    quiet("Managed Outbound can share your booking link and coordinate your calendar path when appropriate.");
+    quiet("$2,500 is the Opportunity Engine: everything in Managed Outbound, and we also validate the business need and set a concrete next sales step.");
+    quiet("Managed Outbound never quietly includes the Opportunity Engine's validation and scheduling.");
+    quiet("Managed Outbound hands over at qualified interest, and the Opportunity Engine validates the need.");
+    quiet("The Opportunity Engine covers up to 150 outreach messages a month.");
     quiet("Commercial HVAC prospecting is part of every plan.");
   });
 
@@ -310,24 +307,33 @@ describe("(a)(b)(c) no plan is given another plan's work", () => {
 /*  (e) + the structured plan data — the strict checks                          */
 /* -------------------------------------------------------------------------- */
 
-describe("(e) the three plans are exactly the canonical three", () => {
+describe("(e) the two plans are exactly the canonical two", () => {
   const CANONICAL = [
-    { name: "Prospecting", price: 750, oneLiner: "We find and contact suitable commercial accounts. You take over at interest." },
-    { name: "Managed Pipeline", price: 1500, oneLiner: "We run outreach and follow-up, screen genuine interest, and organize the handoff." },
     {
-      name: "Qualified Opportunity Engine",
+      name: "Managed Outbound",
+      price: 1500,
+      oneLiner:
+        "We find the right commercial accounts, reach the decision-makers, run the outreach and follow-up, and hand you each prospect who wants to talk — with a warm introduction.",
+      handoffPoint: "Qualified Interest",
+    },
+    {
+      name: "Opportunity Engine",
       price: 2500,
       oneLiner:
-        "We qualify the opportunity, gather the relevant context, coordinate the next step or site visit, and prepare your team to estimate and close.",
+        "Everything in Managed Outbound, and we keep going: we validate the business need, gather the property, account and buyer information, confirm the fit against your agreed criteria, and coordinate a concrete next sales step before we hand the opportunity over.",
+      handoffPoint: "Accepted Sales Opportunity",
     },
   ];
 
-  test("names, prices and one-liners are verbatim, in ladder order", () => {
-    assert.deepEqual(plans.map((p) => ({ name: p.name, price: p.price, oneLiner: p.oneLiner })), CANONICAL);
+  test("names, prices, one-liners and handoff points are verbatim, in ladder order", () => {
+    assert.deepEqual(
+      plans.map((p) => ({ name: p.name, price: p.price, oneLiner: p.oneLiner, handoffPoint: p.handoffPoint })),
+      CANONICAL,
+    );
   });
 
-  test("Managed Pipeline is the one featured plan", () => {
-    assert.deepEqual(plans.filter((p) => p.featured).map((p) => p.name), ["Managed Pipeline"]);
+  test("Managed Outbound is the one featured plan", () => {
+    assert.deepEqual(plans.filter((p) => p.featured).map((p) => p.name), ["Managed Outbound"]);
   });
 
   test("the literal source carries them too, for the operating system's own checker", () => {
@@ -337,112 +343,126 @@ describe("(e) the three plans are exactly the canonical three", () => {
       assert.ok(source.includes(`name: "${c.name}"`), `name: "${c.name}" is not a single literal`);
       assert.ok(source.includes(`"${c.oneLiner}"`), `${c.name}'s one-liner is not a single literal`);
     }
-    assert.deepEqual([...source.matchAll(/\bprice:\s*(\d+)/g)].map((m) => Number(m[1])), [750, 1500, 2500]);
+    assert.deepEqual([...source.matchAll(/\bprice:\s*(\d+)/g)].map((m) => Number(m[1])), [1500, 2500]);
   });
 
-  const [prospecting, managed, qoe] = plans as [(typeof plans)[number], (typeof plans)[number], (typeof plans)[number]];
+  const [managed, engine] = plans as [(typeof plans)[number], (typeof plans)[number]];
   /** Everything a plan says WE do. `youKeep` is excluded on purpose: it is the list of things
    *  that stay with the contractor, which is exactly where the forbidden words belong. */
   const ours = (p: (typeof plans)[number]) =>
-    [p.oneLiner, ...p.owns, ...p.afterInterest, p.handoff.label, p.handoff.unit, p.handoff.definition, p.capacity, p.bestFor, ...p.includes];
+    [p.oneLiner, p.outcome, ...p.owns, ...p.afterInterest, p.handoff.label, p.handoff.unit, p.handoff.definition, p.capacity, p.bestFor, ...p.includes];
 
-  test("Prospecting claims nothing past the handoff at interest", () => {
-    for (const line of ours(prospecting)) {
-      if (TRANSFER.test(line)) continue;
-      for (const re of FORBIDDEN.prospecting) {
-        const hit = line.match(re);
-        assert.ok(!hit || negated(line, hit.index ?? 0, hit[0].length), `Prospecting claims "${hit?.[0]}" in: ${line}`);
-      }
-    }
-    assert.deepEqual(prospecting.afterInterest, ["interest", "contractor takeover"]);
-    assert.match(prospecting.capacity, /no follow-up sequence/i);
-    assert.match(prospecting.youKeep, /follow-up.*screening.*qualification.*site visit.*estimate.*close/i);
-  });
-
-  test("Managed Pipeline screens interest and never qualifies it", () => {
+  test("Managed Outbound stops at the warm handoff of a qualified conversation", () => {
     for (const line of ours(managed)) {
       if (TRANSFER.test(line)) continue;
       for (const re of FORBIDDEN.managed) {
         const hit = line.match(re);
-        assert.ok(!hit || negated(line, hit.index ?? 0, hit[0].length), `Managed Pipeline claims "${hit?.[0]}" in: ${line}`);
+        assert.ok(!hit || negated(line, hit.index ?? 0, hit[0].length), `Managed Outbound claims "${hit?.[0]}" in: ${line}`);
       }
     }
-    assert.match(managed.handoff.label, /screened interest/i);
-    assert.match(managed.handoff.definition, /not a qualified opportunity/i);
-    assert.doesNotMatch(managed.handoff.unit, /qualified/i);
+    assert.deepEqual(managed.afterInterest.slice(0, 2), ["qualified interest", "warm handoff"]);
+    assert.equal(managed.handoff.label, "Warm handoff — qualified interest");
+    assert.equal(managed.handoff.unit, "qualified conversations handed off");
+    assert.equal(managed.outcome, "Create qualified conversations.");
+    assert.match(managed.youKeep, /qualification.*discovery.*estimate.*proposal.*close/i);
   });
 
-  test("Qualified Opportunity Engine is differentiated by responsibility, not by volume", () => {
-    for (const needed of ["qualification", "useful context gathering", "site-visit coordination where appropriate", "contractor handoff"]) {
-      assert.ok(qoe.owns.includes(needed), `the top plan no longer owns "${needed}"`);
+  test("the Opportunity Engine is differentiated by responsibility, not by volume", () => {
+    for (const needed of [
+      "business-need validation",
+      "property, account and buyer information",
+      "acceptance against your criteria",
+      "next sales step coordination",
+      "opportunity brief",
+      "warm handoff",
+    ]) {
+      assert.ok(engine.owns.includes(needed), `the Opportunity Engine no longer owns "${needed}"`);
     }
-    assert.equal(qoe.handoff.unit, "qualified opportunities");
+    assert.equal(engine.handoff.unit, "accepted sales opportunities handed off");
+    assert.equal(engine.outcome, "Turn qualified conversations into accepted sales opportunities.");
     // The one-liner and the "best for" line never mention a count of anything.
     for (const p of plans) assert.doesNotMatch(`${p.oneLiner} ${p.bestFor}`, /\d/, `${p.name} is pitched on a number`);
   });
 
-  test("a lower plan's handoff is never labelled with a higher plan's noun", () => {
-    assert.doesNotMatch(`${prospecting.handoff.label} ${prospecting.handoff.unit}`, /screened|qualified|structured/i);
-    assert.doesNotMatch(`${managed.handoff.label} ${managed.handoff.unit}`, /qualified/i);
+  test("Managed Outbound's handoff is never labelled with the Opportunity Engine's noun", () => {
+    assert.doesNotMatch(`${managed.handoff.label} ${managed.handoff.unit} ${managed.handoff.definition}`, /accepted|opportunity brief/i);
   });
 
-  test("on every plan the contractor keeps the estimate and the close", () => {
-    for (const p of plans) assert.match(p.youKeep, /estimate.*close/i, p.name);
+  test("on both plans the contractor keeps the technical discovery, the estimate, the proposal and the close", () => {
+    for (const p of plans) assert.match(p.youKeep, /discovery.*estimate.*proposal.*close/i, p.name);
   });
 
-  test("the who-owns-what grid never lets a lower plan inherit a higher plan's work", () => {
-    for (const row of responsibilityMatrix) {
-      const [p, m, q] = row.owner;
-      // Monotonic: once we own it on a plan, we own it on every plan above.
-      assert.ok(!(p === "we" && m === "you"), `${row.responsibility}: Prospecting has it, Managed Pipeline does not`);
-      assert.ok(!(m === "we" && q === "you"), `${row.responsibility}: Managed Pipeline has it, the top plan does not`);
-      if (/follow-up|screening|conversation organization|pipeline organization/i.test(row.responsibility)) {
-        assert.equal(p, "you", `Prospecting must not own: ${row.responsibility}`);
-      }
-      if (/qualification|scope context|next-step|site-visit|engaged call|prepared opportunity/i.test(row.responsibility)) {
-        assert.equal(p, "you", `Prospecting must not own: ${row.responsibility}`);
-        assert.equal(m, "you", `Managed Pipeline must not own: ${row.responsibility}`);
-        assert.equal(q, "we", `the top plan must own: ${row.responsibility}`);
-      }
+  test("the who-owns-what grid never lets Managed Outbound inherit the Opportunity Engine's work", () => {
+    const ENGINE_ONLY = /validat|acceptance criteria|next sales step|opportunity brief|property, account and buyer|engaged call/i;
+    const BOTH = /targeting|account research|decision-maker|outreach|follow-up|screening|warm handoff|open conversation/i;
+    for (const row of responsibilityMatrix.slice(0, -1)) {
+      const [m, e] = row.owner;
+      assert.ok(!(m === "we" && e === "you"), `${row.responsibility}: Managed Outbound has it, the Opportunity Engine does not`);
+      if (ENGINE_ONLY.test(row.responsibility)) assert.deepEqual(row.owner, ["you", "we"], row.responsibility);
+      else if (BOTH.test(row.responsibility)) assert.deepEqual(row.owner, ["we", "we"], row.responsibility);
     }
     const last = responsibilityMatrix.at(-1)!;
-    assert.match(last.responsibility, /estimate.*close/i);
-    assert.deepEqual(last.owner, ["you", "you", "you"], "the estimate and the close are the contractor's on every plan");
+    assert.match(last.responsibility, /discovery.*estimate.*proposal.*close/i);
+    assert.deepEqual(last.owner, ["you", "you"], "the technical work, the estimate and the close are the contractor's on both plans");
   });
 
-  test("the five terms are defined once, and the reserved ones name their plan", () => {
+  test("the six terms are defined once, and the plan-bound ones name their plan", () => {
     assert.deepEqual(terminology.map((t) => t.term), [
       "Prospect",
       "Interested Prospect",
-      "Screened Interest",
-      "Qualified Opportunity",
-      "Structured Handoff",
+      "Qualified Conversation",
+      "Accepted Sales Opportunity",
+      "Warm Handoff",
+      "Opportunity Brief",
     ]);
     const def = (term: string) => terminology.find((t) => t.term === term)!.definition;
     assert.match(def("Prospect"), /Always a business/i);
-    // Since 2026-09-18 the definition says who a prospect IS, and names no residential audience.
+    // The definition says who a prospect IS, and names no residential audience.
     assert.doesNotMatch(def("Prospect"), /homeowner|residential/i);
-    assert.match(def("Screened Interest"), /\$1,500 Managed Pipeline/);
-    assert.match(def("Qualified Opportunity"), /Reserved for the \$2,500 Qualified Opportunity Engine/);
+    assert.match(def("Interested Prospect"), /before a qualified conversation/i);
+    assert.match(def("Qualified Conversation"), /What Managed Outbound hands off/);
+    assert.match(def("Accepted Sales Opportunity"), /What the Opportunity Engine hands off/);
   });
 
   test("the boundary is published whole", () => {
-    assert.equal(boundarySentence, "B2B Lead Growth prepares the opportunity. The HVAC contractor estimates and closes it.");
+    assert.equal(
+      boundarySentence,
+      "B2B Lead Growth creates the sales conversation and, on the Opportunity Engine, develops it into an accepted sales opportunity. The HVAC contractor does the technical discovery, estimates, proposes and closes.",
+    );
     const all = contractorBoundary.join(" | ");
-    for (const must of ["inspections", "specify equipment", "diagnose equipment", "final project scope", "estimates or quotes", "final pricing", "negotiate", "guarantee contracts", "estimator or salesperson"]) {
+    for (const must of [
+      "technical HVAC discovery",
+      "site assessments",
+      "diagnose equipment",
+      "specify equipment",
+      "final project scope",
+      "estimates, quotes, bids or proposals",
+      "negotiate",
+      "close the sale",
+      "guarantee contracts",
+    ]) {
       assert.ok(all.includes(must), `the boundary list dropped "${must}"`);
     }
+  });
+
+  test("the warm handoff is published step by step, the same on both plans", () => {
+    assert.equal(warmHandoffSteps.length, 8);
+    for (const step of ["create the handoff record", "make the warm introduction", "transfer ownership", "mark the opportunity handed off"]) {
+      assert.ok(warmHandoffSteps.some((s) => s.includes(step)), `the warm handoff dropped "${step}"`);
+    }
+    assert.match(read("app/how-it-works/page.tsx"), /warmHandoffSteps\.map/);
   });
 
   test("schema says what the plan cards say, and nothing else", () => {
     const service = serviceJsonLd();
     const offers = service.offers.offers;
     assert.deepEqual(offers.map((o) => [o.name, o.price, o.description]), plans.map((p) => [p.name, String(p.price), p.oneLiner]));
-    assert.equal(service.offers.lowPrice, "750");
+    assert.equal(service.offers.lowPrice, "1500");
     assert.equal(service.offers.highPrice, "2500");
-    assert.doesNotMatch(JSON.stringify(service), /appointment setting/i, "the Service node must not advertise appointment setting");
+    assert.equal(service.offers.offerCount, 2);
+    assert.doesNotMatch(JSON.stringify(service), /appointment setting|\$750|"750"/i, "the Service node must not advertise appointment setting or a retired price");
     for (const p of plans) assert.ok(orgDescription.includes(p.name), `orgDescription does not name ${p.name}`);
-    assert.match(orgDescription, /contractor always estimates and closes/i);
+    assert.match(orgDescription, /contractor always does the technical discovery, estimates and closes/i);
   });
 
   test("the homepage hero carries the one positioning sentence, word for word", () => {
@@ -453,7 +473,7 @@ describe("(e) the three plans are exactly the canonical three", () => {
     const have = words(read("components/LeadGenerationLanding.tsx"));
     const found = have.some((_, k) => want.every((w, i) => have[k + i] === w));
     assert.ok(found, "the hero no longer carries lib/content.ts `positioningSentence` verbatim");
-    assert.match(positioningSentence, /interested prospects\.$/);
+    assert.match(positioningSentence, /one thing: qualified conversations\.$/);
   });
 });
 
@@ -463,13 +483,22 @@ describe("(e) the three plans are exactly the canonical three", () => {
 
 describe("(d) nothing retired comes back", () => {
   const RETIRED_NAMES = [
+    // D-015
     "Lead Engine",
     "Outreach Engine",
     "Appointment Engine",
     "Starter Lead Engine",
     "Recommended Outreach Engine",
     "Premium Appointment Engine",
+    // D-027 (retired by D-028, 2026-09-18)
+    "Managed Pipeline",
+    "Qualified Opportunity Engine",
+    "Screened Interest",
+    "Structured Handoff",
   ];
+
+  // The $750 plan is retired, not renamed. Its price and its D-027 name may not be published.
+  const RETIRED_PLAN = [/\$750(?![\d,])/, /\b([Oo]n|[Tt]he|[Tt]o|[Ff]rom) Prospecting\b(?! guide)/, /\bProspecting (plan|tier|level)\b/, /\bthree (plans|levels|tiers)\b/i];
 
   // Each is fine when DENIED ("no acceptance fee", "no pilot") and a defect when asserted.
   const SECOND_PRICING_MODEL = [
@@ -480,6 +509,7 @@ describe("(d) nothing retired comes back", () => {
     /\b(free )?trial\b/i,
     /\bcommission\b/i,
     /\bfounding[- ]client\b/i,
+    /\bperformance[- ](fee|pricing|based)\b/i,
   ];
 
   // The retired residential model, and any sentence in which WE sell consumers.
@@ -568,10 +598,19 @@ describe("(d) nothing retired comes back", () => {
     assert.deepEqual(hits, [], `retired plan names are still published:\n  ${hits.join("\n  ")}`);
   });
 
-  test("'qualified conversation' is gone — the metric is interested prospects", () => {
-    const hits = corpus.filter((d) => /qualified conversations?/i.test(d.prose)).map((d) => d.rel);
-    assert.deepEqual(hits, [], `retired metric wording in: ${hits.join(", ")}`);
-    assert.ok(corpus.some((d) => /interested prospects/.test(d.prose)));
+  test("no retired plan, price or tier count is published", () => {
+    const hits = corpus.flatMap((d) => RETIRED_PLAN.filter((re) => re.test(d.prose)).map((re) => `${d.rel}: ${re}`));
+    assert.deepEqual(hits, [], `the retired $750 plan is still published:\n  ${hits.join("\n  ")}`);
+    for (const fixture of ["Start at $750 a month.", "On Prospecting you take over at interest.", "Pick one of three plans."]) {
+      assert.ok(RETIRED_PLAN.some((re) => re.test(fixture)), `the retired-plan detector no longer fires on: ${fixture}`);
+    }
+    assert.ok(!RETIRED_PLAN.some((re) => re.test("A $7,500 contract. Commercial HVAC prospecting guide.")));
+  });
+
+  test("the one measure is qualified conversations; interested prospects only lead to it", () => {
+    assert.ok(corpus.some((d) => /We measure the work by qualified conversations/.test(d.prose)));
+    const measuredByInterest = corpus.filter((d) => /\bmeasure\w*\b[^.]{0,40}\binterested prospects\b/i.test(d.prose)).map((d) => d.rel);
+    assert.deepEqual(measuredByInterest, [], `the retired metric is still the measure in: ${measuredByInterest.join(", ")}`);
   });
 
   test("there is exactly one pricing model", () => {
@@ -717,7 +756,7 @@ describe("(g) every registered page is fully dressed", () => {
 
   test("metadata names the real service, in the current vocabulary", () => {
     const all = entries.map((e) => `${e.title} ${e.description}`).join(" ");
-    assert.doesNotMatch(all, /New Jersey HVAC|HVAC leads? (cost|in)|shared vs|qualified conversation|Appointment Engine|Outreach Engine|Lead Engine/i);
+    assert.doesNotMatch(all, /New Jersey HVAC|HVAC leads? (cost|in)|shared vs|Appointment Engine|Outreach Engine|Lead Engine|Managed Pipeline|Qualified Opportunity Engine|\$750/i);
     assert.match(all, /commercial HVAC/i);
   });
 

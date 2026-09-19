@@ -18,9 +18,9 @@ import {
 import { plans, planSlug, terminology } from "./content.ts";
 
 // THE D-027 REWRITE DATE, in one place. On 2026-09-17 every page below was rewritten from
-// the retired "Lead / Outreach / Appointment Engine" model to the three levels of
-// responsibility (operating-system repo: D-027), two pages were retired behind redirects and
-// three were added. A page that was NOT substantively edited that day keeps its own date.
+// the retired "Lead / Outreach / Appointment Engine" model to the D-027 tiers (since superseded
+// by D-028's two plans, 2026-09-18 — pages rewritten for D-028 carry that date), two pages were
+// retired behind redirects and three were added. A page not substantively edited keeps its date.
 const D027 = "2026-09-17";
 
 // THE COMMERCIAL-SEO PASS DATE (2026-09-18): five pages first published (see the note above
@@ -54,7 +54,7 @@ export const homepageMetaTitle = "Commercial HVAC Managed Outbound | B2B Lead Gr
 // the estimate and the close stay his.
 export const homepageH1 = "Turn the commercial accounts in your market into conversations your team can quote.";
 export const homepageDescription =
-  "For established commercial HVAC contractors: we find commercial accounts, contact the right people in your name, and hand off at the level you choose.";
+  "For established commercial HVAC contractors: we find commercial accounts, reach decision-makers in your name, and hand your team qualified conversations.";
 
 /** "service" pages describe the service itself; "solution" pages describe how it reaches ONE
  *  kind of commercial buyer and publish a Service node of their own; "guide" pages are
@@ -104,7 +104,7 @@ export const guidePages: GuidePage[] = [
     metaTitle: "Commercial HVAC Lead Generation Service",
     h1: "Commercial HVAC lead generation, run as managed outbound",
     description:
-      "Commercial HVAC lead generation for established contractors: researched commercial accounts, outreach in your name, and a handoff at the level you choose.",
+      "Commercial HVAC lead generation for established contractors: researched accounts, outreach in your name, and a warm handoff of qualified conversations.",
     datePublished: D027,
     dateModified: SEO_FOOTPRINT,
     kind: "service",
@@ -123,10 +123,10 @@ export const guidePages: GuidePage[] = [
   {
     slug: "pricing",
     navLabel: "Pricing",
-    metaTitle: "Commercial HVAC Lead Generation Pricing: $750–$2,500/Mo",
-    h1: "Commercial HVAC lead generation pricing: $750, $1,500 or $2,500 a month",
+    metaTitle: "Commercial HVAC Lead Generation Pricing: $1,500–$2,500/Mo",
+    h1: "Commercial HVAC lead generation pricing: $1,500 or $2,500 a month",
     description:
-      "Commercial HVAC lead generation pricing: Prospecting $750, Managed Pipeline $1,500, Qualified Opportunity Engine $2,500 a month. No setup fee.",
+      "Commercial HVAC lead generation pricing: Managed Outbound $1,500 or Opportunity Engine $2,500 a month. Flat fee, no setup fee, month-to-month.",
     datePublished: "2026-08-08",
     // Rebuilt around responsibility on 2026-09-17; on 2026-09-18 its account-sourcing lines
     // and the terminology stopped naming the retired residential model.
@@ -331,7 +331,7 @@ export const DESCRIPTION_BUDGET = 155;
 // load this file directly under `node --test`).
 const OG_IMAGE_PATH = "/opengraph-image";
 const OG_IMAGE_ALT =
-  "B2B Lead Growth — commercial HVAC managed outbound: we find the commercial accounts, contact the right people in your name, and hand off at the level you chose";
+  "B2B Lead Growth — commercial HVAC managed outbound: we find the commercial accounts, reach the decision-makers in your name, and hand your team qualified conversations — $1,500 or $2,500 a month";
 
 export const ogImages = [
   { url: OG_IMAGE_PATH, width: 1200, height: 630, alt: OG_IMAGE_ALT, type: "image/png" },
@@ -483,9 +483,9 @@ export function serviceJsonLd() {
       audienceType:
         "HVAC contractors that already sell and complete commercial work, have someone who quotes and wins those bids, have room to take on more accounts, and have no consistent way to find target accounts and follow up with them",
     },
-    // What the service produces, PLAN BY PLAN. The three handoffs are three different things
-    // and are named as such: a lower plan's output is never described with a higher plan's
-    // noun, here or anywhere else (D-027 §4).
+    // What the service produces, PLAN BY PLAN. The two handoffs are two different things and
+    // are named as such: a qualified conversation is never described as an accepted sales
+    // opportunity, here or anywhere else (D-028 §6).
     serviceOutput: [
       {
         "@type": "Thing",
@@ -501,7 +501,7 @@ export function serviceJsonLd() {
       })),
     ],
     termsOfService: `${siteUrl}/terms`,
-    // ONE AggregateOffer wrapping the three plans. "$750 to $2,500 a month across three
+    // ONE AggregateOffer wrapping the two plans. "$1,500 to $2,500 a month across two
     // plans" is the sentence an answer engine wants to be able to state, and
     // lowPrice/highPrice/offerCount is the only shape that says it.
     offers: {

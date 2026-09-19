@@ -48,12 +48,12 @@ const hardQuestions = [
   {
     question: "What are you responsible for on each plan, and what stays with my team?",
     ourAnswer:
-      "It is printed on each plan. On Prospecting we find and contact suitable commercial accounts, and you take over at interest. On Managed Pipeline we run outreach and follow-up, screen genuine interest, and organize the handoff. On Qualified Opportunity Engine we qualify the opportunity, gather the relevant context, coordinate the next step or site visit, and prepare your team to estimate and close. On every plan the technical evaluation, the estimate, the price and the close are yours. Ask any vendor for the same line, in writing.",
+      "It is printed on each plan. On Managed Outbound we find the right commercial accounts, reach the decision-makers, run the outreach and follow-up, and hand you each prospect who agrees to speak with your team, with a warm introduction; the deeper qualification is yours from there. On the Opportunity Engine we also validate the need and timing, gather the property, account and buyer information, check the opportunity against the criteria you agreed with us, and set a concrete next sales step before we hand it over with a complete brief. On both plans the technical discovery, the estimate, the proposal, the price and the close are yours. Ask any vendor for the same line, in writing.",
   },
   {
     question: "What do you mean by qualified?",
     ourAnswer:
-      "We mean a written standard, and only one plan delivers it. A qualified opportunity has a verified account and site, a buyer with the responsibility, and a need, a timing and an agreement to hear from your team that the buyer confirmed — with the useful context gathered and unknowns marked. That is Qualified Opportunity Engine work. An interested reply is an interested prospect, and a checked one is screened interest; we do not call either of them qualified.",
+      "We mean a written definition, not an adjective. A qualified conversation is a decision-maker at an account that fits your profile who showed genuine interest and agreed to speak with your team, confirmed by a person; that is what Managed Outbound hands over. An accepted sales opportunity goes further and is published as a standard: a need and timing the buyer confirmed, the property, account and buyer information gathered with unknowns marked, a check against the criteria you agreed with us, and a next sales step set on a date. That is Opportunity Engine work. An interested reply on its own is an interested prospect; we do not call it qualified.",
   },
   {
     question: "Whose name and mailbox does the outreach go out from?",
@@ -83,7 +83,7 @@ const hardQuestions = [
   {
     question: "Do you make phone calls, and to whom?",
     ourAnswer:
-      "Our cold outreach is email-led, and we make no cold calls on any plan. A call becomes appropriate only after a contact has shown genuine interest, when a live conversation would add something an email cannot. On Qualified Opportunity Engine we can run an engaged call with an interested contact, under your written authorization; on the other two plans that call is yours. Ask any vendor who they call, from what list, and what they say your company name is.",
+      "Our cold outreach is email-led, and we make no cold calls on any plan. A call becomes appropriate only after a contact has shown genuine interest, when a live conversation would add something an email cannot. On the Opportunity Engine we can run an engaged call with an interested contact, under your written authorization; on Managed Outbound that call is yours. Ask any vendor who they call, from what list, and what they say your company name is.",
   },
 ];
 
@@ -103,7 +103,7 @@ const redFlags: { flag: string; why: ReactNode }[] = [
         qualified, the word means &ldquo;replied&rdquo;. Ask for it in writing; ours is published
         as{" "}
         <Link href="/how-it-works#qualification-standard" className="text-accent underline underline-offset-4">
-          the qualification standard
+          the acceptance standard
         </Link>
         .
       </>
@@ -111,7 +111,7 @@ const redFlags: { flag: string; why: ReactNode }[] = [
   },
   {
     flag: "Every plan described as appointment setting",
-    why: "Finding accounts, running follow-up and qualifying an opportunity are different jobs. A vendor whose cheapest plan claims all three is overpromising on each of them.",
+    why: "Finding accounts, creating qualified conversations and developing an accepted sales opportunity are different jobs. A vendor whose cheapest plan claims all of them is overpromising on each.",
   },
   {
     flag: "Pricing that requires three sales calls to learn",

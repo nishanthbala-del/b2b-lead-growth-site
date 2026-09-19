@@ -139,9 +139,9 @@ const CSV_COLUMNS = [
   "commercialShare",
   "commercialQuoter",
   "targetAccounts",
-  // Added 2026-09-17 (D-027): whether the shop wants opportunities qualified and the next
-  // step or site visit coordinated before its estimator is involved — the question that
-  // separates Qualified Opportunity Engine from Managed Pipeline. Appended, never inserted.
+  // Added 2026-09-17 (D-027): whether the shop wants opportunities validated and the next
+  // sales step coordinated before its estimator is involved — the question that, since D-028,
+  // separates the Opportunity Engine from Managed Outbound. Appended, never inserted.
   "preparedOpportunities",
   // Added 2026-09-17: first-party visit attribution (lib/attribution.ts) — the five UTM tags,
   // the landing PATH (never a query string) and the referring HOST (never a full URL).
