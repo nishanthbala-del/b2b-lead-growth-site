@@ -108,11 +108,11 @@ const RISK_ON_HOMEPAGE = [
   "Everything built for you stays yours",
 ];
 
-// The four disqualifiers the fit check enforces in code, in three words each. The published
+// The four disqualifiers the fit check enforces in code, in a few words each. The published
 // reasons, in full, are on /commercial-hvac-lead-generation#not-for.
 const notForShort = [
-  "residential-only shops",
-  "anyone wanting homeowner leads",
+  "contractors with no commercial work yet",
+  "anyone wanting to buy leads",
   "companies at capacity year-round",
   "shops that already run in-house outbound",
 ];
@@ -216,7 +216,8 @@ function Hero() {
         </p>
         <p className="mt-4 max-w-2xl leading-7 text-subtle">
           For established HVAC contractors that already do commercial work, anywhere in the
-          United States. Every account is a business — never a homeowner.
+          United States. Every account we contact is a business: a property manager, a building
+          owner or a facility team.
         </p>
         <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
           <PrimaryCta placement="hero" />
@@ -446,7 +447,23 @@ function WhoItsForSection() {
           </li>
         ))}
       </ul>
+      {/* WHO WE WRITE TO, one link per buyer (2026-09-18): each has a page of its own. */}
       <p className="mt-6 max-w-3xl leading-7 text-subtle">
+        <span className="font-semibold text-ink/90">Who we write to for you:</span>{" "}
+        <Link href="/hvac-property-manager-outreach" className={textLink}>
+          property managers
+        </Link>
+        ,{" "}
+        <Link href="/hvac-building-owner-outreach" className={textLink}>
+          building owners
+        </Link>{" "}
+        and{" "}
+        <Link href="/hvac-facility-manager-outreach" className={textLink}>
+          facility teams
+        </Link>
+        . Businesses only, each found from public sources with a cited reason.
+      </p>
+      <p className="mt-4 max-w-3xl leading-7 text-subtle">
         <span className="font-semibold text-ink/90">Not a fit:</span> {notForShort.join(" · ")}.
         The fit check says so on the spot, before you spend anything.{" "}
         <Link href="/commercial-hvac-lead-generation#not-for" className={textLink}>

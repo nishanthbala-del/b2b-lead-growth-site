@@ -27,12 +27,15 @@ export const brandName = "B2B Lead Growth";
 // responsibility BY NAME, and the boundary that holds on every one of them: the contractor
 // estimates and closes. The previous wording said the service "handles the follow-up, and
 // hands off qualified conversations" — which described only the middle plan, and used a
-// noun ("qualified") that D-027 reserves for the $2,500 standard. It still does NOT claim to
-// generate homeowner leads: homeowners are never contacted (gate #0f in the operating
-// system), and saying so in the entity description keeps an answer engine from filing this
-// business next to the per-lead sellers.
+// noun ("qualified") that D-027 reserves for the $2,500 standard.
+//
+// BUSINESSES ONLY, SAID AS A POSITIVE (2026-09-18). It used to end "and homeowners are never
+// contacted" — true (gate #0f in the operating system) but it put the retired residential
+// model into the one sentence answer engines lift to describe the company. It now names who
+// IS contacted — property managers, building owners and facility teams — and that no leads are
+// sold, which keeps it filed away from the per-lead sellers without mentioning homeowners.
 export const orgDescription =
-  "B2B Lead Growth is a commercial HVAC managed outbound service for established HVAC contractors that already sell and complete commercial work. It finds the commercial accounts worth pursuing — property and facility managers, building owners, multi-site operators — from cited public sources, contacts the right people in the contractor's name, and hands each opportunity to the contractor's team at one of three levels of responsibility: Prospecting, Managed Pipeline, or Qualified Opportunity Engine. The contractor always estimates and closes. Not a lead seller, and homeowners are never contacted.";
+  "B2B Lead Growth is a commercial HVAC managed outbound service for established HVAC contractors that already sell and complete commercial work. It finds the commercial accounts worth pursuing — property managers, building owners, facility teams and multi-site operators — from cited public sources, contacts the right people in the contractor's name, and hands each opportunity to the contractor's team at one of three levels of responsibility: Prospecting, Managed Pipeline, or Qualified Opportunity Engine. The contractor always estimates and closes. Every account contacted is a business, and no leads are sold.";
 
 // ---------------------------------------------------------------------------
 // Booking
@@ -178,5 +181,8 @@ export const cancellationNoticeDays = 14;
 // 2026-09-17: the SERVICE-DESCRIPTION passages of both documents moved to D-027 (plan names,
 // what each plan does, the calling policy, nationwide geography, and the attribution fields
 // the fit check now records). No liability, governing-law or dispute clause changed.
-export const legalLastUpdated = "September 17, 2026";
-export const legalLastUpdatedISO = "2026-09-17";
+// 2026-09-18: /terms §2's example of the optional client-supplied lists now reads "your own
+// past commercial accounts" (it listed the retired residential model's record types). No
+// liability, governing-law or dispute clause changed.
+export const legalLastUpdated = "September 18, 2026";
+export const legalLastUpdatedISO = "2026-09-18";

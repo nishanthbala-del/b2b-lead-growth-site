@@ -45,8 +45,8 @@ const principles = [
     body: "Every account we contact carries a public source you can open and the reason it was picked. An account with no citation cannot be contacted at all.",
   },
   {
-    title: "Never homeowners",
-    body: "Everyone we contact is a business. Homeowners are never researched, bought, inferred or contacted, on anyone's behalf, at any price.",
+    title: "Businesses only",
+    body: "Everyone we contact is a business: a property manager, a building owner, a facility team. Each is found from public sources; nobody is contacted from a bought list.",
   },
   {
     title: "No promised outcomes",
@@ -115,7 +115,7 @@ export default function AboutPage() {
             follow up with them.
           </KeyAnswer>
           <p>
-            A residential-only shop is not a fit, and the{" "}
+            A contractor with no commercial work yet is not a fit, and the{" "}
             <Link href="/start" className="text-accent underline underline-offset-4">
               fit check
             </Link>{" "}

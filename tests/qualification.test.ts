@@ -8,7 +8,7 @@
 // REBUILT 2026-09-11 for D-025. The model under test now asks the COMMERCIAL ICP —
 // already sells and completes commercial work; someone who quotes and wins those bids;
 // room for more accounts; a describable target account — and the blocks it enforces are
-// the published declines: residential-only, wants to buy homeowner leads, at capacity,
+// the published declines: no commercial work yet, wants to buy leads, at capacity,
 // already runs an in-house outbound seat. The residential model's "no customer history"
 // and "cannot export" questions are gone, and a test here proves they cannot come back
 // as a precondition: no answer about a customer list can block anyone.
@@ -81,7 +81,7 @@ const with_ = (patch: Partial<QualificationAnswers>): QualificationAnswers => ({
 /** Every blocking answer, keyed by the block id it must trigger. */
 const BLOCKING: Record<string, Partial<QualificationAnswers>> = {
   "wants-to-buy-leads": { growthProblem: "buy-leads" },
-  "residential-only": { commercialShare: "none" },
+  "no-commercial-work": { commercialShare: "none" },
   "no-capacity": { capacity: "at-capacity" },
   "in-house-outbound": { currentApproach: "in-house-outbound" },
 };
@@ -147,35 +147,38 @@ describe("scoring", () => {
 });
 
 describe("hard blocks", () => {
-  test("someone shopping to buy homeowner leads is not offered a call", () => {
+  test("someone shopping to buy leads is not offered a call", () => {
     const result = evaluateFit(with_(BLOCKING["wants-to-buy-leads"]));
     assert.equal(result.outcome, "not_yet");
     assert.equal(result.offerBooking, false);
     assert.equal(result.recommendedTier, null);
     assert.match(result.watchouts.join(" "), /don't sell them|lead seller|resell|broker/i);
-    assert.match(result.watchouts.join(" "), /never contact homeowners/i);
+    // Says what we DO contact — commercial accounts — rather than naming anyone we do not.
+    assert.match(result.watchouts.join(" "), /commercial accounts/i);
     // A dead end is not an acceptable answer — they get sent somewhere useful.
     assert.ok(result.suggestedReading, "a blocked visitor must still be given somewhere to go");
   });
 
-  test("a residential-only shop is not offered a call", () => {
-    const result = evaluateFit(with_(BLOCKING["residential-only"]));
+  test("a shop with no commercial work is not offered a call", () => {
+    const result = evaluateFit(with_(BLOCKING["no-commercial-work"]));
     assert.equal(result.outcome, "not_yet");
     assert.equal(result.offerBooking, false);
     assert.equal(result.recommendedTier, null);
-    assert.match(result.watchouts.join(" "), /residential-only|commercial/i);
-    assert.ok(result.suggestedReading, "a residential shop is pointed at a useful page");
+    assert.match(result.watchouts.join(" "), /commercial/i);
+    assert.ok(result.suggestedReading, "a shop with no commercial work is pointed at a useful page");
   });
 
-  test("the residential-only decline never offers to contact homeowners instead", () => {
+  test("the no-commercial-work decline says we contact businesses only, and offers nobody else", () => {
     // The D-025 inversion is a reason not to sell to the CONTRACTOR. The operating
     // system's guard #0f forbids cold-sourcing consumers unconditionally, so the one
-    // thing this copy must never do is read as "for the right price we'd go after your
-    // homeowners". It has to say the opposite, out loud.
-    const result = evaluateFit(with_(BLOCKING["residential-only"]));
+    // thing this copy must never do is read as "for the right price we'd contact somebody
+    // else for you". It says who we DO contact — businesses only — and, since 2026-09-18,
+    // it names no residential audience at all, not even to rule one out.
+    const result = evaluateFit(with_(BLOCKING["no-commercial-work"]));
     const text = [result.headline, result.nextStep, ...result.watchouts].join(" ");
-    assert.match(text, /never contact homeowners/i);
-    assert.doesNotMatch(text, /\b(contact|reach|email|work) (your )?homeowners instead\b/i);
+    assert.match(text, /businesses only/i);
+    assert.doesNotMatch(text, /homeowner|residential|consumer/i);
+    assert.doesNotMatch(text, /\binstead\b/i, "the decline must not offer an alternative audience");
     assert.doesNotMatch(text, /\bexport\b/i, "the decline must not ask for a customer export");
   });
 
@@ -228,8 +231,8 @@ describe("hard blocks", () => {
     // guards: the visitor would be turned away for a reason they were never shown.
     const published = notFor.join(" ").toLowerCase();
     const publishedAs: Record<string, RegExp> = {
-      "wants-to-buy-leads": /lead seller/,
-      "residential-only": /residential-only/,
+      "wants-to-buy-leads": /buy leads/,
+      "no-commercial-work": /no commercial work/,
       "no-capacity": /at capacity/,
       "in-house-outbound": /in-house outbound/,
     };
@@ -239,8 +242,8 @@ describe("hard blocks", () => {
     for (const [id, re] of Object.entries(publishedAs)) {
       assert.match(published, re, `${id} block must be published in notFor`);
     }
-    // And the site's own rule about homeowners is published next to the decline.
-    assert.match(published, /never contact homeowners/);
+    // And the published list names no residential audience, not even to rule one out.
+    assert.doesNotMatch(published, /homeowner|residential/);
   });
 
   test("no answer about a customer list or an export can block anyone", () => {
@@ -277,7 +280,7 @@ describe("the fits that must not be mistaken for blocks", () => {
   test("a mixed shop is a strong fit, not a weak one", () => {
     const result = evaluateFit(with_({ commercialShare: "steady" }));
     assert.equal(result.outcome, "strong");
-    assert.match(result.reasons.join(" "), /alongside residential/i);
+    assert.match(result.reasons.join(" "), /real share of commercial work/i);
   });
 
   test("needing help to define the target accounts is a watchout, not a block", () => {

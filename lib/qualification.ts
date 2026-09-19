@@ -7,9 +7,9 @@
 //
 // Why fit is evaluated at all: before this, every visitor who completed the form was
 // handed the same booking link. The site's own "not the right fit" list says plainly
-// that a residential-only shop, a company that wants to buy homeowner leads, a company
-// with no capacity to take accounts, and a company already running its own outbound
-// seat are not people we can help — and a form that books them a call anyway makes the
+// that a contractor with no commercial work yet, a company that wants to buy leads, a
+// company with no capacity to take accounts, and a company already running its own
+// outbound seat are not people we can help — and a form that books them a call anyway makes the
 // published list decoration. These rules make it operative.
 //
 // REBUILT 2026-09-10 for D-025. The previous model asked how much CUSTOMER HISTORY a
@@ -38,8 +38,11 @@
 //     work, never whether the work will produce accounts or revenue.
 //   * Every disqualifier must correspond to an entry in `notFor` in lib/content.ts.
 //     If the two drift, the site is screening on criteria it never published.
-//   * A residential-only decline is a reason not to sell to that CONTRACTOR. It is never,
-//     in any wording, a suggestion that homeowners could be contacted instead.
+//   * A no-commercial-work decline is a reason not to sell to that CONTRACTOR. It is never,
+//     in any wording, a suggestion that anyone but a business could be contacted instead.
+//   * Since 2026-09-18 no visible string here names the retired residential model: the
+//     options describe the visitor's COMMERCIAL work, and the declines say who we DO
+//     contact (businesses) rather than who we do not.
 
 // The one published delivery window, imported rather than restated. lib/site.ts holds
 // no React/Next imports either, so this stays usable from both the browser flow and the
@@ -62,19 +65,19 @@ export const YEARS_IN_BUSINESS = [
 ] as const satisfies readonly Option[];
 
 // THE question. A shop with no commercial work has no account base for us to build
-// from, and homeowners are never contacted, so "none" is a hard block. A mixed shop is
+// from, and we contact businesses only, so "none" is a hard block. A mixed shop is
 // the typical fit, not a weak one: D-025 says a commercial COMPONENT, and a
 // commercial-only reading would decline exactly the contractors this is built for.
 export const COMMERCIAL_SHARE = [
   {
     value: "none",
-    label: "None — we're residential only",
-    hint: "Homes, not buildings",
+    label: "None yet — no commercial jobs",
+    hint: "No commercial buildings or accounts so far",
   },
-  { value: "occasional", label: "A few commercial jobs a year, mostly residential" },
+  { value: "occasional", label: "A few commercial jobs a year" },
   {
     value: "steady",
-    label: "A real share of the work — commercial service, maintenance or installs alongside residential",
+    label: "A real share of the work — commercial service, maintenance or installs",
   },
   { value: "most", label: "Most or all of it" },
 ] as const satisfies readonly Option[];
@@ -142,7 +145,7 @@ export const GROWTH_PROBLEM = [
   },
   {
     value: "buy-leads",
-    label: "We're looking to buy homeowner leads",
+    label: "We're looking to buy leads",
     hint: "Worth saying now — we're not a lead seller",
   },
   { value: "other", label: "Something else" },
@@ -345,37 +348,37 @@ type Block = {
 
 const BLOCKS: Block[] = [
   {
-    // notFor: "Anyone wanting to buy homeowner leads — we are not a lead seller, and we
-    // never contact homeowners"
+    // notFor: "Anyone wanting to buy leads — we do not sell, resell or broker leads of any
+    // kind"
     id: "wants-to-buy-leads",
     applies: (a) => a.growthProblem === "buy-leads",
     headline: "We're not what you're looking for.",
     reason:
-      "You're after homeowner leads to buy, and we don't sell them. We don't sell, resell or broker leads of any kind, and we never contact homeowners — the businesses we research on a client's behalf are commercial accounts: property managers, building owners, facility teams. Telling you that now is more useful than a call that ends the same way.",
+      "You're after leads to buy, and we don't sell them. We are not a lead seller: we don't sell, resell or broker leads of any kind. What we do is research commercial accounts — property managers, building owners, facility teams — and contact them in a client's name. Telling you that now is more useful than a call that ends the same way.",
     nextStep:
-      "If you are going to buy leads, the section below sets out how marketplace leads are sold and what the FTC's case against HomeAdvisor was about — two things worth checking with any lead seller. It is written by someone who sells neither kind of lead.",
+      "If you are going to buy leads, the guide below lists the questions worth putting to any vendor before you pay — where the contacts come from, what is promised, and who owns the data.",
     reading: {
-      href: "/how-to-choose-a-lead-generation-agency#residential-marketplaces",
-      label: "How residential lead marketplaces work, and what to verify before you buy",
+      href: "/how-to-choose-a-lead-generation-agency",
+      label: "Ten questions to ask any lead generation vendor before you buy",
     },
   },
   {
-    // notFor: "Residential-only shops — we research commercial accounts, and a shop with
-    // no commercial work has no account base for us to build"
+    // notFor: "Contractors with no commercial work yet — we research commercial accounts,
+    // and without commercial jobs there is no account base for us to build on"
     //
-    // A decline of the CONTRACTOR, and the wording is deliberate: it says twice that
-    // homeowners are never contacted, so nobody can read "residential-only is not a fit"
-    // as "but for the right price we'd go after your homeowners instead".
-    id: "residential-only",
+    // A decline of the CONTRACTOR, and the wording is deliberate: it says who we DO contact
+    // — businesses, and only businesses — so nobody can read "not a fit yet" as "but for the
+    // right price we'd contact somebody else for you instead".
+    id: "no-commercial-work",
     applies: (a) => a.commercialShare === "none",
     headline: "Not yet — this is built for commercial work.",
     reason:
-      "Everything we do runs on the commercial side of an HVAC business: we research the property managers, building owners and facility teams that could become accounts, and we contact them in your name. A residential-only shop has no account base for that to build from, and we never contact homeowners — not from research, not from a purchased list, not at any price. We'd rather say so than take a monthly fee for work that has nothing to run on.",
+      "Everything we do runs on the commercial side of an HVAC business: we research the property managers, building owners and facility teams that could become accounts, and we contact them in your name. We contact businesses only. Without commercial jobs of your own there is no account base for that to build from, and we'd rather say so than take a monthly fee for work that has nothing to run on.",
     nextStep:
-      "If commercial work is something you're moving into — a maintenance agreement for a building, a first rooftop unit — come back once you've won and completed a few of those. Until then, the guide below is the checklist we'd want any lead vendor held to, the residential marketplaces included.",
+      "If commercial work is something you're moving into — a maintenance agreement for a building, a first rooftop unit — come back once you've won and completed a few of those. Until then, the guide below shows how commercial accounts are found, so you can start on your own.",
     reading: {
-      href: "/how-to-choose-a-lead-generation-agency",
-      label: "How to evaluate a lead generation vendor, including how marketplaces sell leads",
+      href: "/how-to-find-commercial-hvac-accounts",
+      label: "How to find commercial HVAC accounts in your service area",
     },
   },
   {
@@ -541,7 +544,7 @@ function buildReasons(a: QualificationAnswers): string[] {
     );
   } else if (a.commercialShare === "steady") {
     out.push(
-      "You already sell and complete commercial work alongside residential — that is the account base this is built on.",
+      "You already sell and complete a real share of commercial work — that is the account base this is built on.",
     );
   }
   if (a.commercialQuoter === "dedicated") {
@@ -704,8 +707,8 @@ export function evaluateFit(a: QualificationAnswers): FitResult {
       reasons: [],
       watchouts: [block.reason],
       // Every block is triggered by a SINGLE radio answer, and a visitor can pick the
-      // wrong one — "at capacity" from an owner who meant this month, "residential
-      // only" from one who does commercial maintenance and didn't think it counted.
+      // wrong one — "at capacity" from an owner who meant this month, "no commercial
+      // work" from one who does commercial maintenance and didn't think it counted.
       // Screening people out honestly is the point of this flow and stays; screening
       // them out with no way to say "you've read that wrong" is just a dead end. So the
       // disqualification keeps its reason and its reading, and gains a person to reply

@@ -70,7 +70,7 @@ const pageFaqs = [
   {
     question: "What does no plan include?",
     answer:
-      "No plan includes technical inspection, equipment diagnosis or specification, final scope, the estimate, the price, negotiation or the close — those are the contractor's on every plan. No plan includes cold calls, paid advertising, homeowner lead sourcing or contacting homeowners. No plan includes a guaranteed number of replies, appointments, site visits, qualified opportunities, contracts or revenue. No plan includes contractual territorial exclusivity: as standard we work one HVAC company per service area as an operating practice, and enforceable per-metro exclusivity is a separate priced add-on on the order form, quoted before you sign.",
+      "No plan includes technical inspection, equipment diagnosis or specification, final scope, the estimate, the price, negotiation or the close — those are the contractor's on every plan. No plan includes cold calls, paid advertising, or buying or selling lead lists. No plan includes a guaranteed number of replies, appointments, site visits, qualified opportunities, contracts or revenue. No plan includes contractual territorial exclusivity: as standard we work one HVAC company per service area as an operating practice, and enforceable per-metro exclusivity is a separate priced add-on on the order form, quoted before you sign.",
   },
 ];
 
@@ -443,10 +443,10 @@ export default function PricingPage() {
             Nothing without a citation can be contacted.
           </p>
           <p>
-            <span className="text-ink">Homeowners are never on the list.</span> We do not, and will
-            not, contact consumers on anyone&rsquo;s behalf — not from research, not from a
-            purchased file, not at any price. That is why a residential-only shop is not a fit,
-            and why the fit check says so before you spend anything.
+            <span className="text-ink">Nothing comes from a bought list.</span> Every account is
+            researched one at a time, around the commercial work you already do. A contractor with
+            no commercial work yet has no account base to research, which is why the fit check says
+            so before you spend anything.
           </p>
         </GuideSection>
 

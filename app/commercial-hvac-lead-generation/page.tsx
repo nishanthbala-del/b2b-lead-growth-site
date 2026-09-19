@@ -45,7 +45,7 @@ const pageFaqs = [
   {
     question: "What is commercial HVAC lead generation?",
     answer:
-      "Commercial HVAC lead generation is the work of finding the businesses that buy commercial HVAC service — property managers, building owners, facility teams, multi-site operators — contacting the right person at each, and turning genuine interest into an opportunity a contractor's team can act on. It is different from residential lead generation in kind: the buyer is a business, the sale is an account rather than a single job, and nobody sells those accounts on a marketplace.",
+      "Commercial HVAC lead generation is the work of finding the businesses that buy commercial HVAC service — property managers, building owners, facility teams, multi-site operators — contacting the right person at each, and turning genuine interest into an opportunity a contractor's team can act on. It is a business-to-business sale: the buyer is a business, the sale is an account rather than a single job, and nobody sells those accounts on a marketplace.",
   },
   {
     question: "Is this commercial HVAC appointment setting?",
@@ -55,7 +55,7 @@ const pageFaqs = [
   {
     question: "Who do you contact on our behalf?",
     answer:
-      "We contact businesses, and only businesses: property and facility managers, building owners, multi-site operators, and the people responsible for HVAC at offices, warehouses, schools, healthcare sites, restaurants and retail. Each contact is a named person chosen because they can take a vendor decision for the building or the portfolio, or route one. We never contact homeowners.",
+      "We contact businesses, and only businesses: property and facility managers, building owners, multi-site operators, and the people responsible for HVAC at offices, warehouses, schools, healthcare sites, restaurants and retail. Each contact is a named person chosen because they can take a vendor decision for the building or the portfolio, or route one.",
   },
   {
     question: "Do you cold call?",
@@ -115,8 +115,19 @@ export default function CommercialHvacLeadGenerationPage() {
               does the technical evaluation, the estimate and the close.
             </p>
             <p>
-              It is not a lead marketplace, and it is not residential. Everyone we contact is a
-              business. We sell no leads, and we never contact homeowners.
+              It is not a lead marketplace. Everyone we contact is a business — a{" "}
+              <Link href="/hvac-property-manager-outreach" className="text-accent underline underline-offset-4">
+                property manager
+              </Link>
+              , a{" "}
+              <Link href="/hvac-building-owner-outreach" className="text-accent underline underline-offset-4">
+                building owner
+              </Link>{" "}
+              or a{" "}
+              <Link href="/hvac-facility-manager-outreach" className="text-accent underline underline-offset-4">
+                facility team
+              </Link>{" "}
+              — and we sell no leads.
             </p>
           </>
         }
@@ -126,7 +137,7 @@ export default function CommercialHvacLeadGenerationPage() {
             {brandName} is for an established HVAC contractor that already sells and completes
             commercial work, has someone who quotes and wins those bids, has room to take on more
             accounts, and has no consistent way to find target accounts and follow up with them.
-            A residential-only shop is not a fit.
+            A contractor with no commercial work yet is not a fit.
           </KeyAnswer>
           <ul className="list-disc space-y-2 pl-5">
             {idealFor.map((line) => (
@@ -288,7 +299,7 @@ export default function CommercialHvacLeadGenerationPage() {
             the right tool.
           </p>
           <GuideTable
-            caption="How B2B Lead Growth differs from residential lead marketplaces, homeowner lead sellers, general cold-email agencies, PPC agencies, directories, call centers and outsourced closers"
+            caption={`How B2B Lead Growth differs from ${alternatives.map((a) => a.name.toLowerCase()).join(", ")}`}
             head={["Alternative", "What it is", "How this service differs", "When the alternative fits"]}
             rows={alternatives.map((a) => [
               <span key={a.name} className="font-semibold text-ink">
@@ -337,6 +348,27 @@ export default function CommercialHvacLeadGenerationPage() {
                 Pricing: the three plans and who owns what
               </Link>
               .
+            </li>
+            <li>
+              How the outreach works for each commercial buyer:{" "}
+              <Link href="/hvac-property-manager-outreach" className="text-accent underline underline-offset-4">
+                property managers
+              </Link>
+              ,{" "}
+              <Link href="/hvac-facility-manager-outreach" className="text-accent underline underline-offset-4">
+                facility teams
+              </Link>{" "}
+              and{" "}
+              <Link href="/hvac-building-owner-outreach" className="text-accent underline underline-offset-4">
+                building owners
+              </Link>
+              .
+            </li>
+            <li>
+              <Link href="/how-to-find-commercial-hvac-accounts" className="text-accent underline underline-offset-4">
+                How to find commercial HVAC accounts in your service area
+              </Link>{" "}
+              — the research method, written out.
             </li>
             <li>
               <Link href="/start" className="text-accent underline underline-offset-4">

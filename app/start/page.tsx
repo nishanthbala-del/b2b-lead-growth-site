@@ -122,8 +122,8 @@ export default function StartPage() {
             <h2 className="font-display text-2xl text-ink">What the fit check asks</h2>
             <p className="mt-3 max-w-2xl leading-7 text-subtle">
               Your name, work email, company and service area, then {QUESTION_COUNT} one-tap
-              questions, of which the monthly fee is optional. Nothing asks for a customer list,
-              and nothing asks about homeowners — we never contact them. We ask:
+              questions, of which the monthly fee is optional. Nothing asks for a customer list
+              or an export. We ask:
             </p>
             <ul className="mt-4 grid gap-x-8 gap-y-2 text-sm leading-6 text-subtle sm:grid-cols-2">
               {ANSWER_KEYS.map((key) => (

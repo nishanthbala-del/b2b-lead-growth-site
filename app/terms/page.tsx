@@ -164,9 +164,9 @@ export default function TermsPage() {
             commercial accounts such as property and facility managers, building owners and
             multi-site operators — found from public sources, each with a cited reason for contact,
             and the outreach is sent from a sending identity you own and approve. Where your order
-            form says so, we also work contact lists you supply and are entitled to use — usually
-            past accounts, proposals that were never accepted, and lapsed service agreements; that
-            is optional and is never a precondition. Each plan&rsquo;s exact inclusions, capacity
+            form says so, we also work contact lists you supply and are entitled to use — for
+            example, your own past commercial accounts; that is optional and is never a
+            precondition. Each plan&rsquo;s exact inclusions, capacity
             limit, and exclusions are published on our{" "}
             <Link href="/pricing" className="text-accent underline-offset-4 hover:underline">
               pricing page

@@ -6,13 +6,22 @@
 // the signals the pass set to one answer each.
 
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { test, describe } from "node:test";
 
-import { guidePages, indexablePaths, pageSection } from "../lib/pages.ts";
-import { siteUrl } from "../lib/site.ts";
+import { productExample } from "../lib/content.ts";
+import { llmsTxt } from "../lib/llms.ts";
+import {
+  guidePages,
+  homepageDescription,
+  homepageH1,
+  homepageMetaTitle,
+  indexablePaths,
+  pageSection,
+} from "../lib/pages.ts";
+import { orgDescription, siteUrl } from "../lib/site.ts";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (rel: string) => readFileSync(path.join(repoRoot, rel), "utf8");
@@ -92,5 +101,117 @@ describe("the commercial-search footprint", () => {
         assert.match(block, /not write again/, `${p.slug}: an example omits the opt-out line`);
       }
     }
+  });
+});
+
+describe("one model: commercial HVAC, and nothing residential", () => {
+  function walk(dir: string, out: string[] = []): string[] {
+    for (const entry of readdirSync(dir)) {
+      const full = path.join(dir, entry);
+      if (statSync(full).isDirectory()) walk(full, out);
+      else if (/\.tsx?$/.test(entry)) out.push(full);
+    }
+    return out;
+  }
+
+  // Every file whose strings reach a visitor, a crawler or an answer engine, comments removed
+  // (the code that retired the residential model necessarily describes it), plus the
+  // rendered /llms.txt.
+  const shipped = [
+    ...walk(path.join(repoRoot, "app")),
+    ...walk(path.join(repoRoot, "components")),
+    ...["content", "qualification", "site", "pages", "llms", "events"].map((n) => path.join(repoRoot, "lib", `${n}.ts`)),
+  ].map((f) => ({ rel: path.relative(repoRoot, f), text: stripComments(readFileSync(f, "utf8")) }));
+  shipped.push({ rel: "/llms.txt (rendered)", text: llmsTxt() });
+
+  // The former model's vocabulary. Not a negation-aware detector ON PURPOSE: the brief was to
+  // remove the residential model from the site, and "we never contact homeowners" is still a
+  // sentence about homeowners. What the site says instead is who it DOES contact.
+  const RETIRED = [
+    /\bhomeowners?\b/i,
+    /\bresidential\b/i,
+    /\bunsold estimates?\b/i,
+    /\blapsed (service|maintenance) (agreements?|plans?|contracts?)\b/i,
+    /\breactivat\w*/i,
+    /\b(HomeAdvisor|Angi|Thumbtack)\b/,
+    /\bHOAs?\b/,
+    /\btownhomes?\b/i,
+  ];
+
+  test("no shipped string names homeowners, residential work, or the residential model's records", () => {
+    const hits: string[] = [];
+    for (const { rel, text } of shipped) {
+      for (const re of RETIRED) {
+        const m = text.match(re);
+        if (m) hits.push(`${rel}: ${JSON.stringify(m[0])}`);
+      }
+    }
+    assert.deepEqual(hits, [], `retired residential vocabulary in shipped copy:\n  ${hits.join("\n  ")}`);
+  });
+
+  test("the detector is live: it catches the sentences this pass removed", () => {
+    const removed = [
+      "Every account is a business — never a homeowner.",
+      "It is not a lead marketplace, and it is not residential.",
+      "usually past accounts, proposals that were never accepted, and lapsed service agreements",
+      "How is this different from Angi, Thumbtack, or a per-lead seller?",
+      "A property management company running condo, townhome, HOA and co-op associations",
+    ];
+    for (const sentence of removed) {
+      assert.ok(RETIRED.some((re) => re.test(sentence)), `the detector misses: ${sentence}`);
+    }
+  });
+
+  test("the organization description says who is contacted, as a positive", () => {
+    assert.match(orgDescription, /property managers, building owners, facility teams/);
+    assert.match(orgDescription, /Every account contacted is a business/);
+  });
+
+  test("the homepage example is a commercial account, dated, and honest about its provenance", () => {
+    const text = JSON.stringify(productExample);
+    for (const re of RETIRED) assert.doesNotMatch(text, re);
+    assert.match(productExample.account.value, /industrial|office|commercial/i);
+    assert.match(productExample.disclosure, /not prepared for a client/i, "a format example must not pose as client work");
+    assert.equal(productExample.preparedOn, "2026-09-18");
+  });
+});
+
+describe("the six priority URLs send one commercial signal", () => {
+  const byPath = (p: string) => guidePages.find((g) => `/${g.slug}` === p)!;
+  const priority = [
+    { path: "/", title: homepageMetaTitle, h1: homepageH1, description: homepageDescription },
+    ...["/commercial-hvac-lead-generation", "/how-it-works", "/pricing", "/free-pipeline-audit", "/about"].map((p) => {
+      const g = byPath(p);
+      assert.ok(g, `${p} is not registered`);
+      return { path: p, title: g.metaTitle, h1: g.h1, description: g.description };
+    }),
+  ];
+
+  test("every priority title names commercial HVAC", () => {
+    for (const p of priority) assert.match(p.title, /commercial HVAC/i, `${p.path} title: ${p.title}`);
+  });
+
+  test("every priority H1 and description is about commercial work", () => {
+    for (const p of priority) {
+      assert.match(p.h1, /commercial/i, `${p.path} H1: ${p.h1}`);
+      assert.match(p.description, /commercial/i, `${p.path} description: ${p.description}`);
+    }
+  });
+
+  test("the pricing page targets \"Commercial HVAC Lead Generation Pricing\"", () => {
+    const pricing = byPath("/pricing");
+    assert.match(pricing.metaTitle, /^Commercial HVAC Lead Generation Pricing\b/);
+    assert.match(pricing.h1, /^Commercial HVAC lead generation pricing\b/i);
+  });
+
+  test("the audit page targets \"Free Commercial HVAC Pipeline Audit\"", () => {
+    const audit = byPath("/free-pipeline-audit");
+    assert.match(audit.metaTitle, /^Free Commercial HVAC Pipeline Audit\b/);
+    assert.match(audit.h1, /^Free commercial HVAC pipeline audit\b/i);
+  });
+
+  test("no two priority pages share a title or an H1", () => {
+    assert.equal(new Set(priority.map((p) => p.title)).size, priority.length);
+    assert.equal(new Set(priority.map((p) => p.h1)).size, priority.length);
   });
 });

@@ -100,16 +100,14 @@ export default function FreePipelineAuditPage() {
         eyebrow="Start here"
         intro={
           <>
-            <p>
-              A pipeline audit is a short, concrete review of where your next commercial accounts
-              are most likely to come from, and whether anything is currently going after them.
-              Ours is free, delivered in writing as real work product, and yours to keep whether
-              or not you ever pay us anything.
+            <p className="text-ink">
+              A commercial HVAC pipeline audit is a short, concrete review of where your next
+              commercial accounts are most likely to come from, and whether anything is going
+              after them now. Ours is free, delivered in writing, and yours to keep.
             </p>
             <p>
-              The audit contains no homeowner records, because we never contact homeowners. Every
-              account in it is a business — a property manager, a building owner, a facilities
-              team — researched from public sources, with the source link attached.
+              Every account in it is a business — a property manager, a building owner, a
+              facilities team — researched from public sources, with the source link attached.
             </p>
             <p>
               This page lists exactly what arrives, how the process works, and what a legitimate
@@ -132,8 +130,8 @@ export default function FreePipelineAuditPage() {
             accounts worth pursuing, 3&ndash;5 named commercial accounts in your service area
             each with a cited public source, one sample outreach message, and a read on where
             your commercial work comes from today. No call is required to receive it, and you
-            keep it whether or not you hire us. It contains no homeowner records and promises no
-            results.
+            keep it whether or not you hire us. Every account in it is a business, and it promises
+            no results.
           </KeyAnswer>
           <ul className="space-y-4">
             {audit.includes.map((item) => (
@@ -237,7 +235,7 @@ export default function FreePipelineAuditPage() {
         <GuideSection title="What we will not do">
           <ul className="list-disc space-y-2 pl-5">
             <li>We will not guarantee lead counts, reply rates, appointments, site visits, or revenue — on the audit or on any paid plan.</li>
-            <li>We will not hand you a homeowner list, and we will not contact homeowners in your name. Not in the audit, not on any plan, not at any price.</li>
+            <li>We will not hand you a bought list. Every account in the audit is a business we researched ourselves, with its source.</li>
             <li>We will not pad the audit with bulk-scraped contacts to make it look bigger.</li>
             <li>We will not invent testimonials or case studies we do not have. We are new; the audit exists precisely because of that.</li>
             <li>We will not chase you. One deliverable, one optional walkthrough, your decision.</li>

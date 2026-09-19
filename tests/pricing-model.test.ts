@@ -419,7 +419,9 @@ describe("(e) the three plans are exactly the canonical three", () => {
       "Structured Handoff",
     ]);
     const def = (term: string) => terminology.find((t) => t.term === term)!.definition;
-    assert.match(def("Prospect"), /never a homeowner/i);
+    assert.match(def("Prospect"), /Always a business/i);
+    // Since 2026-09-18 the definition says who a prospect IS, and names no residential audience.
+    assert.doesNotMatch(def("Prospect"), /homeowner|residential/i);
     assert.match(def("Screened Interest"), /\$1,500 Managed Pipeline/);
     assert.match(def("Qualified Opportunity"), /Reserved for the \$2,500 Qualified Opportunity Engine/);
   });
@@ -582,20 +584,13 @@ describe("(d) nothing retired comes back", () => {
     assert.deepEqual(hits, [], `retired residential positioning:\n  ${hits.join("\n  ")}`);
   });
 
-  test("marketplace names appear only where they are a labelled contrast", () => {
-    // Angi, Thumbtack and HomeAdvisor are other people's RESIDENTIAL products. They may be
-    // named where the site explicitly contrasts itself with them, and nowhere else — the
-    // moment they turn up on the homepage hero or the pricing page, they have become the frame.
-    const ALLOWED = new Set([
-      "lib/content.ts", // one FAQ: "How is this different from Angi, Thumbtack, or a per-lead seller?"
-      "app/how-to-choose-a-lead-generation-agency/page.tsx", // the section headed "A contrast: …"
-      // The fit check's DECLINE for someone who wants to buy homeowner leads: it says we do not
-      // sell them and points him at that same contrast section. Naming the case there is the
-      // opposite of adopting the frame.
-      "lib/qualification.ts",
-    ]);
-    const hits = corpus.filter((d) => /\b(Angi|Thumbtack|HomeAdvisor)\b/.test(d.prose) && !ALLOWED.has(d.rel)).map((d) => d.rel);
-    assert.deepEqual(hits, [], `marketplace names outside a labelled contrast: ${hits.join(", ")}`);
+  test("residential marketplace names appear nowhere", () => {
+    // Angi, Thumbtack and HomeAdvisor are other people's RESIDENTIAL products. Until
+    // 2026-09-18 they were allowed in three labelled contrasts (an FAQ, a section of the
+    // vendor guide, and the fit check's lead-buyer decline). Those contrasts were the last
+    // residential signals on a commercial site, and they are gone; so is the allowance.
+    const hits = corpus.filter((d) => /\b(Angi|Thumbtack|HomeAdvisor)\b/.test(d.prose)).map((d) => d.rel);
+    assert.deepEqual(hits, [], `residential marketplace names in shipped copy: ${hits.join(", ")}`);
   });
 
   test("the business is not positioned as New-Jersey-only", () => {

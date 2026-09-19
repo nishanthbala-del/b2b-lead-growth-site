@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import GuideLayout, { GuideSection, GuideTable, KeyAnswer, SourceNote } from "@/components/GuideLayout";
+import GuideLayout, { GuideSection, GuideTable, KeyAnswer } from "@/components/GuideLayout";
 import { faqSlug } from "@/lib/content";
 import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
 import { siteUrl } from "@/lib/site";
@@ -15,11 +15,14 @@ import { siteUrl } from "@/lib/site";
 // weak vendor there are different ones: what are you responsible for on each plan, what do
 // you mean by "qualified", whose mailbox sends, do you call.
 //
-// The residential-marketplace material survives in ONE place, under a heading that says it is
-// a contrast, because (a) it is the only lead-generation experience most HVAC owners have,
-// and (b) /shared-vs-exclusive-hvac-leads now 301s here, so the visitor that URL used to serve
-// should find the two cited facts it was built on. Every figure in that section is sourced,
-// dated and registered in SOURCES.md; nothing else on this page cites a number.
+// THE RESIDENTIAL CONTRAST IS GONE (2026-09-18). Until then one section, labelled as a
+// contrast, kept two cited facts about residential lead marketplaces (Angi's matching rule and
+// the FTC's HomeAdvisor order) for visitors arriving from /shared-vs-exclusive-hvac-leads. It
+// was accurate, but it was the last page on the site describing the retired residential lead
+// business, and it read to a search engine as a residential signal on a commercial page. Its
+// one useful lesson — check where a vendor's contacts come from, in writing — is now a
+// section of its own, written for a commercial buyer. SOURCES.md records the retired rows.
+// This page cites no figures.
 
 const page = getGuidePage("how-to-choose-a-lead-generation-agency");
 
@@ -40,7 +43,7 @@ const hardQuestions = [
   {
     question: "Who exactly do you contact, and where does the contact data come from?",
     ourAnswer:
-      "Every account we contact is a business we researched from free public sources, with a citation each: property managers, building owners, facility teams, multi-site operators. Each carries a named person, the reason it was included, and the source link. We never contact homeowners — not from research, not from a purchased list. If a vendor cannot tell you where a contact came from or why that person was chosen, you are buying a scraped list with a markup.",
+      "Every account we contact is a business we researched from free public sources, with a citation each: property managers, building owners, facility teams, multi-site operators. Each carries a named person, the reason it was included, and the source link. Nothing comes from a purchased list. If a vendor cannot tell you where a contact came from or why that person was chosen, you are buying a scraped list with a markup.",
   },
   {
     question: "What are you responsible for on each plan, and what stays with my team?",
@@ -230,71 +233,42 @@ export default function ChooseAgencyPage() {
           </div>
         </GuideSection>
 
-        <GuideSection id="residential-marketplaces" title="A contrast: how residential lead marketplaces work">
-          <p>
-            <span className="text-ink">
-              This section is about a different product from ours, and it is here as a contrast.
-            </span>{" "}
-            Most HVAC owners&rsquo; experience of &ldquo;lead generation&rdquo; is a residential
-            marketplace that sells homeowner inquiries per lead. We sell no leads, we never contact
-            homeowners, and commercial accounts do not appear on those marketplaces at all. Two
-            cited facts about that model are still worth knowing before you evaluate anyone:
-          </p>
+        <GuideSection id="check-the-data" title="How to check where a vendor's contacts come from">
+          <KeyAnswer>
+            Before you pay any vendor, ask to see where its contacts come from, in writing. It is
+            the second question on the list above, and it is the one most vendors answer worst.
+          </KeyAnswer>
           <ul className="list-disc space-y-3 pl-5">
             <li>
-              <span className="text-ink">Marketplace leads are shared by design.</span> Angi&rsquo;s
-              help center states that each homeowner project request is matched with{" "}
-              <em>&ldquo;no more than five pros&rdquo;</em>. That is the published model, not a
-              hidden practice.
+              <span className="text-ink">Ask for three sample records.</span> Each should show the
+              building or company, the named person, the reason it was included, the source link,
+              and the date someone checked it.
             </li>
             <li>
-              <span className="text-ink">
-                Lead-quality claims have been the subject of federal action.
-              </span>{" "}
-              In 2023 the FTC finalized an order requiring HomeAdvisor — a company affiliated with
-              Angi — to pay up to $7.2 million to settle charges about how it marketed its leads to
-              service providers, including claims about lead quality and where the leads came from.
-              HomeAdvisor settled by consent order without admitting liability. The case was about
-              lead quality and sourcing claims; it did not charge HomeAdvisor with selling one lead
-              to several contractors.
+              <span className="text-ink">Open the links yourself.</span> A researched record
+              survives the click. A scraped one often points at a page that says something else.
+            </li>
+            <li>
+              <span className="text-ink">Count the named people.</span> A list of info@ addresses
+              is a list of front doors, not decision-makers.
+            </li>
+            <li>
+              <span className="text-ink">Ask who else gets the same list.</span> Commercial
+              accounts are finite in any one market. A vendor selling the same names to your
+              competitors is selling you a race.
+            </li>
+            <li>
+              <span className="text-ink">Ask what happens to the data when you leave.</span> The
+              research done in your name should be yours to keep.
             </li>
           </ul>
-          <KeyAnswer>
-            The lesson carries over to commercial work unchanged: verify what a vendor claims about
-            who they contact and where the data came from, in writing, before you pay. It is the
-            second question on the list above, and it is the one most vendors answer worst.
-          </KeyAnswer>
-          <SourceNote>
-            Sources:{" "}
-            <a
-              href="https://intercom.help/angi/en/articles/6221483-opportunities-and-leads-frequently-asked-questions"
-              rel="nofollow noopener"
-              target="_blank"
-              className="text-accent underline underline-offset-4"
-            >
-              Angi Help Center
-            </a>{" "}
-            (updated April 2026; checked August 7, 2026) ·{" "}
-            <a
-              href="https://www.ftc.gov/news-events/news/press-releases/2023/01/ftc-order-requires-homeadvisor-pay-72-million-stop-deceptively-marketing-its-leads-home-improvement"
-              rel="nofollow noopener"
-              target="_blank"
-              className="text-accent underline underline-offset-4"
-            >
-              FTC press release (Jan 2023)
-            </a>{" "}
-            ·{" "}
-            <a
-              href="https://www.ftc.gov/news-events/news/press-releases/2023/04/ftc-approves-final-order-against-homeadvisor-inc-deceptively-marketing-its-leads-home-improvement"
-              rel="nofollow noopener"
-              target="_blank"
-              className="text-accent underline underline-offset-4"
-            >
-              FTC final-order announcement (Apr 2023)
-            </a>
-            . Policies belong to their owners and change; the order was finalized in April 2023 and
-            the allegations were settled without an admission of liability.
-          </SourceNote>
+          <p>
+            Our own method, written out in full, is in{" "}
+            <Link href="/how-to-find-commercial-hvac-accounts" className="text-accent underline underline-offset-4">
+              how to find commercial HVAC accounts in your service area
+            </Link>
+            .
+          </p>
         </GuideSection>
 
         <GuideSection title="When you should not hire any vendor yet">

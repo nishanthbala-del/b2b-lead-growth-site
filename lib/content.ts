@@ -16,8 +16,9 @@
 // — never three versions of the same outreach with different volume limits. A lower plan
 // never inherits a higher plan's responsibility, and on every plan the contractor estimates
 // and closes. The buyer is unchanged from D-025: an established HVAC contractor that already
-// sells and completes commercial work. Everyone we contact is a BUSINESS; homeowners are
-// never contacted, from any source, at any price.
+// sells and completes commercial work. Everyone we contact is a BUSINESS — a property manager,
+// a building owner, a facility team — found from public sources. (Since 2026-09-18 the copy says
+// that as a positive and no longer mentions the retired residential model at all.)
 //
 // CANONICAL SOURCE: the operating-system repo's core/offer.py (TIERS, RESPONSIBILITY,
 // HANDOFF_STANDARDS, TERMINOLOGY, CONTRACTOR_BOUNDARY, TERMS, STEP_UPS, OUTCOME_METRIC,
@@ -92,7 +93,7 @@ export const terminology: Term[] = [
     key: "prospect",
     term: "Prospect",
     definition:
-      "A commercial account, or a contact at one, that matches the targeting requirements you approved. Always a business — never a homeowner.",
+      "A commercial account, or a contact at one, that matches the targeting requirements you approved. Always a business: a property manager, a building owner, a facility team or another commercial buyer.",
   },
   {
     key: "interested-prospect",
@@ -508,16 +509,16 @@ export type Alternative = { name: string; whatItIs: string; difference: string; 
 
 export const alternatives: Alternative[] = [
   {
-    name: "Residential lead marketplaces",
-    whatItIs: "Sell homeowner service requests, priced per lead.",
-    difference: "Everyone we contact is a business. Commercial accounts do not appear on those marketplaces, and we sell no leads.",
-    whenItFits: "You want residential service calls this week.",
+    name: "Lead marketplaces and per-lead sellers",
+    whatItIs: "Sell service requests or contact details, priced per lead, often to several contractors at once.",
+    difference: "We sell no leads. Every account is a business we researched for you, and nothing is priced per lead: you pay a flat monthly fee for work done in your name.",
+    whenItFits: "You want inbound service requests this week and are happy to pay per request.",
   },
   {
-    name: "Homeowner lead sellers",
-    whatItIs: "Sell a homeowner's name and number, shared or exclusive.",
-    difference: "We never contact homeowners, and nothing is priced per lead. You pay a flat monthly fee for work done in your name.",
-    whenItFits: "Your growth plan is residential replacement or repair.",
+    name: "Contact-data providers",
+    whatItIs: "Sell databases of company and contact records to search and export.",
+    difference: "Every account is researched one at a time, with a named person chosen for the building, a cited reason and a source link. We also write and send the outreach.",
+    whenItFits: "You have people who will research, write and follow up, and you only need raw data.",
   },
   {
     name: "General cold-email agencies",
@@ -563,7 +564,7 @@ export const alternatives: Alternative[] = [
 // Do NOT re-broaden this to "service businesses / SaaS / professional services". A list that
 // includes everyone tells an HVAC owner nothing about whether the service understands him.
 export const idealFor: string[] = [
-  "Established HVAC contractors that already sell and complete commercial work — service, maintenance, repair or replacement — alongside residential or instead of it",
+  "Established HVAC contractors that already sell and complete commercial work — service, maintenance, repair or replacement — whether it is most of your work or a real share of it",
   "Someone on the team who quotes commercial bids and wins them",
   "Room to take on more commercial accounts",
   "Commercial work that arrives by referral, repeat and word of mouth, with no consistent way to find new accounts and follow up with them",
@@ -577,13 +578,14 @@ export const idealFor: string[] = [
 // someone out for a reason it did not publish.
 //
 // Two of these are load-bearing rather than cosmetic:
-//   * "residential-only" is a reason not to sell to that CONTRACTOR — never, in any wording,
-//     a suggestion that his homeowners could be contacted instead.
-//   * "we never contact homeowners" is gate #0f in the operating system: consumers are never
-//     cold-sourced, unconditionally, and no client config can authorize it.
+//   * "no commercial work yet" is a reason not to sell to that CONTRACTOR — never, in any
+//     wording, a suggestion that anyone other than a business could be contacted instead.
+//   * "we do not sell leads of any kind" keeps the lead buyer out; who we DO contact
+//     (businesses only — gate #0f in the operating system) is stated as a positive elsewhere.
+// Neither names the retired residential model (2026-09-18): the site says what it is for.
 export const notFor: string[] = [
-  "Residential-only shops — we research commercial accounts, and a shop with no commercial work has no account base for us to build",
-  "Anyone wanting to buy homeowner leads — we are not a lead seller, and we never contact homeowners",
+  "Contractors with no commercial work yet — we research commercial accounts, and without commercial jobs there is no account base for us to build on",
+  "Anyone wanting to buy leads — we do not sell, resell or broker leads of any kind",
   "Companies at capacity year-round, or not looking to add accounts",
   "Companies already running an in-house outbound or BDR team — you already own what we sell",
   "Solo operators — a commercial account arrives with response-time expectations one truck cannot hold",
@@ -624,8 +626,8 @@ export const differentiators: Differentiator[] = [
     body: "We run a conflict check before accepting anyone, and we work one HVAC company per service area: while we work for you, we will not take on a competing shop in your territory. The reason is practical — the property managers and facility teams we would write to for you are the same ones a competitor would want. Be clear on what this is, though. As standard it is an operating practice, not a contractual right: the agreement is non-exclusive by default. If you want it enforceable, contracted per-metro exclusivity is a priced add-on on the order form, and we will quote it before you sign rather than spring it on a call.",
   },
   {
-    title: "Every account is researched from public sources, and cited — and we never contact homeowners",
-    body: "The businesses we write to in your name are found the checkable way: a property manager's own portfolio page, a posted renovation, a permit filing, a facilities team named on a company site. Every account carries the source link and the reason it was picked; no citation, no contact. Homeowners are never on the list — not from research, not from a purchased file, not at any price.",
+    title: "Every account is a business, researched from public sources and cited",
+    body: "The businesses we write to in your name are found the checkable way: a property manager's own portfolio page, a posted renovation, a permit filing, a facilities team named on a company site. Every account carries the source link and the reason it was picked; no citation, no contact. Nothing comes from a purchased list.",
   },
   {
     title: "It goes out from your name, inside an envelope you signed off",
@@ -742,7 +744,7 @@ export function faqSlug(question: string): string {
 }
 
 // ANSWER-FIRST, and this is not a style preference. Every answer opens with a direct,
-// self-contained sentence that restates the subject ("No, we never contact homeowners" —
+// self-contained sentence that restates the subject ("No, we make no cold calls on any plan" —
 // never a bare "No."), because these exact strings are lifted whole into acceptedAnswer.text
 // and get quoted in isolation, both by an answer engine and by an owner skimming on a phone.
 //
@@ -761,11 +763,11 @@ export const faqs: Faq[] = [
       "We find the commercial accounts worth pursuing, contact the right people in your name, and hand each opportunity to your team at the level you chose. The accounts are businesses in the areas you serve — property managers, building owners, facility teams, multi-site operators — researched from public sources with a cited reason each. Your plan decides how far we carry an opportunity before your team takes it. On every plan, your team estimates and closes.",
   },
   {
-    question: "How is this different from Angi, Thumbtack, or a per-lead seller?",
+    question: "How is this different from buying leads?",
     featured: true,
     group: "What this is",
     answer:
-      "We sell no leads at all — you pay a flat monthly fee for a managed outbound service, never a per-lead price. Those marketplaces sell homeowner inquiries for residential work. Everyone we contact is a business, and commercial accounts do not appear on those marketplaces. The trade-off is real: a marketplace hands you a name today, and a commercial account takes weeks of research and contact to reach.",
+      "We sell no leads at all — you pay a flat monthly fee for a managed outbound service, never a per-lead price. Every account is a business we researched for you: a property manager, a building owner, a facility team. Nobody else is sold the same account. The trade-off is real: a lead seller hands you a name today, and a commercial account takes weeks of research and contact to reach.",
   },
   {
     // The nearest and cheapest substitute, and the one an established shop reaches for first:
@@ -785,7 +787,7 @@ export const faqs: Faq[] = [
     question: "What do you not do?",
     group: "What this is",
     answer:
-      "We do not inspect equipment, diagnose or specify it, set the scope, write the estimate, set the price, negotiate terms, or close the deal — those stay with your team on every plan. We also do not sell or resell leads, run paid ads, make cold calls, or contact homeowners, and we do not promise that any account will sign. We prepare the opportunity to the level you chose; you estimate and close it.",
+      "We do not inspect equipment, diagnose or specify it, set the scope, write the estimate, set the price, negotiate terms, or close the deal — those stay with your team on every plan. We also do not sell or resell leads, run paid ads, make cold calls, or buy contact lists, and we do not promise that any account will sign. We prepare the opportunity to the level you chose; you estimate and close it.",
   },
   {
     question: "Do you make phone calls?",
@@ -800,11 +802,11 @@ export const faqs: Faq[] = [
       "We are a founder-run company based in New Jersey, and we work remotely with established HVAC contractors that already do commercial work, anywhere in the United States. The account research runs from public sources in whatever area you serve, so the service does not depend on where we sit. We work one HVAC company per service area.",
   },
   {
-    question: "Do you contact homeowners?",
+    question: "Who exactly will you contact in our name?",
     featured: true,
     group: "Where the accounts come from",
     answer:
-      "No, we never contact homeowners — not from research, not from a purchased list, not at any price. Everyone we write to in your name is a business: a property manager, a building owner, a facilities team, a general contractor. Each is found from public sources and carries the reason it was picked and a link to where we found it. A residential-only shop is not a fit for that reason, and we say so on the fit check rather than after you pay.",
+      "We contact businesses only: property managers, building owners and facility teams, plus the general contractors and multi-site operators that buy commercial HVAC work. Each is found from public sources and carries the reason it was picked and a link to where we found it. A contractor with no commercial work yet is not a fit for that reason, and the fit check says so before you pay anything.",
   },
   {
     question: "Where do the accounts actually come from?",
@@ -942,7 +944,7 @@ export const audit = {
   whyFree:
     "We have no case studies yet, so the audit is the proof. If it is useful, we talk. If not, you keep it and owe nothing.",
   guardrail:
-    "It shows the quality of the work, not a promised result. No guaranteed leads, calls or jobs. Nothing is sent to anyone as part of it. It contains no homeowner records, because we never contact homeowners; every account in it is a business, with the public source it came from.",
+    "It shows the quality of the work, not a promised result. No guaranteed leads, calls or jobs. Nothing is sent to anyone as part of it. Every account in it is a business, with the public source it came from.",
 } as const;
 
 /* -------------------------------------------------------------------------- */
@@ -953,56 +955,61 @@ export const audit = {
 // every account in the audit arrives in — the target account, why it fits, the buyer role,
 // the source, the reason to write, and the recommended approach.
 //
-// PROVENANCE. This is entry 3 of a real prepared set (the operating-system repo's
-// data/starter_sets/hvac/L-1017_starter_set.md, prepared 2026-08-30 from public sources) for
-// an HVAC contractor based in Monroe Township, Middlesex County, NJ. Every quoted phrase is
-// verbatim from the account's own web page as read that day. NOTHING here is invented: no
-// account, no buyer, no trigger, no reply, no result. The account's name and page link and
-// the contractor's name are withheld on purpose — we do not publish the accounts we research
-// for anyone, and the disclosure line says so — and the buyer is given as a ROLE, because the
-// record names no individual and this page must not either.
+// PROVENANCE (replaced 2026-09-18). Until then this was entry 3 of a set prepared on
+// 2026-08-30 for a residential-era campaign (the operating-system repo's
+// data/starter_sets/hvac/L-1017_starter_set.md): a manager of condo, townhome and homeowner
+// associations. It was real, but it told a commercial HVAC contractor that the audit was about
+// residential communities. No prepared set in the operating system holds a commercial account
+// yet, so this one was researched on 2026-09-18 from a public trade-press article specifically
+// to show the format — and the disclosure says exactly that: it was not prepared for a client.
+// Every quoted phrase is verbatim from Real Estate NJ, "NAI Hanson Management lands three new
+// assignments in New Jersey, New York" (Joshua Burd, May 8, 2026):
+// https://re-nj.com/nai-hanson-management-lands-three-new-assignments-in-new-jersey-new-york/
+// NOTHING here is invented: no account, no buyer, no trigger, no reply, no result. The firm's
+// name and the article link are withheld on the page, as for every account we research, and
+// the buyer is given as a ROLE even though the article names that person.
 //
 // The approach is labelled as OURS. It is a recommendation about what to write, never a claim
 // about the state of anyone's equipment (D-024: an opportunity, not a diagnosis).
 export const productExample = {
-  preparedOn: "2026-08-30",
-  preparedFor: "an HVAC contractor based in Monroe Township, Middlesex County, NJ",
+  preparedOn: "2026-09-18",
+  preparedFor: "no client: researched to show the format",
   account: {
     label: "Target account",
     value:
-      "A property management company running condo, townhome, HOA and co-op associations, with a dedicated page for Monroe Township, NJ — the contractor's home town.",
+      "A commercial property management firm whose new assignments, announced in May 2026, include two New Jersey buildings: a 12,686-square-foot industrial and office property and a 43,560-square-foot industrial building.",
   },
   fit: {
     label: "Why it fits",
     value:
-      "It manages large, master-planned communities there — clubhouses, common facilities and shared infrastructure — and its own page describes scheduled preventive maintenance across them. That is recurring work for an account, not a one-off service call.",
+      "A building that joins a manager's portfolio brings HVAC work with it: the existing equipment needs a maintenance contractor, and a tenant fit-out can mean new or moved equipment. The firm's own services include maintenance and tenant installation — the two ways an HVAC contractor gets into buildings like these.",
   },
   buyer: {
     label: "Relevant buyer",
     value:
-      "The association manager for those communities: the role that schedules maintenance vendors. In your audit each account carries a named contact path; this page gives the role only.",
+      "The firm's director of property management, who is named in the announcement. In your audit each account carries a named contact path; this page gives the role only.",
   },
   source: {
     label: "Verified source",
-    value: "The company's own website — its Monroe Township service page, read on 30 August 2026. Quoted from it:",
+    value: "A trade-press article of 8 May 2026 announcing the assignments, read on 18 September 2026. Quoted from it:",
     quotes: [
-      "Preventive Maintenance for Shared Infrastructure",
-      "Clear scheduling ensures consistent service throughout expansive communities",
-      "Routine On-Site Verification",
+      "a 12,686-square-foot industrial and office property",
+      "a 43,560-square-foot industrial building",
+      "full property management services, including accounting, maintenance, tenant installation",
     ],
   },
   reason: {
     label: "Reason for outreach",
     value:
-      "Its own page says the shared systems in those communities are on a scheduled preventive-maintenance program. That is a reason to write now — an opportunity, not a claim about the condition of anything on site.",
+      "A new management assignment is dated and public: the firm is now responsible for buildings it did not run before. That is a reason to write — an opportunity, not a claim about the condition of anything on site.",
   },
   approach: {
     label: "Recommended approach (ours)",
     value:
-      "One short email from your own mailbox to the association manager, citing that page: ask whether the clubhouse and common-facility HVAC is on that preventive schedule, and offer a maintenance conversation for the communities in Monroe Township. No pitch deck, no cold call.",
+      "One short email from your own mailbox to the director of property management, citing the announcement: offer to be the HVAC contractor on file for the two buildings — preventive maintenance now, tenant fit-out work as it comes — and ask whether a maintenance proposal would be useful. No pitch deck, no cold call.",
   },
   disclosure:
-    "A real account from a real prepared set, built on 30 August 2026 from public sources for an HVAC contractor in Middlesex County, NJ. The company's name, its page link and the contractor are withheld here because we do not publish the accounts we research for anyone; your audit carries all three, for every account in it.",
+    "A real account, researched on 18 September 2026 from a public trade-press article to show the format every account in your audit arrives in. It was not prepared for a client. The firm's name and the article link are withheld here because we do not publish the accounts we research; your audit carries the name, the source link and a named contact path for every account in it.",
 } as const;
 
 /* -------------------------------------------------------------------------- */

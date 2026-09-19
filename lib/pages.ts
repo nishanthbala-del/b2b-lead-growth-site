@@ -23,8 +23,9 @@ import { plans, planSlug, terminology } from "./content.ts";
 // three were added. A page that was NOT substantively edited that day keeps its own date.
 const D027 = "2026-09-17";
 
-// THE COMMERCIAL-SEARCH FOOTPRINT DATE: the three audience pages and the two guides first
-// published on 2026-09-18 (see the note above their registry entries).
+// THE COMMERCIAL-SEO PASS DATE (2026-09-18): five pages first published (see the note above
+// their registry entries), and every page whose visible copy the residential-language sweep
+// changed carries it as dateModified. A page the sweep did not touch keeps its own date.
 const SEO_FOOTPRINT = "2026-09-18";
 
 // When adding ANY indexable route, add it to `guidePages`, `standaloneRoutes` or
@@ -33,7 +34,8 @@ const SEO_FOOTPRINT = "2026-09-18";
 // generated from this registry (lib/llms.ts) and needs no edit. tests/routes.test.ts and
 // tests/pricing-model.test.ts fail if the lists stop agreeing, if a registered route has no
 // page file, or if a redirected path is registered.
-export const homepageDateModified = D027;
+// The homepage's example account was replaced and its hero line rewritten on 2026-09-18.
+export const homepageDateModified = SEO_FOOTPRINT;
 
 // The homepage's own title, description and H1, in the registry with every other route's.
 //
@@ -104,7 +106,7 @@ export const guidePages: GuidePage[] = [
     description:
       "Commercial HVAC lead generation for established contractors: researched commercial accounts, outreach in your name, and a handoff at the level you choose.",
     datePublished: D027,
-    dateModified: D027,
+    dateModified: SEO_FOOTPRINT,
     kind: "service",
   },
   {
@@ -113,9 +115,9 @@ export const guidePages: GuidePage[] = [
     metaTitle: "How Commercial HVAC Managed Outbound Works",
     h1: "How commercial HVAC managed outbound works",
     description:
-      "Step by step: account research, outreach in your name, what happens at genuine interest on each plan, the qualification standard, and the handoff.",
+      "Commercial HVAC managed outbound, step by step: account research, outreach in your name, what happens at genuine interest on each plan, and the handoff.",
     datePublished: D027,
-    dateModified: D027,
+    dateModified: SEO_FOOTPRINT,
     kind: "guide",
   },
   {
@@ -124,24 +126,25 @@ export const guidePages: GuidePage[] = [
     metaTitle: "Commercial HVAC Lead Generation Pricing: $750–$2,500/Mo",
     h1: "Commercial HVAC lead generation pricing: $750, $1,500 or $2,500 a month",
     description:
-      "Three levels of responsibility: Prospecting $750, Managed Pipeline $1,500, Qualified Opportunity Engine $2,500 a month. No setup fee, month-to-month.",
+      "Commercial HVAC lead generation pricing: Prospecting $750, Managed Pipeline $1,500, Qualified Opportunity Engine $2,500 a month. No setup fee.",
     datePublished: "2026-08-08",
-    // The page was rebuilt around responsibility rather than volume: new plans, a
-    // who-owns-what table, the handoff definitions, the boundary and the terminology.
-    dateModified: D027,
+    // Rebuilt around responsibility on 2026-09-17; on 2026-09-18 its account-sourcing lines
+    // and the terminology stopped naming the retired residential model.
+    dateModified: SEO_FOOTPRINT,
     kind: "service",
   },
   {
     slug: "free-pipeline-audit",
     navLabel: "Free Pipeline Audit",
     metaTitle: "Free Commercial HVAC Pipeline Audit: What You Get",
-    h1: "The Free Pipeline Audit for commercial HVAC contractors",
+    // The H1 says the target phrase the title carries, word for word, so the two headlines a
+    // search engine compares cannot disagree about what the page is.
+    h1: "Free commercial HVAC pipeline audit: what you get",
     description:
-      "What the free pipeline audit delivers: an account profile, 3–5 vetted commercial accounts with cited reasons and source links, and a sample message.",
+      "What the free commercial HVAC pipeline audit delivers: an account profile, 3–5 vetted commercial accounts with source links, and a sample message.",
     datePublished: "2026-08-08",
-    // New visible text: how the audit relates to the three paid plans, and that nothing is
-    // sent to anyone as part of it.
-    dateModified: D027,
+    // 2026-09-18: an answer-first opening, an exact-match H1, and no residential wording.
+    dateModified: SEO_FOOTPRINT,
     kind: "guide",
   },
   {
@@ -152,21 +155,23 @@ export const guidePages: GuidePage[] = [
     description:
       "Ten questions that expose a weak commercial HVAC lead generation or managed outbound vendor — guarantees, vague qualification, lock-ins — with our answers.",
     datePublished: "2026-08-08",
-    // Rewritten for choosing a COMMERCIAL outbound partner; the residential-marketplace
-    // material survives only as one labelled, cited contrast.
-    dateModified: D027,
+    // Rewritten for choosing a COMMERCIAL outbound partner on 2026-09-17; on 2026-09-18 its
+    // residential-marketplace contrast was replaced by a section on checking a vendor's data.
+    dateModified: SEO_FOOTPRINT,
     kind: "guide",
     section: "guide",
   },
   {
     slug: "about",
     navLabel: "About",
-    metaTitle: "About B2B Lead Growth",
-    h1: "About B2B Lead Growth",
+    // Names the category as well as the company (2026-09-18): "About B2B Lead Growth" alone
+    // told a search engine nothing about what the company does.
+    metaTitle: "About B2B Lead Growth: Commercial HVAC Managed Outbound",
+    h1: "About B2B Lead Growth: managed outbound for commercial HVAC contractors",
     description:
       "B2B Lead Growth LLC is a founder-run commercial HVAC managed outbound company based in New Jersey, serving contractors across the US. Who runs it, and how.",
     datePublished: D027,
-    dateModified: D027,
+    dateModified: SEO_FOOTPRINT,
     kind: "about",
   },
   // THE COMMERCIAL-SEARCH FOOTPRINT (2026-09-18). Three pages, one per commercial buyer the
@@ -254,9 +259,8 @@ export const standaloneRoutes: StandaloneRoute[] = [
     navLabel: "Fit check",
     metaTitle: "Commercial HVAC Fit Check",
     description: `A ${intakeMinutes}-minute fit check for established HVAC contractors with commercial work. A straight answer, including no — and a free pipeline audit if it fits.`,
-    // One new question (whether you want opportunities qualified and the site visit
-    // coordinated first), new plan names on every result screen.
-    dateModified: D027,
+    // 2026-09-18: the answer options and the declines describe commercial work only.
+    dateModified: SEO_FOOTPRINT,
     priority: 0.7,
   },
   {
