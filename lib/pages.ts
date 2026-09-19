@@ -23,6 +23,10 @@ import { plans, planSlug, terminology } from "./content.ts";
 // retired behind redirects and three were added. A page not substantively edited keeps its date.
 const D027 = "2026-09-17";
 
+// THE CANON DATE (2026-09-18): /definitions and /sample-deliverables first published, both
+// generated from the operating system's own modules.
+const CANON = "2026-09-18";
+
 // THE COMMERCIAL-SEO PASS DATE (2026-09-18): five pages first published (see the note above
 // their registry entries), and every page whose visible copy the residential-language sweep
 // changed carries it as dateModified. A page the sweep did not touch keeps its own date.
@@ -63,9 +67,10 @@ export const homepageDescription =
 
 /** "service" pages describe the service itself; "solution" pages describe how it reaches ONE
  *  kind of commercial buyer and publish a Service node of their own; "guide" pages are
- *  Articles; "about" is the entity page. The kind decides og:type and which JSON-LD graph the
- *  page publishes. */
-export type PageKind = "service" | "solution" | "guide" | "about";
+ *  Articles; "about" is the entity page; "reference" is the definitions page, whose main
+ *  entity is its DefinedTermSet. The kind decides og:type and which JSON-LD graph the page
+ *  publishes. */
+export type PageKind = "service" | "solution" | "guide" | "about" | "reference";
 
 /** Which group a page is listed under in the footer and in every page's "Keep reading" list:
  *  the service itself, the commercial buyers it reaches, or the practical guides. */
@@ -178,6 +183,32 @@ export const guidePages: GuidePage[] = [
     datePublished: D027,
     dateModified: SEO_FOOTPRINT,
     kind: "about",
+  },
+  // THE CANON (2026-09-18). Two pages generated from the operating system itself, never
+  // written by hand: every business term defined once (lib/generated/vocabulary.ts, from the
+  // OS's core/vocabulary.py) and specimens of every document a client receives
+  // (lib/generated/specimens.ts, rendered by the OS's production code with placeholders).
+  {
+    slug: "sample-deliverables",
+    navLabel: "Sample deliverables",
+    metaTitle: "Sample Deliverables: What a Commercial HVAC Client Receives",
+    h1: "Sample deliverables: what a commercial HVAC client receives",
+    description:
+      "Specimens of what B2B Lead Growth delivers: a researched commercial account, the qualification record, both handoffs and the client report. None invented.",
+    datePublished: CANON,
+    dateModified: CANON,
+    kind: "service",
+  },
+  {
+    slug: "definitions",
+    navLabel: "Definitions",
+    metaTitle: "Definitions: Qualified Conversation, Warm Handoff and More",
+    h1: "Definitions: every term we use, and exactly what it means",
+    description:
+      "Every B2B Lead Growth term, defined once: FIT contractor, decision-maker, qualified conversation, accepted sales opportunity, warm handoff and billing.",
+    datePublished: CANON,
+    dateModified: CANON,
+    kind: "reference",
   },
   // THE COMMERCIAL-SEARCH FOOTPRINT (2026-09-18). Three pages, one per commercial buyer the
   // service reaches for a contractor — property managers, facility teams, building owners —
@@ -639,7 +670,9 @@ export function guideJsonLd(page: GuidePage) {
         ? `${siteUrl}/#service`
         : page.kind === "solution"
           ? `${url}#service`
-          : `${siteUrl}/#organization`;
+          : page.kind === "reference"
+            ? `${url}#terminology`
+            : `${siteUrl}/#organization`;
 
   const graph: Record<string, unknown>[] = [
     webPageJsonLd({

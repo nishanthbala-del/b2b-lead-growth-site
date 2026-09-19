@@ -26,6 +26,9 @@ const GUIDE_PRIORITY: Record<string, number> = {
   "hvac-building-owner-outreach": 0.7,
   "how-to-find-commercial-hvac-accounts": 0.6,
   "commercial-hvac-cold-email": 0.6,
+  // The canon (2026-09-18): the proof of what a client receives, and the definitions.
+  "sample-deliverables": 0.7,
+  definitions: 0.6,
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {

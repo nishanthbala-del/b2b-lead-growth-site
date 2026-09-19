@@ -29,6 +29,7 @@
 // names; D-028 retired the $750 tier and renamed and re-scoped the other two. Nothing on this
 // site names the retired tiers.
 
+import { canonAccount, canonTerm } from "./canon.ts";
 import { callLengthMinutes, intakeMinutes } from "./site.ts";
 
 /* -------------------------------------------------------------------------- */
@@ -76,47 +77,27 @@ export const outcomeMetric = {
 
 export type Term = { key: string; term: string; definition: string };
 
-// core.offer.TERMINOLOGY. "the client" reads "you" here because the reader of this site IS the
-// client; nothing else is changed. Rendered on /how-it-works (with a DefinedTermSet), /pricing
-// and /commercial-hvac-lead-generation from this one array.
-export const terminology: Term[] = [
-  {
-    key: "prospect",
-    term: "Prospect",
-    definition:
-      "A commercial account, or a contact at one, that matches the targeting requirements you approved. Always a business: a property manager, a building owner, a facility team or another commercial buyer.",
-  },
-  {
-    key: "interested-prospect",
-    term: "Interested Prospect",
-    definition:
-      "A relevant contact who replied with genuine openness to continuing the conversation, confirmed by a person rather than a keyword match. The step before a qualified conversation.",
-  },
-  {
-    key: "qualified-conversation",
-    term: "Qualified Conversation",
-    definition:
-      "Qualified Interest: a decision-maker at a commercial account that fits your profile — or the colleague they sent us to — who showed genuine interest and agreed to speak with you, confirmed by a person. What Managed Outbound hands off.",
-  },
-  {
-    key: "accepted-sales-opportunity",
-    term: "Accepted Sales Opportunity",
-    definition:
-      "A qualified conversation whose business need was validated, whose property, account and buyer information was gathered, that was accepted against the criteria you agreed with us, and whose concrete next sales step was coordinated. What the Opportunity Engine hands off.",
-  },
-  {
-    key: "warm-handoff",
-    term: "Warm Handoff",
-    definition:
-      "The handoff record, the account, contact, context and conversation history, a warm introduction by name, your booking path where appropriate, notice to you, and ownership of the conversation passed to you.",
-  },
-  {
-    key: "opportunity-brief",
-    term: "Opportunity Brief",
-    definition:
-      "The complete written brief that travels with an accepted sales opportunity: the validated need, timing, property, account and buyer information, the check against your criteria, the coordinated next step, and the open questions.",
-  },
-];
+// The six offer terms, VERBATIM from the operating system (2026-09-18). Until then this array was a
+// hand-written second-person rewrite of core.offer.TERMINOLOGY — the same six definitions in a
+// second text, with nothing checking one against the other. It is now read from
+// lib/generated/vocabulary.ts, which the OS exports from core/vocabulary.py (itself importing
+// core.offer.TERMINOLOGY), so the words on /how-it-works, /pricing and
+// /commercial-hvac-lead-generation are the words the OS's gates and reports use. Rendered with a
+// DefinedTermSet on /how-it-works; every term is on /definitions with who decides and what must
+// be on record. The kebab-case key is the page anchor (`term-<key>`), kept stable.
+const OFFER_TERM_KEYS = [
+  "prospect",
+  "interested_prospect",
+  "qualified_conversation",
+  "accepted_sales_opportunity",
+  "warm_handoff",
+  "opportunity_brief",
+] as const;
+
+export const terminology: Term[] = OFFER_TERM_KEYS.map((k) => {
+  const t = canonTerm(k);
+  return { key: k.replace(/_/g, "-"), term: t.label, definition: t.definition };
+});
 
 /* -------------------------------------------------------------------------- */
 /*  The two plans                                                               */
@@ -363,18 +344,10 @@ export const funnelClose: FunnelStage[] = [
 /*  The warm handoff (both plans) and the acceptance standard (Opportunity Engine) */
 /* -------------------------------------------------------------------------- */
 
-// core.offer.WARM_HANDOFF_STEPS. The same sequence on both plans; what differs is the point it
+// core.offer.WARM_HANDOFF_STEPS, verbatim, read from the OS export (lib/generated/vocabulary.ts,
+// the Warm Handoff term) since 2026-09-18. The same sequence on both plans; what differs is the point it
 // runs at (Qualified Interest or an Accepted Sales Opportunity) and what travels with it.
-export const warmHandoffSteps: string[] = [
-  "create the handoff record",
-  "preserve the account, contact, context and conversation history",
-  "make the warm introduction",
-  "coordinate your booking or calendar path when appropriate",
-  "notify you",
-  "transfer ownership of the conversation to you",
-  "mark the opportunity handed off",
-  "keep tracking downstream progress where you report it",
-];
+export const warmHandoffSteps: string[] = [...canonTerm("warm_handoff").steps];
 
 // What an Accepted Sales Opportunity requires (core.offer.HANDOFF_STANDARDS
 // ["accepted_opportunity"]; four facts must be confirmed BY THE BUYER, not inferred by us).
@@ -939,45 +912,23 @@ export const audit = {
 //
 // The approach is labelled as OURS. It is a recommendation about what to write, never a claim
 // about the state of anyone's equipment (D-024: an opportunity, not a diagnosis).
+//
+// ONE TEXT, FROM THE OPERATING SYSTEM (2026-09-18). The fields are read from the OS export
+// (lib/generated/specimens.ts `account`, from core/specimens.py), where the SAME account is the
+// first specimen on /sample-deliverables and passes the send gate's own starter-set checks. The
+// earlier hand-written "why it fits" said the buildings' equipment "needs a maintenance
+// contractor" — the claim-about-a-stranger's-needs shape the gate refuses in every real record —
+// so the example a contractor was shown broke the standard it was meant to demonstrate.
 export const productExample = {
-  preparedOn: "2026-09-18",
-  preparedFor: "no client: researched to show the format",
-  account: {
-    label: "Target account",
-    value:
-      "A commercial property management firm whose new assignments, announced in May 2026, include two New Jersey buildings: a 12,686-square-foot industrial and office property and a 43,560-square-foot industrial building.",
-  },
-  fit: {
-    label: "Why it fits",
-    value:
-      "A building that joins a manager's portfolio brings HVAC work with it: the existing equipment needs a maintenance contractor, and a tenant fit-out can mean new or moved equipment. The firm's own services include maintenance and tenant installation — the two ways an HVAC contractor gets into buildings like these.",
-  },
-  buyer: {
-    label: "Relevant buyer",
-    value:
-      "The firm's director of property management, who is named in the announcement. In your audit each account carries a named contact path; this page gives the role only.",
-  },
-  source: {
-    label: "Verified source",
-    value: "A trade-press article of 8 May 2026 announcing the assignments, read on 18 September 2026. Quoted from it:",
-    quotes: [
-      "a 12,686-square-foot industrial and office property",
-      "a 43,560-square-foot industrial building",
-      "full property management services, including accounting, maintenance, tenant installation",
-    ],
-  },
-  reason: {
-    label: "Reason for outreach",
-    value:
-      "A new management assignment is dated and public: the firm is now responsible for buildings it did not run before. That is a reason to write — an opportunity, not a claim about the condition of anything on site.",
-  },
-  approach: {
-    label: "Recommended approach (ours)",
-    value:
-      "One short email from your own mailbox to the director of property management, citing the announcement: offer to be the HVAC contractor on file for the two buildings — preventive maintenance now, tenant fit-out work as it comes — and ask whether a maintenance proposal would be useful. No pitch deck, no cold call.",
-  },
-  disclosure:
-    "A real account, researched on 18 September 2026 from a public trade-press article to show the format every account in your audit arrives in. It was not prepared for a client. The firm's name and the article link are withheld here because we do not publish the accounts we research; your audit carries the name, the source link and a named contact path for every account in it.",
+  preparedOn: canonAccount.preparedOn,
+  preparedFor: canonAccount.preparedFor,
+  account: { label: "Target account", value: canonAccount.account },
+  fit: { label: "Why it fits", value: canonAccount.fit },
+  buyer: { label: "Relevant buyer", value: canonAccount.buyer },
+  source: { label: "Verified source", value: canonAccount.sourceNote, quotes: [...canonAccount.quotes] },
+  reason: { label: "Reason for outreach", value: canonAccount.reason },
+  approach: { label: "Recommended approach (ours)", value: canonAccount.approach },
+  disclosure: canonAccount.disclosure,
 } as const;
 
 /* -------------------------------------------------------------------------- */

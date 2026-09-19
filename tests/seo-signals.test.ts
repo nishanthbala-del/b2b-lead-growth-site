@@ -120,7 +120,9 @@ describe("one model: commercial HVAC, and nothing residential", () => {
   const shipped = [
     ...walk(path.join(repoRoot, "app")),
     ...walk(path.join(repoRoot, "components")),
-    ...["content", "qualification", "site", "pages", "llms", "events"].map((n) => path.join(repoRoot, "lib", `${n}.ts`)),
+    ...["content", "qualification", "site", "pages", "llms", "events", "canon"].map((n) => path.join(repoRoot, "lib", `${n}.ts`)),
+    // The operating system's generated canon is shipped copy too: /definitions, /sample-deliverables.
+    ...walk(path.join(repoRoot, "lib", "generated")),
   ].map((f) => ({ rel: path.relative(repoRoot, f), text: stripComments(readFileSync(f, "utf8")) }));
   shipped.push({ rel: "/llms.txt (rendered)", text: llmsTxt() });
 

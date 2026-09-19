@@ -666,7 +666,7 @@ function buildWatchouts(a: QualificationAnswers): string[] {
   }
   if (a.preparedOpportunities === "yes" && a.commercialQuoter === "nobody") {
     out.push(
-      "You'd like accepted opportunities before your estimator is involved, but nobody quotes commercial bids yet. The Opportunity Engine would set a next sales step with nobody to take it, so the honest plan is Managed Outbound — a warm handoff of each qualified conversation — until that person exists.",
+      "You'd like accepted sales opportunities before your estimator is involved, but nobody quotes commercial bids yet. The Opportunity Engine would set a next sales step with nobody to take it, so the honest plan is Managed Outbound — a warm handoff of each qualified conversation — until that person exists.",
     );
   }
   // A stated budget that names a DIFFERENT plan from the one the answers point at. Said out

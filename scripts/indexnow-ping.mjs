@@ -33,6 +33,8 @@ const urls = [
   "/hvac-building-owner-outreach",
   "/how-to-find-commercial-hvac-accounts",
   "/commercial-hvac-cold-email",
+  "/sample-deliverables",
+  "/definitions",
   "/start",
   "/reviews",
   "/privacy",

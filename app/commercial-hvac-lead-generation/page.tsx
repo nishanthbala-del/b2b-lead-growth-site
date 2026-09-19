@@ -330,7 +330,7 @@ export default function CommercialHvacLeadGenerationPage() {
             </li>
             <li>
               We do not guarantee revenue, contracts, appointments, site visits, qualified
-              opportunities, or any count of them, on any plan.
+              conversations, sales opportunities, or any count of them, on any plan.
             </li>
             <li>
               We claim no local expertise we do not have. The company is founder-run and based in{" "}
