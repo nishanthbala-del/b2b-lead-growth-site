@@ -1,11 +1,38 @@
+> # SUPERSEDED — HISTORICAL RECORD, NOT A SPECIFICATION
+>
+> **Superseded 2026-09-20. Do not implement anything from this document.**
+>
+> This was the 2026-09-10 audit. Everything it says about the OFFER is retired, and its whole
+> pricing and packaging analysis describes a model the business no longer sells:
+>
+> - It treats **Lead Engine $750 / Outreach Engine $1,500 / Appointment Engine $2,500** as the
+>   live pricing. **D-028 (2026-09-18) retired all three names and the $750 tier entirely.** The
+>   live offer is two plans: **Managed Outbound $1,500** (hands off at Qualified Interest) and
+>   the **Opportunity Engine $2,500** (hands off an Accepted Sales Opportunity).
+> - It discusses homeowner prospects, customer reactivation and residential contractors as
+>   in-scope motions. **D-025 (2026-09-10) made residential-only a decline**, and consumers are
+>   never cold-sourced. No live page says any of it; `npm run audit:live` fails the build if one
+>   ever does again.
+> - Its repository path (`~/Documents/Lead_Generation`) is stale; the site lives at
+>   `~/Projects/Lead_Generation`.
+> - Its "63 tests / 10 sitemap URLs" baseline is stale: 212 tests, 21 announced URLs.
+>
+> **Kept, not deleted,** because its competitor research, its unit-economics stress test and its
+> operational-risk table are still the reasoning behind decisions that are still in force, and
+> because deleting the record of a superseded position is how the position quietly comes back.
+>
+> **The canonical offer is `core/offer.py` in the operating-system repo**, printed by
+> `python3 scripts/business_rules.py --section offer`. The canonical ICP is `core/icp.py`. The
+> canonical vocabulary is `core/vocabulary.py`. Read those, never this.
+
 # B2B Lead Growth Managed Outbound SEO + AI Search Implementation Handoff
 
 **Target:** [b2bleadgrowth.com](https://www.b2bleadgrowth.com/)  
-**Repository:** `/Users/nishanthbalaji/Documents/Lead_Generation`  
-**Audit date:** 2026-09-10  
-**Audience:** Claude Code implementing the changes in this repository
+**Repository:** `~/Projects/Lead_Generation` (was `~/Documents/Lead_Generation` when this was written)  
+**Audit date:** 2026-09-10 — **SUPERSEDED 2026-09-20, see the banner above**  
+**Audience:** historical record only
 
-This document replaces the earlier audit. The earlier audit treated customer reactivation and referral-partner outreach as the core category. That was incorrect.
+This document replaced an earlier audit that treated customer reactivation and referral-partner outreach as the core category. It has itself now been superseded: the three-tier model it analyses below is retired.
 
 ## 1. Correct business model
 

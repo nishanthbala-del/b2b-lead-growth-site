@@ -40,7 +40,9 @@ results, testimonials, statistics, or credentials — the business has 0 clients
   no prices (quotes via sales call; third-party reviews report $3k–$30k/mo); CIENCE's managed
   service starts at $2,000/mo (its pricing page, checked Aug 2026); Cleverly is the rare
   exception publishing LinkedIn-only plans from $397/mo. A full-service published tier at
-  $750/mo is a genuinely unusual, citable market fact.
+  $1,500/mo is a genuinely unusual, citable market fact. (Written when the entry tier was
+  $750/mo; that tier was retired by D-028 on 2026-09-18 and the lowest published price is now
+  $1,500 — still below CIENCE's $2,000 floor, so the point stands at the new number.)
 - **The HVAC shared-leads pain space is held by conflicted or thin content.** Pages ranking
   for shared-vs-exclusive and Angi-cost queries are written by lead sellers or are template
   affiliate pages. The FTC's HomeAdvisor action (order up to $7.2M, finalized April 2023,
@@ -66,9 +68,9 @@ results, testimonials, statistics, or credentials — the business has 0 clients
 | Cluster | Intent | Value | Winnable? | Where it lives |
 |---|---|---|---|---|
 | HVAC lead gen New Jersey ("hvac lead generation nj", "exclusive hvac leads new jersey") | Transactional | High | **Yes — weakest SERP in the map** | `/hvac-lead-generation-new-jersey` |
-| Shared vs exclusive leads math ("shared vs exclusive hvac leads", "real cost per booked job") | Commercial | High | **Yes — best AI-citation bet**; no neutral voice ranks | `/shared-vs-exclusive-hvac-leads` |
+| Shared vs exclusive leads math ("shared vs exclusive hvac leads", "real cost per booked job") | Commercial | Low | **RETIRED (D-027, 2026-09-17): a residential lead-buying question. The page 301s to the vendor-evaluation guide, which keeps the cited marketplace mechanics as a labelled contrast.** | `/how-to-choose-a-lead-generation-agency` |
 | Cost transparency ("appointment setting cost 2026", "lead gen agency pricing") | Commercial | High | Organic: hard. **AI answers: yes** — concrete published prices are what assistants extract | `/pricing` |
-| Sub-$1k budget ("appointment setting under $1,000/month") | Transactional | High | **Yes — near-empty SERP**, and $750 is a real answer | `/pricing` |
+| ~~Sub-$1k budget ("appointment setting under $1,000/month")~~ | — | — | **RETIRED (D-028, 2026-09-18): the $750 tier no longer exists, so there is no honest answer to a sub-$1k query. Do not target it.** | — |
 | Agency diligence ("lead gen agency red flags", "questions to ask before hiring") | Commercial | Medium | Yes — modest-authority sites already rank here | `/how-to-choose-a-lead-generation-agency` |
 | Pipeline-audit category ("what is a pipeline audit", brand-adjacent searches by outreach recipients) | Transactional | Medium | Yes — near-empty; this page defines the category | `/free-pipeline-audit` |
 | Angi pain long-tails ("are angi leads worth it for hvac") | Commercial | High | Partially — covered inside the two HVAC pages rather than standalone attack pages | HVAC pages |
@@ -100,9 +102,10 @@ filtered out:
   literal buyer questions with immediate answers.
 - **Cited third-party facts with links and dates** — the single strongest measured citation
   factor, and it happens to be our house rule anyway.
-- **Transparent pricing in plain declarative text** ("B2B Lead Growth charges a flat $750,
-  $1,500, or $2,500 per month") — "how much does X cost" is the classic AI-answer query and
-  almost no competitor answers it on-page.
+- **Transparent pricing in plain declarative text** ("B2B Lead Growth charges a flat $1,500 or
+  $2,500 per month") — "how much does X cost" is the classic AI-answer query and almost no
+  competitor answers it on-page. (Was three prices including $750; the $750 tier was retired by
+  D-028 on 2026-09-18. The live prices are generated from `core/offer.py`, never typed by hand.)
 - **Entity consistency**: Organization JSON-LD with email; `sameAs` wired to accept real
   profiles as they're created (LinkedIn/Crunchbase/Clutch — see §9). Identical
   name/description/pricing across all future profiles.

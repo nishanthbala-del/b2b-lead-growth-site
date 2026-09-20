@@ -305,6 +305,61 @@ describe("the privacy policy describes the form that actually exists", () => {
   });
 });
 
+// A REPO DOCUMENT IS A SURFACE TOO — not for crawlers, for whoever reads it next.
+//
+// CLAUDE_CODE_SEO_AI_SEO_AUDIT_HANDOFF.md presented "Lead Engine $750 / Outreach Engine $1,500 /
+// Appointment Engine $2,500" as the live pricing, and homeowner prospecting as an in-scope
+// motion, for two days after D-028 retired all of it — with no stamp saying so, and a line
+// claiming the document "replaces the earlier audit". It was then read as the current
+// specification and its retired numbers propagated into a fresh mandate. Nothing in the repo
+// stopped that: the shipped-source scanners read .ts/.tsx, and a stale .md is invisible to them.
+//
+// So: a markdown file may name a retired plan or the retired price, but only while saying it is
+// retired — on the line itself, or in a stamp at the top of the document. Same discipline the
+// live pages are already held to, applied to the documents that describe them.
+describe("no repo document presents a retired offer as current", () => {
+  const RETIRED_TOKENS = [
+    /\$750\b/,
+    /\bLead Engine\b/,
+    /\bOutreach Engine\b/,
+    /\bAppointment Engine\b/,
+    /\bManaged Pipeline\b/,
+    /\bQualified Opportunity Engine\b/,
+  ];
+  // Words that mark the mention as history rather than as the offer.
+  const MARKER =
+    /retire|superseded|discontinued|historical|no longer|was once|formerly|deprecat|D-02[789]|RETIRED|~~/i;
+  /** A document-level stamp in the first 40 lines exempts the whole file. */
+  const STAMPED = /SUPERSEDED|HISTORICAL RECORD|superseded \d{4}-\d{2}-\d{2}/i;
+
+  const markdown = readdirSync(repoRoot)
+    .filter((f) => f.endsWith(".md"))
+    .map((f) => ({ file: f, text: readFileSync(path.join(repoRoot, f), "utf8") }));
+
+  test("every repo markdown file is scanned (the guard is not scanning an empty set)", () => {
+    assert.ok(markdown.length >= 4, `only ${markdown.length} markdown files found at the repo root`);
+    assert.ok(
+      markdown.some((m) => RETIRED_TOKENS.some((re) => re.test(m.text))),
+      "no file names a retired offer at all — if that is true the guard is vacuous; check the token list",
+    );
+  });
+
+  test("a retired plan or price is never stated without saying it is retired", () => {
+    const offenders: string[] = [];
+    for (const { file, text } of markdown) {
+      const lines = text.split("\n");
+      if (STAMPED.test(lines.slice(0, 40).join("\n"))) continue; // whole document stamped
+      lines.forEach((line, i) => {
+        if (!RETIRED_TOKENS.some((re) => re.test(line))) return;
+        // The line itself, or either neighbour, must mark it as history.
+        const window = [lines[i - 1] ?? "", line, lines[i + 1] ?? ""].join(" ");
+        if (!MARKER.test(window)) offenders.push(`${file}:${i + 1}: ${line.trim().slice(0, 100)}`);
+      });
+    }
+    assert.deepEqual(offenders, [], `these lines present a retired offer as current:\n  ${offenders.join("\n  ")}`);
+  });
+});
+
 describe("no fabricated proof", () => {
   // The site's entire credibility argument is that it has NO clients yet and says so.
   // A single popularity or track-record claim anywhere in the copy destroys that
