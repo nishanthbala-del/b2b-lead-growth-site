@@ -147,6 +147,47 @@ needs an owner-account step at all — see §8's correction.
 
 ## 8. Changes implemented (in this repo, this pass)
 
+> **2026-09-20 — the acquisition cluster, and the attribution chain closed.**
+>
+> Three pages, chosen against the brief rather than from it. The brief listed four
+> maintenance-contract intents, four comparison topics and a list of trigger types; built as
+> written that is a dozen near-duplicate URLs, which is a doorway cluster on a domain at
+> average position 37. What shipped is the three intents the site genuinely could not answer:
+>
+> - **`/commercial-hvac-maintenance-contracts`** — the commercial reason a contractor wants
+>   these accounts. Every existing guide taught a STEP of the method; none said what it is
+>   for. Recurring agreements had one passing mention across three pages.
+> - **`/commercial-hvac-prospecting-triggers`** — the method's one load-bearing rule on its
+>   own URL: *a signal is a reason to contact an account, not proof of HVAC need or buying
+>   intent*. Defined in the operating system's `core/vocabulary.py` and stated inside other
+>   pages, but with nowhere of its own, while every prospecting vendor sells signals as
+>   "intent". A test holds the wording.
+> - **`/commercial-hvac-outbound-vs-inbound`** — the decision BEFORE the vendor decision that
+>   `/how-to-choose-a-lead-generation-agency` already answers. Carries a "when outbound is the
+>   wrong answer" section, and no dollar figures for the options we do not sell.
+>
+> **Not built, deliberately:** "generic vs specialised agency" is
+> `/how-to-choose-a-lead-generation-agency`; "leads vs qualified conversations vs accepted
+> opportunities" is `/definitions`. Both were on the brief; both already existed.
+>
+> **§5 attribution was broken in three places and is now closed.** The site has recorded
+> first-party visit attribution since 2026-09-17 and posted all seven fields to the Sheet on
+> every submission — and (1) the Apps Script `HEADERS` had fallen a generation behind
+> `CSV_COLUMNS`, so the Sheet had no column to store them in; (2) the operating system's
+> `poll_intake_sheet.map_row` carried nine fields and dropped the rest; (3) `run_intake.py`
+> wrote one constant `Source` for every inbound lead. A search arrival, an AI citation, a
+> newsletter link and our own outbound batch were indistinguishable by the time they reached
+> the CRM. All three are fixed (`core/attribution.py` + 35 proofs in the operating-system
+> repo). `Source` keeps its `inbound_intake_form` prefix and gains the channel; `Source URL`
+> carries the landing page. No new analytics store — it lands in the CRM everything else
+> already reads.
+>
+> Verified live 2026-09-20: all three URLs 200, canonical self-referencing, indexable,
+> Article + FAQPage + BreadcrumbList rendering, in the sitemap (21 URLs) and `llms.txt`,
+> mobile with no horizontal scroll, and attribution **persisting** across a guide -> `/start`
+> click-through (landing path kept, not overwritten). IndexNow: 200 OK, 21 URLs.
+
+
 > **Correction, 2026-08-29.** Three items below were recorded as shipped but were never
 > on this branch. They were written in commit `2705c1a`, which is **not reachable from
 > `main`**; the later commit `c3c89a5` ("Restore /pricing, /terms and the guide pages")
@@ -274,9 +315,14 @@ Weekly, once GSC + Bing WMT are live (all free):
 - **AI-citation spot checks** (manual, monthly): ask ChatGPT/Perplexity/Claude the cluster
   questions ("how much does appointment setting cost", "shared vs exclusive hvac leads",
   "hvac lead generation new jersey") and record whether/where the site is cited.
-- **Conversion**: audit-intake submissions (the Google Sheet is the only durable record in
-  production — the `data/` +
-  events.jsonl), with `#get-audit` deep-link arrivals distinguishable in referrer logs.
+- **Conversion, by channel (live since 2026-09-20)**: every fit-check submission now carries
+  the page it landed on, the referring host and any UTM tags all the way into the operating
+  system's tracker — `Source` = `inbound_intake_form:<channel>`, `Source URL` = the landing
+  page. So "which channel produced a FIT company, and which of those became a qualified
+  conversation" is answerable from the CRM rather than from session counts. Channels are the
+  closed set in `core/attribution.py`; an unrecorded visit reads `unknown`, never a guess.
+  Note the honest limit: an organic search referrer carries no query, so this says a search
+  engine sent them and never which words they typed. Do not infer keywords from it.
 - **Honest expectation-setting**: with zero backlinks on a PSL subdomain, meaningful Google
   organic traffic in under ~2–3 months would be a surprise; Bing/AI-surface citations can
   come in weeks. The KPI that pays the bills is audit requests, not sessions.
@@ -393,7 +439,10 @@ of it. On-page work is no longer the constraint and is ranked accordingly._
 | **1** | **Backlinks / entity corroboration — now the only thing that moves rankings.** Position 37.4 is an authority problem; nothing on the web says this company exists. Start with the LinkedIn company page (P2 below). | Owner (ongoing) | $0 |
 | **2** | LinkedIn company page + Crunchbase/Clutch/GoodFirms → paste URLs into `organizationProfiles` in `lib/site.ts` (wiring restored 2026-08-29; array is empty and renders no `sameAs` until then). **This is the entity-corroboration gap: nothing on the web currently says this company exists.** | Owner (~1 hr) | $0 |
 | 3 | Founder LinkedIn cadence + SOS/Qwoted monitoring | Owner (ongoing) | $0 |
+| — | ~~IndexNow re-ping for the acquisition cluster~~ **DONE 2026-09-20** — 200 OK, 21 URLs | — | — |
+| — | ~~SEO -> pipeline attribution~~ **DONE 2026-09-20** — the channel a fit-check came from now reaches the CRM; see §8 and §10 | — | — |
 | 4 | Re-verify §2's competitive claims before writing more guides — the shared-vs-exclusive SERP has filled in since 2026-08-07 (see §2 note) | Either | $0 |
+| 4 | **Let the cluster gather data before writing more pages.** Three URLs went live 2026-09-20 with no external links pointing at them. Whether the recurring-maintenance intent ranks is an authority question, and a fourth page does not answer it. Re-read GSC in 4–6 weeks. | Either | $0 |
 | 5 | 4–8-week refresh cycle on /pricing + HVAC pages (real updates only) + re-ping IndexNow | Either | $0 |
 | 6 | Benchmarks roundup page (cited third-party data, HVAC angle) when time allows | Either | $0 |
 | 7 | Own results content — only when real, permissioned data exists | Blocked on reality | $0 |
