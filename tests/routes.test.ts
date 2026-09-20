@@ -32,6 +32,31 @@ describe("route registry", () => {
     }
   });
 
+  // scripts/audit-live.mjs runs against the DEPLOYED site and therefore cannot import the
+  // registry either. It hardcodes the retired paths so it can prove each one still 301s in a
+  // single hop to a live page. A retirement added to lib/pages.ts and not to the auditor is a
+  // redirect nothing watches.
+  test("every retired path is checked by the live auditor", () => {
+    const script = read("scripts/audit-live.mjs");
+    for (const { from, to } of retiredPaths) {
+      assert.ok(
+        script.includes(`["${from}", "${to}"]`),
+        `${from} -> ${to} is retired in the registry but not checked by scripts/audit-live.mjs`,
+      );
+    }
+  });
+
+  test("the live auditor checks no retirement the registry has dropped", () => {
+    const script = read("scripts/audit-live.mjs");
+    const block = script.slice(script.indexOf("const RETIRED_PATHS"), script.indexOf("];", script.indexOf("const RETIRED_PATHS")));
+    for (const m of block.matchAll(/\["(\/[^"]+)", "(\/[^"]+)"\]/g)) {
+      assert.ok(
+        retiredPaths.some((r) => r.from === m[1] && r.to === m[2]),
+        `scripts/audit-live.mjs checks ${m[1]} -> ${m[2]}, which is not in retiredPaths`,
+      );
+    }
+  });
+
   test("every indexable path is listed in llms.txt", () => {
     const llms = llmsTxt();
     for (const p of indexablePaths) {
