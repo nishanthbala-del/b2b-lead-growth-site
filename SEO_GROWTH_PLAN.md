@@ -332,6 +332,45 @@ Weekly, once GSC + Bing WMT are live (all free):
 
 ## 11. Remaining human actions (owner)
 
+> **MEASURED IN LIVE SERPs, 2026-09-20 — the repositioning is complete on the site and
+> INCOMPLETE in both indexes.** This supersedes the counts below (9 URLs → 21) but not their
+> conclusion, which still holds: the constraint is authority and index refresh, not on-page work.
+>
+> Read off the live result pages, not from a tool:
+>
+> | Surface | What the index served on 2026-09-20 | What the page actually says |
+> |---|---|---|
+> | **Bing**, homepage (ranked #1 for `"B2B Lead Growth" commercial HVAC managed outbound`) | title `HVAC Lead Generation & Appointment Setting \| B2B Lead Growth`; snippet `...work remotely with established RESIDENTIAL HVAC companies...` | `Commercial HVAC Managed Outbound \| B2B Lead Growth`; the word "residential" appears **zero** times anywhere in the indexable corpus |
+> | **Google**, `/pricing` | title `Commercial HVAC Lead Generation Pricing: $750–$2500/Mo` | `...$1,500–$2,500/Mo` — **$750 was retired by D-028 on 2026-09-18** |
+> | **Google**, 6 other URLs (home, service page, /about, /how-it-works, /how-to-find-commercial-hvac-accounts, /commercial-hvac-cold-email) | current commercial titles | matches |
+>
+> **Google has largely converged; Bing has not converged at all on the homepage.** This inverts
+> the "Bing is the fast lane" assumption in §4.4 for the SECOND time — note the 2026-09-05 entry
+> below found the same inversion. Stop planning around Bing being first.
+>
+> **Neither is a repository defect.** Both pages are correct in production, proven by
+> `npm run audit:live` (22 invariants against the deployed site, exit 0). What is stale is the
+> engines' cached copies, and only Search Console access can force a refresh.
+>
+> **Everything controllable was done on 2026-09-20:** the pages are correct; `lastmod` was
+> corrected to a real edit date for the ten pages whose copy changed that day (an accurate
+> recrawl hint is the only signal this repo can send without a console login); and
+> `scripts/indexnow-ping.mjs` was run twice, `200 OK`, 21 URLs — the Bing/ChatGPT-search lane.
+>
+> **The two owner actions, in priority order — each needs a login this system does not hold:**
+>
+> 1. **Google Search Console → URL Inspection → `https://www.b2bleadgrowth.com/pricing` →
+>    Request Indexing.** Highest value of anything on this page: the live SERP is currently
+>    advertising a **price that no longer exists**, which is worse than a stale description
+>    because a prospect can act on it. Do this one first.
+> 2. **Bing Webmaster Tools → URL Inspection → `https://www.b2bleadgrowth.com/` → Request
+>    recrawl.** The cached snippet calls the business residential, which is the single
+>    contradiction the whole 2026-09-10→20 repositioning existed to remove. IndexNow has already
+>    announced it; this is the manual nudge if the announcement does not take.
+>
+> **Re-check by re-running the two queries above.** Convergence is the pass condition; there is
+> nothing further to build for it.
+
 > **VERIFIED IN SEARCH CONSOLE, 2026-09-05 — the P0 below was already done, and the
 > zero-index premise underneath it is false.** Read this before acting on anything in §11
 > or §12. Every line was read off the console itself:
