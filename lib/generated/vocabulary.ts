@@ -631,7 +631,7 @@ export const vocabulary = {
         }
       ],
       "why": "The earlier name for what the $1,500 plan handed off. Managed Outbound now hands off a qualified conversation; screening survives only as an internal step.",
-      "pattern": ""
+      "pattern": "\\bscreened\\s+interest\\b[^.;|]{0,40}\\b(?:hand(?:s|ed|ing)?[-\\s]?off|hand(?:s|ed|ing)?\\s+(?:you|over|to)|handover|deliver(?:s|ed|ing|able|ables|y)?|pass(?:es|ed|ing)?\\s+(?:on|to|you)|you\\s+(?:receive|get)|sent\\s+to\\s+you|what\\s+you\\s+(?:buy|get))\\b|\\b(?:hand(?:s|ed|ing)?[-\\s]?off|hand(?:s|ed|ing)?\\s+(?:you|over|to)|handover|deliver(?:s|ed|ing|able|ables|y)?|pass(?:es|ed|ing)?\\s+(?:on|to|you)|you\\s+(?:receive|get)|sent\\s+to\\s+you|what\\s+you\\s+(?:buy|get))\\b[^.;|]{0,40}\\bscreened\\s+interest\\b"
     },
     {
       "term": "Structured Handoff",
@@ -799,5 +799,5 @@ export const vocabulary = {
       "pattern": ""
     }
   ],
-  "version": "9047714541aacf8f"
+  "version": "6b4931414c8c6a19"
 } as const;

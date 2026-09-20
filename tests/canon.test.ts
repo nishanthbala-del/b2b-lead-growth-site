@@ -143,6 +143,14 @@ describe("no retired name in shipped copy", () => {
     // JSX wraps a sentence across source lines; the 2026-09-19 live miss was exactly this shape.
     assert.ok(fired("site visits, qualified\n              opportunities, or any count of them"));
     assert.ok(!fired("The Opportunity Engine hands off an accepted sales opportunity."));
+    // SENSE-SCOPED, since 2026-09-20. "Screened interest" carries two meanings: what the $1,500
+    // plan was once said to hand over (retired), and the operating system's own five-criterion
+    // row verdict (current, internal — core/qcs.py, never client-facing). The generated pattern
+    // is written against the retired SENSE only, so these hold that it still discriminates in
+    // V8 — a different regex engine from the one core/vocabulary.py was tested against.
+    assert.ok(fired("Managed Outbound hands off screened interest every week."));
+    assert.ok(fired("You receive screened interest, not a raw list."));
+    assert.ok(!fired("Screened interest is the five-criterion verdict run before a handoff."));
   });
 });
 
