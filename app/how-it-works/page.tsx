@@ -123,6 +123,18 @@ export default function HowItWorksPage() {
       >
         <GuideSection id="process" title="The process, stage by stage">
           <p>The first five stages are identical on every plan.</p>
+          <p>
+            Two of them have their own page. The dated public fact that makes an account worth
+            writing to this week is catalogued in{" "}
+            <Link href="/commercial-hvac-prospecting-triggers" className="text-accent underline underline-offset-4">
+              commercial HVAC prospecting triggers
+            </Link>
+            , and the research method behind stage one is in{" "}
+            <Link href="/how-to-find-commercial-hvac-accounts" className="text-accent underline underline-offset-4">
+              how to find commercial HVAC accounts
+            </Link>
+            .
+          </p>
           <ol className="space-y-3">
             {funnel.map((f, i) => (
               <li key={f.stage} className="border-l-2 border-line pl-4">

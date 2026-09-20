@@ -154,6 +154,14 @@ export default function BuildingOwnerOutreachPage() {
         </GuideSection>
 
         <GuideSection id="moments" title="The moments owners look at their HVAC equipment">
+          <p>
+            Each moment below is useful only when a public record carries it with a date. The full
+            catalogue, with the freshness window for each kind, is on{" "}
+            <Link href="/commercial-hvac-prospecting-triggers" className="text-accent underline underline-offset-4">
+              commercial HVAC prospecting triggers
+            </Link>
+            .
+          </p>
           <ul className="list-disc space-y-3 pl-5">
             <li>
               <span className="text-ink">A purchase.</span> A new owner takes on the building&rsquo;s

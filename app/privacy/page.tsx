@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getLegalRoute, pageMetadata } from "@/lib/pages";
+import { getLegalRoute, pageMetadata, standalonePageJsonLd } from "@/lib/pages";
 import { ANSWER_KEYS, QUESTION_LABELS } from "@/lib/qualification";
 import { ATTRIBUTION_KEYS, ATTRIBUTION_LABELS } from "@/lib/attribution";
 import { EVENT_LABELS, EVENT_NAMES } from "@/lib/events";
@@ -24,11 +24,26 @@ export const metadata: Metadata = pageMetadata({
   description: route.description,
 });
 
+// WebPage + BreadcrumbList, built from the same registry entry as the metadata above. A legal
+// page a crawler cannot type is a page it cannot place in the site; both of these are linked
+// from every page's footer and both are in the sitemap.
+const pageJsonLd = standalonePageJsonLd({
+  slug: "privacy",
+  navLabel: route.navLabel,
+  metaTitle: route.metaTitle,
+  description: route.description,
+  dateModified: route.dateModified,
+});
+
 
 
 export default function PrivacyPage() {
   return (
     <PageShell>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd).replace(/</g, "\\u003c") }}
+      />
       <main id="main" className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
           Legal

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getLegalRoute, pageMetadata } from "@/lib/pages";
+import { getLegalRoute, pageMetadata, standalonePageJsonLd } from "@/lib/pages";
 import Link from "next/link";
 import PageShell from "@/components/PageShell";
 import {
@@ -44,12 +44,27 @@ export const metadata: Metadata = pageMetadata({
   description: terms.description,
 });
 
+// WebPage + BreadcrumbList, built from the same registry entry as the metadata above. A legal
+// page a crawler cannot type is a page it cannot place in the site; both of these are linked
+// from every page's footer and both are in the sitemap.
+const pageJsonLd = standalonePageJsonLd({
+  slug: "terms",
+  navLabel: terms.navLabel,
+  metaTitle: terms.metaTitle,
+  description: terms.description,
+  dateModified: terms.dateModified,
+});
+
 const priceList = plans.map((p) => `$${p.price.toLocaleString()}`).join(", ");
 const planNames = plans.map((p) => p.name).join(" and ");
 
 export default function TermsPage() {
   return (
     <PageShell>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd).replace(/</g, "\\u003c") }}
+      />
       <main id="main" className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
           Legal

@@ -698,6 +698,48 @@ function breadcrumbNode(url: string, label: string) {
   };
 }
 
+/**
+ * The graph for an indexable page that is NOT a GuideLayout page: the fit check, the reviews
+ * page and the two legal pages. They each carry only the site-wide Organization / Person /
+ * WebSite nodes from the root layout, so a crawler could see the site's 17 guide pages as
+ * described documents and these four as untyped HTML — /reviews and /start both being pages a
+ * careful buyer reaches before converting. This publishes the same WebPage + BreadcrumbList
+ * pair the guide pages publish, from the same registry fields, so the two kinds of page cannot
+ * drift apart. `mainEntityId` is for a page that already publishes a node it is about.
+ */
+export function standalonePageJsonLd({
+  slug,
+  navLabel,
+  metaTitle,
+  description,
+  dateModified,
+  mainEntityId,
+}: {
+  slug: string;
+  navLabel: string;
+  metaTitle: string;
+  description: string;
+  dateModified?: string;
+  mainEntityId?: string;
+}) {
+  const url = `${siteUrl}/${slug}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      webPageJsonLd({
+        idBase: url,
+        url,
+        name: metaTitle,
+        description,
+        dateModified,
+        breadcrumbId: `${url}#breadcrumbs`,
+        ...(mainEntityId ? { mainEntityId } : {}),
+      }),
+      breadcrumbNode(url, navLabel),
+    ],
+  };
+}
+
 // The graph every GuideLayout page shares. FAQPage, Service, Offer and DefinedTermSet nodes
 // are added per page, only where the visible content supports them.
 //

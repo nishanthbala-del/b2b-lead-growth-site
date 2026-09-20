@@ -140,7 +140,11 @@ export default function PropertyManagerOutreachPage() {
             <li>
               <span className="text-ink">One relationship can cover several buildings.</span>{" "}
               Management companies publish their portfolios, so you can see what they run before
-              you write.
+              you write. It is also why a single manager is worth a{" "}
+              <Link href="/commercial-hvac-maintenance-contracts" className="text-accent underline underline-offset-4">
+                recurring maintenance agreement
+              </Link>{" "}
+              rather than one call-out.
             </li>
             <li>
               <span className="text-ink">The work repeats.</span> Preventive maintenance, seasonal
@@ -208,6 +212,15 @@ export default function PropertyManagerOutreachPage() {
               s.check,
             ])}
           />
+          <p>
+            Every source above answers who and where; none of them answers why now. The dated public
+            facts that do — a management change, a portfolio sale, a fit-out — are catalogued with
+            their freshness windows in{" "}
+            <Link href="/commercial-hvac-prospecting-triggers" className="text-accent underline underline-offset-4">
+              commercial HVAC prospecting triggers
+            </Link>
+            .
+          </p>
           <p>
             The full method, including how to rank the accounts you find, is in{" "}
             <Link href="/how-to-find-commercial-hvac-accounts" className="text-accent underline underline-offset-4">

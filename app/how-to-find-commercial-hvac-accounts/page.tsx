@@ -248,8 +248,11 @@ export default function FindCommercialAccountsPage() {
               honestly cover for an emergency call.
             </li>
             <li>
-              <span className="text-ink">The work you want more of:</span> maintenance agreements,
-              service, replacements or planned projects.
+              <span className="text-ink">The work you want more of:</span>{" "}
+              <Link href="/commercial-hvac-maintenance-contracts" className="text-accent underline underline-offset-4">
+                maintenance agreements
+              </Link>
+              , service, replacements or planned projects.
             </li>
             <li>
               <span className="text-ink">Exclusions:</span> current customers, companies you have
@@ -365,6 +368,16 @@ export default function FindCommercialAccountsPage() {
             checked it. No source, no contact. An undated page proves the account exists; it is not
             a reason to write this week.
           </KeyAnswer>
+          <p>
+            Which public facts actually qualify as a reason, and how long each one stays fresh, is
+            catalogued on{" "}
+            <Link href="/commercial-hvac-prospecting-triggers" className="text-accent underline underline-offset-4">
+              commercial HVAC prospecting triggers
+            </Link>
+            . Use it as the checklist for this step: a fact that is not on that list, or whose
+            freshness window has passed, sends the account back to research rather than to your
+            outbox.
+          </p>
           <p>One row per account is enough:</p>
           <GuideTable
             caption="An example account record, with every field a placeholder"

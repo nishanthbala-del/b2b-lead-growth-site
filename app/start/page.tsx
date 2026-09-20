@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageShell from "@/components/PageShell";
-import { getStandaloneRoute, pageMetadata } from "@/lib/pages";
+import { getStandaloneRoute, pageMetadata, standalonePageJsonLd } from "@/lib/pages";
 import QualificationFlow from "@/components/qualification/QualificationFlow";
 import { ANSWER_KEYS, QUESTION_LABELS } from "@/lib/qualification";
-import { brandName, callLengthMinutes, intakeMinutes, siteUrl } from "@/lib/site";
+import { callLengthMinutes, intakeMinutes } from "@/lib/site";
 
 // The standalone home of the fit check.
 //
@@ -25,15 +25,15 @@ export const metadata: Metadata = pageMetadata({
   description: route.description,
 });
 
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "@id": `${siteUrl}/start#breadcrumbs`,
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: brandName, item: siteUrl },
-    { "@type": "ListItem", position: 2, name: route.navLabel, item: `${siteUrl}/start` },
-  ],
-};
+// WebPage + BreadcrumbList, from the same registry entry that sets the <title> and the
+// canonical, so the structured description of this page cannot drift from its metadata.
+const breadcrumbJsonLd = standalonePageJsonLd({
+  slug: "start",
+  navLabel: route.navLabel,
+  metaTitle: route.metaTitle,
+  description: route.description,
+  dateModified: route.dateModified,
+});
 
 /** Read from the form itself, so the number on the page cannot drift from the questions. */
 const QUESTION_COUNT = ANSWER_KEYS.length;

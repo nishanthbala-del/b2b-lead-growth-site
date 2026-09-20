@@ -255,7 +255,13 @@ export default function CommercialHvacLeadGenerationPage() {
             <li>
               <span className="text-ink">Maintenance-agreement prospecting</span> is a targeting
               choice rather than a plan: if service agreements are the work you want more of, the
-              account profile is built around the buildings and portfolios that buy them.
+              account profile is built around the buildings and portfolios that buy them. How those
+              agreements actually get won, and the sequence a contractor runs to win them, is set
+              out in{" "}
+              <Link href="/commercial-hvac-maintenance-contracts" className="text-accent underline underline-offset-4">
+                commercial HVAC maintenance contracts
+              </Link>
+              .
             </li>
           </ul>
         </GuideSection>
@@ -302,7 +308,11 @@ export default function CommercialHvacLeadGenerationPage() {
           <p>
             These are differences in kind, not a ranking. We have no client results yet, so we make
             no claim to outperform any of them — and the last column says when the other thing is
-            the right tool.
+            the right tool. If the open question is the channel itself rather than the vendor,{" "}
+            <Link href="/commercial-hvac-outbound-vs-inbound" className="text-accent underline underline-offset-4">
+              outbound versus inbound for commercial HVAC
+            </Link>{" "}
+            works through when each one earns the spend, and when neither does.
           </p>
           <GuideTable
             caption={`How B2B Lead Growth differs from ${alternatives.map((a) => a.name.toLowerCase()).join(", ")}`}
@@ -335,7 +345,16 @@ export default function CommercialHvacLeadGenerationPage() {
             <li>
               We claim no local expertise we do not have. The company is founder-run and based in{" "}
               {basedIn}; the research for your engagement is done in your service area, from
-              public sources you can open.
+              public sources you can open.{" "}
+              <Link href="/about" className="text-accent underline underline-offset-4">
+                Who runs it, and how
+              </Link>{" "}
+              names the one person accountable for the work. Before hiring anyone for this,
+              including us, the{" "}
+              <Link href="/how-to-choose-a-lead-generation-agency" className="text-accent underline underline-offset-4">
+                ten questions that expose a weak vendor
+              </Link>{" "}
+              are worth asking — our own answers are on the record there.
             </li>
           </ul>
         </GuideSection>

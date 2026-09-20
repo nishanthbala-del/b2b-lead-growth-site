@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageShell from "@/components/PageShell";
 import PrimaryCta from "@/components/PrimaryCta";
-import { getStandaloneRoute, pageMetadata } from "@/lib/pages";
+import { getStandaloneRoute, pageMetadata, standalonePageJsonLd } from "@/lib/pages";
 import { reviews } from "@/lib/content";
 import { siteUrl } from "@/lib/site";
 
@@ -30,6 +30,7 @@ const reviewJsonLd =
         "@context": "https://schema.org",
         "@graph": reviews.map((r) => ({
           "@type": "Review",
+          "@id": `${siteUrl}/reviews#review-${r.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
           itemReviewed: { "@id": `${siteUrl}/#organization` },
           author: { "@type": "Person", name: r.name },
           reviewBody: r.quote,
@@ -37,9 +38,23 @@ const reviewJsonLd =
       }
     : null;
 
+// The page itself is described whether or not a review exists. No aggregate rating and no
+// review node is emitted while the page is empty — an empty state must not carry review markup.
+const pageJsonLd = standalonePageJsonLd({
+  slug: "reviews",
+  navLabel: route.navLabel,
+  metaTitle: route.metaTitle,
+  description: route.description,
+  dateModified: route.dateModified,
+});
+
 export default function ReviewsPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd).replace(/</g, "\\u003c") }}
+      />
       {reviewJsonLd ? (
         <script
           type="application/ld+json"

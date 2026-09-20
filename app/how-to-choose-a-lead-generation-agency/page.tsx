@@ -288,6 +288,15 @@ export default function ChooseAgencyPage() {
             </Link>{" "}
             is delivered in writing, before any money changes hands.
           </p>
+          <p>
+            And if the question underneath the search is which channel to fund at all rather than
+            which vendor to hire,{" "}
+            <Link href="/commercial-hvac-outbound-vs-inbound" className="text-accent underline underline-offset-4">
+              outbound versus inbound for commercial HVAC
+            </Link>{" "}
+            compares how each one&rsquo;s cost behaves, how long each takes to produce anything, and
+            the cases where none of them is the right purchase yet.
+          </p>
         </GuideSection>
       </GuideLayout>
     </>

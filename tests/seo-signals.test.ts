@@ -20,6 +20,7 @@ import {
   homepageMetaTitle,
   indexablePaths,
   pageSection,
+  retiredPaths,
 } from "../lib/pages.ts";
 import { orgDescription, siteUrl } from "../lib/site.ts";
 
@@ -223,6 +224,134 @@ describe("the six priority URLs send one commercial signal", () => {
 // week, and whether to buy outreach at all. The tests below hold the two things that make the
 // cluster worth publishing rather than the dozen thin pages the keyword list suggests — that
 // each page is distinct, and that the one rule the method rests on cannot be quietly softened.
+// EDITORIAL INBOUND LINKS, counted the only way that matters.
+//
+// Every guide page already links to every other guide page twice over, automatically: the
+// footer in components/SiteChrome.tsx and the "Keep reading" rail in components/GuideLayout.tsx
+// both render from the registry. Those rails are template links — they say nothing about whether
+// a page is part of the site's argument, and a page can sit in all of them and still be
+// reachable only by someone who scrolls past the content.
+//
+// This suite counts the other kind: a link a page's own prose chose to make. It reads
+// app/**/page.tsx plus the homepage body, and deliberately EXCLUDES SiteChrome and GuideLayout,
+// so a rail can never satisfy it.
+//
+// WHY IT EXISTS. On 2026-09-20 the acquisition cluster shipped with every test green while
+// ZERO of the thirteen established pages linked into it in prose — 39 of 39 possible editorial
+// links missing. /commercial-hvac-outbound-vs-inbound gave fourteen prose links and received
+// one. The suite that was supposed to catch it only asserted the links pointing OUT of the
+// cluster, which were all present; nothing asserted the direction that carries authority.
+// A one-directional link test is how an island ships green.
+describe("editorial inbound links, not just outbound ones", () => {
+  // The two files whose links are rails, not arguments. Asserted below rather than merely
+  // described: if either is ever added to the scan, every count inflates by ~20 and the floor
+  // becomes unfalsifiable.
+  const EXCLUDED = ["components/SiteChrome.tsx", "components/GuideLayout.tsx"];
+
+  /** Files whose links are editorial: each page's own body, plus the homepage's body component. */
+  function editorialSources(): { file: string; path: string }[] {
+    const out: { file: string; path: string }[] = [];
+    const appDir = path.join(repoRoot, "app");
+    const walk = (dir: string) => {
+      for (const entry of readdirSync(dir)) {
+        const full = path.join(dir, entry);
+        if (statSync(full).isDirectory()) walk(full);
+        else if (entry === "page.tsx") {
+          const rel = path.relative(appDir, path.dirname(full));
+          out.push({ file: path.relative(repoRoot, full), path: rel === "" ? "/" : `/${rel}` });
+        }
+      }
+    };
+    walk(appDir);
+    out.push({ file: "components/LeadGenerationLanding.tsx", path: "/" });
+    return out;
+  }
+
+  const inbound = new Map<string, Set<string>>();
+  for (const { file, path: from } of editorialSources()) {
+    for (const m of read(file).matchAll(/href="(\/[^"#?]*)/g)) {
+      const to = m[1].replace(/\/$/, "") || "/";
+      if (to === (from.replace(/\/$/, "") || "/")) continue;
+      if (!inbound.has(to)) inbound.set(to, new Set());
+      inbound.get(to)!.add(from);
+    }
+  }
+
+  // Three is the floor the acquisition cluster reaches once it is genuinely woven in, and the
+  // number the weakest cluster page sat at after the 2026-09-20 repair. Raise it as the site
+  // grows; never lower it to make a new page pass.
+  const FLOOR = 3;
+
+  test("the rails are excluded from the count, and still render the links they always did", () => {
+    const scanned = editorialSources().map((f) => f.file);
+    for (const f of EXCLUDED) {
+      assert.ok(!scanned.includes(f), `${f} is a rail; counting it would inflate every page's total`);
+      // It must still exist and still link from the registry — the rails are not being removed,
+      // they are being kept out of a count that is supposed to measure something else.
+      assert.match(read(f), /guidePages/, `${f} no longer renders links from the registry`);
+    }
+  });
+
+  test(`every registered guide page receives at least ${FLOOR} editorial inbound links`, () => {
+    const short = guidePages
+      .map((p) => ({ slug: p.slug, from: [...(inbound.get(`/${p.slug}`) ?? [])].sort() }))
+      .filter((r) => r.from.length < FLOOR);
+    assert.deepEqual(
+      short,
+      [],
+      `these pages are reachable mainly through the footer and the "Keep reading" rail, which is ` +
+        `not an argument for reading them:\n` +
+        short.map((r) => `  /${r.slug}: ${r.from.length} (${r.from.join(", ") || "none"})`).join("\n"),
+    );
+  });
+
+  test("the acquisition cluster is linked INTO by the pages a reader arrives from", () => {
+    // Each cluster page names the established pages whose prose should hand a reader onward.
+    // The reciprocal of the outbound test below.
+    const wanted: Record<string, string[]> = {
+      "/commercial-hvac-maintenance-contracts": [
+        "/commercial-hvac-lead-generation",
+        "/how-to-find-commercial-hvac-accounts",
+        "/hvac-property-manager-outreach",
+      ],
+      "/commercial-hvac-prospecting-triggers": [
+        "/how-to-find-commercial-hvac-accounts",
+        "/commercial-hvac-cold-email",
+        "/how-it-works",
+      ],
+      "/commercial-hvac-outbound-vs-inbound": [
+        "/commercial-hvac-lead-generation",
+        "/how-to-choose-a-lead-generation-agency",
+        "/pricing",
+      ],
+    };
+    for (const [target, sources] of Object.entries(wanted)) {
+      const got = inbound.get(target) ?? new Set<string>();
+      for (const from of sources) {
+        assert.ok(got.has(from), `${from} does not link to ${target} in its own prose`);
+      }
+    }
+  });
+
+  test("no editorial link points at a retired path or a noindex page", () => {
+    for (const [to, from] of inbound) {
+      assert.ok(
+        !retiredPaths.some((r) => r.from === to),
+        `${[...from].join(", ")} links to the retired path ${to} instead of its successor`,
+      );
+      assert.notEqual(to, "/for-clients", `${[...from].join(", ")} links to the noindex /for-clients`);
+    }
+  });
+
+  test("every editorial link resolves to a real route", () => {
+    const real = new Set([...indexablePaths, "/for-clients", "/refer"]);
+    for (const [to, from] of inbound) {
+      if (to.startsWith("/api/")) continue;
+      assert.ok(real.has(to) || real.has(`${to}/`), `${[...from].join(", ")} links to ${to}, which is not a route`);
+    }
+  });
+});
+
 describe("the acquisition cluster", () => {
   // JSX wraps prose across lines, so a phrase in the rendered sentence is almost never a
   // phrase in the source with single spaces. Every prose assertion below reads through this:

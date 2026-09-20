@@ -192,6 +192,19 @@ export default function FacilityManagerOutreachPage() {
             guesses at the age or condition of a site&rsquo;s equipment is a claim you cannot back
             up.
           </p>
+          <p>
+            Each of those moments has to be visible in a public, dated record before it is a reason
+            to write — which ones qualify, and how long each stays fresh, is set out in{" "}
+            <Link href="/commercial-hvac-prospecting-triggers" className="text-accent underline underline-offset-4">
+              commercial HVAC prospecting triggers
+            </Link>
+            . Where the goal is the planned-maintenance line of the budget rather than a single
+            project, the sequence is on{" "}
+            <Link href="/commercial-hvac-maintenance-contracts" className="text-accent underline underline-offset-4">
+              commercial HVAC maintenance contracts
+            </Link>
+            .
+          </p>
         </GuideSection>
 
         <GuideSection id="sources" title="Where to find facility teams: public sources with a date on them">

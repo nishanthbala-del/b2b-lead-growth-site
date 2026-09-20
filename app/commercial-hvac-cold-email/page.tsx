@@ -175,6 +175,18 @@ export default function CommercialHvacColdEmailPage() {
             The left column claims to know something about the reader&rsquo;s building. The right
             column states what you saw and what you offer, and lets the reader decide.
           </p>
+          <p>
+            The right column only exists when you have a dated public fact to point at.{" "}
+            <Link href="/commercial-hvac-prospecting-triggers" className="text-accent underline underline-offset-4">
+              Commercial HVAC prospecting triggers
+            </Link>{" "}
+            lists the facts that qualify and how long each stays usable; if the work you are pitching
+            is a recurring service agreement, the offer itself is covered in{" "}
+            <Link href="/commercial-hvac-maintenance-contracts" className="text-accent underline underline-offset-4">
+              commercial HVAC maintenance contracts
+            </Link>
+            .
+          </p>
         </GuideSection>
 
         <GuideSection id="templates" title="Two templates">

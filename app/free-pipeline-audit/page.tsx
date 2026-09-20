@@ -230,6 +230,13 @@ export default function FreePipelineAuditPage() {
               number of leads or appointments from a free audit is guessing out loud.
             </li>
           </ul>
+          <p>
+            The same discipline applies to the engagement after the audit.{" "}
+            <Link href="/how-to-choose-a-lead-generation-agency" className="text-accent underline underline-offset-4">
+              Ten questions that expose a weak commercial HVAC vendor
+            </Link>{" "}
+            covers what to ask before paying anyone, with our own answers written down beside them.
+          </p>
         </GuideSection>
 
         <GuideSection title="What we will not do">
@@ -237,7 +244,14 @@ export default function FreePipelineAuditPage() {
             <li>We will not guarantee lead counts, reply rates, appointments, site visits, or revenue — on the audit or on any paid plan.</li>
             <li>We will not hand you a bought list. Every account in the audit is a business we researched ourselves, with its source.</li>
             <li>We will not pad the audit with bulk-scraped contacts to make it look bigger.</li>
-            <li>We will not invent testimonials or case studies we do not have. We are new; the audit exists precisely because of that.</li>
+            <li>
+              We will not invent testimonials or case studies we do not have. We are new; the audit
+              exists precisely because of that — and{" "}
+              <Link href="/about" className="text-accent underline underline-offset-4">
+                who runs this company
+              </Link>{" "}
+              is on the record, with nothing claimed that has not happened yet.
+            </li>
             <li>We will not chase you. One deliverable, one optional walkthrough, your decision.</li>
           </ul>
         </GuideSection>

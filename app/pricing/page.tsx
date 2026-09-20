@@ -517,7 +517,14 @@ export default function PricingPage() {
               free pipeline audit
             </Link>{" "}
             exists partly for this: sometimes it shows the bottleneck isn&rsquo;t your targeting,
-            and you deserve to learn that for free.
+            and you deserve to learn that for free. If the prior question is whether outbound is the
+            right place for the money at all,{" "}
+            <Link href="/commercial-hvac-outbound-vs-inbound" className="text-accent underline underline-offset-4">
+              outbound versus inbound for commercial HVAC
+            </Link>{" "}
+            compares how each option&rsquo;s cost behaves — a salary, a monthly fee, a per-click
+            bid, or effort now for results later — and says plainly when each one is the wrong
+            purchase.
           </p>
         </GuideSection>
 
