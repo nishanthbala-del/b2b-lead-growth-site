@@ -332,6 +332,53 @@ Weekly, once GSC + Bing WMT are live (all free):
 
 ## 11. Remaining human actions (owner)
 
+> **RE-MEASURED 2026-09-20, LATER THE SAME DAY — "Google has largely converged" was WRONG.**
+> The entry below read the SERP for six URLs and found their titles current. Re-read with two
+> queries aimed at the retired offer itself (`site:b2bleadgrowth.com pricing` and
+> `"b2bleadgrowth" "$750"`), Google is serving the retired **$750 three-tier** offer — and the
+> retired PLAN NAMES D-028 replaced — on at least six URLs, not one:
+>
+> | URL | What Google served | Google's own last-crawl date |
+> |---|---|---|
+> | `/pricing` | title `...Pricing: $750–$2500/Mo`; snippet `flat $750, $1,500 or $2,500 a month ... $750 is Prospecting` | **Aug 8, 2026** |
+> | `/` (homepage) | snippet `Prospecting $750, Managed Pipeline $1,500, Qualified Opportunity Engine $2,500` | — |
+> | `/terms` | snippet `Our published tiers are $750, $1,500, $2,500 per month` | **Aug 8, 2026** |
+> | `/how-it-works` | snippet carries `Pricing: $750–$2,500/Mo` | 4 days ago |
+> | `/about`, `/how-to-find-commercial-hvac-accounts`, `/hvac-facility-manager-outreach`, `/hvac-property-manager-outreach` | "Read more" snippets carry `Pricing: $750–$2,500/Mo` as cached anchor text | 2–4 days ago |
+>
+> **`/pricing` and `/terms` have not been recrawled by Google since Aug 8** — six weeks, and both
+> are the pages where a stale number is actionable by a prospect. The three retired PLAN NAMES
+> (Prospecting / Managed Pipeline / Qualified Opportunity Engine) are also still being served,
+> which `scripts/test_offer_consistency.py` forbids on any live surface and which the live pages
+> do not contain: `npm run audit:live` passes all 22 invariants, including "retired offers only
+> ever labelled as retired". **Every stale string is in the engines' caches, not in this repo.**
+>
+> **Bing is stale too, confirmed first-hand rather than from this document:** DuckDuckGo (served
+> from Bing's index) returns title `HVAC Lead Generation & Appointment Setting | B2B Lead Growth`
+> with a snippet reading `established residential HVAC companies`.
+>
+> **Why no further automated push was made.** IndexNow had already been run twice that day at
+> 200 OK for all 21 URLs; re-announcing unchanged URLs a third time is what IndexNow's own
+> guidance asks submitters not to do, and it does not reach Google at all. Google's
+> `/ping?sitemap=` endpoint was **removed by Google in 2023** and does nothing. The Indexing API
+> covers only `JobPosting` and `BroadcastEvent` and needs a verified-property service account.
+> There is no unauthenticated Google reindex signal left to send: `lastmod` is accurate, the
+> sitemap is fresh, robots allows every engine, and the pages are correct. **The remaining lever
+> is a console login, and this system holds no Google or Bing credential** (checked: no API key,
+> no service account, no keychain item).
+>
+> **Owner actions, re-prioritised by what a prospect can act on (each needs a login):**
+>
+> 1. **Google Search Console → URL Inspection → Request Indexing**, in this order:
+>    `https://www.b2bleadgrowth.com/pricing`, then `/terms`, then `/` (homepage), then
+>    `/how-it-works`. The first two are six weeks stale and quote a price that no longer exists.
+>    GSC allows ~10 such requests a day, so all four fit in one sitting.
+> 2. **Bing Webmaster Tools → URL Inspection → Request recrawl** for `https://www.b2bleadgrowth.com/`.
+>    Its cached snippet still calls the business residential.
+>
+> **Pass condition:** re-run `site:b2bleadgrowth.com pricing` and `"b2bleadgrowth" "$750"` and get
+> zero results carrying `$750`, `Prospecting`, `Managed Pipeline` or `Qualified Opportunity Engine`.
+
 > **MEASURED IN LIVE SERPs, 2026-09-20 — the repositioning is complete on the site and
 > INCOMPLETE in both indexes.** This supersedes the counts below (9 URLs → 21) but not their
 > conclusion, which still holds: the constraint is authority and index refresh, not on-page work.
