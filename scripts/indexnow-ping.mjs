@@ -20,6 +20,8 @@ const KEY = "fa2d37dcda78121e04e0e0748d3bf823";
 // retired behind 301s and are deliberately NOT here — a redirect is not a URL to announce.
 // The three new pages are. Run this once after the deploy that ships them.
 // 2026-09-18: the three audience pages and the two guides joined the list.
+// 2026-09-20: the acquisition cluster — maintenance contracts, prospecting triggers and the
+// outbound/inbound decision. Run this once after the deploy that ships them.
 const urls = [
   "/",
   "/commercial-hvac-lead-generation",
@@ -33,6 +35,9 @@ const urls = [
   "/hvac-building-owner-outreach",
   "/how-to-find-commercial-hvac-accounts",
   "/commercial-hvac-cold-email",
+  "/commercial-hvac-maintenance-contracts",
+  "/commercial-hvac-prospecting-triggers",
+  "/commercial-hvac-outbound-vs-inbound",
   "/sample-deliverables",
   "/definitions",
   "/start",

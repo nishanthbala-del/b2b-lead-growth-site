@@ -32,6 +32,14 @@ const CANON = "2026-09-19";
 // changed carries it as dateModified. A page the sweep did not touch keeps its own date.
 const SEO_FOOTPRINT = "2026-09-18";
 
+// THE ACQUISITION-CLUSTER DATE (2026-09-20): three pages first published, each for an intent
+// the site could not answer. The recurring-maintenance page is the commercial reason a
+// contractor wants these accounts at all; the trigger page is the research method's one rule
+// stated on its own URL; the channel page is the build-or-buy decision a contractor makes
+// before he evaluates any vendor. Deliberately THREE, not the dozen the keyword list suggests:
+// four ways of saying "get maintenance contracts" would be four near-duplicates of one page.
+const ACQUISITION = "2026-09-20";
+
 // THE TWO-OFFER DATE (D-028, deployed 2026-09-19): every page whose visible offer copy moved from
 // three levels of responsibility to the two plans carries it as dateModified — the homepage, the
 // service page, how-it-works, pricing, the agency guide, the free audit and the fit check.
@@ -273,6 +281,42 @@ export const guidePages: GuidePage[] = [
       "How to write a commercial HVAC cold email a property or facility manager will read: the five parts, what to leave out, a template, follow-ups and the law.",
     datePublished: SEO_FOOTPRINT,
     dateModified: SEO_FOOTPRINT,
+    kind: "guide",
+    section: "guide",
+  },
+  {
+    slug: "commercial-hvac-maintenance-contracts",
+    navLabel: "Maintenance agreements",
+    metaTitle: "How to Get Commercial HVAC Maintenance Contracts",
+    h1: "How to get commercial HVAC maintenance contracts",
+    description:
+      "How commercial HVAC contractors win recurring maintenance agreements: which accounts buy them, who decides, and what the first conversation covers.",
+    datePublished: ACQUISITION,
+    dateModified: ACQUISITION,
+    kind: "guide",
+    section: "guide",
+  },
+  {
+    slug: "commercial-hvac-prospecting-triggers",
+    navLabel: "Reasons to contact an account",
+    metaTitle: "Commercial HVAC Prospecting Triggers",
+    h1: "Commercial HVAC prospecting triggers: what counts as a reason to contact",
+    description:
+      "The public events that justify contacting a commercial account — a new manager, a sale, an expansion, a permit — and why a signal is not proof of need.",
+    datePublished: ACQUISITION,
+    dateModified: ACQUISITION,
+    kind: "guide",
+    section: "guide",
+  },
+  {
+    slug: "commercial-hvac-outbound-vs-inbound",
+    navLabel: "Outbound, inbound or in-house",
+    metaTitle: "Outbound vs Inbound for Commercial HVAC",
+    h1: "Outbound, inbound or in-house: how commercial HVAC accounts get found",
+    description:
+      "The four ways commercial HVAC contractors create account conversations, what each costs in time and money, and when outbound is the wrong choice.",
+    datePublished: ACQUISITION,
+    dateModified: ACQUISITION,
     kind: "guide",
     section: "guide",
   },

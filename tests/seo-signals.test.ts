@@ -217,3 +217,132 @@ describe("the six priority URLs send one commercial signal", () => {
     assert.equal(new Set(priority.map((p) => p.h1)).size, priority.length);
   });
 });
+
+// The acquisition cluster (2026-09-20). Three pages, each for an intent the site could not
+// answer: how recurring maintenance work is won, what makes an account worth contacting this
+// week, and whether to buy outreach at all. The tests below hold the two things that make the
+// cluster worth publishing rather than the dozen thin pages the keyword list suggests — that
+// each page is distinct, and that the one rule the method rests on cannot be quietly softened.
+describe("the acquisition cluster", () => {
+  // JSX wraps prose across lines, so a phrase in the rendered sentence is almost never a
+  // phrase in the source with single spaces. Every prose assertion below reads through this:
+  // a detector that only matches unwrapped text silently stops detecting the moment the file
+  // is reformatted, which is the same failure as having no test.
+  const flat = (rel: string) => read(rel).replace(/\s+/g, " ");
+
+  const CLUSTER = [
+    "commercial-hvac-maintenance-contracts",
+    "commercial-hvac-prospecting-triggers",
+    "commercial-hvac-outbound-vs-inbound",
+  ];
+
+  test("every cluster page is registered, indexable, and has a page file", () => {
+    for (const slug of CLUSTER) {
+      const page = guidePages.find((g) => g.slug === slug);
+      assert.ok(page, `${slug} is not in the registry`);
+      assert.equal(page.kind, "guide");
+      assert.ok(indexablePaths.includes(`/${slug}`), `${slug} is not indexable`);
+      assert.ok(existsSync(path.join(repoRoot, "app", slug, "page.tsx")), `${slug} has no page file`);
+    }
+  });
+
+  test("every cluster page publishes an Article and its own FAQPage", () => {
+    for (const slug of CLUSTER) {
+      const source = read(`app/${slug}/page.tsx`);
+      assert.match(source, /guideJsonLd\(page\)/, `${slug} publishes no Article node`);
+      assert.match(source, /"@type": "FAQPage"/, `${slug} publishes no FAQPage node`);
+    }
+  });
+
+  // THE RULE THE WHOLE METHOD RESTS ON. A signal is a reason to CONTACT an account; it is
+  // never proof that the account needs HVAC work or intends to buy. Stated in the operating
+  // system's vocabulary module and enforced by its send gates, and now published. This test
+  // exists because the sentence is the first thing that gets softened when someone wants the
+  // copy to sound more confident — and softening it is what produces "I see you're having
+  // HVAC problems", a guess about a building nobody from here has entered.
+  test("the trigger page publishes the signal rule, and does not hedge it", () => {
+    const source = flat("app/commercial-hvac-prospecting-triggers/page.tsx");
+    assert.match(
+      source,
+      /reason to contact an account[\s\S]{0,80}not proof of HVAC need/i,
+      "the trigger page no longer states that a signal is a reason to contact, not proof of need",
+    );
+    // The failure mode the rule forbids: asserting the reader's problem from a public record.
+    const DIAGNOSES = [
+      /\byour (?:equipment|system|units?|HVAC) (?:is|are) (?:failing|old|overdue|due)\b/i,
+      /\bwe (?:can see|noticed|see) (?:that )?you(?:'re| are) having\b/i,
+    ];
+    const prose = stripComments(source).replace(/&ldquo;|&rdquo;/g, '"').replace(/\s+/g, " ");
+    for (const re of DIAGNOSES) {
+      assert.ok(!re.test(prose), `the trigger page itself diagnoses a building: ${re}`);
+    }
+  });
+
+  // A comparison page written by one of the options it compares is only worth reading if it
+  // says when its own option is wrong. This is the load-bearing section of that page.
+  test("the channel page says when outbound is the wrong choice", () => {
+    const source = flat("app/commercial-hvac-outbound-vs-inbound/page.tsx");
+    assert.match(source, /When outbound is the wrong answer/i, "the section is gone");
+    assert.match(
+      source,
+      /cannot create commercial capability you do not have/i,
+      "the page no longer states the limit that makes it honest",
+    );
+  });
+
+  // The boundary that keeps the maintenance page inside the business model: we research and
+  // reach, the contractor assesses, prices, scopes and closes. The same line the operating
+  // system enforces in code (core/scope_boundary.py).
+  test("the maintenance page keeps the contractor boundary", () => {
+    const source = flat("app/commercial-hvac-maintenance-contracts/page.tsx");
+    assert.match(source, /Where this work stops/i, "the boundary section is gone");
+    assert.match(
+      source,
+      /price, size, diagnose, scope, negotiate or close/i,
+      "the page no longer names what an agency message may never do",
+    );
+  });
+
+  test("the cluster is internally linked to the method, the buyers and the service", () => {
+    const wanted: Record<string, string[]> = {
+      "commercial-hvac-maintenance-contracts": [
+        "/hvac-property-manager-outreach",
+        "/how-to-find-commercial-hvac-accounts",
+        "/commercial-hvac-prospecting-triggers",
+        "/commercial-hvac-lead-generation",
+      ],
+      "commercial-hvac-prospecting-triggers": [
+        "/how-to-find-commercial-hvac-accounts",
+        "/commercial-hvac-cold-email",
+        "/commercial-hvac-maintenance-contracts",
+      ],
+      "commercial-hvac-outbound-vs-inbound": [
+        "/how-to-choose-a-lead-generation-agency",
+        "/commercial-hvac-maintenance-contracts",
+        "/definitions",
+        "/start",
+      ],
+    };
+    for (const [slug, links] of Object.entries(wanted)) {
+      const source = read(`app/${slug}/page.tsx`);
+      for (const href of links) {
+        assert.ok(source.includes(`href="${href}"`), `${slug} does not link to ${href}`);
+      }
+    }
+  });
+
+  // Depth over page count: three pages that say three different things, not one page with the
+  // noun swapped. Near-duplicate titles are the first symptom of a doorway cluster.
+  test("no registered guide shares a title, an H1 or a description with another", () => {
+    assert.equal(new Set(guidePages.map((g) => g.metaTitle)).size, guidePages.length);
+    assert.equal(new Set(guidePages.map((g) => g.h1)).size, guidePages.length);
+    assert.equal(new Set(guidePages.map((g) => g.description)).size, guidePages.length);
+  });
+
+  test("every cluster page is announced to IndexNow", () => {
+    const ping = read("scripts/indexnow-ping.mjs");
+    for (const slug of CLUSTER) {
+      assert.ok(ping.includes(`"/${slug}"`), `/${slug} is not announced to IndexNow`);
+    }
+  });
+});
