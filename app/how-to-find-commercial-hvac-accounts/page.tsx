@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import GuideLayout, { GuideSection, GuideTable, KeyAnswer } from "@/components/GuideLayout";
+import Figure from "@/components/Figure";
+import GuideLayout, { GuideSection, GuideTable, KeyAnswer, SourceNote } from "@/components/GuideLayout";
 import { faqSlug } from "@/lib/content";
 import { getGuidePage, guideJsonLd, pageMetadata } from "@/lib/pages";
 import { brandName, siteUrl } from "@/lib/site";
@@ -69,6 +70,73 @@ const sources = [
     source: "Public bid and procurement portals",
     finds: "HVAC solicitations from schools, colleges and local governments",
     check: "A solicitation is a formal bid, not an email",
+  },
+];
+
+// NAMED NATIONAL SOURCES, WITH WHAT EACH ONE DOES NOT PROVE.
+//
+// The table above names CATEGORIES, which is the method but not a starting point: a reader
+// cannot open "county property records". These seven are specific, national, free, and were
+// each opened and checked on the date in the source note below. The third column is the
+// reason the section exists at all. Every one of these datasets is routinely read as
+// evidence of a need — a low benchmarking score as "their HVAC is failing", an expiring
+// contract as "they are unhappy" — and that inference is exactly what D-024 forbids and what
+// makes a first email read as a guess about a building nobody has seen.
+const namedSources: { name: string; href: string; gives: string; limit: string }[] = [
+  {
+    name: "SAM.gov — Contract Opportunities",
+    href: "https://sam.gov/search",
+    gives:
+      "Open federal solicitations, including HVAC service and replacement at federal sites, filterable by work type and location.",
+    limit:
+      "A solicitation is a formal bid with its own process. It is not a reason to send a cold email.",
+  },
+  {
+    name: "USAspending.gov",
+    href: "https://www.usaspending.gov/",
+    gives:
+      "Federal contracts already awarded — who holds the maintenance contract at a site today, and when the period of performance ends.",
+    limit:
+      "An incumbent is not evidence of a problem, and an end date is not evidence of a rebid.",
+  },
+  {
+    name: "ENERGY STAR Portfolio Manager",
+    href: "https://www.energystar.gov/buildings/benchmark",
+    gives:
+      "The benchmarking programme most large commercial buildings report into, and the scoring behind city disclosure datasets.",
+    limit:
+      "A score describes energy use. It says nothing about whether any equipment needs work.",
+  },
+  {
+    name: "City benchmarking disclosure (New York City shown; many cities publish the same)",
+    href: "https://www.nyc.gov/site/buildings/codes/benchmarking.page",
+    gives:
+      "Named buildings with their owners and annual energy performance, published under local law.",
+    limit:
+      "A poor grade is a reason to introduce yourself. It is never a diagnosis of the building.",
+  },
+  {
+    name: "ENERGY STAR — Building Performance Standards",
+    href: "https://www.energystar.gov/buildings/resources-topic/what-are-building-performance-standards",
+    gives:
+      "Which cities and states have put commercial buildings on a compliance deadline.",
+    limit:
+      "It does not say which buildings fall short, or what any one of them needs.",
+  },
+  {
+    name: "State business registries (NASS state-by-state selector)",
+    href: "https://www.nass.org/business-services/corporate-registration",
+    gives:
+      "A route into each official corporate registry — the people behind the LLC named on the deed.",
+    limit:
+      "A registered agent is never the contact, and an officer is not always who decides.",
+  },
+  {
+    name: "Census Building Permits Survey",
+    href: "https://www.census.gov/construction/bps/",
+    gives: "Where commercial construction is actually happening, by county and by month.",
+    limit:
+      "It never names a building. For addresses you need your own jurisdiction's permit portal.",
   },
 ];
 
@@ -207,6 +275,39 @@ export default function FindCommercialAccountsPage() {
               s.check,
             ])}
           />
+          <h3 className="mt-10 font-display text-2xl text-ink">
+            Named sources you can open right now
+          </h3>
+          <p>
+            The table above names categories, which is the method but not a starting point &mdash;
+            nobody can open &ldquo;county property records&rdquo;. These seven are specific, free
+            and national. The third column matters more than the second: each of these datasets is
+            routinely misread as proof that a building needs work, and that inference is what turns
+            a reasonable introduction into a guess about a building you have never seen.
+          </p>
+          <GuideTable
+            caption="Named national public sources for commercial HVAC account research, what each gives you, and what it does not prove"
+            head={["Source", "What it gives you", "What it does not prove"]}
+            rows={namedSources.map((s) => [
+              <a
+                key={s.name}
+                href={s.href}
+                rel="nofollow noopener"
+                target="_blank"
+                className="font-semibold text-accent underline underline-offset-4"
+              >
+                {s.name}
+              </a>,
+              s.gives,
+              s.limit,
+            ])}
+          />
+          <SourceNote>
+            Every source above was opened and checked on September 20, 2026. All are free and
+            public. None of them is a mailing list: a record tells you an account exists and gives
+            you a dated reason to write, and the person still has to be found and verified
+            separately.
+          </SourceNote>
           <p>
             Which sources matter most depends on the buyer. The pages on{" "}
             <Link href="/hvac-property-manager-outreach" className="text-accent underline underline-offset-4">
@@ -244,6 +345,18 @@ export default function FindCommercialAccountsPage() {
             tell a generic inbox that it belongs to the decision-maker: &ldquo;as the person
             responsible for the building&rdquo; is a claim you cannot make about info@.
           </p>
+          <Figure
+            src="/diagrams/commercial-hvac-account-stakeholder-map.svg"
+            width={720}
+            height={512}
+            label="Diagram: one commercial account, several stakeholders, and the rules that protect it"
+            alt="A two-panel diagram. The left panel, headed One account, several people, grades four people at a single commercial account: a director of facilities and a named property manager are named decision-makers who may be contacted; a maintenance supervisor is a named contact who routes but does not decide; a general info address or main line is a generic front door and is never treated as decision-maker access. The right panel, headed Four rules enforced in code, states that one person opting out suppresses the whole organisation, that an open conversation stops a cold message to a colleague, that message limits are counted across the whole account rather than per person, and that an account is never worked for two contractors at once."
+          >
+            The ladder above grades one person. A commercial account holds several, and that is
+            what makes commercial prospecting different from chasing a contact: reaching one
+            person changes what may be sent to the rest. These four rules are the ones we enforce
+            in code rather than leave to judgement.
+          </Figure>
         </GuideSection>
 
         <GuideSection id="reason" title="Step 4: Record the reason, with its date and its source">

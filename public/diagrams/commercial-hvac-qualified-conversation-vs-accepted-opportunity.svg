@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 600" width="720" height="600" role="img" aria-labelledby="t d" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title id="t">Where each B2B Lead Growth plan hands a commercial HVAC opportunity to the contractor</title>
+  <desc id="d">A flow diagram. Both plans share one starting point: genuine interest, a reply confirmed by a person rather than a keyword match. The flow then splits into two plans. Managed Outbound, 1,500 dollars a month, goes straight from qualified interest to a warm handoff, and the contractor receives a qualified conversation. It has no validation stage. Opportunity Engine, 2,500 dollars a month, adds a validation stage in which the need, timing and context are confirmed by the buyer, every criterion the contractor agreed is checked, and the buyer confirms a concrete next sales step; it then hands over an accepted sales opportunity with an opportunity brief. On both plans the contractor does the technical discovery, site assessment, estimate, proposal and close.</desc>
+  <rect width="720" height="600" fill="#FFFFFF"/>
+
+  <text x="24" y="28" font-size="19" font-weight="700" fill="#15151A">Where each plan hands the opportunity over</text>
+  <text x="24" y="50" font-size="13" fill="#56565F">The plan decides how far we own a commercial HVAC prospect before the warm handoff.</text>
+
+  <rect x="24" y="70" width="672" height="54" rx="6" fill="#F8F7F4" stroke="#E4E1DA"/>
+  <text x="360" y="92" font-size="14" font-weight="700" fill="#15151A" text-anchor="middle">Genuine interest</text>
+  <text x="360" y="111" font-size="12.5" fill="#56565F" text-anchor="middle">A real reply, confirmed by a person — never a keyword match.</text>
+
+  <g stroke="#C9C4B8" stroke-width="1.5" fill="none">
+    <path d="M360 124 V144 M184 144 H536 M184 144 V162 M528 144 V162"/>
+  </g>
+  <g fill="#C9C4B8">
+    <path d="M184 168 l-5 -8 h10 z"/><path d="M528 168 l-5 -8 h10 z"/>
+  </g>
+
+  <!-- Managed Outbound -->
+  <rect x="24" y="166" width="320" height="320" rx="8" fill="#FFFFFF" stroke="#C9C4B8"/>
+  <path d="M24 174 a8 8 0 0 1 8 -8 h304 a8 8 0 0 1 8 8 v24 h-320 z" fill="#FAF5E9"/>
+  <text x="184" y="189" font-size="14" font-weight="700" fill="#6F5420" text-anchor="middle">Managed Outbound · $1,500/mo</text>
+
+  <rect x="38" y="208" width="292" height="50" rx="5" fill="#F8F7F4" stroke="#E4E1DA"/>
+  <text x="52" y="226" font-size="13" font-weight="700" fill="#15151A">Qualified interest</text>
+  <text x="52" y="244" font-size="12" fill="#56565F">They agree to speak with you.</text>
+
+  <rect x="38" y="270" width="292" height="66" rx="5" fill="none" stroke="#E4E1DA" stroke-dasharray="4 4"/>
+  <text x="52" y="290" font-size="13" font-weight="700" fill="#8C887F">No validation stage</text>
+  <text x="52" y="308" font-size="12" fill="#8C887F">We hand over as soon as the prospect</text>
+  <text x="52" y="324" font-size="12" fill="#8C887F">agrees to talk.</text>
+
+  <rect x="38" y="348" width="292" height="46" rx="5" fill="#8A6A23"/>
+  <text x="184" y="367" font-size="12.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">Warm handoff —</text>
+  <text x="184" y="384" font-size="12.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">qualified interest</text>
+
+  <rect x="38" y="406" width="292" height="66" rx="5" fill="#F8F7F4" stroke="#E4E1DA"/>
+  <text x="52" y="424" font-size="12.5" font-weight="700" fill="#15151A">You receive: a qualified conversation</text>
+  <text x="52" y="442" font-size="12" fill="#56565F">The whole conversation, a warm</text>
+  <text x="52" y="458" font-size="12" fill="#56565F">introduction and the booking path.</text>
+
+  <!-- Opportunity Engine -->
+  <rect x="368" y="166" width="320" height="320" rx="8" fill="#FFFFFF" stroke="#C9C4B8"/>
+  <path d="M368 174 a8 8 0 0 1 8 -8 h304 a8 8 0 0 1 8 8 v24 h-320 z" fill="#FAF5E9"/>
+  <text x="528" y="189" font-size="14" font-weight="700" fill="#6F5420" text-anchor="middle">Opportunity Engine · $2,500/mo</text>
+
+  <rect x="382" y="208" width="292" height="50" rx="5" fill="#F8F7F4" stroke="#E4E1DA"/>
+  <text x="396" y="226" font-size="13" font-weight="700" fill="#15151A">Qualified interest</text>
+  <text x="396" y="244" font-size="12" fill="#56565F">They agree to speak with you.</text>
+
+  <rect x="382" y="270" width="292" height="66" rx="5" fill="#F8F7F4" stroke="#E4E1DA"/>
+  <text x="396" y="290" font-size="13" font-weight="700" fill="#15151A">Validation</text>
+  <text x="396" y="308" font-size="12" fill="#56565F">Need, timing and context confirmed by</text>
+  <text x="396" y="324" font-size="12" fill="#56565F">the buyer. Every criterion you agreed.</text>
+
+  <rect x="382" y="348" width="292" height="46" rx="5" fill="#8A6A23"/>
+  <text x="528" y="367" font-size="12.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">Opportunity handoff —</text>
+  <text x="528" y="384" font-size="12.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">accepted sales opportunity</text>
+
+  <rect x="382" y="406" width="292" height="66" rx="5" fill="#F8F7F4" stroke="#E4E1DA"/>
+  <text x="396" y="424" font-size="12.5" font-weight="700" fill="#15151A">You receive: an accepted opportunity</text>
+  <text x="396" y="442" font-size="12" fill="#56565F">Everything above, plus a brief and a</text>
+  <text x="396" y="458" font-size="12" fill="#56565F">next sales step the buyer confirmed.</text>
+
+  <g stroke="#C9C4B8" stroke-width="1.5" fill="none">
+    <path d="M184 486 V506 M528 486 V506 M184 506 H528 M356 506 V522"/>
+  </g>
+  <path d="M356 528 l-5 -8 h10 z" fill="#C9C4B8"/>
+
+  <rect x="24" y="526" width="672" height="54" rx="6" fill="#15151A"/>
+  <text x="360" y="548" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">Then you do the work — on both plans</text>
+  <text x="360" y="567" font-size="12.5" fill="#E4E1DA" text-anchor="middle">Technical discovery, site assessment, estimate, proposal and close.</text>
+</svg>

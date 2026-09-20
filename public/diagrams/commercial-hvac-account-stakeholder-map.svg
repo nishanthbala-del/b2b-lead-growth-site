@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 512" width="720" height="512" role="img" aria-labelledby="t d" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title id="t">A commercial HVAC account and its stakeholders, and the contact rules that protect it</title>
+  <desc id="d">A two-panel diagram. The left panel, headed One account, several people, lists four people at a single commercial account and how each is graded. A director of facilities is a named decision-maker and may be contacted. A named property manager for the site is a named decision-maker and may be contacted. A maintenance supervisor is a named contact who routes but does not decide. A general info address or main line is a generic front door and is never treated as decision-maker access. The right panel, headed Four rules enforced in code, states that one person's opt-out suppresses the entire organisation; an open conversation stops a cold message to a colleague; message limits are counted across the whole account rather than per person; and an account belongs to one contractor and is never worked for two at once. A closing band states that a general inbox is never verified decision-maker access.</desc>
+  <rect width="720" height="512" fill="#FFFFFF"/>
+
+  <text x="24" y="28" font-size="19" font-weight="700" fill="#15151A">A commercial account is not a contact</text>
+  <text x="24" y="50" font-size="13" fill="#56565F">One building portfolio holds several people. Reaching one of them changes what may be sent to the rest.</text>
+
+  <!-- LEFT: the account -->
+  <rect x="24" y="70" width="328" height="352" rx="8" fill="#FFFFFF" stroke="#C9C4B8"/>
+  <path d="M24 78 a8 8 0 0 1 8 -8 h312 a8 8 0 0 1 8 8 v24 h-328 z" fill="#FAF5E9"/>
+  <text x="188" y="93" font-size="13.5" font-weight="700" fill="#6F5420" text-anchor="middle">One account · several people</text>
+
+  <rect x="38" y="116" width="300" height="68" rx="5" fill="#F8F7F4" stroke="#E4E1DA"/>
+  <rect x="38" y="116" width="4" height="68" fill="#8A6A23"/>
+  <text x="54" y="136" font-size="13" font-weight="700" fill="#15151A">Director of facilities</text>
+  <text x="54" y="154" font-size="11.5" font-weight="700" fill="#6F5420">NAMED DECISION-MAKER</text>
+  <text x="54" y="172" font-size="12" fill="#56565F">Decides the vendor. May be contacted.</text>
+
+  <rect x="38" y="194" width="300" height="68" rx="5" fill="#F8F7F4" stroke="#E4E1DA"/>
+  <rect x="38" y="194" width="4" height="68" fill="#8A6A23"/>
+  <text x="54" y="214" font-size="13" font-weight="700" fill="#15151A">Property manager for the site</text>
+  <text x="54" y="232" font-size="11.5" font-weight="700" fill="#6F5420">NAMED DECISION-MAKER</text>
+  <text x="54" y="250" font-size="12" fill="#56565F">Decides, or routes to who does.</text>
+
+  <rect x="38" y="272" width="300" height="68" rx="5" fill="#F8F7F4" stroke="#E4E1DA"/>
+  <rect x="38" y="272" width="4" height="68" fill="#C9C4B8"/>
+  <text x="54" y="292" font-size="13" font-weight="700" fill="#15151A">Maintenance supervisor</text>
+  <text x="54" y="310" font-size="11.5" font-weight="700" fill="#56565F">NAMED CONTACT</text>
+  <text x="54" y="328" font-size="12" fill="#56565F">Routes a request. Does not decide.</text>
+
+  <rect x="38" y="350" width="300" height="58" rx="5" fill="#FFFFFF" stroke="#E4E1DA" stroke-dasharray="4 4"/>
+  <rect x="38" y="350" width="4" height="58" fill="#8A3B12"/>
+  <text x="54" y="370" font-size="13" font-weight="700" fill="#8C887F">A general inbox or main line</text>
+  <text x="54" y="388" font-size="11.5" font-weight="700" fill="#8A3B12">GENERIC FRONT DOOR</text>
+  <text x="54" y="402" font-size="12" fill="#8C887F">Never decision-maker access.</text>
+
+  <!-- RIGHT: the rules -->
+  <rect x="368" y="70" width="328" height="352" rx="8" fill="#FFFFFF" stroke="#C9C4B8"/>
+  <path d="M368 78 a8 8 0 0 1 8 -8 h312 a8 8 0 0 1 8 8 v24 h-328 z" fill="#FAF5E9"/>
+  <text x="532" y="93" font-size="13.5" font-weight="700" fill="#6F5420" text-anchor="middle">Four rules enforced in code</text>
+
+  <text x="382" y="136" font-size="13" font-weight="700" fill="#15151A">1 · One opt-out stops the account</text>
+  <text x="382" y="154" font-size="12" fill="#56565F">If any one person opts out, the whole</text>
+  <text x="382" y="170" font-size="12" fill="#56565F">organisation is suppressed — not just them.</text>
+
+  <text x="382" y="214" font-size="13" font-weight="700" fill="#15151A">2 · An open thread stops a cold one</text>
+  <text x="382" y="232" font-size="12" fill="#56565F">While a conversation is live, no colleague</text>
+  <text x="382" y="248" font-size="12" fill="#56565F">receives a cold first message.</text>
+
+  <text x="382" y="292" font-size="13" font-weight="700" fill="#15151A">3 · Limits count across the account</text>
+  <text x="382" y="310" font-size="12" fill="#56565F">Message ceilings and spacing are counted</text>
+  <text x="382" y="326" font-size="12" fill="#56565F">over all stakeholders, never per person.</text>
+
+  <text x="382" y="370" font-size="13" font-weight="700" fill="#15151A">4 · One account, one contractor</text>
+  <text x="382" y="388" font-size="12" fill="#56565F">An account is never worked for two</text>
+  <text x="382" y="404" font-size="12" fill="#56565F">clients at the same time.</text>
+
+  <rect x="24" y="438" width="672" height="52" rx="6" fill="#15151A"/>
+  <text x="360" y="460" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">A general inbox is never verified decision-maker access</text>
+  <text x="360" y="478" font-size="12.5" fill="#E4E1DA" text-anchor="middle">A message is not sent to a person the record cannot evidence.</text>
+</svg>

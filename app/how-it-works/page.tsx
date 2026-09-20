@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Figure from "@/components/Figure";
 import GuideLayout, { GuideSection, KeyAnswer } from "@/components/GuideLayout";
 import {
   boundarySentence,
@@ -149,6 +150,20 @@ export default function HowItWorksPage() {
             work between &ldquo;someone replied with interest&rdquo; and &ldquo;your estimator is
             in the room&rdquo;.
           </p>
+          <Figure
+            src="/diagrams/commercial-hvac-qualified-conversation-vs-accepted-opportunity.svg"
+            width={720}
+            height={600}
+            label="Diagram: where each plan hands the opportunity over"
+            alt="A flow diagram. Both plans share one starting point: genuine interest, a reply confirmed by a person rather than a keyword match. The flow then splits. Managed Outbound, 1,500 dollars a month, goes straight from qualified interest to a warm handoff and the contractor receives a qualified conversation; it has no validation stage. Opportunity Engine, 2,500 dollars a month, adds a validation stage in which the need, timing and context are confirmed by the buyer and every criterion the contractor agreed is checked, then hands over an accepted sales opportunity with an opportunity brief. On both plans the contractor does the technical discovery, site assessment, estimate, proposal and close."
+          >
+            The same pipeline runs on both plans until a prospect replies with genuine interest.
+            Managed Outbound hands them over as soon as they agree to speak with you. The
+            Opportunity Engine first confirms the need, timing and context with the buyer, checks
+            every criterion you agreed, and gets a next sales step the buyer confirms &mdash; then
+            hands over an accepted sales opportunity with a brief. The technical discovery, site
+            assessment, estimate, proposal and close stay with you on both.
+          </Figure>
           <div className="space-y-4">
             {plans.map((p) => (
               <div key={p.name} id={`after-interest-${p.key.replace(/_/g, "-")}`} className="scroll-mt-20 rounded-lg border border-line bg-surface p-5">
