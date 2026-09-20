@@ -45,6 +45,23 @@ const ACQUISITION = "2026-09-20";
 // service page, how-it-works, pricing, the agency guide, the free audit and the fit check.
 const D028 = "2026-09-19";
 
+// THE INTERNAL-LINKING PASS DATE (2026-09-20): the ten pages whose VISIBLE prose gained an
+// editorial link into the acquisition cluster, plus the sentence that earns it. Same calendar day
+// as ACQUISITION, named separately because it is a different change to different pages.
+//
+// This is a real edit date, not a freshness signal. The rule at the top of this file — never bump
+// dateModified without a substantive content change — is why the four pages that got only a
+// WebPage/BreadcrumbList node in the same pass are NOT listed here: structured data is not visible
+// copy, and a date that moves for an invisible change is the drift the rule forbids. The split was
+// measured from the diff (prose additions vs JSON-LD additions), not assumed.
+//
+// It matters that the date moves for the ten: `lastmod` in the sitemap reads straight from this
+// field, and on 2026-09-20 both engines were still serving pre-repositioning metadata — Bing the
+// retired homepage title and a snippet naming "residential HVAC companies", Google a /pricing
+// title advertising the retired $750 price. An accurate lastmod is the only recrawl hint this repo
+// can send without Search Console access. It is honest here precisely because the copy did change.
+const LINKING = "2026-09-20";
+
 // When adding ANY indexable route, add it to `guidePages`, `standaloneRoutes` or
 // `legalRoutes` below and then to scripts/indexnow-ping.mjs, which carries its own explicit
 // URL list (a .mjs script run outside the bundler cannot import this registry). /llms.txt is
@@ -124,7 +141,7 @@ export const guidePages: GuidePage[] = [
     description:
       "Commercial HVAC lead generation for established contractors: researched accounts, outreach in your name, and a warm handoff of qualified conversations.",
     datePublished: D027,
-    dateModified: D028,
+    dateModified: LINKING,
     kind: "service",
   },
   {
@@ -135,7 +152,7 @@ export const guidePages: GuidePage[] = [
     description:
       "Commercial HVAC managed outbound, step by step: account research, outreach in your name, what happens at genuine interest on each plan, and the handoff.",
     datePublished: D027,
-    dateModified: D028,
+    dateModified: LINKING,
     kind: "guide",
   },
   {
@@ -148,7 +165,7 @@ export const guidePages: GuidePage[] = [
     datePublished: "2026-08-08",
     // Rebuilt around responsibility on 2026-09-17; on 2026-09-18 its account-sourcing lines
     // and the terminology stopped naming the retired residential model.
-    dateModified: D028,
+    dateModified: LINKING,
     kind: "service",
   },
   {
@@ -162,7 +179,7 @@ export const guidePages: GuidePage[] = [
       "What the free commercial HVAC pipeline audit delivers: an account profile, 3–5 vetted commercial accounts with source links, and a sample message.",
     datePublished: "2026-08-08",
     // 2026-09-18: an answer-first opening, an exact-match H1, and no residential wording.
-    dateModified: D028,
+    dateModified: LINKING,
     kind: "guide",
   },
   {
@@ -175,7 +192,7 @@ export const guidePages: GuidePage[] = [
     datePublished: "2026-08-08",
     // Rewritten for choosing a COMMERCIAL outbound partner on 2026-09-17; on 2026-09-18 its
     // residential-marketplace contrast was replaced by a section on checking a vendor's data.
-    dateModified: D028,
+    dateModified: LINKING,
     kind: "guide",
     section: "guide",
   },
@@ -232,7 +249,7 @@ export const guidePages: GuidePage[] = [
     description:
       "How commercial HVAC contractors win property management accounts: who to contact, the public sources that find them, and what a first email should say.",
     datePublished: SEO_FOOTPRINT,
-    dateModified: SEO_FOOTPRINT,
+    dateModified: LINKING,
     kind: "solution",
     section: "audience",
   },
@@ -244,7 +261,7 @@ export const guidePages: GuidePage[] = [
     description:
       "How commercial HVAC contractors reach in-house facility teams: which facility managers buy outside HVAC help, how to find them, and when they plan work.",
     datePublished: SEO_FOOTPRINT,
-    dateModified: SEO_FOOTPRINT,
+    dateModified: LINKING,
     kind: "solution",
     section: "audience",
   },
@@ -256,7 +273,7 @@ export const guidePages: GuidePage[] = [
     description:
       "How commercial HVAC contractors reach building owners: when to write to the owner rather than the manager, the public records that find them, what to say.",
     datePublished: SEO_FOOTPRINT,
-    dateModified: SEO_FOOTPRINT,
+    dateModified: LINKING,
     kind: "solution",
     section: "audience",
   },
@@ -268,7 +285,7 @@ export const guidePages: GuidePage[] = [
     description:
       "A commercial HVAC prospecting method: define the account profile, work the public sources, choose the right person, and record why each account fits.",
     datePublished: SEO_FOOTPRINT,
-    dateModified: SEO_FOOTPRINT,
+    dateModified: LINKING,
     kind: "guide",
     section: "guide",
   },
@@ -280,7 +297,7 @@ export const guidePages: GuidePage[] = [
     description:
       "How to write a commercial HVAC cold email a property or facility manager will read: the five parts, what to leave out, a template, follow-ups and the law.",
     datePublished: SEO_FOOTPRINT,
-    dateModified: SEO_FOOTPRINT,
+    dateModified: LINKING,
     kind: "guide",
     section: "guide",
   },
