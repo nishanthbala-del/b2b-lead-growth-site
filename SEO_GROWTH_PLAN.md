@@ -308,6 +308,30 @@ Ranked by effort-to-impact; researched Aug 2026:
 
 ## 10. Measurement / KPI framework
 
+> **MEASURED 2026-09-21 — the site had no denominator, and the numerator was zero.**
+> The Sheet's `Events` tab (every first-party event since the tab went live on 2026-09-18) held
+> **four rows, all of them tests**: one hand-inserted `cta_click` and three `fit_outcome` rows
+> from controlled submissions. **Zero real CTA clicks, zero fit checks started** in three days.
+> The pipe was proven working the same evening: a `form_start` fired from the live `/start` page
+> landed in the tab within a second. So the zero is real — but it could not say whether nobody
+> arrived or people arrived and left, because no event recorded a visit. That difference decides
+> whether the next hour goes into being found or into the pages.
+>
+> **Fixed:** `visit_start` (lib/events.ts), once per visit from the first page, with the visit's
+> referring host, landing page, UTM tags and `mobile`/`desktop`; `/api/event` now discards
+> crawler user agents (Googlebot, Bingbot and several AI crawlers execute page scripts) and
+> refuses cross-site posts (`lib/request-guards.ts`). Read it per SETUP.md → "Conversion
+> events". **What this measures and what it does not:** visits by referring host, which is
+> organic search, AI-assistant links, referrals and direct separately; it does not see an AI
+> answer that names the site without a link, an assistant app that strips the referrer, or a
+> search query. AI-assistant counts are a floor.
+>
+> Also measured the same day, for the record: the site does not appear in web-search results
+> even for `"B2B Lead Growth" HVAC lead generation` or `b2bleadgrowth.com commercial HVAC
+> pricing` (competitors fill both pages), and DuckDuckGo served a bot challenge rather than
+> results. Search Console is no longer signed in inside the in-app browser, so Google's own
+> numbers are the owner's to read (§11).
+
 Weekly, once GSC + Bing WMT are live (all free):
 
 - **Index coverage**: pages indexed in Google + Bing (target: all 9 within 4–6 weeks of
@@ -320,8 +344,10 @@ Weekly, once GSC + Bing WMT are live (all free):
   "hvac lead generation new jersey") and record whether/where the site is cited.
 - **Conversion, by channel (live since 2026-09-20)**: every fit-check submission now carries
   the page it landed on, the referring host and any UTM tags all the way into the operating
-  system's tracker — `Source` = `inbound_intake_form:<channel>`, `Source URL` = the landing
-  page. So "which channel produced a FIT company, and which of those became a qualified
+  system's tracker — `Source` = `inbound_intake_form:<channel>`, with the landing page in
+  `Notes`. (`Source URL` stays EMPTY for an inbound row: it is the citation about the prospect,
+  and writing our own page there let our marketing copy pass a citation check — reversed in the
+  operating system on 2026-09-20.) So "which channel produced a FIT company, and which of those became a qualified
   conversation" is answerable from the CRM rather than from session counts. Channels are the
   closed set in `core/attribution.py`; an unrecorded visit reads `unknown`, never a guess.
   Note the honest limit: an organic search referrer carries no query, so this says a search
@@ -331,6 +357,55 @@ Weekly, once GSC + Bing WMT are live (all free):
   come in weeks. The KPI that pays the bills is audit requests, not sessions.
 
 ## 11. Remaining human actions (owner)
+
+> **2026-09-21 AUDIT — the decisions, so the next pass does not re-open them.** Verified live
+> first, then classified. The two Search Console / Bing actions in the entry below are still the
+> top two and are not repeated here.
+>
+> **Already solved (re-verified 2026-09-21, not re-done):** all 21 URLs answer 200 with identical
+> bodies to Googlebot, Bingbot, OAI-SearchBot, GPTBot, ClaudeBot and PerplexityBot user agents;
+> `npm run audit:live` 22/22; http→https, apex→www, trailing slash and the three retired paths
+> redirect; a 404 is a 404 with `noindex`; the IndexNow key file is served and matches; titles,
+> H1s and descriptions are unique and in budget; no cannibalisation worth a retitle (the pages
+> that share words serve different intents); 6 of the 7 priority queries have their own page and
+> "commercial HVAC appointment setting" is answered in the service page's FAQ; the conversion
+> path works on a phone (focus handling, no sideways scroll, events firing); `/reviews` is ready
+> for the first real review and emits review markup only then.
+>
+> **Requires the owner (each needs a login, an account or first-hand knowledge):**
+> 3. **LinkedIn company page** → add its URL to `organizationProfiles` in `lib/site.ts`. The
+>    site's `sameAs` is empty, and nothing else on the web says this company exists.
+> 4. **A named reviewer on the guides.** Both ranking competitors checked (LeadHaste, ServiceTitan)
+>    carry a named-person byline; these guides say "Published by B2B Lead Growth" because no
+>    person is claimed. If you have read and stand behind a guide, say so and it gets
+>    "Reviewed by Nishanth Balaji, founder" plus an Article `author` Person — never before.
+> 5. **Industry-learning calls, logged.** `data/customer_discovery/` holds a call guide and a
+>    residential-era call list with no outcomes logged. Nothing an owner said can be published
+>    until a real call is logged in that template.
+> 6. **Links from the trade.** A guest article or an expert quote in HVAC trade press, or an
+>    association listing, in the founder's own name. This is the actual growth constraint (§10)
+>    and no page on this site can substitute for it.
+> 7. **Delete the six `ZZ TEST` rows in the Leads tab and the test rows in the Events tab.**
+>    Harmless to the operating system (its import watermark has passed them), but they are what
+>    a person reads first.
+>
+> **Requires future client proof:** testimonials (slot ready), a case study, client logos, and
+> any reply or meeting rate — the operating system's own analytics will produce real ones once
+> volume exists; a borrowed industry benchmark would read as a promise.
+>
+> **Deliberately not done (not material, or would do harm):** a dedicated "appointment setting"
+> page (the canon retires that as a service name, and the service page already answers it); a
+> Building Performance Standards reference page (IMT already publishes the authoritative
+> tracker, and a zero-authority copy would earn nothing); third-party analytics (contradicts what
+> `/privacy` promises); a tag on the outbound signature link (it would separate outbound clicks
+> from direct ones cleanly, but it changes live outbound copy, which the operating system's send
+> gates own — its call, not this repo's; until then, read direct and webmail visits after a
+> batch as that batch); a sticky
+> mobile CTA or reordering the fit check (zero form starts is no evidence either way — revisit
+> once `visit_start` shows where visitors stop); more `llms.txt` work; publishing the operating
+> system's signal freshness windows on `/commercial-hvac-prospecting-triggers` (a real,
+> citable improvement, but it belongs in `scripts/export_site_canon.py`, a cross-repo change to
+> make when the page has readers — P2).
 
 > **RE-MEASURED 2026-09-20, LATER THE SAME DAY — "Google has largely converged" was WRONG.**
 > The entry below read the SERP for six URLs and found their titles current. Re-read with two
