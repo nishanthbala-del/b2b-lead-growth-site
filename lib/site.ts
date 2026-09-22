@@ -181,9 +181,14 @@ export const entityFormationState = "New Jersey";
 // Terms is exactly the contradiction a buyer or a chargeback reviewer looks for.
 export const cancellationNoticeDays = 14;
 
-// Last-updated stamp shown on /terms and /privacy. Bump BOTH together, and only on a
-// substantive edit. The ISO form exists because app/sitemap.ts needs a machine-safe date —
+// Last-updated stamps shown on /terms and /privacy, ONE PER DOCUMENT since 2026-09-21. Bump a
+// document's stamp only on a substantive edit to THAT document. Until 2026-09-21 the two shared
+// one date that had to be bumped together, so a change to the privacy policy alone would have
+// moved the Terms' visible date and its sitemap lastmod for text that did not change — the drift
+// lib/pages.ts forbids. The ISO form exists because app/sitemap.ts needs a machine-safe date —
 // parsing the display string relies on locale-dependent Date behaviour.
+//
+// The history below was written while the two moved together, so each entry names both.
 // 2026-09-17: the SERVICE-DESCRIPTION passages of both documents moved to D-027 (plan names,
 // what each plan does, the calling policy, nationwide geography, and the attribution fields
 // the fit check now records). No liability, governing-law or dispute clause changed.
@@ -195,5 +200,14 @@ export const cancellationNoticeDays = 14;
 // retirement of the $750 plan. The §4 no-guarantee list gained "qualified conversations" and
 // "accepted sales opportunities" (it only widens what we never promise). No liability,
 // governing-law or dispute clause changed.
-export const legalLastUpdated = "September 19, 2026";
-export const legalLastUpdatedISO = "2026-09-19";
+export const termsLastUpdated = "September 19, 2026";
+export const termsLastUpdatedISO = "2026-09-19";
+// 2026-09-21 (/privacy only): §1 now lists `visit_start` (generated from lib/events.ts), and the
+// visit-origin paragraph no longer says those values are "not sent anywhere on its own" and never
+// received without a submission. That sentence was already false before this change — every
+// first-party event has carried them since 2026-09-17 — and a policy that says we never receive
+// what we receive is the one kind of error a privacy page cannot carry. It also says crawlers
+// are discarded by how they describe themselves, and that the description is not stored. No
+// rights, retention, legal-basis or contact clause changed.
+export const privacyLastUpdated = "September 21, 2026";
+export const privacyLastUpdatedISO = "2026-09-21";

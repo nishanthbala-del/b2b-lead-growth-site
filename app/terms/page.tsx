@@ -10,7 +10,7 @@ import {
   contactEmail,
   governingLawState,
   entityFormationState,
-  legalLastUpdated,
+  termsLastUpdated,
   cancellationNoticeDays,
 } from "@/lib/site";
 import { boundarySentence, callingPolicy, contractorBoundary, plans } from "@/lib/content";
@@ -72,7 +72,7 @@ export default function TermsPage() {
         <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl">
           Terms of Service
         </h1>
-        <p className="mt-4 text-sm text-subtle">Last updated: {legalLastUpdated}</p>
+        <p className="mt-4 text-sm text-subtle">Last updated: {termsLastUpdated}</p>
 
         <p className="mt-8 leading-7 text-subtle">
           These Terms of Service (&ldquo;Terms&rdquo;) govern your use of this website, your request

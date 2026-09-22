@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { recordEvent } from "@/lib/events-server";
+import { isAutomatedClient, isCrossSitePost } from "@/lib/request-guards";
 
 // First-party conversion events (lib/events.ts). Accepts ONE event per request from this site's
 // own pages, narrows it to the closed vocabulary, and records it as one structured log line —
@@ -10,6 +11,13 @@ export const dynamic = "force-dynamic";
 const MAX_BODY = 2048;
 
 export async function POST(req: NextRequest) {
+  // Another site cannot mint events into the owner's Sheet.
+  if (isCrossSitePost(req.headers)) return new Response(null, { status: 403 });
+  // A crawler's rendering pass is not a visit. Answered exactly as a recorded event is, so a
+  // crawler learns nothing, and the user agent is read for this decision only — it is never
+  // handed to recordEvent, which is given the body and nothing else.
+  if (isAutomatedClient(req.headers.get("user-agent"))) return new Response(null, { status: 204 });
+
   let raw: unknown = null;
   try {
     const text = await req.text();

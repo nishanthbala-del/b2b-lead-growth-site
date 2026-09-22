@@ -13,7 +13,8 @@ import {
   orgDescription,
   founderName,
   intakeMinutes,
-  legalLastUpdatedISO,
+  privacyLastUpdatedISO,
+  termsLastUpdatedISO,
 } from "./site.ts";
 import { plans, planSlug, terminology } from "./content.ts";
 
@@ -379,7 +380,7 @@ export const legalRoutes = [
     metaTitle: "Privacy Policy",
     description:
       "How B2B Lead Growth collects, uses, stores and protects the information you share through this website, including the fit check and its attribution fields.",
-    dateModified: legalLastUpdatedISO,
+    dateModified: privacyLastUpdatedISO,
   },
   {
     slug: "terms",
@@ -387,7 +388,7 @@ export const legalRoutes = [
     metaTitle: "Terms of Service",
     description:
       "The terms for the B2B Lead Growth website, the free pipeline audit, and the paid monthly plans — fees, billing, cancellation, refunds, and termination.",
-    dateModified: legalLastUpdatedISO,
+    dateModified: termsLastUpdatedISO,
   },
 ] as const;
 

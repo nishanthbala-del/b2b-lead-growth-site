@@ -12,6 +12,7 @@ import {
 } from "@/lib/qualification";
 import { ATTRIBUTION_KEYS, sanitizeAttribution } from "@/lib/attribution";
 import { recordEvent } from "@/lib/events-server";
+import { isCrossSitePost } from "@/lib/request-guards";
 
 // Use the Node.js runtime (needs fs) and never cache this handler.
 export const runtime = "nodejs";
@@ -345,26 +346,11 @@ async function forwardToSheets(
 // burn function memory/time.
 const MAX_BODY_BYTES = 16_000;
 
-// Reject obvious cross-site posts. `Sec-Fetch-Site` is set by the browser and
-// cannot be forged from page JavaScript, so it is the reliable signal; the Origin
-// check is the fallback for the handful of clients that don't send it. This is a
-// spam/abuse deterrent rather than a security boundary — the endpoint writes no
-// authenticated state — but it cheaply blocks the "embed a form on another site
-// and post at them" pattern that CORS never prevents.
-function isCrossSitePost(req: NextRequest): boolean {
-  const site = req.headers.get("sec-fetch-site");
-  if (site) return site === "cross-site";
-  const origin = req.headers.get("origin");
-  if (!origin) return false; // non-browser client (curl, uptime check) — allowed
-  try {
-    return new URL(origin).host !== req.headers.get("host");
-  } catch {
-    return true;
-  }
-}
-
+// Reject obvious cross-site posts — lib/request-guards.ts, shared with /api/event so the
+// two endpoints cannot drift into two different rules. A spam/abuse deterrent rather
+// than a security boundary: the endpoint writes no authenticated state.
 export async function POST(req: NextRequest) {
-  if (isCrossSitePost(req)) {
+  if (isCrossSitePost(req.headers)) {
     return Response.json({ ok: false, error: "Invalid request origin." }, { status: 403 });
   }
 

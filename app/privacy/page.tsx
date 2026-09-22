@@ -5,7 +5,7 @@ import { ATTRIBUTION_KEYS, ATTRIBUTION_LABELS } from "@/lib/attribution";
 import { EVENT_LABELS, EVENT_NAMES } from "@/lib/events";
 import Link from "next/link";
 import PageShell from "@/components/PageShell";
-import { brandName, contactEmail, entityFormationState, legalEntity, legalEntityName, legalLastUpdated } from "@/lib/site";
+import { brandName, contactEmail, entityFormationState, legalEntity, legalEntityName, privacyLastUpdated } from "@/lib/site";
 
 // WHAT CHANGED ON 2026-09-17: the FACTUAL descriptions of what this site records and what the
 // service does — the fit check's new question (generated, as before), the visit-attribution
@@ -15,6 +15,12 @@ import { brandName, contactEmail, entityFormationState, legalEntity, legalEntity
 // top plan records from a conversation with a business contact. No rights, retention,
 // legal-basis or contact clause was reworded. This policy has still not been reviewed by
 // counsel (SETUP.md); that note stands.
+//
+// WHAT CHANGED ON 2026-09-21: `visit_start` joined the generated event list, and the
+// visit-origin paragraph was corrected — it said those values were "not sent anywhere on
+// [their] own" and never received without a submission, while every first-party event had
+// carried them since 2026-09-17. The crawler filter on /api/event is described. See
+// `privacyLastUpdated` in lib/site.ts; /terms did not change and keeps its own date.
 
 const route = getLegalRoute("privacy");
 
@@ -51,7 +57,7 @@ export default function PrivacyPage() {
         <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl">
           Privacy Policy
         </h1>
-        <p className="mt-4 text-sm text-subtle">Last updated: {legalLastUpdated}</p>
+        <p className="mt-4 text-sm text-subtle">Last updated: {privacyLastUpdated}</p>
 
         <p className="mt-8 leading-7 text-subtle">
           This Privacy Policy explains how {brandName} (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or
@@ -103,8 +109,8 @@ export default function PrivacyPage() {
               changes, and on this page that is a false legal statement. */}
           <p className="mt-4 leading-7 text-subtle">
             <strong className="text-ink/90">Where your visit came from.</strong> So that we can
-            tell which channels send us companies we can actually help, the fit check submission
-            also carries these values, when they exist:
+            tell which channels send us companies we can actually help, we record these values,
+            when they exist:
           </p>
           <ul className="mt-3 space-y-2 leading-7 text-subtle">
             {ATTRIBUTION_KEYS.map((key) => (
@@ -113,12 +119,13 @@ export default function PrivacyPage() {
           </ul>
           <p className="mt-4 leading-7 text-subtle">
             We record the path of that first page but never its query string, and the domain name
-            of the referring site but never the full address you came from. Until you submit the
-            fit check these values sit only in your browser&rsquo;s session storage — a first-party
-            store that is not a cookie, is not sent anywhere on its own, and is cleared when you
-            close the tab. If you never submit the fit check, we never receive them. This site
-            does <em>not</em> use third-party advertising, analytics, or cross-site tracking
-            cookies, and it sets no cookies of its own.
+            of the referring site but never the full address you came from. Your browser keeps
+            these values in its session storage — a first-party store that is not a cookie and is
+            cleared when you close the tab — and sends them to our own server, and nowhere else,
+            with each of the events listed below, starting with the one that records that your
+            visit began, and with the fit check if you submit it. This site does <em>not</em> use
+            third-party advertising, analytics, or cross-site tracking cookies, and it sets no
+            cookies of its own.
           </p>
           {/* GENERATED from lib/events.ts. The site records a handful of first-party events so
               the owner can tell whether the pages and the form work; the published list is the
@@ -140,8 +147,12 @@ export default function PrivacyPage() {
             and no reference to your submission. That value is not a cookie; it is kept in
             your browser&rsquo;s session storage, is never tied to your name or email, is not used
             to recognise you on a later visit or on any other site, and is gone when you close the
-            tab. No event contains your name, email, IP address or browser details, and none of
-            this is sent to any advertising or analytics company.
+            tab. No event contains your name, email, IP address or browser details — the only
+            thing any event says about your device is, for the start of a visit, whether the
+            screen was phone-sized — and none of this is sent to any advertising or analytics
+            company. Requests from automated crawlers are discarded rather than recorded; our
+            server tells them apart by the description every browser and crawler sends about
+            itself, reads it for that decision only, and does not store it.
           </p>
         </Section>
 

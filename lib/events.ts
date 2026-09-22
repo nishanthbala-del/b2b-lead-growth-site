@@ -5,6 +5,8 @@
 // companies ever open the scheduler?" had no answer — and a page view is not an answer to any
 // of them. These are the events between a visit and a conversation:
 //
+//   visit_start        a visit began: the first page of this tab's visit, where it came from
+//                      (the attribution fields), and whether the screen was phone-sized
 //   cta_click          the primary call to action was clicked (which page, which placement)
 //   form_start         the first field of the fit check was touched
 //   form_step          a step was completed and the next one shown (which step)
@@ -14,6 +16,19 @@
 //   fit_outcome        strong | explore | not_yet, and the plan the answers pointed at
 //                      (recorded by the SERVER from the same evaluateFit the visitor saw)
 //   booking_opened     the scheduler link was opened from the result
+//
+// WHY visit_start WAS ADDED (2026-09-21). Every other event here happens AFTER a visitor has
+// decided to act, so the Events tab could say what converted but never out of how many. Read on
+// 2026-09-21, it held four rows since 2026-09-18, every one of them a test: zero real CTA clicks
+// and zero fit checks started — and nothing could tell "nobody arrived" apart from "people
+// arrived and left". That difference decides whether the next hour goes into getting found or
+// into the pages, so it has to be measured, not guessed. One event per visit, fired once from
+// the first page (components/AttributionCapture.tsx), carrying the same visit-origin fields
+// every other event already carries: organic search, an AI assistant's link, a referral and a
+// direct visit are then told apart by the referring host and the campaign tags, read by the same
+// rules the operating system applies to a submission (core/attribution.py derive_channel) rather
+// than by a second channel list kept here. Crawlers that run the page's script are discarded by
+// the route (lib/request-guards.ts), so a rendering pass is not a visit.
 //
 // WHAT IT IS NOT. No third-party script, no advertising or analytics vendor, no cookie, no
 // cross-site identifier, no fingerprint. `visitId` is a random value kept in this tab's
@@ -25,6 +40,7 @@
 // one closed vocabulary and one sanitizer. The server never trusts what the browser sent.
 
 export const EVENT_NAMES = [
+  "visit_start",
   "cta_click",
   "form_start",
   "form_step",
@@ -39,6 +55,7 @@ export type EventName = (typeof EVENT_NAMES)[number];
 /** Plain-English meaning of each event. Read by /privacy, so the published list is generated
  *  from what the code records — the same discipline as QUESTION_LABELS and ATTRIBUTION_LABELS. */
 export const EVENT_LABELS: Record<EventName, string> = {
+  visit_start: "that a visit began, on which page, and whether the screen was phone-sized",
   cta_click: "that the main button was clicked, and on which page",
   form_start: "that the fit check was started",
   form_step: "which step of the fit check was reached",
@@ -52,7 +69,8 @@ export type SiteEvent = {
   name: EventName;
   /** The page path the event happened on. Never a query string. */
   path: string;
-  /** Where on the page (hero, plans, footer…) — a short label from a closed character set. */
+  /** Where on the page (hero, plans, footer…) — a short label from a closed character set.
+   *  For visit_start, the screen class instead: "mobile" or "desktop" (VISIT_SCREEN_CLASSES). */
   placement: string;
   /** Step number for form events; 0 otherwise. */
   step: number;
@@ -107,3 +125,8 @@ export function sanitizeEvent(raw: unknown): SiteEvent | null {
 }
 
 export const VISIT_STORAGE_KEY = "blg_visit_v1";
+
+/** The two screen classes a visit_start carries. Narrower than 768 CSS pixels reads as mobile —
+ *  the same breakpoint the site's own layout switches at (Tailwind `md`). */
+export const VISIT_SCREEN_CLASSES = ["mobile", "desktop"] as const;
+export const MOBILE_MAX_WIDTH_PX = 767;

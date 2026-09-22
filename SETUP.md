@@ -444,13 +444,22 @@ prioritize. Export anytime via **File → Download → CSV**.
 
 A row in the Sheet is a completed fit check. Everything before it — did anyone click the
 button, start the form, stop at step 3, open the scheduler — used to be invisible, and a page
-view is not an answer to any of those questions. Since 2026-09-17 the site records seven
-first-party events (`lib/events.ts`: `cta_click`, `form_start`, `form_step`, `form_abandon`,
-`form_complete`, `fit_outcome`, `booking_opened`), each with the page, the placement or step,
-the visit's UTM/referrer values, and — for the browser-sent ones — a random per-tab visit id so
-one visit's steps can be read in order. No name, email, IP or user agent is ever in an event;
-no third-party script or cookie is involved; `/privacy` publishes the list, generated from the
-code.
+view is not an answer to any of those questions. Since 2026-09-17 the site records first-party
+events (`lib/events.ts`: `cta_click`, `form_start`, `form_step`, `form_abandon`,
+`form_complete`, `fit_outcome`, `booking_opened`, and since 2026-09-21 `visit_start`), each with
+the page, the placement or step, the visit's UTM/referrer values, and — for the browser-sent
+ones — a random per-tab visit id so one visit's steps can be read in order. No name, email, IP or
+user agent is ever in an event; no third-party script or cookie is involved; `/privacy`
+publishes the list, generated from the code.
+
+**`visit_start` is the denominator.** Every other event happens after a visitor has chosen to
+act, so on its own the tab can say what converted but never out of how many. Read on
+2026-09-21, it held four rows since 2026-09-18 and every one was a test — and nothing could
+tell "nobody arrived" from "people arrived and left". `visit_start` fires ONCE per visit, from
+the first page (`components/AttributionCapture.tsx`), with `placement` = `mobile` or `desktop`.
+`/api/event` discards requests whose user agent names a crawler, a headless browser or an HTTP
+library (`lib/request-guards.ts`) — Googlebot, Bingbot and several AI crawlers run page
+scripts — and refuses cross-site posts, so a row is a person's browser on this site.
 
 - **Where they go by default:** the deployment's runtime log, one line per event, prefixed
   `[event]`. In Vercel → Project → Logs, filter on `[event]` (or `[event] {"name":"form_abandon"`).
@@ -465,6 +474,23 @@ code.
   each step → completes → outcome → scheduler opened. `form_abandon` carries the step reached, so
   "people stop at step 3" is measurable instead of guessed. A jump in `not_yet` outcomes from
   one `utmCampaign` says that campaign is reaching the wrong shops.
+- **Traffic by channel, from `visit_start` rows.** The channel is read from `referrerHost` and
+  the UTM tags by the operating system's rules (`core/attribution.py` `derive_channel`), not a
+  second list kept here: a search engine's host (`google.*`, `bing.*`, `duckduckgo.*`…) is
+  organic search; `chatgpt.com`, `perplexity.ai`, `claude.ai`, `copilot.microsoft.com`,
+  `gemini.google.com` are AI assistants; any other host is a referral; no host and no tag is
+  direct. **Our own outbound email lands in two places**, because the signature link carries no
+  tag: desktop and phone mail apps strip the referrer, so those clicks read as direct; webmail
+  sends its own host (`mail.google.com`, `outlook.live.com`, `mail.yahoo.com`), which is an EMAIL
+  click, not a search or a referral. (Measured 2026-09-21: `derive_channel` reads
+  `mail.google.com` and `mail.yahoo.com` as organic search — reported to the operating-system
+  session; until it is fixed, read those hosts by hand.) Read a rise in direct or webmail visits
+  after a send batch as that batch, not as people typing the address. Two honest limits: an AI answer that
+  shows the site without a clickable link sends no visit at all, and some assistants' apps strip
+  the referrer too, so AI-assistant counts are a floor, never a total.
+  Quick Sheet formula for visits by referring host:
+  `=QUERY(Events!A:M, "select M, count(B) where B = 'visit_start' group by M order by count(B) desc", 1)`
+  — rows tagged `utmSource = qa_*` are our own QA visits; filter them out.
 
 ---
 
