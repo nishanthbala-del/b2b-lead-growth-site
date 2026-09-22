@@ -126,10 +126,40 @@ export function attributionFromVisit({
   }
   out.landingPath = pathname;
   try {
-    const host = referrer ? new URL(referrer).host : "";
-    out.referrerHost = host && host !== ownHost ? host : "";
+    const url = referrer ? new URL(referrer) : null;
+    // A REFERRER IS ANOTHER WEB PAGE. `new URL()` happily parses any scheme, so a link opened
+    // from the Gmail Android app arrived as `android-app://com.google.android.gm` and recorded
+    // `com.google.android.gm` as if it were a website. Only http(s) referrers name a site.
+    const host = url && (url.protocol === "https:" || url.protocol === "http:") ? url.host : "";
+    out.referrerHost = host && !isOwnSite(host, ownHost) ? host : "";
   } catch {
     out.referrerHost = "";
   }
   return sanitizeAttribution(out);
+}
+
+/**
+ * Is `host` this site, allowing for the apex/www split?
+ *
+ * The comparison used to be exact string equality, so `b2bleadgrowth.com` was not
+ * `www.b2bleadgrowth.com`: any apex-to-www crossing by LINK (rather than by the 308 the host
+ * serves) recorded OUR OWN DOMAIN as an external referral — and, because sessionStorage is
+ * per-origin, minted a second `visit_start` for one human. The 308 is real but it lives in the
+ * hosting's domain settings, not in this repo, so nothing in code guaranteed the invariant that
+ * equality depended on. Comparing the registrable domain does not depend on it at all.
+ */
+export function isOwnSite(host: string, ownHost: string): boolean {
+  const base = (h: string) => {
+    const labels = (h || "").toLowerCase().replace(/:\d+$/, "").split(".").filter(Boolean);
+    if (labels.length < 2) return labels.join(".");
+    // Two-part public suffixes (.co.uk, .com.au) keep three labels; everything else keeps two.
+    const twoPart = ["co", "com", "org", "net", "ac", "gov", "edu"];
+    if (labels.length >= 3 && twoPart.includes(labels[labels.length - 2])
+        && labels[labels.length - 1].length === 2) {
+      return labels.slice(-3).join(".");
+    }
+    return labels.slice(-2).join(".");
+  };
+  const a = base(host);
+  return Boolean(a) && a === base(ownHost);
 }

@@ -12,7 +12,7 @@ import {
 } from "@/lib/qualification";
 import { ATTRIBUTION_KEYS, sanitizeAttribution } from "@/lib/attribution";
 import { recordEvent } from "@/lib/events-server";
-import { isCrossSitePost } from "@/lib/request-guards";
+import { isAutomatedClient, isCrossSitePost } from "@/lib/request-guards";
 
 // Use the Node.js runtime (needs fs) and never cache this handler.
 export const runtime = "nodejs";
@@ -350,6 +350,14 @@ const MAX_BODY_BYTES = 16_000;
 // two endpoints cannot drift into two different rules. A spam/abuse deterrent rather
 // than a security boundary: the endpoint writes no authenticated state.
 export async function POST(req: NextRequest) {
+  // ONE POPULATION FOR ALL EIGHT SITE EVENTS. /api/event drops an automated client before
+  // recording (app/api/event/route.ts), but this route is the ONLY writer of `fit_outcome`
+  // and `booking_opened`, and it did not — so visit_start / cta_click / the form events were
+  // crawler-filtered while the two that end the funnel were not. Every rate computed across
+  // that boundary had a filtered numerator over an unfiltered denominator. The lead itself is
+  // still accepted and still reaches the Sheet exactly as before: this decides only whether
+  // the moment is counted as a HUMAN site event.
+  const automated = isAutomatedClient(req.headers.get("user-agent"));
   if (isCrossSitePost(req.headers)) {
     return Response.json({ ok: false, error: "Invalid request origin." }, { status: 403 });
   }
@@ -414,7 +422,9 @@ export async function POST(req: NextRequest) {
     // The same moment as a SITE event (lib/events.ts), recorded once, here, so the browser
     // does not have to fire it twice. It carries the visit's attribution and nothing that
     // identifies the lead: the lead id above goes to the Sheet, not into the event log.
-    await recordEvent({ name: "booking_opened", path: "/start", ...sanitizeAttribution(body as Record<string, unknown>) });
+    if (!automated) {
+      await recordEvent({ name: "booking_opened", path: "/start", ...sanitizeAttribution(body as Record<string, unknown>) });
+    }
     return Response.json({ ok: true });
   }
 
@@ -534,13 +544,15 @@ export async function POST(req: NextRequest) {
   // the verdict it just computed — the browser's copy is never read for this either. It
   // carries the outcome, the plan the answers pointed at and the visit's attribution; no lead
   // id, no name, no email, so the event log stays a count and never a second copy of the lead.
-  await recordEvent({
-    name: "fit_outcome",
-    path: "/start",
-    outcome: fit.outcome,
-    plan: fit.recommendedTier ?? "",
-    ...attribution,
-  });
+  if (!automated) {
+    await recordEvent({
+      name: "fit_outcome",
+      path: "/start",
+      outcome: fit.outcome,
+      plan: fit.recommendedTier ?? "",
+      ...attribution,
+    });
+  }
 
   // `stored` is the honest answer to "did this lead survive the request?".
   // On Vercel the filesystem is ephemeral, so the Sheet is the only durable sink

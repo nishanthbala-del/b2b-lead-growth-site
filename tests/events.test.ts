@@ -20,6 +20,7 @@ import {
   VISIT_STORAGE_KEY,
   sanitizeEvent,
 } from "../lib/events.ts";
+import { attributionFromVisit, isOwnSite } from "../lib/attribution.ts";
 import { isAutomatedClient, isCrossSitePost } from "../lib/request-guards.ts";
 import { legalRoutes } from "../lib/pages.ts";
 import { privacyLastUpdatedISO, termsLastUpdatedISO } from "../lib/site.ts";
@@ -265,7 +266,9 @@ describe("visit_start: one per visit, and only people", () => {
     assert.match(src, /isAutomatedClient\(req\.headers\.get\("user-agent"\)\)\) return new Response\(null, \{ status: 204 \}\)/);
     // The fit check submission uses the SAME cross-site rule, not a second copy of it.
     const lead = stripComments(read("app/api/lead/route.ts"));
-    assert.match(lead, /import \{ isCrossSitePost \} from "@\/lib\/request-guards"/);
+    // One import of the SHARED guards, whichever of them this route needs — it now needs
+    // isAutomatedClient too, so the two endpoints filter one population.
+    assert.match(lead, /import \{[^}]*isCrossSitePost[^}]*\} from "@\/lib\/request-guards"/);
     assert.doesNotMatch(lead, /function isCrossSitePost/);
   });
 });
@@ -299,5 +302,89 @@ describe("/privacy says what the site actually records", () => {
     // The privacy change on 2026-09-21 did not touch /terms, so its date must not have moved.
     assert.equal(termsLastUpdatedISO, "2026-09-19");
     assert.ok(privacyLastUpdatedISO >= termsLastUpdatedISO);
+  });
+});
+
+// ---------------------------------------------------------------------------------------
+// ATTRIBUTION: our own domain is not a referral, and only a web page is a referrer.
+//
+// Measured 2026-09-22: `referrerHost` was `host !== ownHost`, exact string equality, so
+// `b2bleadgrowth.com` was not `www.b2bleadgrowth.com`. An apex-to-www crossing by LINK
+// recorded OUR OWN DOMAIN as an external referral, and — sessionStorage being per-origin —
+// minted a second `visit_start` for one human. The 308 that normally prevents the crossing
+// lives in the hosting's domain settings, not in this repo, so nothing in code guaranteed
+// the invariant that equality depended on.
+//
+// And `new URL()` parses any scheme, so a link opened in the Gmail Android app arrived as
+// `android-app://com.google.android.gm` and was stored as if it were a website.
+describe("attribution: referrer host", () => {
+  const visit = (referrer: string, ownHost = "www.b2bleadgrowth.com") =>
+    attributionFromVisit({ search: "", pathname: "/", referrer, ownHost });
+
+  test("the apex is OUR OWN SITE, not a referral (and neither is www from the apex)", () => {
+    assert.equal(visit("https://b2bleadgrowth.com/pricing").referrerHost, "");
+    assert.equal(
+      attributionFromVisit({
+        search: "", pathname: "/", referrer: "https://www.b2bleadgrowth.com/pricing",
+        ownHost: "b2bleadgrowth.com",
+      }).referrerHost,
+      "",
+    );
+  });
+
+  test("any host of our own registrable domain is ours", () => {
+    for (const h of ["https://b2bleadgrowth.com/", "https://www.b2bleadgrowth.com/x",
+                     "https://staging.b2bleadgrowth.com/y"]) {
+      assert.equal(visit(h).referrerHost, "", h);
+    }
+  });
+
+  test("a real external referrer is STILL recorded — the fix narrowed nothing it should not", () => {
+    assert.equal(visit("https://www.google.com/search?q=x").referrerHost, "www.google.com");
+    assert.equal(visit("https://mail.google.com/mail/u/0").referrerHost, "mail.google.com");
+    assert.equal(visit("https://news.ycombinator.com/item").referrerHost, "news.ycombinator.com");
+  });
+
+  test("a LOOKALIKE of our domain is not treated as ours", () => {
+    assert.equal(
+      visit("https://b2bleadgrowth.com.evil.example/x").referrerHost,
+      "b2bleadgrowth.com.evil.example",
+    );
+    assert.equal(visit("https://notb2bleadgrowth.com/x").referrerHost, "notb2bleadgrowth.com");
+  });
+
+  test("only an http(s) referrer names a website — an app scheme is not a host", () => {
+    assert.equal(visit("android-app://com.google.android.gm").referrerHost, "");
+    assert.equal(visit("javascript:void(0)").referrerHost, "");
+    assert.equal(visit("").referrerHost, "");
+  });
+
+  test("isOwnSite handles a two-part public suffix without a suffix list", () => {
+    assert.equal(isOwnSite("www.example.co.uk", "example.co.uk"), true);
+    assert.equal(isOwnSite("example.co.uk", "other.co.uk"), false);
+  });
+});
+
+// ---------------------------------------------------------------------------------------
+// ONE POPULATION FOR ALL EIGHT EVENTS. /api/event dropped an automated client before
+// recording; /api/lead — the ONLY writer of fit_outcome and booking_opened — did not, so a
+// funnel rate had a crawler-filtered numerator over an unfiltered denominator.
+describe("api/lead: site events are crawler-filtered like every other event", () => {
+  const leadRoute = readFileSync(
+    path.join(path.dirname(fileURLToPath(import.meta.url)), "../app/api/lead/route.ts"),
+    "utf8",
+  );
+  test("it imports the SHARED guard, not a second copy of the rule", () => {
+    assert.match(leadRoute, /import \{[^}]*isAutomatedClient[^}]*\} from "@\/lib\/request-guards"/);
+  });
+  test("every recordEvent call in the route is behind that guard", () => {
+    const calls = leadRoute.split("recordEvent(").length - 1;
+    assert.ok(calls >= 2, `expected the two site-event writes, found ${calls}`);
+    assert.equal(leadRoute.split("if (!automated)").length - 1, calls,
+      "each recordEvent must sit behind its own !automated guard");
+  });
+  test("the LEAD itself is still accepted from any client — only the COUNT is filtered", () => {
+    assert.ok(!/if \(automated\) return/.test(leadRoute),
+      "a crawler-shaped user agent must not reject the submission");
   });
 });

@@ -163,7 +163,7 @@ export const plans: Plan[] = [
         "A qualified conversation: a decision-maker at a commercial account that fits your profile — or the colleague they sent us to — who showed genuine interest and agreed to speak with your team, confirmed by a person rather than a keyword. We introduce you by name and hand over the account, the contact, the context and the whole conversation; from that point the conversation is yours. Deeper qualification, technical discovery, the estimate, the proposal and the close stay with you.",
     },
     capacity:
-      "Up to 100 outreach messages a month, first touches and follow-ups alike (about 33 accounts on a 3-touch sequence).",
+      "Up to 35 new commercial accounts a month, each worked through its whole follow-up sequence (a derived ceiling of 140 outreach messages, so a follow-up never costs you an account).",
     bestFor:
       "Your team can take a conversation from the first call: you want the right accounts found, the decision-makers reached, and every prospect who agrees to talk introduced to you warm.",
     includes: [
@@ -219,7 +219,7 @@ export const plans: Plan[] = [
         "An accepted sales opportunity: a qualified conversation we carried further — the business need validated with the buyer, the property, account and buyer information gathered (anything unknown is marked unknown), the opportunity checked and accepted against the criteria you agreed with us, and a concrete next sales step coordinated with the buyer. Handed over with a complete opportunity brief and a warm introduction. Technical discovery, the site assessment, the estimate, the proposal and the close stay with you.",
     },
     capacity:
-      "Up to 150 outreach messages a month, first touches and follow-ups alike (about 50 accounts on a 3-touch sequence).",
+      "Up to 50 new commercial accounts a month, each worked through its whole follow-up sequence (a derived ceiling of 200 outreach messages, so a follow-up never costs you an account).",
     bestFor:
       "Someone on your team quotes and wins commercial bids, and you want their time spent only on opportunities that were validated, accepted against your criteria and scheduled before they arrive.",
     includes: [
@@ -807,7 +807,7 @@ export const faqs: Faq[] = [
     question: "How many accounts or messages does each plan cover?",
     group: "What you can expect",
     answer:
-      "Each plan has a monthly capacity limit, and it is a supporting fact rather than the reason one plan costs more than the other. Managed Outbound covers up to 100 outreach messages a month, first touches and follow-ups alike, which is about 33 accounts on a three-touch sequence. The Opportunity Engine covers up to 150, about 50 accounts. The count is in messages because that is the unit our sending controls enforce, so the report reconciles against the agreement line for line.",
+      "Each plan is sold in new accounts a month, and the limit is a supporting fact rather than the reason one plan costs more than the other. Managed Outbound covers up to 35 new commercial accounts a month; the Opportunity Engine covers up to 50. Each account is worked through its whole follow-up sequence, so a follow-up never costs you an account. The message ceiling is derived from that, not sold separately: 140 outreach messages on Managed Outbound and 200 on the Opportunity Engine. The report reconciles against the agreement line for line.",
   },
   {
     question: "What does a handoff actually contain?",
